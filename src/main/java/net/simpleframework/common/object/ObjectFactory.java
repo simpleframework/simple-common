@@ -142,7 +142,7 @@ public class ObjectFactory {
 		return proxy;
 	}
 
-	private boolean isAbstract(final Class<?> oClass) {
+	public static boolean isAbstract(final Class<?> oClass) {
 		int m;
 		return oClass == null || Modifier.isInterface(m = oClass.getModifiers())
 				|| Modifier.isAbstract(m);
