@@ -95,7 +95,7 @@ public class ObjectFactory {
 	@SuppressWarnings("unchecked")
 	private <T> T _create(final Class<T> oClass) {
 		if (isAbstract(oClass)) {
-			log.warn($m("ObjectFactory.0"), oClass.getName());
+			log.warn($m("ObjectFactory.0", oClass.getName()));
 			return null;
 		}
 		try {
