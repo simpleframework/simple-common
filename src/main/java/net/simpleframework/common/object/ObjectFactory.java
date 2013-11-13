@@ -1,7 +1,5 @@
 package net.simpleframework.common.object;
 
-import static net.simpleframework.common.I18n.$m;
-
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,8 +7,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.simpleframework.common.ClassUtils;
-import net.simpleframework.common.logger.Log;
-import net.simpleframework.common.logger.LogFactory;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -95,7 +91,6 @@ public class ObjectFactory {
 	@SuppressWarnings("unchecked")
 	private <T> T _create(final Class<T> oClass) {
 		if (isAbstract(oClass)) {
-			log.warn($m("ObjectFactory.0", oClass.getName()));
 			return null;
 		}
 		try {
@@ -131,7 +126,6 @@ public class ObjectFactory {
 
 	private <T> T _newInstance(final Class<T> oClass) {
 		if (isAbstract(oClass)) {
-			log.warn($m("ObjectFactory.0"), oClass.getName());
 			return null;
 		}
 		try {
@@ -181,6 +175,4 @@ public class ObjectFactory {
 		 */
 		Object create(Class<?> oClass);
 	}
-
-	private static Log log = LogFactory.getLogger(ObjectFactory.class);
 }
