@@ -1,6 +1,5 @@
 package net.simpleframework.common.object;
 
-import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -91,9 +90,6 @@ public class ObjectFactory {
 
 	@SuppressWarnings("unchecked")
 	private <T> T _create(final Class<T> oClass) {
-		if (isAbstract(oClass)) {
-			return null;
-		}
 		try {
 			final Class<?> nClass = original(oClass);
 			for (final IObjectCreatorListener l : listeners) {
@@ -126,9 +122,6 @@ public class ObjectFactory {
 	}
 
 	private <T> T _newInstance(final Class<T> oClass) {
-		if (isAbstract(oClass)) {
-			return null;
-		}
 		try {
 			return oClass.newInstance();
 		} catch (final Exception e) {
@@ -143,11 +136,11 @@ public class ObjectFactory {
 		return proxy;
 	}
 
-	private boolean isAbstract(final Class<?> oClass) {
-		int m;
-		return oClass == null || Modifier.isInterface(m = oClass.getModifiers())
-				|| Modifier.isAbstract(m);
-	}
+	// private boolean isAbstract(final Class<?> oClass) {
+	// int m;
+	// return oClass == null || Modifier.isInterface(m = oClass.getModifiers())
+	// || Modifier.isAbstract(m);
+	// }
 
 	public static interface IObjectCreatorListener {
 
