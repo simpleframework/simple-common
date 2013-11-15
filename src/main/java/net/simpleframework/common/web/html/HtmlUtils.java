@@ -23,8 +23,7 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885)
- *         https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class HtmlUtils implements HtmlConst {
@@ -267,12 +266,16 @@ public abstract class HtmlUtils implements HtmlConst {
 		};
 	}
 
-	public static IElementVisitor REMOVE_TAG_VISITOR(final String tag) {
+	public static IElementVisitor REMOVE_TAG_VISITOR(final String tag, final boolean unwrap) {
 		return new IElementVisitor() {
 			@Override
 			public void doElement(final Element ele) {
 				if (tag.equalsIgnoreCase(ele.tagName())) {
-					ele.remove();
+					if (unwrap) {
+						ele.unwrap();
+					} else {
+						ele.remove();
+					}
 				}
 			}
 		};
