@@ -266,6 +266,10 @@ public abstract class HtmlUtils implements HtmlConst {
 		};
 	}
 
+	public static IElementVisitor REMOVE_TAG_VISITOR(final String tag) {
+		return REMOVE_TAG_VISITOR(tag, false);
+	}
+
 	public static IElementVisitor REMOVE_TAG_VISITOR(final String tag, final boolean unwrap) {
 		return new IElementVisitor() {
 			@Override
