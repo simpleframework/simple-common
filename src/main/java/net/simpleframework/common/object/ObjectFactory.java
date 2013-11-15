@@ -69,14 +69,16 @@ public class ObjectFactory {
 		if (oClass == null) {
 			return null;
 		}
-		T o = (T) singletonCache.get(oClass);
-		if (o == null) {
-			o = _create(oClass);
-			if (o != null) {
-				singletonCache.put(oClass, o);
+		synchronized (singletonCache) {
+			T o = (T) singletonCache.get(oClass);
+			if (o == null) {
+				o = _create(oClass);
+				if (o != null) {
+					singletonCache.put(oClass, o);
+				}
 			}
+			return o;
 		}
-		return o;
 	}
 
 	private Object _singleton(final String className) {
