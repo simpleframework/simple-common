@@ -121,8 +121,7 @@ public abstract class HttpUtils implements HtmlConst {
 	}
 
 	public static void setNoCache(final HttpServletResponse httpResponse) {
-		httpResponse.setHeader("Cache-Control",
-				"max-age=0, must-revalidate, no-cache, no-store, private, post-check=0, pre-check=0");
+		httpResponse.setHeader("Cache-Control", "must-revalidate, no-cache, private");
 		httpResponse.setHeader("Pragma", "no-cache");
 		httpResponse.setDateHeader("Expires", 0);
 	}
