@@ -21,6 +21,8 @@ public class FilterItem implements Serializable {
 
 	private EFilterOpe ope;
 
+	private FilterItem orItem;
+
 	public FilterItem(final String column, final Object value) {
 		this(column, null, value);
 	}
@@ -77,6 +79,15 @@ public class FilterItem implements Serializable {
 
 	public FilterItem setOriginalValue(final Object originalValue) {
 		this.originalValue = originalValue;
+		return this;
+	}
+
+	public FilterItem getOrItem() {
+		return orItem;
+	}
+
+	public FilterItem setOrItem(final FilterItem orItem) {
+		this.orItem = orItem;
 		return this;
 	}
 
