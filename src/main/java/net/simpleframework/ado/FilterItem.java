@@ -129,5 +129,8 @@ public class FilterItem implements Serializable {
 		return true;
 	}
 
+	public static FilterItem TRUE = new FilterItem("1", 1);
+	public static FilterItem FALSE = new FilterItem("1", 2);
+
 	private static final long serialVersionUID = 598446923126901786L;
 }
