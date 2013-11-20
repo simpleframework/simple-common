@@ -13,7 +13,7 @@ public interface IOrderBeanAware {
 	 * 
 	 * @return
 	 */
-	long getOorder();
+	int getOorder();
 
-	void setOorder(final long oorder);
+	void setOorder(final int oorder);
 }
