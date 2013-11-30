@@ -143,6 +143,30 @@ public abstract class ImageUtils {
 		}
 	}
 
+	public static void thumbnail(final InputStream inputStream, final double d,
+			final OutputStream outputStream, final String filetype) throws IOException {
+		try {
+			final BufferedImage sbi = ImageIO.read(inputStream);
+			if (sbi == null) {
+				IoUtils.copyStream(inputStream, outputStream);
+				return;
+			}
+			final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
+			final BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+			final Graphics2D g = bi.createGraphics();
+			g.drawImage(sbi, 0, 0, w, h, null);
+			g.dispose();
+			ImageIO.write(bi, filetype, outputStream);
+		} finally {
+			outputStream.close();
+		}
+	}
+
+	public static void thumbnail(final InputStream inputStream, final double d,
+			final OutputStream outputStream) throws IOException {
+		thumbnail(inputStream, d, outputStream, "png");
+	}
+
 	public static boolean isImage(final String ext) {
 		return ext == null ? false : MimeTypes.getMimeType(ext).startsWith("image/");
 	}
