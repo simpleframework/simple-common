@@ -146,8 +146,8 @@ public abstract class ImageUtils {
 	public static void thumbnail(final InputStream inputStream, final double d,
 			final OutputStream outputStream, final String filetype) throws IOException {
 		try {
-			final BufferedImage sbi = ImageIO.read(inputStream);
-			if (sbi == null) {
+			BufferedImage sbi;
+			if (d == 1 || (sbi = ImageIO.read(inputStream)) == null) {
 				IoUtils.copyStream(inputStream, outputStream);
 				return;
 			}
