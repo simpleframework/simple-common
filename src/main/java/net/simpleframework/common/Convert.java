@@ -60,7 +60,7 @@ public abstract class Convert {
 		return convert(obj, Boolean.class, defaultValue);
 	}
 
-	public static final Boolean toBool(final Object obj) {
+	public static final boolean toBool(final Object obj) {
 		return toBool(obj, false);
 	}
 
@@ -68,7 +68,7 @@ public abstract class Convert {
 		return convert(obj, Byte.class, defaultValue);
 	}
 
-	public static final Byte toByte(final Object obj) {
+	public static final byte toByte(final Object obj) {
 		return toByte(obj, (byte) 0);
 	}
 
@@ -76,7 +76,7 @@ public abstract class Convert {
 		return convert(obj, Short.class, defaultValue);
 	}
 
-	public static final Short toShort(final Object obj) {
+	public static final short toShort(final Object obj) {
 		return toShort(obj, (short) 0);
 	}
 
@@ -84,7 +84,7 @@ public abstract class Convert {
 		return convert(obj, Integer.class, defaultValue);
 	}
 
-	public static final Integer toInt(final Object obj) {
+	public static final int toInt(final Object obj) {
 		return toInt(obj, 0);
 	}
 
@@ -92,7 +92,7 @@ public abstract class Convert {
 		return convert(obj, Long.class, defaultValue);
 	}
 
-	public static final Long toLong(final Object obj) {
+	public static final long toLong(final Object obj) {
 		return toLong(obj, 0l);
 	}
 
@@ -100,8 +100,16 @@ public abstract class Convert {
 		return convert(obj, Double.class, defaultValue);
 	}
 
-	public static final Double toDouble(final Object obj) {
+	public static final double toDouble(final Object obj) {
 		return toDouble(obj, 0d);
+	}
+
+	public static final float toFloat(final Object obj, final float defaultValue) {
+		return convert(obj, Float.class, defaultValue);
+	}
+
+	public static final float toFloat(final Object obj) {
+		return toFloat(obj, 0f);
 	}
 
 	public static <T extends Enum<T>> T toEnum(final Class<T> enumClazz, final Object obj) {

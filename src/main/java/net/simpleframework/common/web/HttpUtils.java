@@ -221,7 +221,8 @@ public abstract class HttpUtils implements HtmlConst {
 			httpResponse.setHeader("Content-Length", String.valueOf(filesize));
 		}
 		try {
-			if (UserAgentParser.get(httpRequest).isGecko()) {
+			final String userAgent = httpRequest.getHeader("User-Agent");
+			if (userAgent.indexOf("Gecko/") > -1) {
 				filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
 			} else {
 				filename = encodeUrl(filename);
