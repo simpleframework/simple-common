@@ -12,6 +12,8 @@ import java.util.Date;
  */
 public class TimePeriod implements Serializable {
 
+	public static TimePeriod day = new TimePeriod(ETimePeriod.day);
+	public static TimePeriod day2 = new TimePeriod(ETimePeriod.day2);
 	public static TimePeriod week = new TimePeriod(ETimePeriod.week);
 	public static TimePeriod month = new TimePeriod(ETimePeriod.month);
 	public static TimePeriod year = new TimePeriod(ETimePeriod.year);
