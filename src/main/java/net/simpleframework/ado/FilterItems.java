@@ -14,10 +14,20 @@ public class FilterItems extends AbstractArrayListEx<FilterItems, FilterItem> {
 		return new FilterItems().append(item);
 	}
 
-	public FilterItems addEqualItem(final String key, final Object val) {
+	public FilterItems addEqual(final String key, final Object val) {
 		if (val != null) {
 			add(new FilterItem(key, val));
 		}
+		return this;
+	}
+
+	public FilterItems addIsNull(final String key) {
+		add(new FilterItem(key).setRelation(EFilterRelation.isNull));
+		return this;
+	}
+
+	public FilterItems addNotNull(final String key) {
+		add(new FilterItem(key).setRelation(EFilterRelation.isNotNull));
 		return this;
 	}
 
