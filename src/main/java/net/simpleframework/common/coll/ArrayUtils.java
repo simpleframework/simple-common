@@ -85,4 +85,17 @@ public abstract class ArrayUtils {
 	public static boolean contains(final int[] array, final int value) {
 		return indexOf(array, value) != -1;
 	}
+
+	public static boolean isEmpty(final Object[] arr) {
+		int i = arr.length;
+		if (arr == null || i == 0) {
+			return true;
+		}
+		for (final Object o : arr) {
+			if (o == null) {
+				i--;
+			}
+		}
+		return i == 0;
+	}
 }

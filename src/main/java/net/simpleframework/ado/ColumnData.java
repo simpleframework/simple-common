@@ -18,6 +18,14 @@ public class ColumnData extends ObjectEx implements Serializable {
 
 	public static ColumnData ORDER = new ColumnData("oorder", EOrder.desc);
 
+	public static ColumnData ASC(final String name) {
+		return new ColumnData(name, EOrder.asc);
+	}
+
+	public static ColumnData DESC(final String name) {
+		return new ColumnData(name, EOrder.desc);
+	}
+
 	/**
 	 * 列名称及别名
 	 */
