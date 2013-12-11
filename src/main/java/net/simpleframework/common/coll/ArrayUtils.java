@@ -92,9 +92,10 @@ public abstract class ArrayUtils {
 			return true;
 		}
 		for (final Object o : arr) {
-			if (o == null) {
-				i--;
+			if (o != null) {
+				return false;
 			}
+			i--;
 		}
 		return i == 0;
 	}
