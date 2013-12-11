@@ -87,8 +87,8 @@ public abstract class ArrayUtils {
 	}
 
 	public static boolean isEmpty(final Object[] arr) {
-		int i = arr.length;
-		if (arr == null || i == 0) {
+		int i;
+		if (arr == null || (i = arr.length) == 0) {
 			return true;
 		}
 		for (final Object o : arr) {
