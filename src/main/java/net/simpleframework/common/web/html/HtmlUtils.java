@@ -285,6 +285,17 @@ public abstract class HtmlUtils implements HtmlConst {
 		};
 	}
 
+	public static IElementVisitor REPLACE_TAG_VISITOR(final String tag, final String tag2) {
+		return new IElementVisitor() {
+			@Override
+			public void doElement(final Element ele) {
+				if (tag.equalsIgnoreCase(ele.tagName())) {
+					ele.tagName(tag2);
+				}
+			}
+		};
+	}
+
 	public static IElementVisitor REMOVE_ATTRI_VISITOR(final String... attris) {
 		return REMOVE_ATTRI_VISITOR(null, attris);
 	}
