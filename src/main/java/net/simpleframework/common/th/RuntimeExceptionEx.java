@@ -50,12 +50,13 @@ public abstract class RuntimeExceptionEx extends RuntimeException {
 			} catch (final Exception e) {
 			}
 		}
-		if (throwable instanceof RuntimeException) {
-			return (RuntimeException) throwable;
+
+		final Throwable th = ThrowableUtils.convertThrowable(throwable);
+		if (th instanceof RuntimeException) {
+			return (RuntimeException) th;
 		} else {
 			try {
-				return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg,
-						ThrowableUtils.convertThrowable(throwable));
+				return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg, th);
 			} catch (final Throwable e) {
 				e.printStackTrace();
 			}
