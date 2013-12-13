@@ -134,7 +134,8 @@ public abstract class HtmlUtils implements HtmlConst {
 	}
 
 	public static String htmlToText(final String htmlString) {
-		return createHtmlDocument(htmlString).text();
+		final Document doc = createHtmlDocument(htmlString);
+		return elementText(doc, doc.childNodes(), "\n", false);
 	}
 
 	private static final Pattern EXPR_PATTERN = Pattern
