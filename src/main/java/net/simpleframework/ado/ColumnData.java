@@ -25,9 +25,9 @@ public class ColumnData extends ObjectEx implements Serializable {
 	}
 
 	/**
-	 * 列名称及别名
+	 * 列名称及别名，别名可理解为sql名称
 	 */
-	private String name, sqlName;
+	private String name, alias;
 
 	/**
 	 * 列的显示名称
@@ -86,12 +86,12 @@ public class ColumnData extends ObjectEx implements Serializable {
 		return this;
 	}
 
-	public String getSqlName() {
-		return StringUtils.hasText(sqlName) ? sqlName : getName();
+	public String getAlias() {
+		return StringUtils.hasText(alias) ? alias : getName();
 	}
 
-	public ColumnData setSqlName(final String sqlName) {
-		this.sqlName = sqlName;
+	public ColumnData setAlias(final String alias) {
+		this.alias = alias;
 		return this;
 	}
 

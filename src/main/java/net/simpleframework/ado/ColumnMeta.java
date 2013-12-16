@@ -22,11 +22,11 @@ public @interface ColumnMeta {
 	String columnText() default "";
 
 	/**
-	 * 列的映射名称。比如sqlcolumn
+	 * 列的别名。比如sqlcolumn
 	 * 
 	 * @return
 	 */
-	String columnMappingName() default "";
+	String columnAlias() default "";
 
 	/**
 	 * 忽略持续化
