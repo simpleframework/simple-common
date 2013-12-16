@@ -24,8 +24,6 @@ public class ColumnData extends ObjectEx implements Serializable {
 		return new ColumnData(name, EOrder.desc);
 	}
 
-	public static ColumnData ORDER = ColumnData.DESC("oorder");
-
 	/**
 	 * 列名称及别名
 	 */
