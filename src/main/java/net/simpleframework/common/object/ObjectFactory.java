@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.simpleframework.common.ClassUtils;
+import net.simpleframework.common.coll.ArrayUtils;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -21,20 +22,20 @@ public class ObjectFactory {
 		return factory;
 	}
 
-	public static <T> T singleton(final Class<T> oClass) {
-		return get()._singleton(oClass);
+	public static <T> T singleton(final Class<T> oClass, final IObjectCreatorListener... listeners) {
+		return get()._singleton(oClass, listeners);
 	}
 
-	public static Object singleton(final String className) {
-		return get()._singleton(className);
+	public static Object singleton(final String className, final IObjectCreatorListener... listeners) {
+		return get()._singleton(className, listeners);
 	}
 
-	public static <T> T create(final Class<T> oClass) {
-		return get()._create(oClass);
+	public static <T> T create(final Class<T> oClass, final IObjectCreatorListener... listeners) {
+		return get()._create(oClass, listeners);
 	}
 
-	public static Object create(final String className) {
-		return get()._create(className);
+	public static Object create(final String className, final IObjectCreatorListener... listeners) {
+		return get()._create(className, listeners);
 	}
 
 	public static <T> T newInstance(final Class<T> oClass) {
@@ -57,22 +58,22 @@ public class ObjectFactory {
 		return this;
 	}
 
-	private final Set<IObjectCreatorListener> listeners = new HashSet<IObjectCreatorListener>();
+	private final Set<IObjectCreatorListener> listenerSet = new HashSet<IObjectCreatorListener>();
 
 	public ObjectFactory addListener(final IObjectCreatorListener listener) {
-		listeners.add(listener);
+		listenerSet.add(listener);
 		return this;
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T _singleton(final Class<T> oClass) {
+	private <T> T _singleton(final Class<T> oClass, final IObjectCreatorListener... listeners) {
 		if (oClass == null) {
 			return null;
 		}
 		synchronized (singletonCache) {
 			T o = (T) singletonCache.get(oClass);
 			if (o == null) {
-				o = _create(oClass);
+				o = _create(oClass, listeners);
 				if (o != null) {
 					singletonCache.put(oClass, o);
 				}
@@ -81,22 +82,26 @@ public class ObjectFactory {
 		}
 	}
 
-	private Object _singleton(final String className) {
+	private Object _singleton(final String className, final IObjectCreatorListener... listeners) {
 		try {
-			return _singleton(ClassUtils.forName(className));
+			return _singleton(ClassUtils.forName(className), listeners);
 		} catch (final ClassNotFoundException e) {
 			throw ObjectInstanceException.of(e);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> T _create(final Class<T> oClass) {
+	private <T> T _create(final Class<T> oClass, final IObjectCreatorListener... listeners) {
 		if (isAbstract(oClass)) {
 			return null;
 		}
 		try {
 			final Class<?> nClass = original(oClass);
-			for (final IObjectCreatorListener l : listeners) {
+			if (!ArrayUtils.isEmpty(listeners)) {
+				for (final IObjectCreatorListener l : listeners) {
+					l.onBefore(nClass);
+				}
+			}
+			for (final IObjectCreatorListener l : listenerSet) {
 				l.onBefore(nClass);
 			}
 			if (_creator == null) {
@@ -107,8 +112,16 @@ public class ObjectFactory {
 					}
 				};
 			}
+
+			@SuppressWarnings("unchecked")
 			final T t = (T) _creator.create(nClass);
-			for (final IObjectCreatorListener l : listeners) {
+
+			if (!ArrayUtils.isEmpty(listeners)) {
+				for (final IObjectCreatorListener l : listeners) {
+					l.onCreated(t);
+				}
+			}
+			for (final IObjectCreatorListener l : listenerSet) {
 				l.onCreated(t);
 			}
 			return t;
@@ -117,9 +130,9 @@ public class ObjectFactory {
 		}
 	}
 
-	private Object _create(final String className) {
+	private Object _create(final String className, final IObjectCreatorListener... listeners) {
 		try {
-			return _create(ClassUtils.forName(className));
+			return _create(ClassUtils.forName(className), listeners);
 		} catch (final ClassNotFoundException e) {
 			throw ObjectInstanceException.of(e);
 		}
@@ -164,6 +177,12 @@ public class ObjectFactory {
 		 * @param o
 		 */
 		void onCreated(Object o);
+	}
+
+	public static abstract class ObjectCreatorListener implements IObjectCreatorListener {
+		@Override
+		public void onBefore(final Class<?> oClass) {
+		}
 	}
 
 	public static interface IObjectCreator {

@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
+import net.simpleframework.common.object.ObjectFactory.IObjectCreatorListener;
 import net.simpleframework.common.th.NotImplementedException;
 import net.simpleframework.common.th.RuntimeExceptionEx;
 import net.simpleframework.common.th.ThrowableUtils;
@@ -19,12 +20,13 @@ import net.simpleframework.common.th.ThrowableUtils;
  */
 public abstract class ObjectEx {
 
-	public static <T> T singleton(final Class<T> beanClass) {
-		return ObjectFactory.singleton(beanClass);
+	public static <T> T singleton(final Class<T> beanClass,
+			final IObjectCreatorListener... listeners) {
+		return ObjectFactory.singleton(beanClass, listeners);
 	}
 
-	public static Object singleton(final String className) {
-		return ObjectFactory.singleton(className);
+	public static Object singleton(final String className, final IObjectCreatorListener... listeners) {
+		return ObjectFactory.singleton(className, listeners);
 	}
 
 	/**

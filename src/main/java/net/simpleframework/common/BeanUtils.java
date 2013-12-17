@@ -166,7 +166,7 @@ public abstract class BeanUtils {
 	}
 
 	public static <T> T toBean(final Class<T> tClass, final Map<String, Object> map) {
-		final T t = ObjectFactory.create(tClass);
+		final T t = ObjectFactory.newInstance(tClass);
 		getBeanWrapper(tClass).copy(map, t);
 		return t;
 	}
