@@ -165,6 +165,12 @@ public abstract class BeanUtils {
 		return kv;
 	}
 
+	public static <T> T toBean(final Class<T> tClass, final Map<String, Object> map) {
+		final T t = ObjectFactory.create(tClass);
+		getBeanWrapper(tClass).copy(map, t);
+		return t;
+	}
+
 	public static <T> T clone(final T t) {
 		final Class<?> tClass = t.getClass();
 		final T o = (T) ObjectFactory.newInstance(tClass);
@@ -239,6 +245,15 @@ public abstract class BeanUtils {
 		void copy(final Object bean, final Map<String, Object> map) {
 			for (final String key : properties.keySet()) {
 				map.put(key, get(bean, key));
+			}
+		}
+
+		void copy(final Map<String, Object> map, final Object bean) {
+			for (final String key : properties.keySet()) {
+				final Object val = map.get(key);
+				if (val != null) {
+					set(bean, key, val);
+				}
 			}
 		}
 
