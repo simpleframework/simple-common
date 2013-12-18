@@ -22,6 +22,7 @@ import java.util.jar.JarFile;
 
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.common.object.ObjectFactory;
+import net.simpleframework.common.object.ObjectFactory.IObjectCreator;
 import net.simpleframework.common.th.ClassException;
 
 /**
@@ -269,27 +270,27 @@ public abstract class ClassUtils {
 			return null;
 		}
 
+		private final IObjectCreator DEFAULT_CREATOR = new IObjectCreator() {
+			@Override
+			public Object create(final Class<?> oClass) {
+				return ObjectFactory.singleton(oClass);
+			}
+		};
+
+		protected <T> T getInstance(final Class<?> tClass, final Class<T> iClass) {
+			return getInstance(tClass, iClass, DEFAULT_CREATOR);
+		}
+
 		@SuppressWarnings("unchecked")
-		protected <T> T newInstance(final Class<?> tClass, final Class<T> iClass) {
+		protected <T> T getInstance(final Class<?> tClass, final Class<T> iClass,
+				final IObjectCreator creator) {
 			if (tClass == null || tClass.isInterface() || Modifier.isAbstract(tClass.getModifiers())) {
 				return null;
 			}
 			if (!iClass.isAssignableFrom(tClass)) {
 				return null;
 			}
-			T t = null;
-			try {
-				t = (T) tClass.getMethod("singleton", Class.class).invoke(null, tClass);
-			} catch (final NoSuchMethodException e) {
-				try {
-					t = (T) tClass.newInstance();
-				} catch (final Exception e1) {
-					log.error(e1);
-				}
-			} catch (final Exception e) {
-				log.error(e);
-			}
-			return t;
+			return (T) creator.create(tClass);
 		}
 	}
 }

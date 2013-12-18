@@ -104,6 +104,7 @@ public class ObjectFactory {
 			for (final IObjectCreatorListener l : listenerSet) {
 				l.onBefore(nClass);
 			}
+
 			if (_creator == null) {
 				_creator = new IObjectCreator() {
 					@Override
