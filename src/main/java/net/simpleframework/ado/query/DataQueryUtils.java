@@ -25,7 +25,7 @@ public abstract class DataQueryUtils {
 
 					@Override
 					public boolean hasNext() {
-						return (t = dataQuery.next()) != null;
+						return dataQuery != null && (t = dataQuery.next()) != null;
 					}
 
 					@Override
