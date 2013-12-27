@@ -1,6 +1,5 @@
 package net.simpleframework.common.th;
 
-import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 
 /**
@@ -16,7 +15,7 @@ public abstract class RuntimeExceptionEx extends RuntimeException {
 	private int code;
 
 	public RuntimeExceptionEx(final String msg, final Throwable cause) {
-		super(StringUtils.hasText(msg) ? msg : msg(cause), cause);
+		super(msg, cause);
 	}
 
 	public int getCode() {
@@ -28,50 +27,42 @@ public abstract class RuntimeExceptionEx extends RuntimeException {
 		return this;
 	}
 
+	public Object getVal(final String key) {
+		return attributes.get(key);
+	}
+
 	public RuntimeExceptionEx putVal(final String key, final Object val) {
 		attributes.add(key, val);
 		return this;
 	}
 
-	public Object getVal(final String key) {
-		return attributes.get(key);
+	@Override
+	public String getLocalizedMessage() {
+		String msg = super.getLocalizedMessage();
+		Throwable cause;
+		if (msg == null && (cause = getCause()) != null) {
+			msg = cause.toString();
+		}
+		return msg;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T extends RuntimeExceptionEx> T _of(final Class<T> exClazz, final String msg) {
-		return (T) _of(exClazz, msg, null);
+		return _of(exClazz, msg, null);
 	}
 
-	public static RuntimeException _of(final Class<? extends RuntimeExceptionEx> exClazz,
-			final String msg, final Throwable throwable) {
+	public static <T extends RuntimeExceptionEx> T _of(final Class<T> exClazz, final String msg,
+			final Throwable throwable) {
 		if (throwable == null) {
 			try {
 				return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg, null);
 			} catch (final Exception e) {
 			}
 		}
-
-		final Throwable th = ThrowableUtils.convertThrowable(throwable);
-		if (th instanceof RuntimeException) {
-			return (RuntimeException) th;
-		} else {
-			try {
-				return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg, th);
-			} catch (final Throwable e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	private static String msg(final Throwable cause) {
-		Throwable th = cause;
-		while (th != null) {
-			final String msg = th.getLocalizedMessage();
-			if (StringUtils.hasText(msg)) {
-				return msg;
-			}
-			th = th.getCause();
+		try {
+			return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg,
+					ThrowableUtils.convertThrowable(throwable));
+		} catch (final Throwable e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
