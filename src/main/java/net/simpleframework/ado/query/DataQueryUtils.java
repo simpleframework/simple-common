@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -20,7 +22,7 @@ public abstract class DataQueryUtils {
 		return new Iterable<T>() {
 			@Override
 			public Iterator<T> iterator() {
-				return new Iterator<T>() {
+				return new AbstractIterator<T>() {
 					private T t;
 
 					@Override
@@ -31,10 +33,6 @@ public abstract class DataQueryUtils {
 					@Override
 					public T next() {
 						return t;
-					}
-
-					@Override
-					public void remove() {
 					}
 				};
 			}
