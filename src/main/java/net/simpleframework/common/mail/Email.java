@@ -8,8 +8,8 @@ import net.simpleframework.common.MimeTypes;
 
 public class Email extends CommonEmail {
 
-	public static Email create() {
-		return new Email();
+	public static Email of(final String to) {
+		return new Email().to(to);
 	}
 
 	// ---------------------------------------------------------------- from, to,
