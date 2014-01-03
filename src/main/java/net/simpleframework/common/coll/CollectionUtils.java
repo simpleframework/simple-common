@@ -39,6 +39,7 @@ public abstract class CollectionUtils {
 	};
 
 	public static abstract class AbstractIterator<E> implements Iterator<E> {
+		protected int i = -1;
 
 		@Override
 		public void remove() {
