@@ -7,7 +7,6 @@ import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,7 +18,6 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.TextUtils;
 import net.simpleframework.common.coll.KVMap;
-import net.simpleframework.common.coll.ParameterMap;
 import net.simpleframework.common.web.html.HtmlConst;
 
 /**
@@ -378,20 +376,5 @@ public abstract class HttpUtils implements HtmlConst {
 			qs = "?" + qs;
 		}
 		return request + qs;
-	}
-
-	/****************************** coll *****************************/
-
-	public static Map<String, String> map(final HttpServletRequest request) {
-		final Map<String, String> m = new ParameterMap();
-		final Enumeration<?> e = request.getParameterNames();
-		while (e.hasMoreElements()) {
-			final String key = (String) e.nextElement();
-			final String val = toLocaleString(request.getParameter(key));
-			if (val != null) {
-				m.put(key, val);
-			}
-		}
-		return m;
 	}
 }
