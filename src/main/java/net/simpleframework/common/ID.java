@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import net.simpleframework.common.object.ObjectUtils;
+import net.simpleframework.lib.net.minidev.json.JSONAware;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -67,7 +68,7 @@ public abstract class ID {
 
 	@SuppressWarnings("serial")
 	public static abstract class AbstractID<T extends Comparable<T>> extends ID implements
-			Comparable<AbstractID<T>>, Serializable {
+			Comparable<AbstractID<T>>, Serializable, JSONAware {
 		protected T id;
 
 		@Override
@@ -101,6 +102,15 @@ public abstract class ID {
 		@Override
 		public int compareTo(final AbstractID<T> o) {
 			return id != null && o.id != null ? id.compareTo(o.id) : 0;
+		}
+
+		@Override
+		public String toJSONString() {
+			final T t = getValue();
+			if (t instanceof CharSequence) {
+				return "\"" + t + "\"";
+			}
+			return toString();
 		}
 	}
 

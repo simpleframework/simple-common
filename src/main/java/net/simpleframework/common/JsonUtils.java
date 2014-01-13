@@ -75,6 +75,18 @@ public abstract class JsonUtils {
 		}
 	}
 
+	public static class TestBean {
+		private ID id;
+
+		public ID getId() {
+			return id;
+		}
+
+		public void setId(final ID id) {
+			this.id = id;
+		}
+	}
+
 	public static class ListMapper<T> extends AMapper<T> {
 
 		private final BeansAccess<?> ba;
