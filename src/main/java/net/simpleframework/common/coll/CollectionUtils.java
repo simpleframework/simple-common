@@ -24,6 +24,26 @@ public abstract class CollectionUtils {
 		return l;
 	}
 
+	public static abstract class NestEnumeration<T, N> implements Enumeration<T> {
+		protected Enumeration<N> nest;
+
+		public NestEnumeration(final Enumeration<N> nest) {
+			this.nest = nest;
+		}
+
+		@Override
+		public boolean hasMoreElements() {
+			return nest.hasMoreElements();
+		}
+
+		protected abstract T change(N n);
+
+		@Override
+		public T nextElement() {
+			return change(nest.nextElement());
+		}
+	}
+
 	@SuppressWarnings("rawtypes")
 	public static Enumeration EMPTY_ENUMERATION = new Enumeration() {
 
