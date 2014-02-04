@@ -36,7 +36,7 @@ public interface IParamsValue extends Serializable {
 
 		@SuppressWarnings("unchecked")
 		public T addValues(final Object... values) {
-			if (values.length > 0) {
+			if (values != null && values.length > 0) {
 				if (this.values == null) {
 					this.values = values;
 				} else {
