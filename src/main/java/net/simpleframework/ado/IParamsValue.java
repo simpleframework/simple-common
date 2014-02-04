@@ -21,7 +21,8 @@ public interface IParamsValue extends Serializable {
 	String getKey();
 
 	@SuppressWarnings("serial")
-	public abstract class AbstractParamsValue extends ObjectEx implements IParamsValue {
+	public abstract class AbstractParamsValue<T extends AbstractParamsValue<T>> extends ObjectEx
+			implements IParamsValue {
 		private Object[] values;
 
 		{
@@ -33,7 +34,8 @@ public interface IParamsValue extends Serializable {
 			return values;
 		}
 
-		public void addValues(final Object... values) {
+		@SuppressWarnings("unchecked")
+		public T addValues(final Object... values) {
 			if (values.length > 0) {
 				if (this.values == null) {
 					this.values = values;
@@ -41,6 +43,7 @@ public interface IParamsValue extends Serializable {
 					this.values = ArrayUtils.add(this.values, values);
 				}
 			}
+			return (T) this;
 		}
 
 		protected String valuesToString() {

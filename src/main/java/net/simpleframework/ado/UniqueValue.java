@@ -8,8 +8,7 @@ import net.simpleframework.ado.IParamsValue.AbstractParamsValue;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class UniqueValue extends AbstractParamsValue {
-	private static final long serialVersionUID = 3290227392192678851L;
+public class UniqueValue extends AbstractParamsValue<UniqueValue> {
 
 	public UniqueValue(final Object... values) {
 		addValues(values);
@@ -19,4 +18,6 @@ public class UniqueValue extends AbstractParamsValue {
 	public String getKey() {
 		return valuesToString();
 	}
+
+	private static final long serialVersionUID = 3290227392192678851L;
 }
