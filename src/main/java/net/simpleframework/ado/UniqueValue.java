@@ -12,7 +12,7 @@ public class UniqueValue extends AbstractParamsValue {
 	private static final long serialVersionUID = 3290227392192678851L;
 
 	public UniqueValue(final Object... values) {
-		setValues(values);
+		addValues(values);
 	}
 
 	@Override

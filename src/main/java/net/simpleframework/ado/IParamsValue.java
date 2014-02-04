@@ -33,20 +33,14 @@ public interface IParamsValue extends Serializable {
 			return values;
 		}
 
-		public void setValues(final Object[] values) {
-			this.values = values;
-		}
-
-		public void addValues(final Object[] values) {
-			if (this.values == null) {
-				this.values = values;
-			} else {
-				this.values = ArrayUtils.add(this.values, values);
+		public void addValues(final Object... values) {
+			if (values.length > 0) {
+				if (this.values == null) {
+					this.values = values;
+				} else {
+					this.values = ArrayUtils.add(this.values, values);
+				}
 			}
-		}
-
-		public void addValue(final Object value) {
-			addValues(new Object[] { value });
 		}
 
 		protected String valuesToString() {
