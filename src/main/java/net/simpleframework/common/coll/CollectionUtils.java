@@ -65,4 +65,17 @@ public abstract class CollectionUtils {
 		public void remove() {
 		}
 	}
+
+	@SuppressWarnings("rawtypes")
+	public static Iterator EMPTY_ITERATOR = new AbstractIterator() {
+		@Override
+		public boolean hasNext() {
+			return false;
+		}
+
+		@Override
+		public Object next() {
+			return null;
+		}
+	};
 }
