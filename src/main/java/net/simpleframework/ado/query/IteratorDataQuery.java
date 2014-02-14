@@ -2,6 +2,8 @@ package net.simpleframework.ado.query;
 
 import java.util.Iterator;
 
+import net.simpleframework.ado.query.DataQueryUtils.DataQueryIterator;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -10,10 +12,21 @@ import java.util.Iterator;
  */
 public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 
-	private final Iterator<T> it;
+	private Iterator<T> it;
+
+	private int count;
+
+	public IteratorDataQuery() {
+		this(null);
+	}
 
 	public IteratorDataQuery(final Iterator<T> it) {
+		this(it, it instanceof DataQueryIterator ? ((DataQueryIterator<T>) it).getCount() : 0);
+	}
+
+	public IteratorDataQuery(final Iterator<T> it, final int count) {
 		this.it = it;
+		this.count = count;
 	}
 
 	public Iterator<T> iterator() {
@@ -27,7 +40,7 @@ public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 
 	@Override
 	public int getCount() {
-		return 0;
+		return count;
 	}
 
 	@Override

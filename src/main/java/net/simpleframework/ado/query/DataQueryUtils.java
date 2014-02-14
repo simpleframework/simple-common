@@ -18,22 +18,6 @@ public abstract class DataQueryUtils {
 		return new ListDataQuery<T>();
 	}
 
-	public static <T> Iterator<T> toIterator(final IDataQuery<T> dataQuery) {
-		return new AbstractIterator<T>() {
-			private T t;
-
-			@Override
-			public boolean hasNext() {
-				return dataQuery != null && (t = dataQuery.next()) != null;
-			}
-
-			@Override
-			public T next() {
-				return t;
-			}
-		};
-	}
-
 	public static <T> List<T> toList(final IDataQuery<T> dataQuery) {
 		T t;
 		final List<T> al = new ArrayList<T>();
@@ -41,5 +25,33 @@ public abstract class DataQueryUtils {
 			al.add(t);
 		}
 		return al;
+	}
+
+	public static <T> Iterator<T> toIterator(final IDataQuery<T> dataQuery) {
+		return new DataQueryIterator<T>(dataQuery);
+	}
+
+	public static class DataQueryIterator<T> extends AbstractIterator<T> {
+		private T t;
+
+		private final IDataQuery<T> dataQuery;
+
+		public DataQueryIterator(final IDataQuery<T> dataQuery) {
+			this.dataQuery = dataQuery;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return dataQuery != null && (t = dataQuery.next()) != null;
+		}
+
+		@Override
+		public T next() {
+			return t;
+		}
+
+		public int getCount() {
+			return dataQuery.getCount();
+		}
 	}
 }

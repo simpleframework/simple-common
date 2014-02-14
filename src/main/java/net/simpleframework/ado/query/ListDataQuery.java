@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ListDataQuery<T> extends AbstractDataQuery<T> {
 
-	private final List<T> list;
+	private List<T> list;
 
 	public ListDataQuery() {
 		this(null);
