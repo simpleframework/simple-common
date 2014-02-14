@@ -15,26 +15,21 @@ import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 public abstract class DataQueryUtils {
 
 	public static <T> IDataQuery<T> nullQuery() {
-		return new ListDataObjectQuery<T>();
+		return new ListDataQuery<T>();
 	}
 
-	public static <T> Iterable<T> toIterable(final IDataQuery<T> dataQuery) {
-		return new Iterable<T>() {
+	public static <T> Iterator<T> toIterator(final IDataQuery<T> dataQuery) {
+		return new AbstractIterator<T>() {
+			private T t;
+
 			@Override
-			public Iterator<T> iterator() {
-				return new AbstractIterator<T>() {
-					private T t;
+			public boolean hasNext() {
+				return dataQuery != null && (t = dataQuery.next()) != null;
+			}
 
-					@Override
-					public boolean hasNext() {
-						return dataQuery != null && (t = dataQuery.next()) != null;
-					}
-
-					@Override
-					public T next() {
-						return t;
-					}
-				};
+			@Override
+			public T next() {
+				return t;
 			}
 		};
 	}

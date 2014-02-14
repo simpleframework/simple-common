@@ -10,19 +10,19 @@ import java.util.List;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class ListDataObjectQuery<T> extends AbstractDataQuery<T> {
+public class ListDataQuery<T> extends AbstractDataQuery<T> {
 
-	private List<T> list;
+	private final List<T> list;
 
-	public ListDataObjectQuery() {
+	public ListDataQuery() {
 		this(null);
 	}
 
-	public ListDataObjectQuery(final Collection<T> list) {
-		this.list = list == null ? new ArrayList<T>() : new ArrayList<T>(list);
+	public ListDataQuery(final Collection<T> list) {
+		this.list = new ArrayList<T>(list);
 	}
 
-	public List<T> getList() {
+	public List<T> list() {
 		return list;
 	}
 
@@ -45,7 +45,7 @@ public class ListDataObjectQuery<T> extends AbstractDataQuery<T> {
 	}
 
 	@Override
-	public ListDataObjectQuery<T> setFetchSize(final int fetchSize) {
+	public ListDataQuery<T> setFetchSize(final int fetchSize) {
 		return this;
 	}
 }
