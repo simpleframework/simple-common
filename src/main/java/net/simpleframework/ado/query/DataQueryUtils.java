@@ -37,7 +37,7 @@ public abstract class DataQueryUtils {
 	public static <T> List<T> toList(final IDataQuery<T> dataQuery) {
 		T t;
 		final List<T> al = new ArrayList<T>();
-		while ((t = dataQuery.next()) != null) {
+		while (dataQuery != null && (t = dataQuery.next()) != null) {
 			al.add(t);
 		}
 		return al;
