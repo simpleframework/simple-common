@@ -31,7 +31,8 @@ public abstract class DataQueryUtils {
 		return new DataQueryIterator<T>(dataQuery);
 	}
 
-	public static class DataQueryIterator<T> extends AbstractIterator<T> {
+	public static class DataQueryIterator<T> extends AbstractIterator<T> implements
+			IDataQueryCountAware {
 		private T t;
 
 		private final IDataQuery<T> dataQuery;
@@ -50,6 +51,7 @@ public abstract class DataQueryUtils {
 			return t;
 		}
 
+		@Override
 		public int getCount() {
 			return dataQuery.getCount();
 		}

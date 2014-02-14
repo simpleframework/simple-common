@@ -2,8 +2,6 @@ package net.simpleframework.ado.query;
 
 import java.util.Iterator;
 
-import net.simpleframework.ado.query.DataQueryUtils.DataQueryIterator;
-
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -21,7 +19,7 @@ public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 	}
 
 	public IteratorDataQuery(final Iterator<T> it) {
-		this(it, it instanceof DataQueryIterator ? ((DataQueryIterator<T>) it).getCount() : 0);
+		this(it, it instanceof IDataQueryCountAware ? ((IDataQueryCountAware) it).getCount() : 0);
 	}
 
 	public IteratorDataQuery(final Iterator<T> it, final int count) {

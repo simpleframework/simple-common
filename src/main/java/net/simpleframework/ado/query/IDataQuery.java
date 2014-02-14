@@ -1,14 +1,12 @@
 package net.simpleframework.ado.query;
 
-import java.util.Collection;
-
 /**
  * Licensed under the Apache License, Version 2.0
  * 
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IDataQuery<T> {
+public interface IDataQuery<T> extends IDataQueryListenerManager<T>, IDataQueryCountAware {
 
 	/**
 	 * 获取下一个可用的对象，null表示已没有可用的数据
@@ -31,8 +29,6 @@ public interface IDataQuery<T> {
 	 */
 	int position();
 
-	int getCount();
-
 	void setCount(int count);
 
 	int getFetchSize();
@@ -47,10 +43,4 @@ public interface IDataQuery<T> {
 	void reset();
 
 	void close();
-
-	Collection<IDataQueryListener<T>> getListeners();
-
-	void addListener(IDataQueryListener<T> listener);
-
-	boolean removeListener(IDataQueryListener<T> listener);
 }
