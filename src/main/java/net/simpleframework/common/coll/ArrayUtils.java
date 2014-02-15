@@ -61,9 +61,11 @@ public abstract class ArrayUtils {
 	}
 
 	public static int indexOf(final Object[] array, final Object value) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i].equals(value)) {
-				return i;
+		if (array != null) {
+			for (int i = 0; i < array.length; i++) {
+				if (array[i].equals(value)) {
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -74,9 +76,11 @@ public abstract class ArrayUtils {
 	}
 
 	public static int indexOf(final int[] array, final int value) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == value) {
-				return i;
+		if (array != null) {
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] == value) {
+					return i;
+				}
 			}
 		}
 		return -1;
