@@ -13,13 +13,13 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.object.ObjectEx;
 import net.simpleframework.common.object.ObjectFactory;
 import net.simpleframework.common.object.ObjectFactory.IObjectCreator;
@@ -133,7 +133,7 @@ public abstract class ClassUtils {
 		final HashSet<Class<?>> set = new HashSet<Class<?>>();
 		Class<?> superClazz = ObjectFactory.original(clazz);
 		while (superClazz != null) {
-			set.addAll(Arrays.asList(superClazz.getInterfaces()));
+			set.addAll(ArrayUtils.asList(superClazz.getInterfaces()));
 			superClazz = superClazz.getSuperclass();
 		}
 		return set.toArray(new Class<?>[set.size()]);
@@ -143,7 +143,7 @@ public abstract class ClassUtils {
 		final ArrayList<Field> al = new ArrayList<Field>();
 		Class<?> superClazz = ObjectFactory.original(clazz);
 		while (superClazz != null) {
-			al.addAll(Arrays.asList(superClazz.getDeclaredFields()));
+			al.addAll(ArrayUtils.asList(superClazz.getDeclaredFields()));
 			superClazz = superClazz.getSuperclass();
 		}
 		return al.toArray(new Field[al.size()]);

@@ -1,8 +1,12 @@
 package net.simpleframework.common.coll;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -102,5 +106,22 @@ public abstract class ArrayUtils {
 			i--;
 		}
 		return i == 0;
+	}
+
+	public static <T> List<T> asList(final T... a) {
+		return (List<T>) _setColl(new ArrayList<T>(), a);
+	}
+
+	public static <T> Vector<T> asVector(final T... a) {
+		return (Vector<T>) _setColl(new Vector<T>(), a);
+	}
+
+	private static <T> Collection<T> _setColl(final Collection<T> coll, final T... a) {
+		for (final T t : a) {
+			if (t != null) {
+				coll.add(t);
+			}
+		}
+		return coll;
 	}
 }

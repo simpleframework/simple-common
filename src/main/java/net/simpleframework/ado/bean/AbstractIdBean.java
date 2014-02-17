@@ -31,8 +31,9 @@ public abstract class AbstractIdBean extends ObjectEx implements IIdBeanAware {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof AbstractIdBean) {
-			return getId().equals(((IIdBeanAware) obj).getId());
+		final ID id = getId();
+		if (id != null && obj instanceof AbstractIdBean) {
+			return id.equals(((IIdBeanAware) obj).getId());
 		}
 		return super.equals(obj);
 	}

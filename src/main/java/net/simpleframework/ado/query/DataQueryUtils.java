@@ -2,7 +2,9 @@ package net.simpleframework.ado.query;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 
@@ -19,8 +21,17 @@ public abstract class DataQueryUtils {
 	}
 
 	public static <T> List<T> toList(final IDataQuery<T> dataQuery) {
-		T t;
 		final List<T> al = new ArrayList<T>();
+		T t;
+		while (dataQuery != null && (t = dataQuery.next()) != null) {
+			al.add(t);
+		}
+		return al;
+	}
+
+	public static <T> Set<T> toSet(final IDataQuery<T> dataQuery) {
+		final Set<T> al = new LinkedHashSet<T>();
+		T t;
 		while (dataQuery != null && (t = dataQuery.next()) != null) {
 			al.add(t);
 		}

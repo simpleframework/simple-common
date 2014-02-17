@@ -1,6 +1,7 @@
 package net.simpleframework.common.coll;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,11 @@ import java.util.List;
  *         http://www.simpleframework.net
  */
 public abstract class CollectionUtils {
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> EMPTY_LIST() {
+		return Collections.EMPTY_LIST;
+	}
 
 	public static <T> List<T> toList(final Enumeration<T> enumeration) {
 		if (enumeration == null) {

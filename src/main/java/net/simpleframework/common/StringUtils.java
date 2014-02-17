@@ -1,6 +1,6 @@
 package net.simpleframework.common;
 
-import java.util.Arrays;
+import net.simpleframework.common.coll.ArrayUtils;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -83,7 +83,7 @@ public abstract class StringUtils {
 	}
 
 	public static String join(final Object[] arr, final String delim) {
-		return join(Arrays.asList(arr), delim);
+		return join(ArrayUtils.asList(arr), delim);
 	}
 
 	public static String join(final Iterable<?> it) {
