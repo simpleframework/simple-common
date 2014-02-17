@@ -117,9 +117,11 @@ public abstract class ArrayUtils {
 	}
 
 	private static <T> Collection<T> _setColl(final Collection<T> coll, final T... a) {
-		for (final T t : a) {
-			if (t != null) {
-				coll.add(t);
+		if (a != null) {
+			for (final T t : a) {
+				if (t != null) {
+					coll.add(t);
+				}
 			}
 		}
 		return coll;
