@@ -19,7 +19,10 @@ public class ListDataQuery<T> extends AbstractDataQuery<T> {
 	}
 
 	public ListDataQuery(final Collection<T> list) {
-		this.list = new ArrayList<T>(list);
+		this.list = new ArrayList<T>();
+		if (list != null) {
+			this.list.addAll(list);
+		}
 	}
 
 	public List<T> list() {
