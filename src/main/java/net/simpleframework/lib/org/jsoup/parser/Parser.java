@@ -160,11 +160,10 @@ public class Parser {
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
 		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
 																								// node
-																								// list
-																								// gets
-																								// modified
-																								// when
-																								// re-parented
+		// list gets
+		// modified
+		// when
+		// re-parented
 		for (final Node node : nodes) {
 			body.appendChild(node);
 		}

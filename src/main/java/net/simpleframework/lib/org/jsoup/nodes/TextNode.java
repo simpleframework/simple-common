@@ -110,18 +110,16 @@ public class TextNode extends Node {
 
 	@Override
 	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
-		String html = Entities.escape(getWholeText(), out);
-		if (out.prettyPrint() && parent() instanceof Element && !Element.preserveWhitespace(parent())) {
-			html = normaliseWhitespace(html);
-		}
-
 		if (out.prettyPrint()
 				&& ((siblingIndex() == 0 && parentNode instanceof Element
 						&& ((Element) parentNode).tag().formatAsBlock() && !isBlank()) || (out.outline()
 						&& siblingNodes().size() > 0 && !isBlank()))) {
 			indent(accum, depth, out);
 		}
-		accum.append(html);
+
+		final boolean normaliseWhite = out.prettyPrint() && parent() instanceof Element
+				&& !Element.preserveWhitespace(parent());
+		Entities.escape(accum, getWholeText(), out, false, normaliseWhite, false);
 	}
 
 	@Override

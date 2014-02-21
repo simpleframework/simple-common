@@ -50,9 +50,9 @@ class HtmlTreeBuilder extends TreeBuilder {
 	private Element contextElement; // fragment parse context -- could be null
 												// even if fragment parsing
 	private final DescendableLinkedList<Element> formattingElements = new DescendableLinkedList<Element>(); // active
-																																				// (open)
-																																				// formatting
-																																				// elements
+	// (open)
+	// formatting
+	// elements
 	private List<Token.Character> pendingTableCharacters = new ArrayList<Token.Character>(); // chars
 																															// in
 																															// table
@@ -98,7 +98,6 @@ class HtmlTreeBuilder extends TreeBuilder {
 				tokeniser.transition(TokeniserState.ScriptData);
 			} else if (contextTag.equals(("noscript"))) {
 				tokeniser.transition(TokeniserState.Data); // if scripting enabled,
-																			// rawtext
 			} else if (contextTag.equals("plaintext")) {
 				tokeniser.transition(TokeniserState.Data);
 			} else {
@@ -272,7 +271,8 @@ class HtmlTreeBuilder extends TreeBuilder {
 	void insert(final Token.Character characterToken) {
 		Node node;
 		// characters in script and style go in as datanodes, not text nodes
-		if (StringUtil.in(currentElement().tagName(), TagsScriptStyle)) {
+		final String tagName = currentElement().tagName();
+		if (tagName.equals("script") || tagName.equals("style")) {
 			node = new DataNode(characterToken.getData(), baseUri);
 		} else {
 			node = new TextNode(characterToken.getData(), baseUri);
@@ -561,6 +561,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 				return true;
 			}
 			if (!StringUtil.in(elName, TagSearchSelectScope)) {
+				// except
 				return false;
 			}
 		}
@@ -684,6 +685,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 			entry = formattingElements.get(--pos); // step 5. one earlier than
 																// entry
 			if (entry == null || onStack(entry)) {
+				// stack
 				break; // jump to 8, else continue back to 4
 			}
 		}
@@ -698,7 +700,8 @@ class HtmlTreeBuilder extends TreeBuilder {
 			// stack
 			skip = false; // can only skip increment from 4.
 			final Element newEl = insert(entry.nodeName()); // todo: avoid
-																			// fostering here?
+																			// fostering
+			// here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
 

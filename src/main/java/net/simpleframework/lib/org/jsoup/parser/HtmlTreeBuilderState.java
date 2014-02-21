@@ -275,7 +275,10 @@ enum HtmlTreeBuilderState {
 					// todo confirm that check
 					tb.error(this);
 					return false;
-				} else if (isWhitespace(c)) {
+				} else if (tb.framesetOk() && isWhitespace(c)) { // don't check if
+																					// whitespace if
+																					// frames already
+																					// closed
 					tb.reconstructFormattingElements();
 					tb.insert(c);
 				} else {
@@ -489,9 +492,13 @@ enum HtmlTreeBuilderState {
 					tb.insertEmpty(startTag);
 					tb.framesetOk(false);
 				} else if (name.equals("image")) {
-					// we're not supposed to ask.
-					startTag.name("img");
-					return tb.process(startTag);
+					if (tb.getFromStack("svg") == null) {
+						return tb.process(startTag.name("img")); // change <image> to
+																				// <img>, unless in
+																				// svg
+					} else {
+						tb.insert(startTag);
+					}
 				} else if (name.equals("isindex")) {
 					// how much do we care about the early 90s?
 					tb.error(this);

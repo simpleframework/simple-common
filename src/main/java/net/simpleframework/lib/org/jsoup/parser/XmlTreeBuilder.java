@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Comment;
+import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.DocumentType;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
@@ -12,6 +13,13 @@ import net.simpleframework.lib.org.jsoup.nodes.TextNode;
 import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
 
 /**
+ * Use the {@code XmlTreeBuilder} when you want to parse XML without any of the
+ * HTML DOM rules being applied to the document.
+ * <p>
+ * Usage example:
+ * {@code Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());}
+ * </p>
+ * 
  * @author Jonathan Hedley
  */
 public class XmlTreeBuilder extends TreeBuilder {
@@ -21,6 +29,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 		super.initialiseParse(input, baseUri, errors);
 		stack.add(doc); // place the document onto the stack. differs from
 								// HtmlTreeBuilder (not on stack)
+		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 	}
 
 	@Override
@@ -63,6 +72,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 		if (startTag.isSelfClosing()) {
 			tokeniser.acknowledgeSelfClosingFlag();
 			if (!tag.isKnownTag()) {
+				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {

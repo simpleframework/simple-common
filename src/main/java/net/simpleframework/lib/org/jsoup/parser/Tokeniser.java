@@ -18,9 +18,8 @@ class Tokeniser {
 	private boolean isEmitPending = false;
 	private final StringBuilder charBuffer = new StringBuilder(); // buffers
 																						// characters
-																						// to output
-																						// as one
-																						// token
+	// to output as one
+	// token
 	StringBuilder dataBuffer; // buffers data looking for </script>
 
 	Token.Tag tagPending; // tag we are building up

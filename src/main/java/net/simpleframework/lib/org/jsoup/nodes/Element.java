@@ -1043,15 +1043,13 @@ public class Element extends Node {
 	}
 
 	private static void appendNormalisedText(final StringBuilder accum, final TextNode textNode) {
-		String text = textNode.getWholeText();
+		final String text = textNode.getWholeText();
 
-		if (!preserveWhitespace(textNode.parent())) {
-			text = TextNode.normaliseWhitespace(text);
-			if (TextNode.lastCharIsWhitespace(accum)) {
-				text = TextNode.stripLeadingWhitespace(text);
-			}
+		if (preserveWhitespace(textNode.parentNode)) {
+			accum.append(text);
+		} else {
+			StringUtil.appendNormalisedWhitespace(accum, text, TextNode.lastCharIsWhitespace(accum));
 		}
-		accum.append(text);
 	}
 
 	private static void appendWhitespaceIfBr(final Element element, final StringBuilder accum) {
@@ -1291,8 +1289,14 @@ public class Element extends Node {
 		accum.append("<").append(tagName());
 		attributes.html(accum, out);
 
+		// selfclosing includes unknown tags, isEmpty defines tags that are always
+		// empty
 		if (childNodes.isEmpty() && tag.isSelfClosing()) {
-			accum.append(" />");
+			if (out.syntax() == Document.OutputSettings.Syntax.html && tag.isEmpty()) {
+				accum.append('>');
+			} else {
+				accum.append(" />"); // <img> in html, <img /> in xml
+			}
 		} else {
 			accum.append(">");
 		}
@@ -1323,7 +1327,7 @@ public class Element extends Node {
 	public String html() {
 		final StringBuilder accum = new StringBuilder();
 		html(accum);
-		return accum.toString().trim();
+		return getOutputSettings().prettyPrint() ? accum.toString().trim() : accum.toString();
 	}
 
 	private void html(final StringBuilder accum) {

@@ -57,7 +57,7 @@ public class Document extends Element {
 	 * redirect, this will return the final URL from which the document was
 	 * served from.
 	 * 
-	 * @return sourceUri
+	 * @return location
 	 */
 	public String location() {
 		return location;
@@ -179,7 +179,8 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created above if not existent
+																// created
+		// above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<Node>();
 			for (int i = 1; i < elements.size(); i++) {
@@ -251,12 +252,20 @@ public class Document extends Element {
 	 * methods.
 	 */
 	public static class OutputSettings implements Cloneable {
+		/**
+		 * The output serialization syntax.
+		 */
+		public enum Syntax {
+			html, xml
+		}
+
 		private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;
 		private Charset charset = Charset.forName("UTF-8");
 		private CharsetEncoder charsetEncoder = charset.newEncoder();
 		private boolean prettyPrint = true;
 		private boolean outline = false;
 		private int indentAmount = 1;
+		private Syntax syntax = Syntax.html;
 
 		public OutputSettings() {
 		}
@@ -277,7 +286,9 @@ public class Document extends Element {
 		}
 
 		/**
-		 * Set the document's escape mode
+		 * Set the document's escape mode, which determines how characters are
+		 * escaped when the output character set does not support a given
+		 * character:- using either a named or a numbered escape.
 		 * 
 		 * @param escapeMode
 		 *           the new escape mode to use
@@ -331,6 +342,28 @@ public class Document extends Element {
 
 		CharsetEncoder encoder() {
 			return charsetEncoder;
+		}
+
+		/**
+		 * Get the document's current output syntax.
+		 * 
+		 * @return current syntax
+		 */
+		public Syntax syntax() {
+			return syntax;
+		}
+
+		/**
+		 * Set the document's output syntax. Either {@code html}, with empty tags
+		 * and boolean attributes (etc), or {@code xml}, with self-closing tags.
+		 * 
+		 * @param syntax
+		 *           serialization syntax
+		 * @return the document's output settings, for chaining
+		 */
+		public OutputSettings syntax(final Syntax syntax) {
+			this.syntax = syntax;
+			return this;
 		}
 
 		/**
