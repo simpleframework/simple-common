@@ -27,7 +27,7 @@ public abstract class Convert {
 		if (value == null) {
 			return defaultValue != null ? defaultValue : null;
 		}
-		if (targetClass.equals(value.getClass())) {
+		if (targetClass.isAssignableFrom(value.getClass())) {
 			return (T) value;
 		}
 
