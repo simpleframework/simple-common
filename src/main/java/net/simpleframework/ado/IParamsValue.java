@@ -65,13 +65,16 @@ public interface IParamsValue extends Serializable {
 			if (v == null) {
 				return null;
 			}
-			if (v.getClass().isPrimitive() || v instanceof Number || v instanceof String
-					|| v instanceof Boolean) {
+			if (v instanceof String) {
+				return (String) v;
+			} else if (v.getClass().isPrimitive() || v instanceof Number || v instanceof Boolean) {
 				return String.valueOf(v);
 			} else if (v instanceof Date) {
 				return String.valueOf(((Date) v).getTime());
 			} else if (v instanceof ID) {
 				return valueToString(((ID) v).getValue());
+			} else if (v instanceof Enum) {
+				return String.valueOf(((Enum<?>) v).ordinal());
 			} else {
 				return ObjectUtils.hashStr(v);
 			}
