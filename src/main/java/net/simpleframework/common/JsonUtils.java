@@ -3,7 +3,9 @@ package net.simpleframework.common;
 import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +57,7 @@ public abstract class JsonUtils {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, ?> toMap(final String json) {
-		return toObject(json, Map.class);
+		return toObject(json, HashMap.class);
 	}
 
 	public static Collection<?> toList(final String json) {
@@ -64,7 +66,7 @@ public abstract class JsonUtils {
 
 	public static List<?> toList(final String json, final Class<?> beanClass) {
 		if (beanClass == null) {
-			return JSONValue.parse(json, List.class);
+			return JSONValue.parse(json, ArrayList.class);
 		}
 		try {
 			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(json, new ListMapper<List<?>>(
