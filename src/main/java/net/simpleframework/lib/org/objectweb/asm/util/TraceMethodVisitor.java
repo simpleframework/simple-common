@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,512 +29,256 @@
  */
 package net.simpleframework.lib.org.objectweb.asm.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
+import net.simpleframework.lib.org.objectweb.asm.Handle;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
-import net.simpleframework.lib.org.objectweb.asm.Type;
-import net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader;
+import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
- * A {@link MethodVisitor} that prints a disassembled view of the methods it
- * visits.
+ * A {@link MethodVisitor} that prints the methods it visits with a
+ * {@link Printer}.
  * 
  * @author Eric Bruneton
  */
-public class TraceMethodVisitor extends TraceAbstractVisitor implements MethodVisitor {
+public final class TraceMethodVisitor extends MethodVisitor {
 
-	/**
-	 * The {@link MethodVisitor} to which this visitor delegates calls. May be
-	 * <tt>null</tt>.
-	 */
-	protected MethodVisitor mv;
+	public final Printer p;
 
-	/**
-	 * Tab for bytecode instructions.
-	 */
-	protected String tab2 = "    ";
-
-	/**
-	 * Tab for table and lookup switch instructions.
-	 */
-	protected String tab3 = "      ";
-
-	/**
-	 * Tab for labels.
-	 */
-	protected String ltab = "   ";
-
-	/**
-	 * The label names. This map associate String values to Label keys.
-	 */
-	protected final Map labelNames;
-
-	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.TraceMethodVisitor}.
-	 */
-	public TraceMethodVisitor() {
-		this(null);
+	public TraceMethodVisitor(final Printer p) {
+		this(null, p);
 	}
 
-	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.TraceMethodVisitor}.
-	 * 
-	 * @param mv
-	 *           the {@link MethodVisitor} to which this visitor delegates calls.
-	 *           May be <tt>null</tt>.
-	 */
-	public TraceMethodVisitor(final MethodVisitor mv) {
-		this.labelNames = new HashMap();
-		this.mv = mv;
+	public TraceMethodVisitor(final MethodVisitor mv, final Printer p) {
+		super(Opcodes.ASM5, mv);
+		this.p = p;
 	}
 
-	// ------------------------------------------------------------------------
-	// Implementation of the MethodVisitor interface
-	// ------------------------------------------------------------------------
+	@Override
+	public void visitParameter(final String name, final int access) {
+		p.visitParameter(name, access);
+		super.visitParameter(name, access);
+	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitAnnotation(desc, visible);
-		if (mv != null) {
-			((TraceAnnotationVisitor) av).av = mv.visitAnnotation(desc, visible);
-		}
-		return av;
+		final Printer p = this.p.visitMethodAnnotation(desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitAnnotation(desc, visible);
+		return new TraceAnnotationVisitor(av, p);
+	}
+
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		final Printer p = this.p.visitMethodTypeAnnotation(typeRef, typePath, desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitTypeAnnotation(typeRef, typePath,
+				desc, visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitAttribute(final Attribute attr) {
-		buf.setLength(0);
-		buf.append(tab).append("ATTRIBUTE ");
-		appendDescriptor(-1, attr.type);
-
-		if (attr instanceof Traceable) {
-			((Traceable) attr).trace(buf, labelNames);
-		} else {
-			buf.append(" : unknown\n");
-		}
-
-		text.add(buf.toString());
-		if (mv != null) {
-			mv.visitAttribute(attr);
-		}
+		p.visitMethodAttribute(attr);
+		super.visitAttribute(attr);
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
-		text.add(tab2 + "default=");
-		final TraceAnnotationVisitor tav = createTraceAnnotationVisitor();
-		text.add(tav.getText());
-		text.add("\n");
-		if (mv != null) {
-			tav.av = mv.visitAnnotationDefault();
-		}
-		return tav;
+		final Printer p = this.p.visitAnnotationDefault();
+		final AnnotationVisitor av = mv == null ? null : mv.visitAnnotationDefault();
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
 			final boolean visible) {
-		buf.setLength(0);
-		buf.append(tab2).append('@');
-		appendDescriptor(FIELD_DESCRIPTOR, desc);
-		buf.append('(');
-		text.add(buf.toString());
-		final TraceAnnotationVisitor tav = createTraceAnnotationVisitor();
-		text.add(tav.getText());
-		text.add(visible ? ") // parameter " : ") // invisible, parameter ");
-		text.add(new Integer(parameter));
-		text.add("\n");
-		if (mv != null) {
-			tav.av = mv.visitParameterAnnotation(parameter, desc, visible);
-		}
-		return tav;
+		final Printer p = this.p.visitParameterAnnotation(parameter, desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitParameterAnnotation(parameter, desc,
+				visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitCode() {
-		if (mv != null) {
-			mv.visitCode();
-		}
+		p.visitCode();
+		super.visitCode();
 	}
 
 	@Override
 	public void visitFrame(final int type, final int nLocal, final Object[] local, final int nStack,
 			final Object[] stack) {
-		buf.setLength(0);
-		buf.append(ltab);
-		buf.append("FRAME ");
-		switch (type) {
-		case Opcodes.F_NEW:
-		case Opcodes.F_FULL:
-			buf.append("FULL [");
-			appendFrameTypes(nLocal, local);
-			buf.append("] [");
-			appendFrameTypes(nStack, stack);
-			buf.append(']');
-			break;
-		case Opcodes.F_APPEND:
-			buf.append("APPEND [");
-			appendFrameTypes(nLocal, local);
-			buf.append(']');
-			break;
-		case Opcodes.F_CHOP:
-			buf.append("CHOP ").append(nLocal);
-			break;
-		case Opcodes.F_SAME:
-			buf.append("SAME");
-			break;
-		case Opcodes.F_SAME1:
-			buf.append("SAME1 ");
-			appendFrameTypes(1, stack);
-			break;
-		}
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitFrame(type, nLocal, local, nStack, stack);
-		}
+		p.visitFrame(type, nLocal, local, nStack, stack);
+		super.visitFrame(type, nLocal, local, nStack, stack);
 	}
 
 	@Override
 	public void visitInsn(final int opcode) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitInsn(opcode);
-		}
+		p.visitInsn(opcode);
+		super.visitInsn(opcode);
 	}
 
 	@Override
 	public void visitIntInsn(final int opcode, final int operand) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ')
-				.append(opcode == Opcodes.NEWARRAY ? TYPES[operand] : Integer.toString(operand))
-				.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitIntInsn(opcode, operand);
-		}
+		p.visitIntInsn(opcode, operand);
+		super.visitIntInsn(opcode, operand);
 	}
 
 	@Override
 	public void visitVarInsn(final int opcode, final int var) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ').append(var).append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitVarInsn(opcode, var);
-		}
+		p.visitVarInsn(opcode, var);
+		super.visitVarInsn(opcode, var);
 	}
 
 	@Override
 	public void visitTypeInsn(final int opcode, final String type) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ');
-		appendDescriptor(INTERNAL_NAME, type);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitTypeInsn(opcode, type);
-		}
+		p.visitTypeInsn(opcode, type);
+		super.visitTypeInsn(opcode, type);
 	}
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner, final String name,
 			final String desc) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ');
-		appendDescriptor(INTERNAL_NAME, owner);
-		buf.append('.').append(name).append(" : ");
-		appendDescriptor(FIELD_DESCRIPTOR, desc);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitFieldInsn(opcode, owner, name, desc);
-		}
+		p.visitFieldInsn(opcode, owner, name, desc);
+		super.visitFieldInsn(opcode, owner, name, desc);
 	}
 
+	@Deprecated
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
 			final String desc) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ');
-		appendDescriptor(INTERNAL_NAME, owner);
-		buf.append('.').append(name).append(' ');
-		appendDescriptor(METHOD_DESCRIPTOR, desc);
-		buf.append('\n');
-		text.add(buf.toString());
-
+		if (api >= Opcodes.ASM5) {
+			super.visitMethodInsn(opcode, owner, name, desc);
+			return;
+		}
+		p.visitMethodInsn(opcode, owner, name, desc);
 		if (mv != null) {
 			mv.visitMethodInsn(opcode, owner, name, desc);
 		}
 	}
 
 	@Override
-	public void visitJumpInsn(final int opcode, final Label label) {
-		buf.setLength(0);
-		buf.append(tab2).append(OPCODES[opcode]).append(' ');
-		appendLabel(label);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitJumpInsn(opcode, label);
+	public void visitMethodInsn(final int opcode, final String owner, final String name,
+			final String desc, final boolean itf) {
+		if (api < Opcodes.ASM5) {
+			super.visitMethodInsn(opcode, owner, name, desc, itf);
+			return;
 		}
+		p.visitMethodInsn(opcode, owner, name, desc, itf);
+		if (mv != null) {
+			mv.visitMethodInsn(opcode, owner, name, desc, itf);
+		}
+	}
+
+	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc, final Handle bsm,
+			final Object... bsmArgs) {
+		p.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+		super.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	}
+
+	@Override
+	public void visitJumpInsn(final int opcode, final Label label) {
+		p.visitJumpInsn(opcode, label);
+		super.visitJumpInsn(opcode, label);
 	}
 
 	@Override
 	public void visitLabel(final Label label) {
-		buf.setLength(0);
-		buf.append(ltab);
-		appendLabel(label);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitLabel(label);
-		}
+		p.visitLabel(label);
+		super.visitLabel(label);
 	}
 
 	@Override
 	public void visitLdcInsn(final Object cst) {
-		buf.setLength(0);
-		buf.append(tab2).append("LDC ");
-		if (cst instanceof String) {
-			AbstractVisitor.appendString(buf, (String) cst);
-		} else if (cst instanceof Type) {
-			buf.append(((Type) cst).getDescriptor()).append(".class");
-		} else {
-			buf.append(cst);
-		}
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitLdcInsn(cst);
-		}
+		p.visitLdcInsn(cst);
+		super.visitLdcInsn(cst);
 	}
 
 	@Override
 	public void visitIincInsn(final int var, final int increment) {
-		buf.setLength(0);
-		buf.append(tab2).append("IINC ").append(var).append(' ').append(increment).append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitIincInsn(var, increment);
-		}
+		p.visitIincInsn(var, increment);
+		super.visitIincInsn(var, increment);
 	}
 
 	@Override
 	public void visitTableSwitchInsn(final int min, final int max, final Label dflt,
-			final Label[] labels) {
-		buf.setLength(0);
-		buf.append(tab2).append("TABLESWITCH\n");
-		for (int i = 0; i < labels.length; ++i) {
-			buf.append(tab3).append(min + i).append(": ");
-			appendLabel(labels[i]);
-			buf.append('\n');
-		}
-		buf.append(tab3).append("default: ");
-		appendLabel(dflt);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitTableSwitchInsn(min, max, dflt, labels);
-		}
+			final Label... labels) {
+		p.visitTableSwitchInsn(min, max, dflt, labels);
+		super.visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
 	@Override
 	public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
-		buf.setLength(0);
-		buf.append(tab2).append("LOOKUPSWITCH\n");
-		for (int i = 0; i < labels.length; ++i) {
-			buf.append(tab3).append(keys[i]).append(": ");
-			appendLabel(labels[i]);
-			buf.append('\n');
-		}
-		buf.append(tab3).append("default: ");
-		appendLabel(dflt);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitLookupSwitchInsn(dflt, keys, labels);
-		}
+		p.visitLookupSwitchInsn(dflt, keys, labels);
+		super.visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 	@Override
 	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		buf.setLength(0);
-		buf.append(tab2).append("MULTIANEWARRAY ");
-		appendDescriptor(FIELD_DESCRIPTOR, desc);
-		buf.append(' ').append(dims).append('\n');
-		text.add(buf.toString());
+		p.visitMultiANewArrayInsn(desc, dims);
+		super.visitMultiANewArrayInsn(desc, dims);
+	}
 
-		if (mv != null) {
-			mv.visitMultiANewArrayInsn(desc, dims);
-		}
+	@Override
+	public AnnotationVisitor visitInsnAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		final Printer p = this.p.visitInsnAnnotation(typeRef, typePath, desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitInsnAnnotation(typeRef, typePath,
+				desc, visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end, final Label handler,
 			final String type) {
-		buf.setLength(0);
-		buf.append(tab2).append("TRYCATCHBLOCK ");
-		appendLabel(start);
-		buf.append(' ');
-		appendLabel(end);
-		buf.append(' ');
-		appendLabel(handler);
-		buf.append(' ');
-		appendDescriptor(INTERNAL_NAME, type);
-		buf.append('\n');
-		text.add(buf.toString());
+		p.visitTryCatchBlock(start, end, handler, type);
+		super.visitTryCatchBlock(start, end, handler, type);
+	}
 
-		if (mv != null) {
-			mv.visitTryCatchBlock(start, end, handler, type);
-		}
+	@Override
+	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		final Printer p = this.p.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitTryCatchAnnotation(typeRef,
+				typePath, desc, visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitLocalVariable(final String name, final String desc, final String signature,
 			final Label start, final Label end, final int index) {
-		buf.setLength(0);
-		buf.append(tab2).append("LOCALVARIABLE ").append(name).append(' ');
-		appendDescriptor(FIELD_DESCRIPTOR, desc);
-		buf.append(' ');
-		appendLabel(start);
-		buf.append(' ');
-		appendLabel(end);
-		buf.append(' ').append(index).append('\n');
+		p.visitLocalVariable(name, desc, signature, start, end, index);
+		super.visitLocalVariable(name, desc, signature, start, end, index);
+	}
 
-		if (signature != null) {
-			buf.append(tab2);
-			appendDescriptor(FIELD_SIGNATURE, signature);
-
-			final TraceSignatureVisitor sv = new TraceSignatureVisitor(0);
-			final SignatureReader r = new SignatureReader(signature);
-			r.acceptType(sv);
-			buf.append(tab2).append("// declaration: ").append(sv.getDeclaration()).append('\n');
-		}
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitLocalVariable(name, desc, signature, start, end, index);
-		}
+	@Override
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
+			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
+			final String desc, final boolean visible) {
+		final Printer p = this.p.visitLocalVariableAnnotation(typeRef, typePath, start, end, index,
+				desc, visible);
+		final AnnotationVisitor av = mv == null ? null : mv.visitLocalVariableAnnotation(typeRef,
+				typePath, start, end, index, desc, visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitLineNumber(final int line, final Label start) {
-		buf.setLength(0);
-		buf.append(tab2).append("LINENUMBER ").append(line).append(' ');
-		appendLabel(start);
-		buf.append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitLineNumber(line, start);
-		}
+		p.visitLineNumber(line, start);
+		super.visitLineNumber(line, start);
 	}
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
-		buf.setLength(0);
-		buf.append(tab2).append("MAXSTACK = ").append(maxStack).append('\n');
-		text.add(buf.toString());
-
-		buf.setLength(0);
-		buf.append(tab2).append("MAXLOCALS = ").append(maxLocals).append('\n');
-		text.add(buf.toString());
-
-		if (mv != null) {
-			mv.visitMaxs(maxStack, maxLocals);
-		}
+		p.visitMaxs(maxStack, maxLocals);
+		super.visitMaxs(maxStack, maxLocals);
 	}
 
 	@Override
 	public void visitEnd() {
+		p.visitMethodEnd();
 		super.visitEnd();
-
-		if (mv != null) {
-			mv.visitEnd();
-		}
-	}
-
-	// ------------------------------------------------------------------------
-	// Utility methods
-	// ------------------------------------------------------------------------
-
-	private void appendFrameTypes(final int n, final Object[] o) {
-		for (int i = 0; i < n; ++i) {
-			if (i > 0) {
-				buf.append(' ');
-			}
-			if (o[i] instanceof String) {
-				final String desc = (String) o[i];
-				if (desc.startsWith("[")) {
-					appendDescriptor(FIELD_DESCRIPTOR, desc);
-				} else {
-					appendDescriptor(INTERNAL_NAME, desc);
-				}
-			} else if (o[i] instanceof Integer) {
-				switch (((Integer) o[i]).intValue()) {
-				case 0:
-					appendDescriptor(FIELD_DESCRIPTOR, "T");
-					break;
-				case 1:
-					appendDescriptor(FIELD_DESCRIPTOR, "I");
-					break;
-				case 2:
-					appendDescriptor(FIELD_DESCRIPTOR, "F");
-					break;
-				case 3:
-					appendDescriptor(FIELD_DESCRIPTOR, "D");
-					break;
-				case 4:
-					appendDescriptor(FIELD_DESCRIPTOR, "J");
-					break;
-				case 5:
-					appendDescriptor(FIELD_DESCRIPTOR, "N");
-					break;
-				case 6:
-					appendDescriptor(FIELD_DESCRIPTOR, "U");
-					break;
-				}
-			} else {
-				appendLabel((Label) o[i]);
-			}
-		}
-	}
-
-	/**
-	 * Appends the name of the given label to {@link #buf buf}. Creates a new
-	 * label name if the given label does not yet have one.
-	 * 
-	 * @param l
-	 *           a label.
-	 */
-	protected void appendLabel(final Label l) {
-		String name = (String) labelNames.get(l);
-		if (name == null) {
-			name = "L" + labelNames.size();
-			labelNames.put(l, name);
-		}
-		buf.append(name);
 	}
 }

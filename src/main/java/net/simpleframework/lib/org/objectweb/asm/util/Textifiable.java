@@ -1,6 +1,6 @@
 /**
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,24 +31,26 @@ package net.simpleframework.lib.org.objectweb.asm.util;
 
 import java.util.Map;
 
+import net.simpleframework.lib.org.objectweb.asm.Label;
+
 /**
- * An attribute that can print eadable representation of the attribute.
+ * An {@link org.objectweb.asm.Attribute Attribute} that can print a readable
+ * representation of itself.
  * 
- * Implementation should construct readable output from an attribute data
- * structures for current attribute state. Such representation could be used in
- * unit test assertions.
+ * Implementations should construct readable output from an attribute data
+ * structure. Such representation could be used in unit test assertions.
  * 
  * @author Eugene Kuleshov
  */
-public interface Traceable {
+public interface Textifiable {
 
 	/**
-	 * Build a human readable representation of the attribute.
+	 * Build a human readable representation of this attribute.
 	 * 
 	 * @param buf
-	 *           A buffer used for printing Java code.
+	 *           a buffer used for printing Java code.
 	 * @param labelNames
 	 *           map of label instances to their names.
 	 */
-	void trace(StringBuffer buf, Map labelNames);
+	void textify(StringBuffer buf, Map<Label, String> labelNames);
 }

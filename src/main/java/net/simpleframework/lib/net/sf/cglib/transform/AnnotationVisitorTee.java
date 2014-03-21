@@ -16,8 +16,9 @@
 package net.simpleframework.lib.net.sf.cglib.transform;
 
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
-public class AnnotationVisitorTee implements AnnotationVisitor {
+public class AnnotationVisitorTee extends AnnotationVisitor {
 	private final AnnotationVisitor av1, av2;
 
 	public static AnnotationVisitor getInstance(final AnnotationVisitor av1,
@@ -32,6 +33,7 @@ public class AnnotationVisitorTee implements AnnotationVisitor {
 	}
 
 	public AnnotationVisitorTee(final AnnotationVisitor av1, final AnnotationVisitor av2) {
+		super(Opcodes.ASM4);
 		this.av1 = av1;
 		this.av2 = av2;
 	}

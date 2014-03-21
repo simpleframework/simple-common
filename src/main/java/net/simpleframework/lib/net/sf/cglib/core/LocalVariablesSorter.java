@@ -30,20 +30,19 @@
 package net.simpleframework.lib.net.sf.cglib.core;
 
 import net.simpleframework.lib.org.objectweb.asm.Label;
-import net.simpleframework.lib.org.objectweb.asm.MethodAdapter;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
- * A {@link MethodAdapter} that renumbers local variables in their order of
+ * A {@link MethodVisitor} that renumbers local variables in their order of
  * appearance. This adapter allows one to easily add new local variables to a
  * method.
  * 
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
-public class LocalVariablesSorter extends MethodAdapter {
+public class LocalVariablesSorter extends MethodVisitor {
 
 	/**
 	 * Mapping from old to new local variable indexes. A local variable at index
@@ -59,7 +58,7 @@ public class LocalVariablesSorter extends MethodAdapter {
 	private final State state;
 
 	public LocalVariablesSorter(final int access, final String desc, final MethodVisitor mv) {
-		super(mv);
+		super(Opcodes.ASM4, mv);
 		state = new State();
 		final Type[] args = Type.getArgumentTypes(desc);
 		state.nextLocal = ((Opcodes.ACC_STATIC & access) != 0) ? 0 : 1;
@@ -70,7 +69,7 @@ public class LocalVariablesSorter extends MethodAdapter {
 	}
 
 	public LocalVariablesSorter(final LocalVariablesSorter lvs) {
-		super(lvs.mv);
+		super(Opcodes.ASM4, lvs.mv);
 		state = lvs.state;
 		firstLocal = lvs.firstLocal;
 	}

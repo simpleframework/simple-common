@@ -76,7 +76,7 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 
 		} else {
 
-			log("ignoring " + file.toURL(), Project.MSG_WARN);
+			log("ignoring " + file.toURI(), Project.MSG_WARN);
 
 		}
 	}
@@ -93,12 +93,12 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 
 		final ClassReader reader = getClassReader(file);
 		final String name[] = ClassNameReader.getClassInfo(reader);
-		final ClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
+		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
 		final ClassTransformer t = getClassTransformer(name);
 		if (t != null) {
 
 			if (verbose) {
-				log("processing " + file.toURL());
+				log("processing " + file.toURI());
 			}
 			new TransformingClassGenerator(new ClassReaderGenerator(getClassReader(file),
 					attributes(), getFlags()), t).generateClass(w);
@@ -137,7 +137,7 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 	protected void processJarFile(final File file) throws Exception {
 
 		if (verbose) {
-			log("processing " + file.toURL());
+			log("processing " + file.toURI());
 		}
 
 		final File tempFile = File.createTempFile(file.getName(), null, new File(file
@@ -226,7 +226,7 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 
 		final ClassReader reader = new ClassReader(new ByteArrayInputStream(bytes));
 		final String name[] = ClassNameReader.getClassInfo(reader);
-		final ClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
+		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
 		final ClassTransformer t = getClassTransformer(name);
 		if (t != null) {
 			if (verbose) {

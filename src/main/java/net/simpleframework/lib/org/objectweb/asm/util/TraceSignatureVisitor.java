@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@ import net.simpleframework.lib.org.objectweb.asm.signature.SignatureVisitor;
  * @author Eugene Kuleshov
  * @author Eric Bruneton
  */
-public class TraceSignatureVisitor implements SignatureVisitor {
+public final class TraceSignatureVisitor extends SignatureVisitor {
 
 	private final StringBuffer declaration;
 
@@ -74,11 +74,13 @@ public class TraceSignatureVisitor implements SignatureVisitor {
 	private String separator = "";
 
 	public TraceSignatureVisitor(final int access) {
+		super(Opcodes.ASM5);
 		isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
 		this.declaration = new StringBuffer();
 	}
 
 	private TraceSignatureVisitor(final StringBuffer buf) {
+		super(Opcodes.ASM5);
 		this.declaration = buf;
 	}
 

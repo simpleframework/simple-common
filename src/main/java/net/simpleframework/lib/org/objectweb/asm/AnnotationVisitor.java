@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,14 +30,57 @@
 package net.simpleframework.lib.org.objectweb.asm;
 
 /**
- * A visitor to visit a Java annotation. The methods of this interface must be
- * called in the following order: (<tt>visit<tt> | <tt>visitEnum<tt> | 
- * <tt>visitAnnotation<tt> | <tt>visitArray<tt>)* <tt>visitEnd<tt>.
+ * A visitor to visit a Java annotation. The methods of this class must be
+ * called in the following order: ( <tt>visit</tt> | <tt>visitEnum</tt> |
+ * <tt>visitAnnotation</tt> | <tt>visitArray</tt> )* <tt>visitEnd</tt>.
  * 
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public interface AnnotationVisitor {
+public abstract class AnnotationVisitor {
+
+	/**
+	 * The ASM API version implemented by this visitor. The value of this field
+	 * must be one of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 */
+	protected final int api;
+
+	/**
+	 * The annotation visitor to which this visitor must delegate method calls.
+	 * May be null.
+	 */
+	protected AnnotationVisitor av;
+
+	/**
+	 * Constructs a new
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor}.
+	 * 
+	 * @param api
+	 *           the ASM API version implemented by this visitor. Must be one of
+	 *           {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 */
+	public AnnotationVisitor(final int api) {
+		this(api, null);
+	}
+
+	/**
+	 * Constructs a new
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor}.
+	 * 
+	 * @param api
+	 *           the ASM API version implemented by this visitor. Must be one of
+	 *           {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 * @param av
+	 *           the annotation visitor to which this visitor must delegate
+	 *           method calls. May be null.
+	 */
+	public AnnotationVisitor(final int api, final AnnotationVisitor av) {
+		if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
+			throw new IllegalArgumentException();
+		}
+		this.api = api;
+		this.av = av;
+	}
 
 	/**
 	 * Visits a primitive value of the annotation.
@@ -47,15 +90,18 @@ public interface AnnotationVisitor {
 	 * @param value
 	 *           the actual value, whose type must be {@link Byte},
 	 *           {@link Boolean}, {@link Character}, {@link Short},
-	 *           {@link Integer}, {@link Long}, {@link Float}, {@link Double},
-	 *           {@link String} or
-	 *           {@link net.simpleframework.lib.org.objectweb.asm.Type}. This
+	 *           {@link Integer} , {@link Long}, {@link Float}, {@link Double},
+	 *           {@link String} or {@link Type} or OBJECT or ARRAY sort. This
 	 *           value can also be an array of byte, boolean, short, char, int,
 	 *           long, float or double values (this is equivalent to using
 	 *           {@link #visitArray visitArray} and visiting each array element
 	 *           in turn, but is more convenient).
 	 */
-	void visit(String name, Object value);
+	public void visit(final String name, final Object value) {
+		if (av != null) {
+			av.visit(name, value);
+		}
+	}
 
 	/**
 	 * Visits an enumeration value of the annotation.
@@ -67,7 +113,11 @@ public interface AnnotationVisitor {
 	 * @param value
 	 *           the actual enumeration value.
 	 */
-	void visitEnum(String name, String desc, String value);
+	public void visitEnum(final String name, final String desc, final String value) {
+		if (av != null) {
+			av.visitEnum(name, desc, value);
+		}
+	}
 
 	/**
 	 * Visits a nested annotation value of the annotation.
@@ -82,7 +132,12 @@ public interface AnnotationVisitor {
 	 *         visited before calling other methods on this annotation
 	 *         visitor</i>.
 	 */
-	AnnotationVisitor visitAnnotation(String name, String desc);
+	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
+		if (av != null) {
+			return av.visitAnnotation(name, desc);
+		}
+		return null;
+	}
 
 	/**
 	 * Visits an array value of the annotation. Note that arrays of primitive
@@ -98,10 +153,19 @@ public interface AnnotationVisitor {
 	 *         visitor are ignored. <i>All the array values must be visited
 	 *         before calling other methods on this annotation visitor</i>.
 	 */
-	AnnotationVisitor visitArray(String name);
+	public AnnotationVisitor visitArray(final String name) {
+		if (av != null) {
+			return av.visitArray(name);
+		}
+		return null;
+	}
 
 	/**
 	 * Visits the end of the annotation.
 	 */
-	void visitEnd();
+	public void visitEnd() {
+		if (av != null) {
+			av.visitEnd();
+		}
+	}
 }

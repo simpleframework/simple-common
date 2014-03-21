@@ -31,7 +31,8 @@ import net.simpleframework.lib.net.sf.cglib.transform.TransformingClassGenerator
  * alternative exception of your choice.
  */
 public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
-	private ClassTransformer t;
+
+	private final Class wrapper;
 
 	/**
 	 * Create a new instance of this strategy.
@@ -44,8 +45,7 @@ public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
 	 *           <code>java.lang.reflect.UndeclaredThrowableException.class</code>
 	 */
 	public UndeclaredThrowableStrategy(final Class wrapper) {
-		t = new UndeclaredThrowableTransformer(wrapper);
-		t = new MethodFilterTransformer(TRANSFORM_FILTER, t);
+		this.wrapper = wrapper;
 	}
 
 	private static final MethodFilter TRANSFORM_FILTER = new MethodFilter() {
@@ -58,6 +58,8 @@ public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
 
 	@Override
 	protected ClassGenerator transform(final ClassGenerator cg) throws Exception {
-		return new TransformingClassGenerator(cg, t);
+		ClassTransformer tr = new UndeclaredThrowableTransformer(wrapper);
+		tr = new MethodFilterTransformer(TRANSFORM_FILTER, tr);
+		return new TransformingClassGenerator(cg, tr);
 	}
 }

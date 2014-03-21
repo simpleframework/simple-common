@@ -18,10 +18,9 @@ package net.simpleframework.lib.net.sf.cglib.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.simpleframework.lib.org.objectweb.asm.ClassAdapter;
+import net.simpleframework.lib.net.sf.cglib.transform.ClassTransformer;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
-import net.simpleframework.lib.org.objectweb.asm.MethodAdapter;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
@@ -29,7 +28,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
 /**
  * @author Juozas Baliuka, Chris Nokleberg
  */
-public class ClassEmitter extends ClassAdapter {
+public class ClassEmitter extends ClassTransformer {
 	private ClassInfo classInfo;
 	private Map fieldInfo;
 
@@ -40,14 +39,14 @@ public class ClassEmitter extends ClassAdapter {
 	private Signature staticHookSig;
 
 	public ClassEmitter(final ClassVisitor cv) {
-		super(null);
 		setTarget(cv);
 	}
 
 	public ClassEmitter() {
-		super(null);
+		super(Opcodes.ASM4);
 	}
 
+	@Override
 	public void setTarget(final ClassVisitor cv) {
 		this.cv = cv;
 		fieldInfo = new HashMap();
@@ -150,7 +149,7 @@ public class ClassEmitter extends ClassAdapter {
 				TypeUtils.toInternalNames(exceptions));
 		if (sig.equals(Constants.SIG_STATIC) && !TypeUtils.isInterface(getAccess())) {
 			rawStaticInit = v;
-			final MethodVisitor wrapped = new MethodAdapter(v) {
+			final MethodVisitor wrapped = new MethodVisitor(Opcodes.ASM4, v) {
 				@Override
 				public void visitMaxs(final int maxStack, final int maxLocals) {
 					// ignore

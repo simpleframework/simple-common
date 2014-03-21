@@ -19,12 +19,14 @@ import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
-public class MethodVisitorTee implements MethodVisitor {
+public class MethodVisitorTee extends MethodVisitor {
 	private final MethodVisitor mv1;
 	private final MethodVisitor mv2;
 
 	public MethodVisitorTee(final MethodVisitor mv1, final MethodVisitor mv2) {
+		super(Opcodes.ASM4);
 		this.mv1 = mv1;
 		this.mv2 = mv2;
 	}

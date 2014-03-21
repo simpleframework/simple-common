@@ -16,6 +16,8 @@ package net.simpleframework.lib.net.minidev.asm;
  * limitations under the License.
  */
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class BeansAccess<T> {
 	private HashMap<String, Accessor> map;
-	// private Map<String, Accessor> map;
 	private Accessor[] accs;
 
 	protected void setAccessor(final Accessor[] accs) {
@@ -95,22 +96,61 @@ public abstract class BeansAccess<T> {
 		} catch (final ClassNotFoundException ignored) {
 		}
 
+		final LinkedList<Class<?>> parentClasses = getParents(type);
+
 		// if the class do not exists build it
 		if (accessClass == null) {
 			final BeansAccessBuilder builder = new BeansAccessBuilder(type, accs, loader);
-			builder.addConversion(DefaultConverter.class);
+			for (final Class<?> c : parentClasses) {
+				builder.addConversion(BeansAccessConfig.classMapper.get(c));
+			}
 			accessClass = builder.bulid();
 		}
-
 		try {
 			@SuppressWarnings("unchecked")
 			final BeansAccess<P> access = (BeansAccess<P>) accessClass.newInstance();
 			access.setAccessor(accs);
 			cache.putIfAbsent(type, access);
+			// add fieldname alias
+			for (final Class<?> c : parentClasses) {
+				addAlias(access, BeansAccessConfig.classFiledNameMapper.get(c));
+			}
 			return access;
 		} catch (final Exception ex) {
 			throw new RuntimeException("Error constructing accessor class: " + accessClassName, ex);
 		}
+	}
+
+	private static LinkedList<Class<?>> getParents(Class<?> type) {
+		final LinkedList<Class<?>> m = new LinkedList<Class<?>>();
+		while (type != null && !type.equals(Object.class)) {
+			m.addLast(type);
+			for (final Class<?> c : type.getInterfaces()) {
+				m.addLast(c);
+			}
+			type = type.getSuperclass();
+		}
+		m.addLast(Object.class);
+		return m;
+	}
+
+	/**
+	 * 
+	 */
+	private static void addAlias(final BeansAccess<?> access, final HashMap<String, String> m) {
+		// HashMap<String, String> m =
+		// BeansAccessConfig.classFiledNameMapper.get(type);
+		if (m == null) {
+			return;
+		}
+		final HashMap<String, Accessor> changes = new HashMap<String, Accessor>();
+		for (final Entry<String, String> e : m.entrySet()) {
+			final Accessor a1 = access.map.get(e.getValue());
+			if (a1 != null) {
+				changes.put(e.getValue(), a1);
+			}
+		}
+		access.map.putAll(changes);
 	}
 
 	/**

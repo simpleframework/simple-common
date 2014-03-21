@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,7 @@ package net.simpleframework.lib.org.objectweb.asm;
 
 /**
  * A constant pool item. Constant pool items can be created with the 'newXXX'
- * methods in the {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter}
- * class.
+ * methods in the {@link ClassWriter} class.
  * 
  * @author Eric Bruneton
  */
@@ -46,28 +45,24 @@ final class Item {
 	/**
 	 * Type of this constant pool item. A single class is used to represent all
 	 * constant pool item types, in order to minimize the bytecode size of this
-	 * package. The value of this field is one of
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#INT},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#LONG},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#FLOAT},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#DOUBLE},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#UTF8},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#STR},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#CLASS},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#NAME_TYPE},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#FIELD},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#METH},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#IMETH}.
+	 * package. The value of this field is one of {@link ClassWriter#INT},
+	 * {@link ClassWriter#LONG}, {@link ClassWriter#FLOAT},
+	 * {@link ClassWriter#DOUBLE}, {@link ClassWriter#UTF8},
+	 * {@link ClassWriter#STR}, {@link ClassWriter#CLASS},
+	 * {@link ClassWriter#NAME_TYPE}, {@link ClassWriter#FIELD},
+	 * {@link ClassWriter#METH}, {@link ClassWriter#IMETH},
+	 * {@link ClassWriter#MTYPE}, {@link ClassWriter#INDY}.
+	 * 
+	 * MethodHandle constant 9 variations are stored using a range of 9 values
+	 * from {@link ClassWriter#HANDLE_BASE} + 1 to
+	 * {@link ClassWriter#HANDLE_BASE} + 9.
 	 * 
 	 * Special Item types are used for Items that are stored in the ClassWriter
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#typeTable},
-	 * instead of the constant pool, in order to avoid clashes with normal
-	 * constant pool items in the ClassWriter constant pool's hash table. These
-	 * special item types are
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#TYPE_NORMAL},
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#TYPE_UNINIT}
-	 * and
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#TYPE_MERGED}.
+	 * {@link ClassWriter#typeTable}, instead of the constant pool, in order to
+	 * avoid clashes with normal constant pool items in the ClassWriter constant
+	 * pool's hash table. These special item types are
+	 * {@link ClassWriter#TYPE_NORMAL}, {@link ClassWriter#TYPE_UNINIT} and
+	 * {@link ClassWriter#TYPE_MERGED}.
 	 */
 	int type;
 
@@ -217,19 +212,57 @@ final class Item {
 		case ClassWriter.UTF8:
 		case ClassWriter.STR:
 		case ClassWriter.CLASS:
+		case ClassWriter.MTYPE:
 		case ClassWriter.TYPE_NORMAL:
 			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode());
 			return;
-		case ClassWriter.NAME_TYPE:
+		case ClassWriter.NAME_TYPE: {
 			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode());
 			return;
-			// ClassWriter.FIELD:
-			// ClassWriter.METH:
-			// ClassWriter.IMETH:
+		}
+		// ClassWriter.FIELD:
+		// ClassWriter.METH:
+		// ClassWriter.IMETH:
+		// ClassWriter.HANDLE_BASE + 1..9
 		default:
 			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode()
 					* strVal3.hashCode());
 		}
+	}
+
+	/**
+	 * Sets the item to an InvokeDynamic item.
+	 * 
+	 * @param name
+	 *           invokedynamic's name.
+	 * @param desc
+	 *           invokedynamic's desc.
+	 * @param bsmIndex
+	 *           zero based index into the class attribute BootrapMethods.
+	 */
+	void set(final String name, final String desc, final int bsmIndex) {
+		this.type = ClassWriter.INDY;
+		this.longVal = bsmIndex;
+		this.strVal1 = name;
+		this.strVal2 = desc;
+		this.hashCode = 0x7FFFFFFF & (ClassWriter.INDY + bsmIndex * strVal1.hashCode()
+				* strVal2.hashCode());
+	}
+
+	/**
+	 * Sets the item to a BootstrapMethod item.
+	 * 
+	 * @param position
+	 *           position in byte in the class attribute BootrapMethods.
+	 * @param hashCode
+	 *           hashcode of the item. This hashcode is processed from the
+	 *           hashcode of the bootstrap method and the hashcode of all
+	 *           bootstrap arguments.
+	 */
+	void set(final int position, final int hashCode) {
+		this.type = ClassWriter.BSM;
+		this.intVal = position;
+		this.hashCode = hashCode;
 	}
 
 	/**
@@ -247,6 +280,7 @@ final class Item {
 		case ClassWriter.UTF8:
 		case ClassWriter.STR:
 		case ClassWriter.CLASS:
+		case ClassWriter.MTYPE:
 		case ClassWriter.TYPE_NORMAL:
 			return i.strVal1.equals(strVal1);
 		case ClassWriter.TYPE_MERGED:
@@ -260,9 +294,13 @@ final class Item {
 			return i.intVal == intVal && i.strVal1.equals(strVal1);
 		case ClassWriter.NAME_TYPE:
 			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
-			// case ClassWriter.FIELD:
-			// case ClassWriter.METH:
-			// case ClassWriter.IMETH:
+		case ClassWriter.INDY: {
+			return i.longVal == longVal && i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2);
+		}
+		// case ClassWriter.FIELD:
+		// case ClassWriter.METH:
+		// case ClassWriter.IMETH:
+		// case ClassWriter.HANDLE_BASE + 1..9
 		default:
 			return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2) && i.strVal3.equals(strVal3);
 		}

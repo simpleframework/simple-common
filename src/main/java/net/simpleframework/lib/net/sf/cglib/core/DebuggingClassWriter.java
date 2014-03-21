@@ -18,21 +18,22 @@ package net.simpleframework.lib.net.sf.cglib.core;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
+import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.ClassWriter;
-import net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
-public class DebuggingClassWriter extends ClassWriter {
+public class DebuggingClassWriter extends ClassVisitor {
 
 	public static final String DEBUG_LOCATION_PROPERTY = "cglib.debugLocation";
 
 	private static String debugLocation;
-	private static boolean traceEnabled;
+	private static Constructor traceCtor;
 
 	private String className;
 	private String superName;
@@ -42,15 +43,16 @@ public class DebuggingClassWriter extends ClassWriter {
 		if (debugLocation != null) {
 			System.err.println("CGLIB debugging enabled, writing to '" + debugLocation + "'");
 			try {
-				Class.forName("org.objectweb.asm.util.TraceClassVisitor");
-				traceEnabled = true;
+				final Class clazz = Class
+						.forName("net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor");
+				traceCtor = clazz.getConstructor(new Class[] { ClassVisitor.class, PrintWriter.class });
 			} catch (final Throwable ignore) {
 			}
 		}
 	}
 
 	public DebuggingClassWriter(final int flags) {
-		super(flags);
+		super(Opcodes.ASM4, new ClassWriter(flags));
 	}
 
 	@Override
@@ -69,7 +71,6 @@ public class DebuggingClassWriter extends ClassWriter {
 		return superName;
 	}
 
-	@Override
 	public byte[] toByteArray() {
 
 		return (byte[]) java.security.AccessController
@@ -77,7 +78,7 @@ public class DebuggingClassWriter extends ClassWriter {
 					@Override
 					public Object run() {
 
-						final byte[] b = DebuggingClassWriter.super.toByteArray();
+						final byte[] b = ((ClassWriter) DebuggingClassWriter.super.cv).toByteArray();
 						if (debugLocation != null) {
 							final String dirs = className.replace('.', File.separatorChar);
 							try {
@@ -92,20 +93,21 @@ public class DebuggingClassWriter extends ClassWriter {
 									out.close();
 								}
 
-								if (traceEnabled) {
+								if (traceCtor != null) {
 									file = new File(new File(debugLocation), dirs + ".asm");
 									out = new BufferedOutputStream(new FileOutputStream(file));
 									try {
 										final ClassReader cr = new ClassReader(b);
 										final PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));
-										final TraceClassVisitor tcv = new TraceClassVisitor(null, pw);
+										final ClassVisitor tcv = (ClassVisitor) traceCtor
+												.newInstance(new Object[] { null, pw });
 										cr.accept(tcv, 0);
 										pw.flush();
 									} finally {
 										out.close();
 									}
 								}
-							} catch (final IOException e) {
+							} catch (final Exception e) {
 								throw new CodeGenerationException(e);
 							}
 						}

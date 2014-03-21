@@ -126,26 +126,26 @@ class JStylerObj {
 			ch = s.charAt(0);
 			if (ch >= '0' && ch <= '9' || ch == '-') {
 				int p = 1;
-				for (; p < s.length(); p++) {
+				for (; p < len; p++) {
 					ch = s.charAt(p);
 					if (ch < '0' || ch > '9') {
 						break;
 					}
 				}
 				// int/long
-				if (p == s.length()) {
+				if (p == len) {
 					return true;
 				}
 				if (ch == '.') {
 					p++;
-					for (; p < s.length(); p++) {
+					for (; p < len; p++) {
 						ch = s.charAt(p);
 						if (ch < '0' || ch > '9') {
 							break;
 						}
 					}
 				}
-				if (p == s.length()) {
+				if (p == len) {
 					return true; // can be read as an number
 				}
 
@@ -153,13 +153,13 @@ class JStylerObj {
 					return false;
 				}
 				p++;
-				if (p == s.length()) {
+				if (p == len) {
 					return false;
 				}
 				ch = s.charAt(p);
 				if (ch == '+' || ch == '-') {
 					ch++;
-					if (p == s.length()) {
+					if (p == len) {
 						return false;
 					}
 					ch = s.charAt(p);
@@ -167,18 +167,18 @@ class JStylerObj {
 
 				if (ch == '+' || ch == '-') {
 					ch++;
-					if (p == s.length()) {
+					if (p == len) {
 						return false;
 					}
 				}
 
-				for (; p < s.length(); p++) {
+				for (; p < len; p++) {
 					ch = s.charAt(p);
 					if (ch < '0' || ch > '9') {
 						break;
 					}
 				}
-				if (p == s.length()) {
+				if (p == len) {
 					return true;
 				}
 				return false;
@@ -246,7 +246,8 @@ class JStylerObj {
 		@Override
 		public void escape(final String s, final Appendable out) {
 			try {
-				for (int i = 0; i < s.length(); i++) {
+				final int len = s.length();
+				for (int i = 0; i < len; i++) {
 					final char ch = s.charAt(i);
 					switch (ch) {
 					case '"':
@@ -304,7 +305,8 @@ class JStylerObj {
 		@Override
 		public void escape(final String s, final Appendable sb) {
 			try {
-				for (int i = 0; i < s.length(); i++) {
+				final int len = s.length();
+				for (int i = 0; i < len; i++) {
 					final char ch = s.charAt(i);
 					switch (ch) {
 					case '"':

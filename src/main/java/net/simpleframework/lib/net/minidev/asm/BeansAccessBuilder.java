@@ -32,6 +32,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+import net.simpleframework.lib.net.minidev.asm.ex.NoSuchFiledException;
 import net.simpleframework.lib.org.objectweb.asm.ClassWriter;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
@@ -64,7 +65,19 @@ public class BeansAccessBuilder {
 		this.classNameInternal = className.replace('.', '/');
 	}
 
+	public void addConversion(final Iterable<Class<?>> conv) {
+		if (conv == null) {
+			return;
+		}
+		for (final Class<?> c : conv) {
+			addConversion(c);
+		}
+	}
+
 	public void addConversion(final Class<?> conv) {
+		if (conv == null) {
+			return;
+		}
 		for (final Method mtd : conv.getMethods()) {
 			if ((mtd.getModifiers() & Modifier.STATIC) == 0) {
 				continue;
@@ -103,8 +116,7 @@ public class BeansAccessBuilder {
 		final boolean USE_HASH = accs.length > 10;
 		final int HASH_LIMIT = 14;
 
-		final String signature = "Lnet/simpleframework/lib/net/minidev/asm/BeansAccess<L"
-				+ classNameInternal + ";>;";
+		final String signature = "Lnet/minidev/asm/BeansAccess<L" + classNameInternal + ";>;";
 
 		cw.visit(Opcodes.V1_6, ACC_PUBLIC + Opcodes.ACC_SUPER, accessClassNameInternal, signature,
 				METHOD_ACCESS_NAME, null);
@@ -210,6 +222,10 @@ public class BeansAccessBuilder {
 					mv.visitFieldInsn(GETFIELD, classNameInternal, acc.getName(),
 							fieldType.getDescriptor());
 				} else {
+					if (acc.getter == null) {
+						throw new RuntimeException("no Getter for field " + acc.getName() + " in class "
+								+ this.className);
+					}
 					final String sig = Type.getMethodDescriptor(acc.getter);
 					mv.visitMethodInsn(INVOKEVIRTUAL, classNameInternal, acc.getter.getName(), sig);
 				}

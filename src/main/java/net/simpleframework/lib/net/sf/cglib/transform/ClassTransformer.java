@@ -16,7 +16,16 @@
 package net.simpleframework.lib.net.sf.cglib.transform;
 
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
-public interface ClassTransformer extends ClassVisitor {
-	public void setTarget(ClassVisitor target);
+public abstract class ClassTransformer extends ClassVisitor {
+	public ClassTransformer() {
+		super(Opcodes.ASM4);
+	}
+
+	public ClassTransformer(final int opcode) {
+		super(opcode);
+	}
+
+	public abstract void setTarget(ClassVisitor target);
 }

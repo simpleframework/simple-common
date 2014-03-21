@@ -50,7 +50,7 @@ public class UpdaterMapper<T> extends AMapper<T> {
 	}
 
 	/**
-	 * called when json-smart done parssing a value
+	 * called when json-smart done parsing a value
 	 */
 	@Override
 	public void setValue(final Object current, final String key, final Object value)

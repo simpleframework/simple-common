@@ -17,10 +17,12 @@ package net.simpleframework.lib.net.minidev.json.mapper;
  */
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 
 import net.simpleframework.lib.net.minidev.asm.Accessor;
 import net.simpleframework.lib.net.minidev.asm.BeansAccess;
+import net.simpleframework.lib.net.minidev.asm.ConvertDate;
 import net.simpleframework.lib.net.minidev.json.JSONUtil;
 
 @SuppressWarnings("unchecked")
@@ -71,7 +73,7 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		public AMapper<?> startArray(final String key) {
 			final Accessor nfo = index.get(key);
 			if (nfo == null) {
-				throw new RuntimeException("Can not set " + key + " field in " + clz);
+				throw new RuntimeException("Can not find '" + key + "' field in " + clz);
 			}
 			return Mapper.getMapper(nfo.getGenericType());
 		}
@@ -80,7 +82,7 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		public AMapper<?> startObject(final String key) {
 			final Accessor f = index.get(key);
 			if (f == null) {
-				throw new RuntimeException("Can not set " + key + " field in " + clz);
+				throw new RuntimeException("Can not find '" + key + "' field in " + clz);
 			}
 			return Mapper.getMapper(f.getGenericType());
 		}
@@ -141,5 +143,12 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 			return ba.newInstance();
 		}
 	}
+
+	public static AMapper<Date> MAPPER_DATE = new ArraysMapper<Date>() {
+		@Override
+		public Date convert(final Object current) {
+			return ConvertDate.convertToDate(current);
+		}
+	};
 
 }

@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,45 +32,53 @@ package net.simpleframework.lib.org.objectweb.asm.util;
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
+import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
- * A {@link FieldVisitor} that prints a disassembled view of the fields it
- * visits.
+ * A {@link FieldVisitor} that prints the fields it visits with a
+ * {@link Printer}.
  * 
  * @author Eric Bruneton
  */
-public class TraceFieldVisitor extends TraceAbstractVisitor implements FieldVisitor {
+public final class TraceFieldVisitor extends FieldVisitor {
 
-	/**
-	 * The {@link FieldVisitor} to which this visitor delegates calls. May be
-	 * <tt>null</tt>.
-	 */
-	protected FieldVisitor fv;
+	public final Printer p;
+
+	public TraceFieldVisitor(final Printer p) {
+		this(null, p);
+	}
+
+	public TraceFieldVisitor(final FieldVisitor fv, final Printer p) {
+		super(Opcodes.ASM5, fv);
+		this.p = p;
+	}
 
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitAnnotation(desc, visible);
-		if (fv != null) {
-			((TraceAnnotationVisitor) av).av = fv.visitAnnotation(desc, visible);
-		}
-		return av;
+		final Printer p = this.p.visitFieldAnnotation(desc, visible);
+		final AnnotationVisitor av = fv == null ? null : fv.visitAnnotation(desc, visible);
+		return new TraceAnnotationVisitor(av, p);
+	}
+
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		final Printer p = this.p.visitFieldTypeAnnotation(typeRef, typePath, desc, visible);
+		final AnnotationVisitor av = fv == null ? null : fv.visitTypeAnnotation(typeRef, typePath,
+				desc, visible);
+		return new TraceAnnotationVisitor(av, p);
 	}
 
 	@Override
 	public void visitAttribute(final Attribute attr) {
+		p.visitFieldAttribute(attr);
 		super.visitAttribute(attr);
-
-		if (fv != null) {
-			fv.visitAttribute(attr);
-		}
 	}
 
 	@Override
 	public void visitEnd() {
+		p.visitFieldEnd();
 		super.visitEnd();
-
-		if (fv != null) {
-			fv.visitEnd();
-		}
 	}
 }

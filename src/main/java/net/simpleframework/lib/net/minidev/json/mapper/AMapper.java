@@ -48,7 +48,7 @@ public abstract class AMapper<T> {
 	}
 
 	/**
-	 * called when json-smart done parssing a value
+	 * called when json-smart done parsing a value
 	 */
 	public void setValue(final Object current, final String key, final Object value)
 			throws ParseException, IOException {

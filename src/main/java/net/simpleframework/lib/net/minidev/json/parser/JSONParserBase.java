@@ -68,7 +68,7 @@ abstract class JSONParserBase {
 	protected int pos;
 
 	/*
-	 * Parssing flags
+	 * Parsing flags
 	 */
 	protected final boolean acceptLeadinZero;
 	protected final boolean acceptNaN;
@@ -554,12 +554,15 @@ abstract class JSONParserBase {
 				if (!acceptData) {
 					throw new ParseException(pos, ERROR_UNEXPECTED_TOKEN, key);
 				}
-				//
-				while (c != ':' && c != EOI) {
-					read();
-				}
-				if (c == EOI) {
-					throw new ParseException(pos - 1, ERROR_UNEXPECTED_EOF, null);
+
+				// Skip spaces
+				skipSpace();
+
+				if (c != ':') {
+					if (c == EOI) {
+						throw new ParseException(pos - 1, ERROR_UNEXPECTED_EOF, null);
+					}
+					throw new ParseException(pos - 1, ERROR_UNEXPECTED_CHAR, c);
 				}
 				readNoEnd(); /* skip : */
 				lastKey = key;
@@ -646,7 +649,10 @@ abstract class JSONParserBase {
 					sb.append('"');
 					break;
 				case 'u':
-					sb.append(readUnicode());
+					sb.append(readUnicode(4));
+					break;
+				case 'x':
+					sb.append(readUnicode(2));
 					break;
 				default:
 					break;
@@ -695,9 +701,9 @@ abstract class JSONParserBase {
 		}
 	}
 
-	protected char readUnicode() throws ParseException, IOException {
+	protected char readUnicode(final int totalChars) throws ParseException, IOException {
 		int value = 0;
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < totalChars; i++) {
 			value = value * 16;
 			read();
 			if (c <= '9' && c >= '0') {

@@ -37,6 +37,15 @@ class DynamicClassLoader extends ClassLoader {
 	private final static Class<?>[] DEF_CLASS_SIG = new Class[] { String.class, byte[].class,
 			int.class, int.class };
 
+	/**
+	 * 
+	 * @param parent
+	 *           used to choose the ClassLoader
+	 * @param clsName
+	 *           C
+	 * @param clsData
+	 * @return
+	 */
 	public static <T> Class<T> directLoad(final Class<? extends T> parent, final String clsName,
 			final byte[] clsData) {
 		final DynamicClassLoader loader = new DynamicClassLoader(parent.getClassLoader());

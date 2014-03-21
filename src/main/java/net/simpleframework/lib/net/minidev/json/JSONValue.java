@@ -21,6 +21,7 @@ import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.MODE_RF
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -429,6 +430,19 @@ public class JSONValue {
 	}
 
 	/**
+	 * Parse input json as a mapTo class
+	 * 
+	 * mapTo can be a bean
+	 * 
+	 * @since 2.0
+	 */
+	public static <T> T parseWithException(final String in, final Class<T> mapTo)
+			throws ParseException {
+		final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
+		return p.parse(in, Mapper.getMapper(mapTo));
+	}
+
+	/**
 	 * Parse valid RFC4627 JSON text into java object from the input source.
 	 * 
 	 * @see JSONParser
@@ -589,7 +603,8 @@ public class JSONValue {
 		} else if (value instanceof Iterable<?>) { // List
 			JSONArray.writeJSONString((Iterable<Object>) value, out, compression);
 		} else if (value instanceof Date) {
-			JSONValue.writeJSONString(value.toString(), out, compression);
+			final String vtext = DateFormat.getDateInstance().format((Date) value);
+			JSONValue.writeJSONString(vtext, out, compression);
 		} else if (value instanceof Enum<?>) {
 			@SuppressWarnings("rawtypes")
 			final String s = ((Enum) value).name();

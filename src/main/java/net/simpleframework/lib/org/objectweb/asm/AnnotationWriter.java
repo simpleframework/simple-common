@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,13 +30,12 @@
 package net.simpleframework.lib.org.objectweb.asm;
 
 /**
- * An {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor} that
- * generates annotations in bytecode form.
+ * An {@link AnnotationVisitor} that generates annotations in bytecode form.
  * 
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-final class AnnotationWriter implements AnnotationVisitor {
+final class AnnotationWriter extends AnnotationVisitor {
 
 	/**
 	 * The class writer to which this annotation must be added.
@@ -106,6 +105,7 @@ final class AnnotationWriter implements AnnotationVisitor {
 	 */
 	AnnotationWriter(final ClassWriter cw, final boolean named, final ByteVector bv,
 			final ByteVector parent, final int offset) {
+		super(Opcodes.ASM5);
 		this.cw = cw;
 		this.named = named;
 		this.bv = bv;
@@ -114,7 +114,7 @@ final class AnnotationWriter implements AnnotationVisitor {
 	}
 
 	// ------------------------------------------------------------------------
-	// Implementation of the AnnotationVisitor interface
+	// Implementation of the AnnotationVisitor abstract class
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -311,6 +311,59 @@ final class AnnotationWriter implements AnnotationVisitor {
 				out.putByteArray(aw.bv.data, 0, aw.bv.length);
 				aw = aw.prev;
 			}
+		}
+	}
+
+	/**
+	 * Puts the given type reference and type path into the given bytevector.
+	 * LOCAL_VARIABLE and RESOURCE_VARIABLE target types are not supported.
+	 * 
+	 * @param typeRef
+	 *           a reference to the annotated type. See {@link TypeReference}.
+	 * @param typePath
+	 *           the path to the annotated type argument, wildcard bound, array
+	 *           element type, or static inner type within 'typeRef'. May be
+	 *           <tt>null</tt> if the annotation targets 'typeRef' as a whole.
+	 * @param out
+	 *           where the type reference and type path must be put.
+	 */
+	static void putTarget(final int typeRef, final TypePath typePath, final ByteVector out) {
+		switch (typeRef >>> 24) {
+		case 0x00: // CLASS_TYPE_PARAMETER
+		case 0x01: // METHOD_TYPE_PARAMETER
+		case 0x16: // METHOD_FORMAL_PARAMETER
+			out.putShort(typeRef >>> 16);
+			break;
+		case 0x13: // FIELD
+		case 0x14: // METHOD_RETURN
+		case 0x15: // METHOD_RECEIVER
+			out.putByte(typeRef >>> 24);
+			break;
+		case 0x47: // CAST
+		case 0x48: // CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT
+		case 0x49: // METHOD_INVOCATION_TYPE_ARGUMENT
+		case 0x4A: // CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT
+		case 0x4B: // METHOD_REFERENCE_TYPE_ARGUMENT
+			out.putInt(typeRef);
+			break;
+		// case 0x10: // CLASS_EXTENDS
+		// case 0x11: // CLASS_TYPE_PARAMETER_BOUND
+		// case 0x12: // METHOD_TYPE_PARAMETER_BOUND
+		// case 0x17: // THROWS
+		// case 0x42: // EXCEPTION_PARAMETER
+		// case 0x43: // INSTANCEOF
+		// case 0x44: // NEW
+		// case 0x45: // CONSTRUCTOR_REFERENCE
+		// case 0x46: // METHOD_REFERENCE
+		default:
+			out.put12(typeRef >>> 24, (typeRef & 0xFFFF00) >> 8);
+			break;
+		}
+		if (typePath == null) {
+			out.putByte(0);
+		} else {
+			final int length = typePath.b[typePath.offset] * 2 + 1;
+			out.putByteArray(typePath.b, typePath.offset, length);
 		}
 	}
 }

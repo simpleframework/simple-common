@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -214,8 +214,7 @@ public class Label {
 
 	/**
 	 * Information about the input and output stack map frames of this basic
-	 * block. This field is only used when
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#COMPUTE_FRAMES}
+	 * block. This field is only used when {@link ClassWriter#COMPUTE_FRAMES}
 	 * option is used.
 	 */
 	Frame frame;
@@ -223,19 +222,16 @@ public class Label {
 	/**
 	 * The successor of this label, in the order they are visited. This linked
 	 * list does not include labels used for debug info only. If
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassWriter#COMPUTE_FRAMES}
-	 * option is used then, in addition, it does not contain successive labels
-	 * that denote the same bytecode position (in this case only the first label
-	 * appears in this list).
+	 * {@link ClassWriter#COMPUTE_FRAMES} option is used then, in addition, it
+	 * does not contain successive labels that denote the same bytecode position
+	 * (in this case only the first label appears in this list).
 	 */
 	Label successor;
 
 	/**
 	 * The successors of this node in the control flow graph. These successors
-	 * are stored in a linked list of
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Edge Edge} objects,
-	 * linked to each other by their
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Edge#next} field.
+	 * are stored in a linked list of {@link Edge Edge} objects, linked to each
+	 * other by their {@link Edge#next} field.
 	 */
 	Edge successors;
 
@@ -266,8 +262,8 @@ public class Label {
 	/**
 	 * Returns the offset corresponding to this label. This offset is computed
 	 * from the start of the method's bytecode. <i>This method is intended for
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Attribute} sub classes,
-	 * and is normally not needed by class generators or adapters.</i>
+	 * {@link Attribute} sub classes, and is normally not needed by class
+	 * generators or adapters.</i>
 	 * 
 	 * @return the offset corresponding to this label.
 	 * @throws IllegalStateException

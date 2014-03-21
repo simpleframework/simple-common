@@ -95,7 +95,7 @@ class JSONParserByteArray extends JSONParserMemory {
 	}
 
 	/**
-	 * Same as read() in memory parssing
+	 * Same as read() in memory parsing
 	 */
 	@Override
 	protected void readS() {

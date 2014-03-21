@@ -17,5 +17,5 @@ package net.simpleframework.lib.net.sf.cglib.transform;
 
 import net.simpleframework.lib.net.sf.cglib.core.ClassEmitter;
 
-abstract public class ClassEmitterTransformer extends ClassEmitter implements ClassTransformer {
+abstract public class ClassEmitterTransformer extends ClassEmitter {
 }

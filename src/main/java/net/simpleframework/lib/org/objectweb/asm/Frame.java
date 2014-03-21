@@ -1,6 +1,6 @@
 /***
  * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2007 INRIA, France Telecom
+ * Copyright (c) 2000-2011 INRIA, France Telecom
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -70,8 +70,8 @@ final class Frame {
 	 * stack types. VALUE depends on KIND. For LOCAL types, it is an index in the
 	 * input local variable types. For STACK types, it is a position relatively
 	 * to the top of input frame stack. For BASE types, it is either one of the
-	 * constants defined in FrameVisitor, or for OBJECT and UNINITIALIZED types,
-	 * a tag and an index in the type table.
+	 * constants defined below, or for OBJECT and UNINITIALIZED types, a tag and
+	 * an index in the type table.
 	 * 
 	 * Output frames can contain types of any kind and with a positive or
 	 * negative dimension (and even unassigned types, represented by 0 - which
@@ -436,7 +436,7 @@ final class Frame {
 		// NA, //INVOKESPECIAL, // -
 		// NA, //INVOKESTATIC, // -
 		// NA, //INVOKEINTERFACE, // -
-		// NA, //INVOKEDYNAMIC, // -
+		// NA, //INVOKEDYNAMIC, // visitInvokeDynamicInsn
 		// 1, //NEW, // visitTypeInsn
 		// 0, //NEWARRAY, // visitIntInsn
 		// 0, //ANEWARRAY, // visitTypeInsn
@@ -910,9 +910,15 @@ final class Frame {
 			case ClassWriter.CLASS:
 				push(OBJECT | cw.addType("java/lang/Class"));
 				break;
-			// case ClassWriter.STR:
-			default:
+			case ClassWriter.STR:
 				push(OBJECT | cw.addType("java/lang/String"));
+				break;
+			case ClassWriter.MTYPE:
+				push(OBJECT | cw.addType("java/lang/invoke/MethodType"));
+				break;
+			// case ClassWriter.HANDLE_BASE + [1..9]:
+			default:
+				push(OBJECT | cw.addType("java/lang/invoke/MethodHandle"));
 			}
 			break;
 		case Opcodes.ALOAD:
@@ -1268,10 +1274,8 @@ final class Frame {
 	 * @param frame
 	 *           the basic block whose input frame must be updated.
 	 * @param edge
-	 *           the kind of the
-	 *           {@link net.simpleframework.lib.org.objectweb.asm.Edge} between
-	 *           this label and 'label'. See
-	 *           {@link net.simpleframework.lib.org.objectweb.asm.Edge#info}.
+	 *           the kind of the {@link Edge} between this label and 'label'. See
+	 *           {@link Edge#info}.
 	 * @return <tt>true</tt> if the input frame of the given label has been
 	 *         changed by this operation.
 	 */
@@ -1406,6 +1410,7 @@ final class Frame {
 				// if t is the NULL type, merge(u,t)=u, so there is no change
 				return false;
 			} else if ((t & (DIM | BASE_KIND)) == (u & (DIM | BASE_KIND))) {
+				// if t and u have the same dimension and same base kind
 				if ((u & BASE_KIND) == OBJECT) {
 					// if t is also a reference type, and if u and t have the
 					// same dimension merge(u,t) = dim(t) | common parent of the
@@ -1417,9 +1422,12 @@ final class Frame {
 					v = OBJECT | cw.addType("java/lang/Object");
 				}
 			} else if ((t & BASE_KIND) == OBJECT || (t & DIM) != 0) {
-				// if t is any other reference or array type,
-				// merge(u,t)=java/lang/Object
-				v = OBJECT | cw.addType("java/lang/Object");
+				// if t is any other reference or array type, the merged type
+				// is Object, or min(dim(u), dim(t)) | java/lang/Object is u
+				// and t have different array dimensions
+				final int tdim = t & DIM;
+				final int udim = u & DIM;
+				v = (udim != tdim ? Math.min(tdim, udim) : 0) | OBJECT | cw.addType("java/lang/Object");
 			} else {
 				// if t is any other type, merge(u,t)=TOP
 				v = TOP;

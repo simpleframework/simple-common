@@ -15,12 +15,12 @@
  */
 package net.simpleframework.lib.net.sf.cglib.transform;
 
-import net.simpleframework.lib.org.objectweb.asm.ClassAdapter;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
-abstract public class AbstractClassTransformer extends ClassAdapter implements ClassTransformer {
+abstract public class AbstractClassTransformer extends ClassTransformer {
 	protected AbstractClassTransformer() {
-		super(null);
+		super(Opcodes.ASM4);
 	}
 
 	@Override

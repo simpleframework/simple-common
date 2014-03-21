@@ -73,6 +73,9 @@ class JSONParserString extends JSONParserMemory {
 		return in.indexOf(c, pos);
 	}
 
+	/**
+	 * Read next char or END OF INPUT
+	 */
 	@Override
 	protected void read() {
 		if (++pos >= len) {
@@ -83,7 +86,7 @@ class JSONParserString extends JSONParserMemory {
 	}
 
 	/**
-	 * Same as read() in memory parssing
+	 * Same as read() in memory parsing
 	 */
 	@Override
 	protected void readS() {

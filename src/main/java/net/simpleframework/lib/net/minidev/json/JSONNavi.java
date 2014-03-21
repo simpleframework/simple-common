@@ -15,6 +15,7 @@ package net.simpleframework.lib.net.minidev.json;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -105,11 +106,82 @@ public class JSONNavi<T> {
 		return current;
 	}
 
+	public Collection<String> getKeys() {
+		if (current instanceof Map) {
+			return ((Map) current).keySet();
+		}
+		return null;
+	}
+
+	public int getSize() {
+		if (current == null) {
+			return 0;
+		}
+		if (isArray()) {
+			return ((List<?>) current).size();
+		}
+		if (isObject()) {
+			return ((Map<?, ?>) current).size();
+		}
+		return 1;
+	}
+
+	public String getString(final String key) {
+		String v = null;
+		if (!hasKey(key)) {
+			return v;
+		}
+		at(key);
+		v = asString();
+		up();
+		return v;
+	}
+
+	public int getInt(final String key) {
+		int v = 0;
+		if (!hasKey(key)) {
+			return v;
+		}
+		at(key);
+		v = asInt();
+		up();
+		return v;
+	}
+
+	public Integer getInteger(final String key) {
+		Integer v = null;
+		if (!hasKey(key)) {
+			return v;
+		}
+		at(key);
+		v = asIntegerObj();
+		up();
+		return v;
+	}
+
+	public double getDouble(final String key) {
+		double v = 0;
+		if (!hasKey(key)) {
+			return v;
+		}
+		at(key);
+		v = asDouble();
+		up();
+		return v;
+	}
+
+	public boolean hasKey(final String key) {
+		if (!isObject()) {
+			return false;
+		}
+		return o(current).containsKey(key);
+	}
+
 	public JSONNavi<?> at(final String key) {
 		if (failure) {
 			return this;
 		}
-		if (!isObject(current)) {
+		if (!isObject()) {
 			object();
 		}
 		if (!(current instanceof Map)) {
@@ -130,6 +202,32 @@ public class JSONNavi<T> {
 		path.add(key);
 		current = next;
 		return this;
+	}
+
+	public Object get(final String key) {
+		if (failure) {
+			return this;
+		}
+		if (!isObject()) {
+			object();
+		}
+		if (!(current instanceof Map)) {
+			return failure("current node is not an Object", key);
+		}
+		return o(current).get(key);
+	}
+
+	public Object get(final int index) {
+		if (failure) {
+			return this;
+		}
+		if (!isArray()) {
+			array();
+		}
+		if (!(current instanceof List)) {
+			return failure("current node is not an List", index);
+		}
+		return a(current).get(index);
 	}
 
 	public JSONNavi<T> set(final String key, final String value) {
@@ -391,10 +489,10 @@ public class JSONNavi<T> {
 			failure("Can not create Object child in readonly", null);
 		}
 		if (current != null) {
-			if (isObject(current)) {
+			if (isObject()) {
 				return this;
 			}
-			if (isArray(current)) {
+			if (isArray()) {
 				failure("can not use Object feature on Array.", null);
 			}
 			failure("Can not use current possition as Object", null);
@@ -421,10 +519,10 @@ public class JSONNavi<T> {
 			failure("Can not create Array child in readonly", null);
 		}
 		if (current != null) {
-			if (isArray(current)) {
+			if (isArray()) {
 				return this;
 			}
-			if (isObject(current)) {
+			if (isObject()) {
 				failure("can not use Object feature on Array.", null);
 			}
 			failure("Can not use current possition as Object", null);
@@ -494,6 +592,20 @@ public class JSONNavi<T> {
 			}
 			lst.set(index, current);
 		}
+	}
+
+	/**
+	 * is the current node is an array
+	 */
+	public boolean isArray() {
+		return isArray(current);
+	}
+
+	/**
+	 * is the current node is an object
+	 */
+	public boolean isObject() {
+		return isObject(current);
 	}
 
 	/**

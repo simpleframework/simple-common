@@ -70,11 +70,6 @@ public class ParseException extends Exception {
 		return unexpectedObject;
 	}
 
-	@Override
-	public String toString() {
-		return getMessage();
-	}
-
 	private static String toMessage(final int position, final int errorType,
 			final Object unexpectedObject) {
 		final StringBuilder sb = new StringBuilder();
@@ -125,8 +120,6 @@ public class ParseException extends Exception {
 			sb.append(position);
 			sb.append(".");
 		}
-		// sb.append("Unexpected exception at position ").append(position).append(": ").append(unexpectedObject);
-		// break;
 		return sb.toString();
 	}
 

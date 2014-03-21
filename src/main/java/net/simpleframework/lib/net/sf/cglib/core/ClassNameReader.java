@@ -18,8 +18,9 @@ package net.simpleframework.lib.net.sf.cglib.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simpleframework.lib.org.objectweb.asm.ClassAdapter;
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
+import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
+import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 // TODO: optimize (ClassReader buffers entire class before accept)
 public class ClassNameReader {
@@ -40,7 +41,7 @@ public class ClassNameReader {
 	public static String[] getClassInfo(final ClassReader r) {
 		final List array = new ArrayList();
 		try {
-			r.accept(new ClassAdapter(null) {
+			r.accept(new ClassVisitor(Opcodes.ASM4, null) {
 				@Override
 				public void visit(final int version, final int access, final String name,
 						final String signature, final String superName, final String[] interfaces) {
