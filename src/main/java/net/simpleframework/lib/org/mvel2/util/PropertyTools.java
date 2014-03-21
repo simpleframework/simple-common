@@ -89,6 +89,7 @@ public class PropertyTools {
 
 	public static Method getGetter(final Class clazz, String property) {
 		final String simple = "get" + property;
+		final String simpleIsGet = "is" + property;
 		final String isGet = ReflectionUtil.getIsGetter(property);
 		property = ReflectionUtil.getGetter(property);
 
@@ -97,8 +98,8 @@ public class PropertyTools {
 			if ((meth.getModifiers() & PUBLIC) != 0
 					&& meth.getParameterTypes().length == 0
 					&& (property.equals(meth.getName())
-							|| (isGet.equals(meth.getName()) && meth.getReturnType() == boolean.class) || simple
-								.equals(meth.getName()))) {
+							|| ((isGet.equals(meth.getName()) || simpleIsGet.equals(meth.getName())) && meth
+									.getReturnType() == boolean.class) || simple.equals(meth.getName()))) {
 				if (candidate == null
 						|| candidate.getReturnType().isAssignableFrom(meth.getReturnType())) {
 					candidate = meth;

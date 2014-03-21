@@ -14,6 +14,7 @@ import static net.simpleframework.lib.org.mvel2.Operator.MULT;
 import static net.simpleframework.lib.org.mvel2.Operator.NEQUAL;
 import static net.simpleframework.lib.org.mvel2.Operator.OR;
 import static net.simpleframework.lib.org.mvel2.Operator.PTABLE;
+import static net.simpleframework.lib.org.mvel2.Operator.REGEX;
 import static net.simpleframework.lib.org.mvel2.Operator.SIMILARITY;
 import static net.simpleframework.lib.org.mvel2.Operator.SOUNDEX;
 import static net.simpleframework.lib.org.mvel2.Operator.SUB;
@@ -64,6 +65,7 @@ public class ASTBinaryTree {
 		case SOUNDEX:
 		case INSTANCEOF:
 		case SIMILARITY:
+		case REGEX:
 			return Boolean.class;
 		case ADD:
 			if (leftType.equals(String.class) || rightType.equals(String.class)) {

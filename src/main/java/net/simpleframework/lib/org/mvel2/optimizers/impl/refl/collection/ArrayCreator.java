@@ -53,6 +53,10 @@ public class ArrayCreator implements Accessor {
 		}
 	}
 
+	public Accessor[] getTemplate() {
+		return template;
+	}
+
 	public ArrayCreator(final Accessor[] template, final Class arrayType) {
 		this.template = template;
 		this.arrayType = arrayType;

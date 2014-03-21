@@ -37,6 +37,10 @@ public class Sign extends ASTNode {
 		}
 	}
 
+	public ExecutableStatement getStatement() {
+		return stmt;
+	}
+
 	@Override
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {

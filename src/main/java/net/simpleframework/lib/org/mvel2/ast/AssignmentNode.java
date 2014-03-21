@@ -38,6 +38,7 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
  * @author Christopher Brock
  */
 public class AssignmentNode extends ASTNode implements Assignment {
+	private String assignmentVar;
 	private String varName;
 	private transient CompiledAccExpression accExpr;
 
@@ -59,6 +60,7 @@ public class AssignmentNode extends ASTNode implements Assignment {
 
 		if ((assignStart = find(expr, start, offset, '=')) != -1) {
 			this.varName = createStringTrimmed(expr, start, assignStart - start);
+			this.assignmentVar = varName;
 
 			this.start = skipWhitespace(expr, assignStart + 1);
 			if (this.start >= start + offset) {
@@ -90,6 +92,7 @@ public class AssignmentNode extends ASTNode implements Assignment {
 		} else {
 			try {
 				checkNameSafety(this.varName = new String(expr, start, offset));
+				this.assignmentVar = varName;
 			} catch (final RuntimeException e) {
 				throw new CompileException(e.getMessage(), expr, start);
 			}
@@ -145,7 +148,7 @@ public class AssignmentNode extends ASTNode implements Assignment {
 
 	@Override
 	public String getAssignmentVar() {
-		return varName;
+		return assignmentVar;
 	}
 
 	@Override
@@ -165,6 +168,6 @@ public class AssignmentNode extends ASTNode implements Assignment {
 
 	@Override
 	public String toString() {
-		return varName + " = " + new String(expr, start, offset);
+		return assignmentVar + " = " + new String(expr, start, offset);
 	}
 }
