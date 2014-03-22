@@ -6,7 +6,7 @@ package net.simpleframework.ado.query;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IDataQuery<T> extends IDataQueryListenerManager<T>, IDataQueryCountAware {
+public interface IDataQuery<T> extends IDataQueryListenerManager<T> {
 
 	/**
 	 * 获取下一个可用的对象，null表示已没有可用的数据
@@ -28,6 +28,8 @@ public interface IDataQuery<T> extends IDataQueryListenerManager<T>, IDataQueryC
 	 * @return
 	 */
 	int position();
+
+	int getCount();
 
 	void setCount(int count);
 

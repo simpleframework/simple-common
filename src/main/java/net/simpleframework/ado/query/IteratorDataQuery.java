@@ -10,21 +10,10 @@ import java.util.Iterator;
  */
 public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 
-	private Iterator<T> it;
-
-	private int count;
-
-	public IteratorDataQuery() {
-		this(null);
-	}
+	private final Iterator<T> it;
 
 	public IteratorDataQuery(final Iterator<T> it) {
-		this(it, it instanceof IDataQueryCountAware ? ((IDataQueryCountAware) it).getCount() : 0);
-	}
-
-	public IteratorDataQuery(final Iterator<T> it, final int count) {
 		this.it = it;
-		this.count = count;
 	}
 
 	public Iterator<T> iterator() {
@@ -36,18 +25,29 @@ public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 		return it != null && it.hasNext() ? it.next() : null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public IDataQuery<T> getRawDataQuery() {
+		return it instanceof IDataQueryAware ? ((IDataQueryAware<T>) it).getDataQuery() : this;
+	}
+
 	@Override
 	public int getCount() {
-		return count;
+		final IDataQuery<T> dq = getRawDataQuery();
+		return dq != this ? dq.getCount() : count;
 	}
 
 	@Override
 	public int getFetchSize() {
-		return 0;
+		final IDataQuery<T> dq = getRawDataQuery();
+		return dq != this ? dq.getFetchSize() : 0;
 	}
 
 	@Override
-	public IDataQuery<T> setFetchSize(final int fetchSize) {
+	public IteratorDataQuery<T> setFetchSize(final int fetchSize) {
+		final IDataQuery<T> dq = getRawDataQuery();
+		if (dq != this) {
+			dq.setFetchSize(fetchSize);
+		}
 		return this;
 	}
 }

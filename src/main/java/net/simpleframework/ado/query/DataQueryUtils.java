@@ -43,7 +43,7 @@ public abstract class DataQueryUtils {
 	}
 
 	public static class DataQueryIterator<T> extends AbstractIterator<T> implements
-			IDataQueryCountAware {
+			IDataQueryAware<T> {
 		private T t;
 
 		private final IDataQuery<T> dataQuery;
@@ -63,8 +63,8 @@ public abstract class DataQueryUtils {
 		}
 
 		@Override
-		public int getCount() {
-			return dataQuery.getCount();
+		public IDataQuery<T> getDataQuery() {
+			return dataQuery;
 		}
 	}
 }
