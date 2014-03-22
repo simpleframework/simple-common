@@ -2,7 +2,6 @@ package net.simpleframework.common.coll;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,56 +18,42 @@ public abstract class CollectionUtils {
 		return Collections.EMPTY_LIST;
 	}
 
-	public static <T> List<T> toList(final Enumeration<T> enumeration) {
-		if (enumeration == null) {
+	public static <T> List<T> toList(final Iterator<T> it) {
+		if (it == null) {
 			return null;
 		}
 		final List<T> l = new ArrayList<T>();
-		while (enumeration.hasMoreElements()) {
-			l.add(enumeration.nextElement());
+		while (it.hasNext()) {
+			l.add(it.next());
 		}
 		return l;
 	}
-
-	public static abstract class NestEnumeration<T, N> implements Enumeration<T> {
-		protected Enumeration<N> nest;
-
-		public NestEnumeration(final Enumeration<N> nest) {
-			this.nest = nest;
-		}
-
-		@Override
-		public boolean hasMoreElements() {
-			return nest.hasMoreElements();
-		}
-
-		protected abstract T change(N n);
-
-		@Override
-		public T nextElement() {
-			return change(nest.nextElement());
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static Enumeration EMPTY_ENUMERATION = new Enumeration() {
-
-		@Override
-		public boolean hasMoreElements() {
-			return false;
-		}
-
-		@Override
-		public Object nextElement() {
-			return null;
-		}
-	};
 
 	public static abstract class AbstractIterator<E> implements Iterator<E> {
 		protected int i = -1;
 
 		@Override
 		public void remove() {
+		}
+	}
+
+	public static abstract class NestIterator<T, N> extends AbstractIterator<T> {
+		protected Iterator<N> nest;
+
+		public NestIterator(final Iterator<N> nest) {
+			this.nest = nest;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return nest.hasNext();
+		}
+
+		protected abstract T change(N n);
+
+		@Override
+		public T next() {
+			return change(nest.next());
 		}
 	}
 
