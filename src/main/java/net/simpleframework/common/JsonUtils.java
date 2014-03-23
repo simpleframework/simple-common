@@ -3,12 +3,12 @@ package net.simpleframework.common;
 import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.simpleframework.common.logger.Log;
+import net.simpleframework.common.logger.LogFactory;
 import net.simpleframework.lib.net.minidev.asm.BeansAccess;
 import net.simpleframework.lib.net.minidev.json.JSONArray;
 import net.simpleframework.lib.net.minidev.json.JSONObject;
@@ -42,50 +42,35 @@ public abstract class JsonUtils {
 		try {
 			JSONArray.writeJSONString(data, sb, JSONValue.COMPRESSION);
 		} catch (final IOException e) {
+			log.warn(e);
 		}
 		return sb.toString();
 	}
 
 	/*-------------------------------json-to-bean-------------------------------*/
 
-	public static <T> T toObject(final String json, final Class<T> valueType) {
-		if (!StringUtils.hasText(json)) {
-			return null;
-		}
-		return JSONValue.parse(json, valueType);
-	}
-
 	@SuppressWarnings("unchecked")
 	public static Map<String, ?> toMap(final String json) {
 		return toObject(json, HashMap.class);
 	}
 
-	public static Collection<?> toList(final String json) {
-		return toList(json, null);
+	public static <T> T toObject(final String json, final Class<T> valueType) {
+		return json == null ? null : JSONValue.parse(json, valueType);
 	}
 
-	public static List<?> toList(final String json, final Class<?> beanClass) {
-		if (beanClass == null) {
-			return JSONValue.parse(json, ArrayList.class);
-		}
+	@SuppressWarnings("unchecked")
+	public static List<Map<String, ?>> toList(final String json) {
+		return toList(json, HashMap.class);
+	}
+
+	private static JSONParser JSON_PARSER = new JSONParser(DEFAULT_PERMISSIVE_MODE);
+
+	public static <T, M extends T> List<T> toList(final String json, final Class<M> beanClass) {
 		try {
-			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(json, new ListMapper<List<?>>(
-					beanClass));
+			return JSON_PARSER.parse(json, new ListMapper<List<T>>(beanClass));
 		} catch (final ParseException e) {
-			e.printStackTrace();
+			log.warn(e);
 			return null;
-		}
-	}
-
-	public static class TestBean {
-		private ID id;
-
-		public ID getId() {
-			return id;
-		}
-
-		public void setId(final ID id) {
-			this.id = id;
 		}
 	}
 
@@ -126,4 +111,6 @@ public abstract class JsonUtils {
 			((List<Object>) current).add(JSONUtil.convertToX(value, valueClass));
 		}
 	};
+
+	static final Log log = LogFactory.getLogger(JsonUtils.class);
 }
