@@ -3,7 +3,6 @@ package net.simpleframework.common;
 import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,18 +48,16 @@ public abstract class JsonUtils {
 
 	/*-------------------------------json-to-bean-------------------------------*/
 
-	@SuppressWarnings("unchecked")
 	public static Map<String, ?> toMap(final String json) {
-		return toObject(json, HashMap.class);
+		return toObject(json, JSONObject.class);
 	}
 
 	public static <T> T toObject(final String json, final Class<T> valueType) {
 		return json == null ? null : JSONValue.parse(json, valueType);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<Map<String, ?>> toList(final String json) {
-		return toList(json, HashMap.class);
+		return toList(json, JSONObject.class);
 	}
 
 	private static JSONParser JSON_PARSER = new JSONParser(DEFAULT_PERMISSIVE_MODE);
