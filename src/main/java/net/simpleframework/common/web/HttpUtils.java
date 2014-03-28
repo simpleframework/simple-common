@@ -142,20 +142,18 @@ public abstract class HttpUtils implements HtmlConst {
 		return true;
 	}
 
-	public static final String wrapContextPath(final HttpServletRequest httpRequest, final String url) {
-		final String contextPath = StringUtils.text(httpRequest.getContextPath(), "/");
+	public static final String wrapContextPath(final HttpServletRequest httpRequest, String url) {
+		final String cp = httpRequest.getContextPath();
 		if (!StringUtils.hasText(url)) {
-			return contextPath;
+			return StringUtils.text(cp, "/");
 		}
-		if (HttpUtils.isAbsoluteUrl(url)) {
-			return url;
-		} else if (url.charAt(0) != '/') {
-			return url;
-		} else if (url.toLowerCase().startsWith(contextPath.toLowerCase())) {
-			return url;
-		} else {
-			return contextPath + url;
+		if (url.length() > 0 && url.charAt(0) != '/') {
+			url = "/" + url;
 		}
+		if (!StringUtils.hasText(cp) || HttpUtils.isAbsoluteUrl(url)) {
+			return url;
+		}
+		return url.toLowerCase().startsWith(cp.toLowerCase() + "/") ? url : cp + url;
 	}
 
 	public static boolean loc(final HttpServletRequest httpRequest,
