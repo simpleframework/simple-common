@@ -33,7 +33,7 @@ public abstract class StringUtils {
 
 	public static String[] split(final String src, final String delim) {
 		if (src == null) {
-			return null;
+			return new String[0];
 		}
 
 		final int maxparts = (src.length() / delim.length()) + 2;

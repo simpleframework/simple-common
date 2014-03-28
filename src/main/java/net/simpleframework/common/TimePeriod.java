@@ -32,7 +32,7 @@ public class TimePeriod implements Serializable {
 			}
 			if (this.timePeriod == null) {
 				final String[] arr = StringUtils.split(timePeriod, ";");
-				if (arr != null && arr.length > 0) {
+				if (arr.length > 0) {
 					this.timePeriod = ETimePeriod.custom;
 					final String dateFormat = getDateFormat();
 					from = Convert.toDate(arr[0], dateFormat);

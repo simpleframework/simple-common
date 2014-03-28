@@ -55,9 +55,7 @@ public class MimeTypes {
 				mimeType = "video" + mimeType.substring(1);
 			}
 
-			final String[] allExtensions = StringUtils.split(extensions, " ");
-
-			for (final String extension : allExtensions) {
+			for (final String extension : StringUtils.split(extensions, " ")) {
 				if (MIME_TYPE_MAP.put(extension, mimeType) != null) {
 					throw new IllegalArgumentException("Duplicated extension: " + extension);
 				}
