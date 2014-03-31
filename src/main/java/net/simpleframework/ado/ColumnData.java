@@ -48,12 +48,12 @@ public class ColumnData extends ObjectEx implements Serializable {
 
 	public Collection<FilterItem> filterItems;
 
-	public ColumnData(final String name, final String text) {
-		this(name, text, null);
-	}
-
 	public ColumnData(final String name) {
 		this(name, (String) null);
+	}
+
+	public ColumnData(final String name, final String text) {
+		this(name, text, null);
 	}
 
 	public ColumnData(final String name, final String text, final Class<?> propertyClass) {
