@@ -2,7 +2,6 @@ package net.simpleframework.common.web;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
@@ -18,14 +17,8 @@ import net.simpleframework.lib.org.jsoup.Jsoup;
  *         http://www.simpleframework.net
  */
 public class HttpClient extends ObjectEx {
-	private static Map<String, HttpClient> cache = new ConcurrentHashMap<String, HttpClient>();
-
 	public static HttpClient of(final String url) {
-		HttpClient httpClient = cache.get(url);
-		if (httpClient == null) {
-			cache.put(url, httpClient = new HttpClient(url));
-		}
-		return httpClient;
+		return new HttpClient(url);
 	}
 
 	private String url;
