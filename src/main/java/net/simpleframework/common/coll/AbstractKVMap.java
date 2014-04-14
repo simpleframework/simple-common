@@ -95,6 +95,10 @@ public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>> implements
 
 	@Override
 	public T put(final String key, final T value) {
+		final T nullVal = getNullVal();
+		if (nullVal == null && value == null) {
+			return null;
+		}
 		if (caseInsensitiveKeys != null) {
 			caseInsensitiveKeys.put(caseInsensitiveKey(key), key);
 		}
