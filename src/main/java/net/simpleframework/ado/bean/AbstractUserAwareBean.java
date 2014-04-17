@@ -1,7 +1,5 @@
 package net.simpleframework.ado.bean;
 
-import java.util.Date;
-
 import net.simpleframework.common.ID;
 
 /**
@@ -11,20 +9,10 @@ import net.simpleframework.common.ID;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractUserAwareBean extends AbstractIdBean {
-	/* 创建日期 */
-	private Date createDate;
+public abstract class AbstractUserAwareBean extends AbstractDateAwareBean {
 
 	/* 创建人 */
 	private ID userId;
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(final Date createDate) {
-		this.createDate = createDate;
-	}
 
 	public ID getUserId() {
 		return userId;
