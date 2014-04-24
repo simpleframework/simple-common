@@ -10,8 +10,8 @@ import net.simpleframework.ado.IParamsValue.AbstractParamsValue;
  */
 public class UniqueValue extends AbstractParamsValue<UniqueValue> {
 
-	public UniqueValue(final Object... values) {
-		addValues(values);
+	public UniqueValue(final Object value) {
+		addValues(value);
 	}
 
 	@Override
