@@ -14,6 +14,10 @@ public class FilterItems extends AbstractArrayListEx<FilterItems, FilterItem> {
 		return new FilterItems().append(item);
 	}
 
+	public static FilterItems of(final String key, final Object val) {
+		return new FilterItems().addEqual(key, val);
+	}
+
 	public FilterItems addEqual(final String key, final Object val) {
 		if (val != null) {
 			add(new FilterItem(key, val));
