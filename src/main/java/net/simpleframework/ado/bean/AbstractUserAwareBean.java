@@ -9,15 +9,17 @@ import net.simpleframework.common.ID;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractUserAwareBean extends AbstractDateAwareBean {
+public abstract class AbstractUserAwareBean extends AbstractDateAwareBean implements IUserAwareBean {
 
 	/* 创建人 */
 	private ID userId;
 
+	@Override
 	public ID getUserId() {
 		return userId;
 	}
 
+	@Override
 	public void setUserId(final ID userId) {
 		this.userId = userId;
 	}
