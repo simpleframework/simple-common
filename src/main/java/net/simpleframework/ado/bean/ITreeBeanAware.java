@@ -22,5 +22,5 @@ public interface ITreeBeanAware {
 	 * 
 	 * @param parentId
 	 */
-	void setParentId(final ID parentId);
+	void setParentId(ID parentId);
 }

@@ -10,5 +10,5 @@ public interface ITextBeanAware {
 
 	String getText();
 
-	void setText(final String text);
+	void setText(String text);
 }

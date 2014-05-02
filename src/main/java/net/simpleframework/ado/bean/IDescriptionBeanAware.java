@@ -10,5 +10,5 @@ public interface IDescriptionBeanAware {
 
 	String getDescription();
 
-	void setDescription(final String description);
+	void setDescription(String description);
 }

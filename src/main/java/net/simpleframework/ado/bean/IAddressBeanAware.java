@@ -6,14 +6,17 @@ package net.simpleframework.ado.bean;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface IOrderBeanAware {
+public interface IAddressBeanAware {
 
-	/**
-	 * 获取bean的排序
-	 * 
-	 * @return
-	 */
-	int getOorder();
+	String getAddress();
 
-	void setOorder(int oorder);
+	void setAddress(String address);
+
+	double getLongitude();
+
+	void setLongitude(double longitude);
+
+	double getLatitude();
+
+	void setLatitude(double latitude);
 }
