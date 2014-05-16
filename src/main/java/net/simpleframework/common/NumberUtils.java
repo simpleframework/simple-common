@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class NumberUtils {
 	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<String, DecimalFormat>();
 
-	public static String formatDouble(final Number number) {
-		return format(number, "#.##");
+	public static String format(final Number number) {
+		return format(number, ".##");
 	}
 
 	public static String format(final Number number, final String pattern) {

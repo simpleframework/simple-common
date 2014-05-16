@@ -102,13 +102,13 @@ public abstract class FileUtils {
 			return "";
 		} else if (size > gb) {
 			final double d = (double) size / (double) gb;
-			return Convert.toString(NumberUtils.formatDouble(d)) + " GB";
+			return Convert.toString(NumberUtils.format(d)) + " GB";
 		} else if (size > mb) {
 			final double d = (double) size / (double) mb;
-			return Convert.toString(NumberUtils.formatDouble(d)) + " MB";
+			return Convert.toString(NumberUtils.format(d)) + " MB";
 		} else if (size > kb) {
 			final double d = (double) size / (double) kb;
-			return Convert.toString(NumberUtils.formatDouble(d)) + " KB";
+			return Convert.toString(NumberUtils.format(d)) + " KB";
 		} else {
 			return Convert.toString(size) + " B";
 		}
