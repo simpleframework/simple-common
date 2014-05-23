@@ -80,10 +80,15 @@ public class HttpClient extends ObjectEx {
 		}
 		int p;
 		final String jsessionid = getJsessionid();
+		boolean bJsessionid = false;
 		if (StringUtils.hasText(jsessionid) && (p = url.indexOf("?")) > 0) {
 			url = url.substring(0, p) + ";jsessionid=" + jsessionid + url.substring(p);
+			bJsessionid = true;
 		}
 		final Connection conn = Jsoup.connect(url).userAgent("HttpClient-[service]").timeout(0);
+		if (bJsessionid) {
+			conn.cookie("jsessionid", jsessionid);
+		}
 		if (data != null) {
 			for (final Map.Entry<String, Object> o : data.entrySet()) {
 				conn.data(o.getKey(), String.valueOf(o.getValue()));
