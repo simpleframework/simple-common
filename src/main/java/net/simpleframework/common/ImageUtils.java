@@ -131,17 +131,21 @@ public abstract class ImageUtils {
 			final BufferedImage bi = new BufferedImage(width, height,
 					alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 			final Graphics2D g = bi.createGraphics();
-			g.setBackground(Color.white);
-			g.fillRect(0, 0, width, height);
-			if (w != width) {
-				g.drawImage(sbi, Math.abs(w - width) / 2, 0, w, h, null);
-			} else if (h != height) {
-				g.drawImage(sbi, 0, Math.abs(h - height) / 2, w, h, null);
-			} else {
+			if (w == width && h == height) {
 				g.drawImage(sbi, 0, 0, w, h, null);
+			} else {
+				if (!alpha) {
+					g.setBackground(Color.white);
+					g.fillRect(0, 0, width, height);
+				}
+				if (w != width) {
+					g.drawImage(sbi, Math.abs(w - width) / 2, 0, w, h, null);
+				} else {
+					g.drawImage(sbi, 0, Math.abs(h - height) / 2, w, h, null);
+				}
 			}
 			g.dispose();
-			ImageIO.write(bi, alpha ? "png" : filetype, outputStream);
+			ImageIO.write(bi, filetype, outputStream);
 		} finally {
 			outputStream.close();
 		}
@@ -156,14 +160,13 @@ public abstract class ImageUtils {
 				return;
 			}
 			final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
-
-			final boolean alpha = sbi.getAlphaRaster() != null;
-			final BufferedImage bi = new BufferedImage(w, h, alpha ? BufferedImage.TYPE_INT_ARGB
-					: BufferedImage.TYPE_INT_RGB);
+			final BufferedImage bi = new BufferedImage(w, h,
+					sbi.getAlphaRaster() != null ? BufferedImage.TYPE_INT_ARGB
+							: BufferedImage.TYPE_INT_RGB);
 			final Graphics2D g = bi.createGraphics();
 			g.drawImage(sbi, 0, 0, w, h, null);
 			g.dispose();
-			ImageIO.write(bi, alpha ? "png" : filetype, outputStream);
+			ImageIO.write(bi, filetype, outputStream);
 		} finally {
 			outputStream.close();
 		}
