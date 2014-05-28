@@ -131,6 +131,8 @@ public abstract class ImageUtils {
 			final BufferedImage bi = new BufferedImage(width, height,
 					alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 			final Graphics2D g = bi.createGraphics();
+			g.setBackground(Color.white);
+			g.fillRect(0, 0, width, height);
 			if (w != width) {
 				g.drawImage(sbi, Math.abs(w - width) / 2, 0, w, h, null);
 			} else if (h != height) {
