@@ -94,6 +94,21 @@ public abstract class ArrayUtils {
 		return indexOf(array, value) != -1;
 	}
 
+	public static int indexOf(final char[] array, final char value) {
+		if (array != null) {
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] == value) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public static boolean contains(final char[] array, final char value) {
+		return indexOf(array, value) != -1;
+	}
+
 	public static boolean isEmpty(final Object[] arr) {
 		int i;
 		if (arr == null || (i = arr.length) == 0) {
