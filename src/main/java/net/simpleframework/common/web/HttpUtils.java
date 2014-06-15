@@ -198,7 +198,7 @@ public abstract class HttpUtils implements HtmlConst {
 		final Cookie[] cookies = httpRequest.getCookies();
 		if (cookies != null) {
 			for (final Cookie cookie : cookies) {
-				if (key.equals(cookie.getName())) {
+				if (key.equalsIgnoreCase(cookie.getName())) {
 					return cookie.getValue();
 				}
 			}
