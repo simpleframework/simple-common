@@ -24,7 +24,7 @@ public class Document extends Element {
 	 * Create a new, empty Document.
 	 * 
 	 * @param baseUri
-	 *           base URI of document
+	 *        base URI of document
 	 * @see net.simpleframework.lib.org.jsoup.Jsoup#parse
 	 * @see #createShell
 	 */
@@ -38,7 +38,7 @@ public class Document extends Element {
 	 * elements to.
 	 * 
 	 * @param baseUri
-	 *           baseUri of document
+	 *        baseUri of document
 	 * @return document with html, head, and body elements.
 	 */
 	static public Document createShell(final String baseUri) {
@@ -98,7 +98,7 @@ public class Document extends Element {
 	 * adds {@code title} to {@code head} if not present
 	 * 
 	 * @param title
-	 *           string to set as title
+	 *        string to set as title
 	 */
 	public void title(final String title) {
 		Validate.notNull(title);
@@ -115,7 +115,7 @@ public class Document extends Element {
 	 * element a child of this document.
 	 * 
 	 * @param tagName
-	 *           element tag name (e.g. {@code a})
+	 *        element tag name (e.g. {@code a})
 	 * @return new element
 	 */
 	public Element createElement(final String tagName) {
@@ -179,7 +179,7 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created
+		// created
 		// above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<Node>();
@@ -226,7 +226,7 @@ public class Document extends Element {
 	 * within the body will be cleared.
 	 * 
 	 * @param text
-	 *           unencoded text
+	 *        unencoded text
 	 * @return this document
 	 */
 	@Override
@@ -291,7 +291,7 @@ public class Document extends Element {
 		 * character:- using either a named or a numbered escape.
 		 * 
 		 * @param escapeMode
-		 *           the new escape mode to use
+		 *        the new escape mode to use
 		 * @return the document's output settings, for chaining
 		 */
 		public OutputSettings escapeMode(final Entities.EscapeMode escapeMode) {
@@ -318,7 +318,7 @@ public class Document extends Element {
 		 * Update the document's output charset.
 		 * 
 		 * @param charset
-		 *           the new charset to use.
+		 *        the new charset to use.
 		 * @return the document's output settings, for chaining
 		 */
 		public OutputSettings charset(final Charset charset) {
@@ -332,7 +332,7 @@ public class Document extends Element {
 		 * Update the document's output charset.
 		 * 
 		 * @param charset
-		 *           the new charset (by name) to use.
+		 *        the new charset (by name) to use.
 		 * @return the document's output settings, for chaining
 		 */
 		public OutputSettings charset(final String charset) {
@@ -358,7 +358,7 @@ public class Document extends Element {
 		 * and boolean attributes (etc), or {@code xml}, with self-closing tags.
 		 * 
 		 * @param syntax
-		 *           serialization syntax
+		 *        serialization syntax
 		 * @return the document's output settings, for chaining
 		 */
 		public OutputSettings syntax(final Syntax syntax) {
@@ -381,7 +381,7 @@ public class Document extends Element {
 		 * Enable or disable pretty printing.
 		 * 
 		 * @param pretty
-		 *           new pretty print setting
+		 *        new pretty print setting
 		 * @return this, for chaining
 		 */
 		public OutputSettings prettyPrint(final boolean pretty) {
@@ -403,7 +403,7 @@ public class Document extends Element {
 		 * Enable or disable HTML outline mode.
 		 * 
 		 * @param outlineMode
-		 *           new outline setting
+		 *        new outline setting
 		 * @return this, for chaining
 		 */
 		public OutputSettings outline(final boolean outlineMode) {
@@ -424,8 +424,8 @@ public class Document extends Element {
 		 * Set the indent amount for pretty printing
 		 * 
 		 * @param indentAmount
-		 *           number of spaces to use for indenting each level. Must be >=
-		 *           0.
+		 *        number of spaces to use for indenting each level. Must be >=
+		 *        0.
 		 * @return this, for chaining
 		 */
 		public OutputSettings indentAmount(final int indentAmount) {
@@ -463,7 +463,7 @@ public class Document extends Element {
 	 * Set the document's output settings.
 	 * 
 	 * @param outputSettings
-	 *           new output settings.
+	 *        new output settings.
 	 * @return this document, for chaining.
 	 */
 	public Document outputSettings(final OutputSettings outputSettings) {

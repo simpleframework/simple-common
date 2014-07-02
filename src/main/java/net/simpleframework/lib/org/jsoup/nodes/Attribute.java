@@ -25,9 +25,9 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * Create a new attribute from unencoded (raw) key and value.
 	 * 
 	 * @param key
-	 *           attribute key
+	 *        attribute key
 	 * @param value
-	 *           attribute value
+	 *        attribute value
 	 * @see #createFromEncoded
 	 */
 	public Attribute(final String key, final String value) {
@@ -51,7 +51,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * Set the attribute key. Gets normalised as per the constructor method.
 	 * 
 	 * @param key
-	 *           the new key; must not be null
+	 *        the new key; must not be null
 	 */
 	public void setKey(final String key) {
 		Validate.notEmpty(key);
@@ -72,7 +72,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * Set the attribute value.
 	 * 
 	 * @param value
-	 *           the new attribute value; must not be null
+	 *        the new attribute value; must not be null
 	 */
 	@Override
 	public String setValue(final String value) {
@@ -119,10 +119,10 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * value.
 	 * 
 	 * @param unencodedKey
-	 *           assumes the key is not encoded, as can be only run of simple \w
-	 *           chars.
+	 *        assumes the key is not encoded, as can be only run of simple \w
+	 *        chars.
 	 * @param encodedValue
-	 *           HTML attribute encoded value
+	 *        HTML attribute encoded value
 	 * @return attribute
 	 */
 	public static Attribute createFromEncoded(final String unencodedKey, final String encodedValue) {
@@ -175,8 +175,8 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	public Attribute clone() {
 		try {
 			return (Attribute) super.clone(); // only fields are immutable strings
-															// key and value, so no more deep
-															// copy required
+			// key and value, so no more deep
+			// copy required
 		} catch (final CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}

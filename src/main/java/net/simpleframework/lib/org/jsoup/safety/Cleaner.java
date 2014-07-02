@@ -35,7 +35,7 @@ public class Cleaner {
 	 * whitelist.
 	 * 
 	 * @param whitelist
-	 *           white-list to clean with
+	 *        white-list to clean with
 	 */
 	public Cleaner(final Whitelist whitelist) {
 		Validate.notNull(whitelist);
@@ -49,7 +49,7 @@ public class Cleaner {
 	 * are used.
 	 * 
 	 * @param dirtyDocument
-	 *           Untrusted base document to clean.
+	 *        Untrusted base document to clean.
 	 * @return cleaned document.
 	 */
 	public Document clean(final Document dirtyDocument) {
@@ -76,7 +76,7 @@ public class Cleaner {
 	 * set correctly, and that the output is tidied.
 	 * 
 	 * @param dirtyDocument
-	 *           document to test
+	 *        document to test
 	 * @return true if no tags or attributes need to be removed; false if they do
 	 */
 	public boolean isValid(final Document dirtyDocument) {
@@ -107,7 +107,7 @@ public class Cleaner {
 				final Element sourceEl = (Element) source;
 
 				if (whitelist.isSafeTag(sourceEl.tagName())) { // safe, clone and
-																				// copy safe attrs
+					// copy safe attrs
 					final ElementMeta meta = createSafeElement(sourceEl);
 					final Element destChild = meta.el;
 					destination.appendChild(destChild);
@@ -115,7 +115,7 @@ public class Cleaner {
 					numDiscarded += meta.numAttribsDiscarded;
 					destination = destChild;
 				} else if (source != root) { // not a safe tag, so don't add. don't
-														// count root against discarded.
+					// count root against discarded.
 					numDiscarded++;
 				}
 			} else if (source instanceof TextNode) {
@@ -123,7 +123,7 @@ public class Cleaner {
 				final TextNode destText = new TextNode(sourceText.getWholeText(), source.baseUri());
 				destination.appendChild(destText);
 			} else { // else, we don't care about comments, xml proc instructions,
-						// etc
+				// etc
 				numDiscarded++;
 			}
 		}
@@ -132,7 +132,7 @@ public class Cleaner {
 		public void tail(final Node source, final int depth) {
 			if (source instanceof Element && whitelist.isSafeTag(source.nodeName())) {
 				destination = destination.parent(); // would have descended, so pop
-																// destination stack
+				// destination stack
 			}
 		}
 	}

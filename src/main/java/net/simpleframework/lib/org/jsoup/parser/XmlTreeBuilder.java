@@ -28,7 +28,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 			final ParseErrorList errors) {
 		super.initialiseParse(input, baseUri, errors);
 		stack.add(doc); // place the document onto the stack. differs from
-								// HtmlTreeBuilder (not on stack)
+		// HtmlTreeBuilder (not on stack)
 		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 	}
 
@@ -85,8 +85,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 		final Comment comment = new Comment(commentToken.getData(), baseUri);
 		Node insert = comment;
 		if (commentToken.bogus) { // xml declarations are emitted as bogus
-											// comments (which is right for html, but not
-											// xml)
+			// comments (which is right for html, but not
+			// xml)
 			final String data = comment.getData();
 			if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
 				final String declaration = data.substring(1);

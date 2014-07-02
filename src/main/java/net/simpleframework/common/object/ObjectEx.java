@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
 import net.simpleframework.common.object.ObjectFactory.IObjectCreatorListener;
-import net.simpleframework.common.th.NotImplementedException;
 import net.simpleframework.common.th.RuntimeExceptionEx;
 import net.simpleframework.common.th.ThrowableUtils;
 
@@ -32,40 +31,38 @@ public abstract class ObjectEx {
 	/**
 	 * 扩充属性
 	 */
-	private Map<String, Object> attributes;
+	private Map<String, Object> _attributes;
 
-	public void enableAttributes() {
-		attributes = new ConcurrentHashMap<String, Object>();
+	private Map<String, Object> _getAttributes() {
+		if (_attributes == null) {
+			_attributes = new ConcurrentHashMap<String, Object>();
+		}
+		return _attributes;
 	}
 
 	public Object getAttr(final String key) {
-		return attributes != null ? attributes.get(key) : null;
+		return _getAttributes().get(key);
 	}
 
 	public ObjectEx setAttr(final String key, final Object value) {
-		if (attributes == null) {
-			throw NotImplementedException.of(getClass(), "enableAttributes");
-		}
 		if (value == null) {
 			removeAttr(key);
 		} else {
-			attributes.put(key, value);
+			_getAttributes().put(key, value);
 		}
 		return this;
 	}
 
 	public Object removeAttr(final String key) {
-		return attributes != null ? attributes.remove(key) : null;
+		return _getAttributes().remove(key);
 	}
 
 	public void clearAttribute() {
-		if (attributes != null) {
-			attributes.clear();
-		}
+		_getAttributes().clear();
 	}
 
 	public Enumeration<String> attrNames() {
-		return attributes != null ? new Vector<String>(attributes.keySet()).elements() : null;
+		return new Vector<String>(_getAttributes().keySet()).elements();
 	}
 
 	public static <T> T isolate(final IIsolation<T> callback) {

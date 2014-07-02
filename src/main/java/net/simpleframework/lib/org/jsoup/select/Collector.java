@@ -18,9 +18,9 @@ public class Collector {
 	 * and testing it against the evaluator.
 	 * 
 	 * @param eval
-	 *           Evaluator to test elements against
+	 *        Evaluator to test elements against
 	 * @param root
-	 *           root of tree to descend
+	 *        root of tree to descend
 	 * @return list of matches; empty if none
 	 */
 	public static Elements collect(final Evaluator eval, final Element root) {

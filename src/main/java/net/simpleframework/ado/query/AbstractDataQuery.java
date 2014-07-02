@@ -18,7 +18,6 @@ public abstract class AbstractDataQuery<T> extends ObjectEx implements IDataQuer
 
 	public AbstractDataQuery() {
 		reset();
-		enableAttributes();
 	}
 
 	@Override

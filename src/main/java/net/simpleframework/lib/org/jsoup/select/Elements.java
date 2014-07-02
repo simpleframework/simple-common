@@ -74,7 +74,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * attribute.
 	 * 
 	 * @param attributeKey
-	 *           The attribute key.
+	 *        The attribute key.
 	 * @return The attribute value from the first matched element that has the
 	 *         attribute.. If no elements were matched (isEmpty() == true), or if
 	 *         the no elements have the attribute, returns empty string.
@@ -93,7 +93,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Checks if any of the matched elements have this attribute set.
 	 * 
 	 * @param attributeKey
-	 *           attribute key
+	 *        attribute key
 	 * @return true if any of the elements have the attribute; false if none do.
 	 */
 	public boolean hasAttr(final String attributeKey) {
@@ -109,9 +109,9 @@ public class Elements implements List<Element>, Cloneable {
 	 * Set an attribute on all matched elements.
 	 * 
 	 * @param attributeKey
-	 *           attribute key
+	 *        attribute key
 	 * @param attributeValue
-	 *           attribute value
+	 *        attribute value
 	 * @return this
 	 */
 	public Elements attr(final String attributeKey, final String attributeValue) {
@@ -125,7 +125,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Remove an attribute from every matched element.
 	 * 
 	 * @param attributeKey
-	 *           The attribute to remove.
+	 *        The attribute to remove.
 	 * @return this (for chaining)
 	 */
 	public Elements removeAttr(final String attributeKey) {
@@ -139,7 +139,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Add the class name to every matched element's {@code class} attribute.
 	 * 
 	 * @param className
-	 *           class name to add
+	 *        class name to add
 	 * @return this
 	 */
 	public Elements addClass(final String className) {
@@ -154,7 +154,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * attribute, if present.
 	 * 
 	 * @param className
-	 *           class name to remove
+	 *        class name to remove
 	 * @return this
 	 */
 	public Elements removeClass(final String className) {
@@ -168,8 +168,8 @@ public class Elements implements List<Element>, Cloneable {
 	 * Toggle the class name on every matched element's {@code class} attribute.
 	 * 
 	 * @param className
-	 *           class name to add if missing, or remove if present, from every
-	 *           element.
+	 *        class name to add if missing, or remove if present, from every
+	 *        element.
 	 * @return this
 	 */
 	public Elements toggleClass(final String className) {
@@ -184,7 +184,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * {@code class} attribute.
 	 * 
 	 * @param className
-	 *           class name to check for
+	 *        class name to check for
 	 * @return true if any do, false if none do
 	 */
 	public boolean hasClass(final String className) {
@@ -214,7 +214,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Set the form element's value in each of the matched elements.
 	 * 
 	 * @param value
-	 *           The value to set into each matched element
+	 *        The value to set into each matched element
 	 * @return this (for chaining)
 	 */
 	public Elements val(final String value) {
@@ -308,7 +308,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * {@code <i>} to a {@code <em>}, do {@code doc.select("i").tagName("em");}
 	 * 
 	 * @param tagName
-	 *           the new tag name
+	 *        the new tag name
 	 * @return this, for chaining
 	 * @see Element#tagName(String)
 	 */
@@ -323,7 +323,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Set the inner HTML of each matched element.
 	 * 
 	 * @param html
-	 *           HTML to parse and set into each matched element.
+	 *        HTML to parse and set into each matched element.
 	 * @return this, for chaining
 	 * @see Element#html(String)
 	 */
@@ -338,7 +338,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Add the supplied HTML to the start of each matched element's inner HTML.
 	 * 
 	 * @param html
-	 *           HTML to add inside each element, before the existing HTML
+	 *        HTML to add inside each element, before the existing HTML
 	 * @return this, for chaining
 	 * @see Element#prepend(String)
 	 */
@@ -353,7 +353,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Add the supplied HTML to the end of each matched element's inner HTML.
 	 * 
 	 * @param html
-	 *           HTML to add inside each element, after the existing HTML
+	 *        HTML to add inside each element, after the existing HTML
 	 * @return this, for chaining
 	 * @see Element#append(String)
 	 */
@@ -368,7 +368,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Insert the supplied HTML before each matched element's outer HTML.
 	 * 
 	 * @param html
-	 *           HTML to insert before each element
+	 *        HTML to insert before each element
 	 * @return this, for chaining
 	 * @see Element#before(String)
 	 */
@@ -383,7 +383,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Insert the supplied HTML after each matched element's outer HTML.
 	 * 
 	 * @param html
-	 *           HTML to insert after each element
+	 *        HTML to insert after each element
 	 * @return this, for chaining
 	 * @see Element#after(String)
 	 */
@@ -401,8 +401,8 @@ public class Elements implements List<Element>, Cloneable {
 	 * {@code <p><i><b>This</b></i> is <i><b>jsoup</b></i></p>}
 	 * 
 	 * @param html
-	 *           HTML to wrap around each element, e.g.
-	 *           {@code <div class="head"></div>}. Can be arbitrarily deep.
+	 *        HTML to wrap around each element, e.g.
+	 *        {@code <div class="head"></div>}. Can be arbitrarily deep.
 	 * @return this (for chaining)
 	 * @see Element#wrap
 	 */
@@ -488,7 +488,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Find matching elements within this element list.
 	 * 
 	 * @param query
-	 *           A {@link Selector} query
+	 *        A {@link Selector} query
 	 * @return the filtered list of elements, or an empty list if none match.
 	 */
 	public Elements select(final String query) {
@@ -504,8 +504,8 @@ public class Elements implements List<Element>, Cloneable {
 	 * <p>
 	 * 
 	 * @param query
-	 *           the selector query whose results should be removed from these
-	 *           elements
+	 *        the selector query whose results should be removed from these
+	 *        elements
 	 * @return a new elements list that contains only the filtered results
 	 */
 	public Elements not(final String query) {
@@ -519,7 +519,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * See also {@link #get(int)} to retrieve an Element.
 	 * 
 	 * @param index
-	 *           the (zero-based) index of the element in the list to retain
+	 *        the (zero-based) index of the element in the list to retain
 	 * @return Elements containing only the specified element, or, if that
 	 *         element did not exist, an empty list.
 	 */
@@ -531,7 +531,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Test if any of the matched elements match the supplied query.
 	 * 
 	 * @param query
-	 *           A selector
+	 *        A selector
 	 * @return true if at least one element in the list matches the query.
 	 */
 	public boolean is(final String query) {
@@ -577,7 +577,7 @@ public class Elements implements List<Element>, Cloneable {
 	 * Perform a depth-first traversal on each of the selected elements.
 	 * 
 	 * @param nodeVisitor
-	 *           the visitor callbacks to perform on each node
+	 *        the visitor callbacks to perform on each node
 	 * @return this, for chaining
 	 */
 	public Elements traverse(final NodeVisitor nodeVisitor) {

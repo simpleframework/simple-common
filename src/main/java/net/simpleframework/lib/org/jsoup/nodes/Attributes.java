@@ -36,7 +36,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Get an attribute value by key.
 	 * 
 	 * @param key
-	 *           the attribute key
+	 *        the attribute key
 	 * @return the attribute value if set; or empty string if not set.
 	 * @see #hasKey(String)
 	 */
@@ -55,9 +55,9 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Set a new attribute, or replace an existing one by key.
 	 * 
 	 * @param key
-	 *           attribute key
+	 *        attribute key
 	 * @param value
-	 *           attribute value
+	 *        attribute value
 	 */
 	public void put(final String key, final String value) {
 		final Attribute attr = new Attribute(key, value);
@@ -68,7 +68,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Set a new attribute, or replace an existing one by key.
 	 * 
 	 * @param attribute
-	 *           attribute
+	 *        attribute
 	 */
 	public void put(final Attribute attribute) {
 		Validate.notNull(attribute);
@@ -82,7 +82,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Remove an attribute by key.
 	 * 
 	 * @param key
-	 *           attribute key to remove
+	 *        attribute key to remove
 	 */
 	public void remove(final String key) {
 		Validate.notEmpty(key);
@@ -96,7 +96,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Tests if these attributes contain an attribute with this key.
 	 * 
 	 * @param key
-	 *           key to check for
+	 *        key to check for
 	 * @return true if key exists, false otherwise
 	 */
 	public boolean hasKey(final String key) {
@@ -119,7 +119,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Add all the attributes from the incoming set to this set.
 	 * 
 	 * @param incoming
-	 *           attributes to add to these attributes.
+	 *        attributes to add to these attributes.
 	 */
 	public void addAll(final Attributes incoming) {
 		if (incoming.size() == 0) {
@@ -173,8 +173,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	public String html() {
 		final StringBuilder accum = new StringBuilder();
 		html(accum, (new Document("")).outputSettings()); // output settings a bit
-																			// funky, but this
-																			// html() seldom used
+		// funky, but this
+		// html() seldom used
 		return accum.toString();
 	}
 

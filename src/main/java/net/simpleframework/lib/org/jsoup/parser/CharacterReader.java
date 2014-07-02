@@ -64,7 +64,7 @@ class CharacterReader {
 	 * instance of the input char
 	 * 
 	 * @param c
-	 *           scan target
+	 *        scan target
 	 * @return offset between current position and next instance of target. -1 if
 	 *         not found.
 	 */
@@ -83,7 +83,7 @@ class CharacterReader {
 	 * instance of the input sequence
 	 * 
 	 * @param seq
-	 *           scan target
+	 *        scan target
 	 * @return offset between current position and next instance of target. -1 if
 	 *         not found.
 	 */

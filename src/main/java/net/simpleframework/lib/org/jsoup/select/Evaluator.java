@@ -23,9 +23,9 @@ public abstract class Evaluator {
 	 * Test if the element meets the evaluator's requirements.
 	 * 
 	 * @param root
-	 *           Root of the matching subtree
+	 *        Root of the matching subtree
 	 * @param element
-	 *           tested element
+	 *        tested element
 	 */
 	public abstract boolean matches(Element root, Element element);
 
@@ -196,10 +196,10 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().startsWith(value); // value
-																															// is
-																															// lower
-																															// case
-																															// already
+			// is
+			// lower
+			// case
+			// already
 		}
 
 		@Override
@@ -220,9 +220,9 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().endsWith(value); // value
-																														// is
-																														// lower
-																														// case
+			// is
+			// lower
+			// case
 		}
 
 		@Override
@@ -243,9 +243,9 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().contains(value); // value
-																														// is
-																														// lower
-																														// case
+			// is
+			// lower
+			// case
 		}
 
 		@Override

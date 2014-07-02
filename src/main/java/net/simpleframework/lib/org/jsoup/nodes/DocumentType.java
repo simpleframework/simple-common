@@ -13,13 +13,13 @@ public class DocumentType extends Node {
 	 * Create a new doctype element.
 	 * 
 	 * @param name
-	 *           the doctype's name
+	 *        the doctype's name
 	 * @param publicId
-	 *           the doctype's public ID
+	 *        the doctype's public ID
 	 * @param systemId
-	 *           the doctype's system ID
+	 *        the doctype's system ID
 	 * @param baseUri
-	 *           the doctype's base URI
+	 *        the doctype's base URI
 	 */
 	public DocumentType(final String name, final String publicId, final String systemId,
 			final String baseUri) {

@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -858,9 +858,9 @@ public class ParseTools {
 	 * Replace escape sequences and return trim required.
 	 * 
 	 * @param escapeStr
-	 *           -
+	 *        -
 	 * @param pos
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	public static int handleEscapeSequence(final char[] escapeStr, int pos) {
@@ -1323,11 +1323,11 @@ public class ParseTools {
 	 * current position and the end of the last non-whitespace character.
 	 * 
 	 * @param expr
-	 *           -
+	 *        -
 	 * @param start
-	 *           -
+	 *        -
 	 * @param pos
-	 *           - current position
+	 *        - current position
 	 * @return new position.
 	 */
 	public static int trimLeft(final char[] expr, final int start, int pos) {
@@ -1345,9 +1345,9 @@ public class ParseTools {
 	 * current position and beginning of the first non-whitespace character.
 	 * 
 	 * @param expr
-	 *           -
+	 *        -
 	 * @param pos
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	public static int trimRight(final char[] expr, int pos) {
@@ -1386,11 +1386,11 @@ public class ParseTools {
 	 * Etc.
 	 * 
 	 * @param chars
-	 *           -
+	 *        -
 	 * @param start
-	 *           -
+	 *        -
 	 * @param type
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	public static int balancedCapture(final char[] chars, final int start, final char type) {
@@ -2160,7 +2160,7 @@ public class ParseTools {
 	 * Check if the specified string is a reserved word in the parser.
 	 * 
 	 * @param name
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	public static boolean isReservedWord(final String name) {
@@ -2171,7 +2171,7 @@ public class ParseTools {
 	 * Check if the specfied string represents a valid name of label.
 	 * 
 	 * @param name
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	public static boolean isNotValidNameorLabel(final String name) {

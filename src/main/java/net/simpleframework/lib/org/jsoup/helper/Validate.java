@@ -12,7 +12,7 @@ public final class Validate {
 	 * Validates that the object is not null
 	 * 
 	 * @param obj
-	 *           object to test
+	 *        object to test
 	 */
 	public static void notNull(final Object obj) {
 		if (obj == null) {
@@ -24,9 +24,9 @@ public final class Validate {
 	 * Validates that the object is not null
 	 * 
 	 * @param obj
-	 *           object to test
+	 *        object to test
 	 * @param msg
-	 *           message to output if validation fails
+	 *        message to output if validation fails
 	 */
 	public static void notNull(final Object obj, final String msg) {
 		if (obj == null) {
@@ -38,7 +38,7 @@ public final class Validate {
 	 * Validates that the value is true
 	 * 
 	 * @param val
-	 *           object to test
+	 *        object to test
 	 */
 	public static void isTrue(final boolean val) {
 		if (!val) {
@@ -50,9 +50,9 @@ public final class Validate {
 	 * Validates that the value is true
 	 * 
 	 * @param val
-	 *           object to test
+	 *        object to test
 	 * @param msg
-	 *           message to output if validation fails
+	 *        message to output if validation fails
 	 */
 	public static void isTrue(final boolean val, final String msg) {
 		if (!val) {
@@ -64,7 +64,7 @@ public final class Validate {
 	 * Validates that the value is false
 	 * 
 	 * @param val
-	 *           object to test
+	 *        object to test
 	 */
 	public static void isFalse(final boolean val) {
 		if (val) {
@@ -76,9 +76,9 @@ public final class Validate {
 	 * Validates that the value is false
 	 * 
 	 * @param val
-	 *           object to test
+	 *        object to test
 	 * @param msg
-	 *           message to output if validation fails
+	 *        message to output if validation fails
 	 */
 	public static void isFalse(final boolean val, final String msg) {
 		if (val) {
@@ -90,7 +90,7 @@ public final class Validate {
 	 * Validates that the array contains no null elements
 	 * 
 	 * @param objects
-	 *           the array to test
+	 *        the array to test
 	 */
 	public static void noNullElements(final Object[] objects) {
 		noNullElements(objects, "Array must not contain any null objects");
@@ -100,9 +100,9 @@ public final class Validate {
 	 * Validates that the array contains no null elements
 	 * 
 	 * @param objects
-	 *           the array to test
+	 *        the array to test
 	 * @param msg
-	 *           message to output if validation fails
+	 *        message to output if validation fails
 	 */
 	public static void noNullElements(final Object[] objects, final String msg) {
 		for (final Object obj : objects) {
@@ -116,7 +116,7 @@ public final class Validate {
 	 * Validates that the string is not empty
 	 * 
 	 * @param string
-	 *           the string to test
+	 *        the string to test
 	 */
 	public static void notEmpty(final String string) {
 		if (string == null || string.length() == 0) {
@@ -128,9 +128,9 @@ public final class Validate {
 	 * Validates that the string is not empty
 	 * 
 	 * @param string
-	 *           the string to test
+	 *        the string to test
 	 * @param msg
-	 *           message to output if validation fails
+	 *        message to output if validation fails
 	 */
 	public static void notEmpty(final String string, final String msg) {
 		if (string == null || string.length() == 0) {
@@ -142,7 +142,7 @@ public final class Validate {
 	 * Cause a failure.
 	 * 
 	 * @param msg
-	 *           message to output.
+	 *        message to output.
 	 */
 	public static void fail(final String msg) {
 		throw new IllegalArgumentException(msg);

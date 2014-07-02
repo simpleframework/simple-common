@@ -1,8 +1,9 @@
 package net.simpleframework.lib.org.jsoup.safety;
 
 /*
- Thank you to Ryan Grove (wonko.com) for the Ruby HTML cleaner http://github.com/rgrove/sanitize/, which inspired
- this whitelist configuration, and the initial defaults.
+ * Thank you to Ryan Grove (wonko.com) for the Ruby HTML cleaner
+ * http://github.com/rgrove/sanitize/, which inspired
+ * this whitelist configuration, and the initial defaults.
  */
 
 import java.util.HashMap;
@@ -53,10 +54,10 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-														// br,
+	// br,
 	// span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
-																					// attribute[].
+	// attribute[].
 	// allowed attributes
 	// [href] for a tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
@@ -189,7 +190,7 @@ public class Whitelist {
 	 * it will be removed from the HTML.)
 	 * 
 	 * @param tags
-	 *           tag names to allow
+	 *        tag names to allow
 	 * @return this (for chaining)
 	 */
 	public Whitelist addTags(final String... tags) {
@@ -214,10 +215,10 @@ public class Whitelist {
 	 * <code>:all</code>, e.g. <code>addAttributes(":all", "class")</code>.
 	 * 
 	 * @param tag
-	 *           The tag the attributes are for. The tag will be added to the
-	 *           allowed tag list if necessary.
+	 *        The tag the attributes are for. The tag will be added to the
+	 *        allowed tag list if necessary.
 	 * @param keys
-	 *           List of valid attributes for the tag
+	 *        List of valid attributes for the tag
 	 * @return this (for chaining)
 	 */
 	public Whitelist addAttributes(final String tag, final String... keys) {
@@ -253,12 +254,12 @@ public class Whitelist {
 	 * <code>&lt;a href="..." rel="nofollow"></code>
 	 * 
 	 * @param tag
-	 *           The tag the enforced attribute is for. The tag will be added to
-	 *           the allowed tag list if necessary.
+	 *        The tag the enforced attribute is for. The tag will be added to
+	 *        the allowed tag list if necessary.
 	 * @param key
-	 *           The attribute key
+	 *        The attribute key
 	 * @param value
-	 *           The enforced attribute value
+	 *        The enforced attribute value
 	 * @return this (for chaining)
 	 */
 	public Whitelist addEnforcedAttribute(final String tag, final String key, final String value) {
@@ -297,8 +298,8 @@ public class Whitelist {
 	 * allowed protocol; otherwise the attribute will be removed.
 	 * 
 	 * @param preserve
-	 *           {@code true} to allow relative links, {@code false} (default) to
-	 *           deny
+	 *        {@code true} to allow relative links, {@code false} (default) to
+	 *        deny
 	 * @return this Whitelist, for chaining.
 	 * @see #addProtocols
 	 */
@@ -314,11 +315,11 @@ public class Whitelist {
 	 * E.g.: <code>addProtocols("a", "href", "ftp", "http", "https")</code>
 	 * 
 	 * @param tag
-	 *           Tag the URL protocol is for
+	 *        Tag the URL protocol is for
 	 * @param key
-	 *           Attribute key
+	 *        Attribute key
 	 * @param protocols
-	 *           List of valid protocols
+	 *        List of valid protocols
 	 * @return this, for chaining
 	 */
 	public Whitelist addProtocols(final String tag, final String key, final String... protocols) {
@@ -355,7 +356,7 @@ public class Whitelist {
 	 * Test if the supplied tag is allowed by this whitelist
 	 * 
 	 * @param tag
-	 *           test tag
+	 *        test tag
 	 * @return true if allowed
 	 */
 	protected boolean isSafeTag(final String tag) {
@@ -366,11 +367,11 @@ public class Whitelist {
 	 * Test if the supplied attribute is allowed by this whitelist for this tag
 	 * 
 	 * @param tagName
-	 *           tag to consider allowing the attribute in
+	 *        tag to consider allowing the attribute in
 	 * @param el
-	 *           element under test, to confirm protocol
+	 *        element under test, to confirm protocol
 	 * @param attr
-	 *           attribute under test
+	 *        attribute under test
 	 * @return true if allowed
 	 */
 	protected boolean isSafeAttribute(final String tagName, final Element el, final Attribute attr) {

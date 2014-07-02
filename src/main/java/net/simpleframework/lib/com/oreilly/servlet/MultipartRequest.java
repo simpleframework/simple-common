@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -70,13 +70,14 @@ public class MultipartRequest {
 	private static final int DEFAULT_MAX_POST_SIZE = 1024 * 1024; // 1 Meg
 
 	protected Hashtable<String, Vector<String>> parameters = new Hashtable<String, Vector<String>>(); // name
-																																		// -
-																																		// Vector
-																																		// of
-																																		// values
+	// -
+	// Vector
+	// of
+	// values
 	protected Hashtable<String, UploadedFile> files = new Hashtable<String, UploadedFile>(); // name
-																															// -
-																															// UploadedFile
+
+	// -
+	// UploadedFile
 
 	/**
 	 * Constructs a new MultipartRequest to handle the specified request, saving
@@ -86,12 +87,12 @@ public class MultipartRequest {
 	 * IOException if there's any problem reading or parsing the request.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @exception IOException
-	 *               if the uploaded content is larger than 1 Megabyte or there's
-	 *               a problem reading or parsing the request.
+	 *            if the uploaded content is larger than 1 Megabyte or there's
+	 *            a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory)
 			throws IOException {
@@ -107,14 +108,14 @@ public class MultipartRequest {
 	 * request.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @param maxPostSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @exception IOException
-	 *               if the uploaded content is larger than <tt>maxPostSize</tt>
-	 *               or there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
+	 *            there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize) throws IOException {
@@ -130,14 +131,14 @@ public class MultipartRequest {
 	 * request.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @param encoding
-	 *           the encoding of the response, such as ISO-8859-1
+	 *        the encoding of the response, such as ISO-8859-1
 	 * @exception IOException
-	 *               if the uploaded content is larger than 1 Megabyte or there's
-	 *               a problem reading or parsing the request.
+	 *            if the uploaded content is larger than 1 Megabyte or there's
+	 *            a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final String encoding) throws IOException {
@@ -153,16 +154,16 @@ public class MultipartRequest {
 	 * request.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @param maxPostSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @param encoding
-	 *           the encoding of the response, such as ISO-8859-1
+	 *        the encoding of the response, such as ISO-8859-1
 	 * @exception IOException
-	 *               if the uploaded content is larger than <tt>maxPostSize</tt>
-	 *               or there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
+	 *            there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final FileRenamePolicy policy) throws IOException {
@@ -178,16 +179,16 @@ public class MultipartRequest {
 	 * request.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @param maxPostSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @param encoding
-	 *           the encoding of the response, such as ISO-8859-1
+	 *        the encoding of the response, such as ISO-8859-1
 	 * @exception IOException
-	 *               if the uploaded content is larger than <tt>maxPostSize</tt>
-	 *               or there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
+	 *            there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final String encoding) throws IOException {
@@ -206,18 +207,18 @@ public class MultipartRequest {
 	 * FileRenamePolicy interface to allow a pluggable rename policy.
 	 * 
 	 * @param request
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param saveDirectory
-	 *           the directory in which to save any uploaded files.
+	 *        the directory in which to save any uploaded files.
 	 * @param maxPostSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @param encoding
-	 *           the encoding of the response, such as ISO-8859-1
+	 *        the encoding of the response, such as ISO-8859-1
 	 * @param policy
-	 *           a pluggable file rename policy
+	 *        a pluggable file rename policy
 	 * @exception IOException
-	 *               if the uploaded content is larger than <tt>maxPostSize</tt>
-	 *               or there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
+	 *            there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final String encoding, final FileRenamePolicy policy)
@@ -357,7 +358,7 @@ public class MultipartRequest {
 	 * last "value" may be null.
 	 * 
 	 * @param name
-	 *           the parameter name.
+	 *        the parameter name.
 	 * @return the parameter value.
 	 */
 	public String getParameter(final String name) {
@@ -381,7 +382,7 @@ public class MultipartRequest {
 	 * decoded form. A single value is returned as a one-element array.
 	 * 
 	 * @param name
-	 *           the parameter name.
+	 *        the parameter name.
 	 * @return the parameter values.
 	 */
 	public String[] getParameterValues(final String name) {
@@ -404,7 +405,7 @@ public class MultipartRequest {
 	 * user. It is also the name under which the file is actually saved.
 	 * 
 	 * @param name
-	 *           the file name.
+	 *        the file name.
 	 * @return the filesystem name of the file.
 	 */
 	public String getFilesystemName(final String name) {
@@ -422,7 +423,7 @@ public class MultipartRequest {
 	 * upload. A filesystem name is the name specified by the user.
 	 * 
 	 * @param name
-	 *           the file name.
+	 *        the file name.
 	 * @return the original file name of the file.
 	 */
 	public String getOriginalFileName(final String name) {
@@ -439,7 +440,7 @@ public class MultipartRequest {
 	 * browser), or null if the file was not included in the upload.
 	 * 
 	 * @param name
-	 *           the file name.
+	 *        the file name.
 	 * @return the content type of the file.
 	 */
 	public String getContentType(final String name) {
@@ -456,7 +457,7 @@ public class MultipartRequest {
 	 * filesystem, or null if the file was not included in the upload.
 	 * 
 	 * @param name
-	 *           the file name.
+	 *        the file name.
 	 * @return a File object for the named file.
 	 */
 	public File getFile(final String name) {

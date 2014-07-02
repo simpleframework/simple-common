@@ -52,7 +52,7 @@ public class Entities {
 	 * Check if the input is a known named entity
 	 * 
 	 * @param name
-	 *           the possible entity name (e.g. "lt" or "amp")
+	 *        the possible entity name (e.g. "lt" or "amp")
 	 * @return true if a known named entity
 	 */
 	public static boolean isNamedEntity(final String name) {
@@ -63,7 +63,7 @@ public class Entities {
 	 * Check if the input is a known named entity in the base entity set.
 	 * 
 	 * @param name
-	 *           the possible entity name (e.g. "lt" or "amp")
+	 *        the possible entity name (e.g. "lt" or "amp")
 	 * @return true if a known named entity in the base set
 	 * @see #isNamedEntity(String)
 	 */
@@ -72,10 +72,10 @@ public class Entities {
 	}
 
 /**
-     * Get the Character value of the named entity
-     * @param name named entity (e.g. "lt" or "amp")
-     * @return the Character value of the named entity (e.g. '<' or '&')
-     */
+	 * Get the Character value of the named entity
+	 * @param name named entity (e.g. "lt" or "amp")
+	 * @return the Character value of the named entity (e.g. '<' or '&')
+	 */
 	public static Character getCharacterByName(final String name) {
 		return full.get(name);
 	}
@@ -182,8 +182,8 @@ public class Entities {
 	 * 
 	 * @param string
 	 * @param strict
-	 *           if "strict" (that is, requires trailing ';' char, otherwise
-	 *           that's optional)
+	 *        if "strict" (that is, requires trailing ';' char, otherwise
+	 *        that's optional)
 	 * @return
 	 */
 	static String unescape(final String string, final boolean strict) {
@@ -199,7 +199,7 @@ public class Entities {
 		base = loadEntities("entities-base.properties"); // most common / default
 		baseByVal = toCharacterKey(base);
 		full = loadEntities("entities-full.properties"); // extended and
-																			// overblown.
+		// overblown.
 		fullByVal = toCharacterKey(full);
 
 		for (final Object[] entity : xhtmlArray) {

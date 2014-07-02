@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -46,21 +46,21 @@ public class FilePart extends Part {
 	 * Construct a file part; this is called by the parser.
 	 * 
 	 * @param name
-	 *           the name of the parameter.
+	 *        the name of the parameter.
 	 * @param in
-	 *           the servlet input stream to read the file from.
+	 *        the servlet input stream to read the file from.
 	 * @param boundary
-	 *           the MIME boundary that delimits the end of file.
+	 *        the MIME boundary that delimits the end of file.
 	 * @param contentType
-	 *           the content type of the file provided in the MIME header.
+	 *        the content type of the file provided in the MIME header.
 	 * @param fileName
-	 *           the file system name of the file provided in the MIME header.
+	 *        the file system name of the file provided in the MIME header.
 	 * @param filePath
-	 *           the file system path of the file provided in the MIME header (as
-	 *           specified in disposition info).
+	 *        the file system path of the file provided in the MIME header (as
+	 *        specified in disposition info).
 	 * 
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 */
 	FilePart(final String name, final ServletInputStream in, final String boundary,
 			final String contentType, final String fileName, final String filePath) throws IOException {
@@ -140,7 +140,7 @@ public class FilePart extends Part {
 	 * 
 	 * @return number of bytes written
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 */
 	public long writeTo(final File fileOrDirectory) throws IOException {
 		long written = 0;
@@ -181,7 +181,7 @@ public class FilePart extends Part {
 	 * 
 	 * @return number of bytes written.
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 */
 	public long writeTo(final OutputStream out) throws IOException {
 		long size = 0;
@@ -199,7 +199,7 @@ public class FilePart extends Part {
 	 * 
 	 * @return number of bytes written.
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 */
 	long write(OutputStream out) throws IOException {
 		// decode macbinary if this was sent

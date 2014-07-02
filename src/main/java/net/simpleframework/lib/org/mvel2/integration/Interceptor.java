@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -35,9 +35,9 @@ public interface Interceptor {
 	 * This method is executed before the wrapped statement.
 	 * 
 	 * @param node
-	 *           The ASTNode wrapped by the interceptor
+	 *        The ASTNode wrapped by the interceptor
 	 * @param factory
-	 *           The variable factory
+	 *        The variable factory
 	 * @return The response code. Should return 0.
 	 */
 	public int doBefore(ASTNode node, VariableResolverFactory factory);
@@ -47,11 +47,11 @@ public interface Interceptor {
 	 * the top-value of the execution stack is also availablehere.
 	 * 
 	 * @param exitStackValue
-	 *           The value on the top of the stack after executing the statement.
+	 *        The value on the top of the stack after executing the statement.
 	 * @param node
-	 *           The ASTNode wrapped by the interceptor
+	 *        The ASTNode wrapped by the interceptor
 	 * @param factory
-	 *           The variable factory
+	 *        The variable factory
 	 * @return The response code. Should return 0.
 	 */
 	public int doAfter(Object exitStackValue, ASTNode node, VariableResolverFactory factory);

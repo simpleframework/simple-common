@@ -1022,8 +1022,8 @@ enum TokeniserState {
 			} else {
 				t.error(this);
 				t.advanceTransition(BogusComment); // advance so this character gets
-																// in bogus comment data's
-																// rewind
+				// in bogus comment data's
+				// rewind
 			}
 		}
 	},

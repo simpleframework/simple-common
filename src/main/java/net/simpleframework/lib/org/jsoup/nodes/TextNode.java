@@ -22,9 +22,9 @@ public class TextNode extends Node {
 	 * Create a new TextNode representing the supplied (unencoded) text).
 	 * 
 	 * @param text
-	 *           raw text
+	 *        raw text
 	 * @param baseUri
-	 *           base uri
+	 *        base uri
 	 * @see #createFromEncoded(String, String)
 	 */
 	public TextNode(final String text, final String baseUri) {
@@ -51,7 +51,7 @@ public class TextNode extends Node {
 	 * Set the text content of this text node.
 	 * 
 	 * @param text
-	 *           unencoded text
+	 *        unencoded text
 	 * @return this, for chaining
 	 */
 	public TextNode text(final String text) {
@@ -89,7 +89,7 @@ public class TextNode extends Node {
 	 * will have a new text node sibling containing the text after the offset.
 	 * 
 	 * @param offset
-	 *           string offset point to split node at.
+	 *        string offset point to split node at.
 	 * @return the newly created text node containing the text after the offset.
 	 */
 	public TextNode splitText(final int offset) {
@@ -135,7 +135,7 @@ public class TextNode extends Node {
 	 * Create a new TextNode from HTML encoded (aka escaped) data.
 	 * 
 	 * @param encodedText
-	 *           Text containing encoded HTML (e.g. &amp;lt;)
+	 *        Text containing encoded HTML (e.g. &amp;lt;)
 	 * @return TextNode containing unencoded data (e.g. &lt;)
 	 */
 	public static TextNode createFromEncoded(final String encodedText, final String baseUri) {

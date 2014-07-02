@@ -1,13 +1,13 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -93,9 +93,9 @@ public class EmitUtils {
 	 * element on the stack and triggers the callback.
 	 * 
 	 * @param type
-	 *           the type of the array (type.isArray() must be true)
+	 *        the type of the array (type.isArray() must be true)
 	 * @param callback
-	 *           the callback triggered for each element
+	 *        the callback triggered for each element
 	 */
 	public static void process_array(final CodeEmitter e, final Type type,
 			final ProcessArrayCallback callback) {
@@ -130,9 +130,9 @@ public class EmitUtils {
 	 * stack and triggers the callback.
 	 * 
 	 * @param type
-	 *           the type of the arrays (type.isArray() must be true)
+	 *        the type of the arrays (type.isArray() must be true)
 	 * @param callback
-	 *           the callback triggered for each pair of elements
+	 *        the callback triggered for each pair of elements
 	 */
 	public static void process_arrays(final CodeEmitter e, final Type type,
 			final ProcessArrayCallback callback) {
@@ -541,9 +541,9 @@ public class EmitUtils {
 	 * the respective label.
 	 * 
 	 * @param oneNull
-	 *           label to branch to if only one of the objects is null
+	 *        label to branch to if only one of the objects is null
 	 * @param bothNull
-	 *           label to branch to if both of the objects are null
+	 *        label to branch to if both of the objects are null
 	 */
 	private static void nullcmp(final CodeEmitter e, final Label oneNull, final Label bothNull) {
 		e.dup2();

@@ -70,7 +70,7 @@ abstract class CombiningEvaluator extends Evaluator {
 		 * and used as the first clause of the OR.
 		 * 
 		 * @param evaluators
-		 *           initial OR clause (these are wrapped into an AND evaluator).
+		 *        initial OR clause (these are wrapped into an AND evaluator).
 		 */
 		Or(final Collection<Evaluator> evaluators) {
 			super();

@@ -1,14 +1,14 @@
 package net.simpleframework.lib.net.minidev.json.mapper;
 
 /*
- *    Copyright 2011 JSON-SMART authors
- *
+ * Copyright 2011 JSON-SMART authors
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public abstract class AMapper<T> {
 	 * called when json-smart parser start an array.
 	 * 
 	 * @param key
-	 *           the destination key name, or null.
+	 *        the destination key name, or null.
 	 */
 	public AMapper<?> startArray(final String key) throws ParseException, IOException {
 		throw new RuntimeException(ERR_MSG);

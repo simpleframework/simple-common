@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -96,7 +96,7 @@ public class MailMessage {
 	 * server.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem contacting the mail server
+	 *            if there's any problem contacting the mail server
 	 */
 	public MailMessage() throws IOException {
 		this("localhost");
@@ -107,9 +107,9 @@ public class MailMessage {
 	 * mail server.
 	 * 
 	 * @param host
-	 *           the mail server to use
+	 *        the mail server to use
 	 * @exception IOException
-	 *               if there's any problem contacting the mail server
+	 *            if there's any problem contacting the mail server
 	 */
 	public MailMessage(final String host) throws IOException {
 		this.host = host;
@@ -126,7 +126,7 @@ public class MailMessage {
 	 * called only once.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public void from(final String from) throws IOException {
 		sendFrom(from);
@@ -138,7 +138,7 @@ public class MailMessage {
 	 * multiple times.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public void to(final String to) throws IOException {
 		sendRcpt(to);
@@ -150,7 +150,7 @@ public class MailMessage {
 	 * multiple times.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public void cc(final String cc) throws IOException {
 		sendRcpt(cc);
@@ -162,7 +162,7 @@ public class MailMessage {
 	 * This method may be called multiple times.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public void bcc(final String bcc) throws IOException {
 		sendRcpt(bcc);
@@ -191,7 +191,7 @@ public class MailMessage {
 	 * wrapped on top if necessary for internationalization.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public PrintStream getPrintStream() throws IOException {
 		setFromHeader();
@@ -245,7 +245,7 @@ public class MailMessage {
 	 * object cannot be reused.
 	 * 
 	 * @exception IOException
-	 *               if there's any problem reported by the mail server
+	 *            if there's any problem reported by the mail server
 	 */
 	public void sendAndClose() throws IOException {
 		sendDot();

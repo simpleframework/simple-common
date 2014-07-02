@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -50,9 +50,9 @@ public class PartInputStream extends FilterInputStream {
 	 * boundary from a <code>ServletInputStream<code>.
 	 * 
 	 * @param in
-	 *           a servlet input stream.
+	 *        a servlet input stream.
 	 * @param boundary
-	 *           the MIME boundary to stop at.
+	 *        the MIME boundary to stop at.
 	 */
 	PartInputStream(final ServletInputStream in, final String boundary) throws IOException {
 		super(in);
@@ -67,7 +67,7 @@ public class PartInputStream extends FilterInputStream {
 	 * boundary is not found in the first line read.
 	 * 
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	private void fill() throws IOException {
 		if (eof) {
@@ -130,7 +130,7 @@ public class PartInputStream extends FilterInputStream {
 	 * @return the next byte of data, or <code>-1</code> if the end of the stream
 	 *         is reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read() throws IOException {
@@ -151,12 +151,12 @@ public class PartInputStream extends FilterInputStream {
 	 * is encountered.
 	 * 
 	 * @param b
-	 *           the buffer into which the data is read.
+	 *        the buffer into which the data is read.
 	 * @return the total number of bytes read into the buffer, or <code>-1</code>
 	 *         if there is no more data because the end of the stream has been
 	 *         reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read(final byte b[]) throws IOException {
@@ -171,16 +171,16 @@ public class PartInputStream extends FilterInputStream {
 	 * is encountered.
 	 * 
 	 * @param b
-	 *           the buffer into which the data is read.
+	 *        the buffer into which the data is read.
 	 * @param off
-	 *           the start offset of the data.
+	 *        the start offset of the data.
 	 * @param len
-	 *           the maximum number of bytes read.
+	 *        the maximum number of bytes read.
 	 * @return the total number of bytes read into the buffer, or <code>-1</code>
 	 *         if there is no more data because the end of the stream has been
 	 *         reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read(final byte b[], final int off, final int len) throws IOException {
@@ -225,7 +225,7 @@ public class PartInputStream extends FilterInputStream {
 	 * @return the number of bytes that can be read from the input stream without
 	 *         blocking.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int available() throws IOException {
@@ -245,7 +245,7 @@ public class PartInputStream extends FilterInputStream {
 	 * <code>readNextPart()</code>.
 	 * 
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public void close() throws IOException {

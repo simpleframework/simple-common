@@ -276,9 +276,9 @@ enum HtmlTreeBuilderState {
 					tb.error(this);
 					return false;
 				} else if (tb.framesetOk() && isWhitespace(c)) { // don't check if
-																					// whitespace if
-																					// frames already
-																					// closed
+					// whitespace if
+					// frames already
+					// closed
 					tb.reconstructFormattingElements();
 					tb.insert(c);
 				} else {
@@ -419,8 +419,8 @@ enum HtmlTreeBuilderState {
 					}
 					tb.insert(startTag);
 					tb.tokeniser.transition(TokeniserState.PLAINTEXT); // once in,
-																						// never gets
-																						// out
+					// never gets
+					// out
 				} else if (name.equals("button")) {
 					if (tb.inButtonScope("button")) {
 						// close and reprocess
@@ -494,8 +494,8 @@ enum HtmlTreeBuilderState {
 				} else if (name.equals("image")) {
 					if (tb.getFromStack("svg") == null) {
 						return tb.process(startTag.name("img")); // change <image> to
-																				// <img>, unless in
-																				// svg
+						// <img>, unless in
+						// svg
 					} else {
 						tb.insert(startTag);
 					}
@@ -579,7 +579,7 @@ enum HtmlTreeBuilderState {
 						if (!tb.currentElement().nodeName().equals("ruby")) {
 							tb.error(this);
 							tb.popStackToBefore("ruby"); // i.e. close up to but not
-																	// include name
+							// include name
 						}
 						tb.insert(startTag);
 					}
@@ -652,8 +652,8 @@ enum HtmlTreeBuilderState {
 					if (!tb.inButtonScope(name)) {
 						tb.error(this);
 						tb.process(new Token.StartTag(name)); // if no p to close,
-																			// creates an empty
-																			// <p></p>
+						// creates an empty
+						// <p></p>
 						return tb.process(endTag);
 					} else {
 						tb.generateImpliedEndTags(name);
@@ -750,8 +750,8 @@ enum HtmlTreeBuilderState {
 								node = tb.aboveOnStack(node);
 							}
 							if (!tb.isInActiveFormattingElements(node)) { // note no
-																							// bookmark
-																							// check
+								// bookmark
+								// check
 								tb.removeFromStack(node);
 								continue INNER;
 							} else if (node == formatEl) {
@@ -797,8 +797,8 @@ enum HtmlTreeBuilderState {
 								new Node[furthestBlock.childNodeSize()]);
 						for (final Node childNode : childNodes) {
 							adopter.appendChild(childNode); // append will reparent.
-																		// thus the clone to avoid
-																		// concurrent mod.
+							// thus the clone to avoid
+							// concurrent mod.
 						}
 						furthestBlock.appendChild(adopter);
 						tb.removeFromActiveFormattingElements(formatEl);
@@ -944,7 +944,7 @@ enum HtmlTreeBuilderState {
 					return anythingElse(t, tb);
 				}
 				return true; // todo: check if should return processed
-									// http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable
+				// http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#parsing-main-intable
 			} else if (t.isEndTag()) {
 				final Token.EndTag endTag = t.asEndTag();
 				final String name = endTag.name();
@@ -1182,8 +1182,8 @@ enum HtmlTreeBuilderState {
 			}
 			tb.clearStackToTableBodyContext();
 			tb.process(new Token.EndTag(tb.currentElement().nodeName())); // tbody,
-																								// tfoot,
-																								// thead
+			// tfoot,
+			// thead
 			return tb.process(t);
 		}
 
@@ -1267,7 +1267,7 @@ enum HtmlTreeBuilderState {
 					if (!tb.inTableScope(name)) {
 						tb.error(this);
 						tb.transition(InRow); // might not be in scope if empty: <td
-														// /> and processing fake end tag
+						// /> and processing fake end tag
 						return false;
 					}
 					tb.generateImpliedEndTags();
@@ -1314,7 +1314,7 @@ enum HtmlTreeBuilderState {
 				tb.process(new Token.EndTag("td"));
 			} else {
 				tb.process(new Token.EndTag("th")); // only here if th or td in
-																// scope
+				// scope
 			}
 		}
 	},

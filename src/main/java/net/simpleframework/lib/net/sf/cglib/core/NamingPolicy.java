@@ -1,13 +1,13 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -24,19 +24,19 @@ public interface NamingPolicy {
 	 * Choose a name for a generated class.
 	 * 
 	 * @param prefix
-	 *           a dotted-name chosen by the generating class (possibly to put
-	 *           the generated class in a particular package)
+	 *        a dotted-name chosen by the generating class (possibly to put
+	 *        the generated class in a particular package)
 	 * @param source
-	 *           the fully-qualified class name of the generating class (for
-	 *           example "net.simpleframework.lib.net.sf.cglib.Enhancer")
+	 *        the fully-qualified class name of the generating class (for
+	 *        example "net.simpleframework.lib.net.sf.cglib.Enhancer")
 	 * @param key
-	 *           A key object representing the state of the parameters; for
-	 *           caching to work properly, equal keys should result in the same
-	 *           generated class name. The default policy incorporates
-	 *           <code>key.hashCode()</code> into the class name.
+	 *        A key object representing the state of the parameters; for
+	 *        caching to work properly, equal keys should result in the same
+	 *        generated class name. The default policy incorporates
+	 *        <code>key.hashCode()</code> into the class name.
 	 * @param names
-	 *           a predicate that returns true if the given classname has already
-	 *           been used in the same ClassLoader.
+	 *        a predicate that returns true if the given classname has already
+	 *        been used in the same ClassLoader.
 	 * @return the fully-qualified class name
 	 */
 	String getClassName(String prefix, String source, Object key, Predicate names);

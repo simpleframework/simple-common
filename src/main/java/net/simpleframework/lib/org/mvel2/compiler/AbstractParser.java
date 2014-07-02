@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -1379,7 +1379,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Handle a union between a closed statement and a residual property chain.
 	 * 
 	 * @param node
-	 *           an ast node
+	 *        an ast node
 	 * @return ASTNode
 	 */
 	protected ASTNode handleUnion(final ASTNode node) {
@@ -1410,11 +1410,11 @@ public class AbstractParser implements Parser, Serializable {
 	 * Create an operator node.
 	 * 
 	 * @param expr
-	 *           an char[] containing the expression
+	 *        an char[] containing the expression
 	 * @param start
-	 *           the start offet for the token
+	 *        the start offet for the token
 	 * @param end
-	 *           the end offset for the token
+	 *        the end offset for the token
 	 * @return ASTNode
 	 */
 	private ASTNode createOperator(final char[] expr, final int start, final int end) {
@@ -1429,9 +1429,9 @@ public class AbstractParser implements Parser, Serializable {
 	 * the parser uses this internally.
 	 * 
 	 * @param start
-	 *           the start offset
+	 *        the start offset
 	 * @param end
-	 *           the end offset
+	 *        the end offset
 	 * @return an array
 	 */
 	private char[] subArray(final int start, final int end) {
@@ -1451,9 +1451,9 @@ public class AbstractParser implements Parser, Serializable {
 	 * Generate a property token
 	 * 
 	 * @param st
-	 *           the start offset
+	 *        the start offset
 	 * @param end
-	 *           the end offset
+	 *        the end offset
 	 * @return an ast node
 	 */
 	private ASTNode createPropertyToken(final int st, final int end) {
@@ -1512,7 +1512,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Process the current typed node
 	 * 
 	 * @param decl
-	 *           node is a declaration or not
+	 *        node is a declaration or not
 	 * @return and ast node
 	 */
 	private ASTNode procTypedNode(final boolean decl) {
@@ -1598,15 +1598,15 @@ public class AbstractParser implements Parser, Serializable {
 	 * Generate a code block token.
 	 * 
 	 * @param condStart
-	 *           the start offset for the condition
+	 *        the start offset for the condition
 	 * @param condEnd
-	 *           the end offset for the condition
+	 *        the end offset for the condition
 	 * @param blockStart
-	 *           the start offset for the block
+	 *        the start offset for the block
 	 * @param blockEnd
-	 *           the end offset for the block
+	 *        the end offset for the block
 	 * @param type
-	 *           the type of block
+	 *        the type of block
 	 * @return and ast node
 	 */
 	private ASTNode createBlockToken(final int condStart, final int condEnd, final int blockStart,
@@ -1656,7 +1656,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Capture a code block by type.
 	 * 
 	 * @param type
-	 *           the block type
+	 *        the block type
 	 * @return an ast node
 	 */
 	private ASTNode captureCodeBlock(final int type) {
@@ -2133,7 +2133,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * current position and the end of the last non-whitespace character.
 	 * 
 	 * @param pos
-	 *           - current position
+	 *        - current position
 	 * @return new position.
 	 */
 	protected int trimLeft(int pos) {
@@ -2151,7 +2151,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * current position and beginning of the first non-whitespace character.
 	 * 
 	 * @param pos
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	protected int trimRight(int pos) {
@@ -2267,7 +2267,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * whitespace.
 	 * 
 	 * @param expression
-	 *           the expression
+	 *        the expression
 	 */
 	protected void setExpression(final String expression) {
 		if (expression != null && expression.length() != 0) {
@@ -2303,7 +2303,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * whitespace.
 	 * 
 	 * @param expression
-	 *           the expression
+	 *        the expression
 	 */
 	protected void setExpression(final char[] expression) {
 		end = length = (this.expr = expression).length;
@@ -2364,7 +2364,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * specified range delta.
 	 * 
 	 * @param range
-	 *           -
+	 *        -
 	 * @return -
 	 */
 	protected char lookAhead(final int range) {
@@ -2426,7 +2426,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Expect the next specified character or fail
 	 * 
 	 * @param c
-	 *           character
+	 *        character
 	 */
 	public void expectNextChar_IW(final char c) {
 		nextNonBlank();
@@ -2485,7 +2485,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Create a new ParserContext in the current thread, using the one specified.
 	 * 
 	 * @param pCtx
-	 *           -
+	 *        -
 	 */
 	public void newContext(final ParserContext pCtx) {
 		contextControl(SET, this.pCtx = pCtx, this);
@@ -2588,7 +2588,7 @@ public class AbstractParser implements Parser, Serializable {
 			operatorsTable.put(";", END_OF_STMT);
 
 		case 1: // boolean, math ops, projection, assertion, objection creation,
-					// block setters, imports
+			// block setters, imports
 			operatorsTable.put("+", ADD);
 			operatorsTable.put("-", SUB);
 			operatorsTable.put("*", MULT);
@@ -2657,7 +2657,7 @@ public class AbstractParser implements Parser, Serializable {
 	 * Reduce the current operations on the stack.
 	 * 
 	 * @param operator
-	 *           the operator
+	 *        the operator
 	 * @return a stack control code
 	 */
 	protected int arithmeticFunctionReduction(int operator) {

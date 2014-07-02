@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -44,16 +44,16 @@ public class LimitedServletInputStream extends ServletInputStream {
 	 * the wrapped <code>ServletInputStream</code>.
 	 * 
 	 * @param b
-	 *           an array of bytes into which data is read.
+	 *        an array of bytes into which data is read.
 	 * @param off
-	 *           an integer specifying the character at which this method begins
-	 *           reading.
+	 *        an integer specifying the character at which this method begins
+	 *        reading.
 	 * @param len
-	 *           an integer specifying the maximum number of bytes to read.
+	 *        an integer specifying the maximum number of bytes to read.
 	 * @return an integer specifying the actual number of bytes read, or -1 if
 	 *         the end of the stream is reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int readLine(final byte b[], final int off, final int len) throws IOException {
@@ -77,7 +77,7 @@ public class LimitedServletInputStream extends ServletInputStream {
 	 * @return the next byte of data, or <code>-1</code> if the end of the stream
 	 *         is reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read() throws IOException {
@@ -97,15 +97,15 @@ public class LimitedServletInputStream extends ServletInputStream {
 	 * wrapped <code>ServletInputStream</code>.
 	 * 
 	 * @param b
-	 *           destination buffer.
+	 *        destination buffer.
 	 * @param off
-	 *           offset at which to start storing bytes.
+	 *        offset at which to start storing bytes.
 	 * @param len
-	 *           maximum number of bytes to read.
+	 *        maximum number of bytes to read.
 	 * @return the number of bytes read, or <code>-1</code> if the end of the
 	 *         stream has been reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read(final byte b[], final int off, final int len) throws IOException {

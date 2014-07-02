@@ -13,9 +13,9 @@ public class DataNode extends Node {
 	 * Create a new DataNode.
 	 * 
 	 * @param data
-	 *           data contents
+	 *        data contents
 	 * @param baseUri
-	 *           base URI
+	 *        base URI
 	 */
 	public DataNode(final String data, final String baseUri) {
 		super(baseUri);
@@ -41,7 +41,7 @@ public class DataNode extends Node {
 	 * Set the data contents of this node.
 	 * 
 	 * @param data
-	 *           unencoded data
+	 *        unencoded data
 	 * @return this node, for chaining
 	 */
 	public DataNode setWholeData(final String data) {
@@ -52,7 +52,7 @@ public class DataNode extends Node {
 	@Override
 	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
 		accum.append(getWholeData()); // data is not escaped in return from data
-												// nodes, so " in script, style is plain
+		// nodes, so " in script, style is plain
 	}
 
 	@Override
@@ -68,9 +68,9 @@ public class DataNode extends Node {
 	 * Create a new DataNode from HTML encoded data.
 	 * 
 	 * @param encodedData
-	 *           encoded data
+	 *        encoded data
 	 * @param baseUri
-	 *           bass URI
+	 *        bass URI
 	 * @return new DataNode
 	 */
 	public static DataNode createFromEncoded(final String encodedData, final String baseUri) {

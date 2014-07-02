@@ -1,14 +1,14 @@
 package net.simpleframework.lib.net.minidev.json;
 
 /*
- *    Copyright 2011 JSON-SMART authors
- *
+ * Copyright 2011 JSON-SMART authors
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -252,9 +252,9 @@ public class JSONNavi<T> {
 	 * write an value in the current object
 	 * 
 	 * @param key
-	 *           key to access
+	 *        key to access
 	 * @param value
-	 *           new value
+	 *        new value
 	 * @return this
 	 */
 	public JSONNavi<T> set(final String key, final long value) {
@@ -265,9 +265,9 @@ public class JSONNavi<T> {
 	 * write an value in the current object
 	 * 
 	 * @param key
-	 *           key to access
+	 *        key to access
 	 * @param value
-	 *           new value
+	 *        new value
 	 * @return this
 	 */
 	public JSONNavi<T> set(final String key, final int value) {
@@ -278,9 +278,9 @@ public class JSONNavi<T> {
 	 * write an value in the current object
 	 * 
 	 * @param key
-	 *           key to access
+	 *        key to access
 	 * @param value
-	 *           new value
+	 *        new value
 	 * @return this
 	 */
 	public JSONNavi<T> set(final String key, final double value) {
@@ -291,9 +291,9 @@ public class JSONNavi<T> {
 	 * write an value in the current object
 	 * 
 	 * @param key
-	 *           key to access
+	 *        key to access
 	 * @param value
-	 *           new value
+	 *        new value
 	 * @return this
 	 */
 	public JSONNavi<T> set(final String key, final float value) {
@@ -304,7 +304,7 @@ public class JSONNavi<T> {
 	 * add value to the current arrays
 	 * 
 	 * @param values
-	 *           to add
+	 *        to add
 	 * @return this
 	 */
 	public JSONNavi<T> add(final Object... values) {
@@ -650,7 +650,7 @@ public class JSONNavi<T> {
 	 * If index is less than 0 access element index from the end like in python.
 	 * 
 	 * @param index
-	 *           0 based desired position in Array
+	 *        0 based desired position in Array
 	 */
 	public JSONNavi<?> at(int index) {
 		if (failure) {
@@ -706,7 +706,7 @@ public class JSONNavi<T> {
 	 * call up() level times.
 	 * 
 	 * @param level
-	 *           number of parent move.
+	 *        number of parent move.
 	 */
 	public JSONNavi<?> up(int level) {
 		while (level-- > 0) {

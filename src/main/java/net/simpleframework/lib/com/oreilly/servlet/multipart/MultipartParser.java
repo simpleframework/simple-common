@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -90,9 +90,9 @@ public class MultipartParser {
 	 * Content-Length.
 	 * 
 	 * @param req
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param maxSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 */
 	public MultipartParser(final HttpServletRequest req, final int maxSize) throws IOException {
 		this(req, maxSize, true, true);
@@ -105,16 +105,16 @@ public class MultipartParser {
 	 * Content-Length.
 	 * 
 	 * @param req
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param maxSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @param buffer
-	 *           whether to do internal buffering or let the server buffer,
-	 *           useful for servers that don't buffer
+	 *        whether to do internal buffering or let the server buffer,
+	 *        useful for servers that don't buffer
 	 * @param limitLength
-	 *           boolean flag to indicate if we need to filter the request's
-	 *           input stream to prevent trying to read past the end of the
-	 *           stream.
+	 *        boolean flag to indicate if we need to filter the request's
+	 *        input stream to prevent trying to read past the end of the
+	 *        stream.
 	 */
 	public MultipartParser(final HttpServletRequest req, final int maxSize, final boolean buffer,
 			final boolean limitLength) throws IOException {
@@ -128,18 +128,18 @@ public class MultipartParser {
 	 * Content-Length, and with a specified encoding.
 	 * 
 	 * @param req
-	 *           the servlet request.
+	 *        the servlet request.
 	 * @param maxSize
-	 *           the maximum size of the POST content.
+	 *        the maximum size of the POST content.
 	 * @param buffer
-	 *           whether to do internal buffering or let the server buffer,
-	 *           useful for servers that don't buffer
+	 *        whether to do internal buffering or let the server buffer,
+	 *        useful for servers that don't buffer
 	 * @param limitLength
-	 *           boolean flag to indicate if we need to filter the request's
-	 *           input stream to prevent trying to read past the end of the
-	 *           stream.
+	 *        boolean flag to indicate if we need to filter the request's
+	 *        input stream to prevent trying to read past the end of the
+	 *        stream.
 	 * @param encoding
-	 *           the encoding to use for parsing, default is ISO-8859-1.
+	 *        the encoding to use for parsing, default is ISO-8859-1.
 	 */
 	public MultipartParser(final HttpServletRequest req, final int maxSize, final boolean buffer,
 			final boolean limitLength, final String encoding) throws IOException {
@@ -221,7 +221,7 @@ public class MultipartParser {
 	 * even the initial line reads are correct.
 	 * 
 	 * @param encoding
-	 *           The encoding to use for parsing
+	 *        The encoding to use for parsing
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
@@ -236,7 +236,7 @@ public class MultipartParser {
 	 * @return either a <code>FilePart</code>, a <code>ParamPart</code> or
 	 *         <code>null</code> if there are no more parts to read.
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 * 
 	 * @see FilePart
 	 * @see ParamPart
@@ -359,7 +359,7 @@ public class MultipartParser {
 	 * 
 	 * @return String[] of elements: disposition, name, filename.
 	 * @exception IOException
-	 *               if the line is malformatted.
+	 *            if the line is malformatted.
 	 */
 	private String[] extractDispositionInfo(String line) throws IOException {
 		// Return the line's data as an array: disposition, name, filename
@@ -429,7 +429,7 @@ public class MultipartParser {
 	 * 
 	 * @return content type, or null if line was empty.
 	 * @exception IOException
-	 *               if the line is malformatted.
+	 *            if the line is malformatted.
 	 */
 	private static String extractContentType(String line) throws IOException {
 		// Convert the line to a lowercase string
@@ -453,7 +453,7 @@ public class MultipartParser {
 	 * @return a String containing the next line of input from the stream, or
 	 *         null to indicate the end of the stream.
 	 * @exception IOException
-	 *               if an input or output exception has occurred.
+	 *            if an input or output exception has occurred.
 	 */
 	private String readLine() throws IOException {
 		final StringBuffer sbuf = new StringBuffer();

@@ -16,10 +16,10 @@ public interface NodeVisitor {
 	 * Callback for when a node is first visited.
 	 * 
 	 * @param node
-	 *           the node being visited.
+	 *        the node being visited.
 	 * @param depth
-	 *           the depth of the node, relative to the root node. E.g., the root
-	 *           node has depth 0, and a child node of that will have depth 1.
+	 *        the depth of the node, relative to the root node. E.g., the root
+	 *        node has depth 0, and a child node of that will have depth 1.
 	 */
 	public void head(Node node, int depth);
 
@@ -28,10 +28,10 @@ public interface NodeVisitor {
 	 * have been visited.
 	 * 
 	 * @param node
-	 *           the node being visited.
+	 *        the node being visited.
 	 * @param depth
-	 *           the depth of the node, relative to the root node. E.g., the root
-	 *           node has depth 0, and a child node of that will have depth 1.
+	 *        the depth of the node, relative to the root node. E.g., the root
+	 *        node has depth 0, and a child node of that will have depth 1.
 	 */
 	public void tail(Node node, int depth);
 }

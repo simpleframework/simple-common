@@ -279,7 +279,7 @@ public class HttpConnection implements Connection {
 			Validate.notEmpty(name, "Header name must not be empty");
 			Validate.notNull(value, "Header value must not be null");
 			removeHeader(name); // ensures we don't get an "accept-encoding" and a
-										// "Accept-Encoding"
+			// "Accept-Encoding"
 			headers.put(name, value);
 			return (T) this;
 		}
@@ -294,7 +294,7 @@ public class HttpConnection implements Connection {
 		public T removeHeader(final String name) {
 			Validate.notEmpty(name, "Header name must not be empty");
 			final Map.Entry<String, String> entry = scanHeaders(name); // remove is
-																							// case
+			// case
 			// insensitive
 			// too
 			if (entry != null) {
@@ -534,7 +534,7 @@ public class HttpConnection implements Connection {
 				res.setupFromConnection(conn, previousResponse);
 				if (needsRedirect && req.followRedirects()) {
 					req.method(Method.GET); // always redirect with a get. any data
-													// param from original req are dropped.
+					// param from original req are dropped.
 					req.data().clear();
 
 					String location = res.header("Location");
@@ -585,12 +585,12 @@ public class HttpConnection implements Connection {
 
 					res.byteData = DataUtil.readToByteBuffer(bodyStream, req.maxBodySize());
 					res.charset = DataUtil.getCharsetFromContentType(res.contentType); // may
-																												// be
-																												// null,
-																												// readInputStream
-																												// deals
-																												// with
-																												// it
+					// be
+					// null,
+					// readInputStream
+					// deals
+					// with
+					// it
 				} finally {
 					if (bodyStream != null) {
 						bodyStream.close();
@@ -640,8 +640,8 @@ public class HttpConnection implements Connection {
 					req.parser());
 			byteData.rewind();
 			charset = doc.outputSettings().charset().name(); // update charset from
-																				// meta-equiv,
-																				// possibly
+			// meta-equiv,
+			// possibly
 			return doc;
 		}
 
@@ -676,7 +676,7 @@ public class HttpConnection implements Connection {
 			final HttpURLConnection conn = (HttpURLConnection) req.url().openConnection();
 			conn.setRequestMethod(req.method().name());
 			conn.setInstanceFollowRedirects(false); // don't rely on native
-																	// redirection support
+			// redirection support
 			conn.setConnectTimeout(req.timeout());
 			conn.setReadTimeout(req.timeout());
 			if (req.method() == Method.POST) {
@@ -787,8 +787,8 @@ public class HttpConnection implements Connection {
 			boolean first = true;
 			// reconstitute the query, ready for appends
 			url.append(in.getProtocol()).append("://").append(in.getAuthority()) // includes
-																										// host,
-																										// port
+					// host,
+					// port
 					.append(in.getPath()).append("?");
 			if (in.getQuery() != null) {
 				url.append(in.getQuery());

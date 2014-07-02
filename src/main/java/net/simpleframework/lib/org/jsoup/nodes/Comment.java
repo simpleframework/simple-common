@@ -12,9 +12,9 @@ public class Comment extends Node {
 	 * Create a new comment node.
 	 * 
 	 * @param data
-	 *           The contents of the comment
+	 *        The contents of the comment
 	 * @param baseUri
-	 *           base URI
+	 *        base URI
 	 */
 	public Comment(final String data, final String baseUri) {
 		super(baseUri);

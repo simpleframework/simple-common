@@ -13,10 +13,6 @@ import net.simpleframework.common.object.ObjectEx;
 @SuppressWarnings("serial")
 public abstract class AbstractIdBean extends ObjectEx implements IIdBeanAware {
 
-	public AbstractIdBean() {
-		enableAttributes();
-	}
-
 	private ID id;
 
 	@Override

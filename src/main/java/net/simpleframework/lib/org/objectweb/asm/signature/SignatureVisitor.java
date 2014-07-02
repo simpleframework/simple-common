@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -84,8 +84,8 @@ public abstract class SignatureVisitor {
 	 * .
 	 * 
 	 * @param api
-	 *           the ASM API version implemented by this visitor. Must be one of
-	 *           {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one of
+	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	public SignatureVisitor(final int api) {
 		if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
@@ -98,7 +98,7 @@ public abstract class SignatureVisitor {
 	 * Visits a formal type parameter.
 	 * 
 	 * @param name
-	 *           the name of the formal parameter.
+	 *        the name of the formal parameter.
 	 */
 	public void visitFormalTypeParameter(final String name) {
 	}
@@ -170,7 +170,7 @@ public abstract class SignatureVisitor {
 	 * Visits a signature corresponding to a primitive type.
 	 * 
 	 * @param descriptor
-	 *           the descriptor of the primitive type, or 'V' for <tt>void</tt> .
+	 *        the descriptor of the primitive type, or 'V' for <tt>void</tt> .
 	 */
 	public void visitBaseType(final char descriptor) {
 	}
@@ -179,7 +179,7 @@ public abstract class SignatureVisitor {
 	 * Visits a signature corresponding to a type variable.
 	 * 
 	 * @param name
-	 *           the name of the type variable.
+	 *        the name of the type variable.
 	 */
 	public void visitTypeVariable(final String name) {
 	}
@@ -199,7 +199,7 @@ public abstract class SignatureVisitor {
 	 * type.
 	 * 
 	 * @param name
-	 *           the internal name of the class or interface.
+	 *        the internal name of the class or interface.
 	 */
 	public void visitClassType(final String name) {
 	}
@@ -208,7 +208,7 @@ public abstract class SignatureVisitor {
 	 * Visits an inner class.
 	 * 
 	 * @param name
-	 *           the local name of the inner class in its enclosing class.
+	 *        the local name of the inner class in its enclosing class.
 	 */
 	public void visitInnerClassType(final String name) {
 	}
@@ -224,7 +224,7 @@ public abstract class SignatureVisitor {
 	 * Visits a type argument of the last visited class or inner class type.
 	 * 
 	 * @param wildcard
-	 *           '+', '-' or '='.
+	 *        '+', '-' or '='.
 	 * @return a non null visitor to visit the signature of the type argument.
 	 */
 	public SignatureVisitor visitTypeArgument(final char wildcard) {

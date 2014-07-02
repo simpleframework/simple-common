@@ -18,7 +18,7 @@ public class TokenQueue {
 	 * Create a new TokenQueue.
 	 * 
 	 * @param data
-	 *           string of data to back queue.
+	 *        string of data to back queue.
 	 */
 	public TokenQueue(final String data) {
 		Validate.notNull(data);
@@ -52,7 +52,7 @@ public class TokenQueue {
 	 * retrieved).
 	 * 
 	 * @param c
-	 *           character to add
+	 *        character to add
 	 */
 	public void addFirst(final Character c) {
 		addFirst(c.toString());
@@ -62,7 +62,7 @@ public class TokenQueue {
 	 * Add a string to the start of the queue.
 	 * 
 	 * @param seq
-	 *           string to add.
+	 *        string to add.
 	 */
 	public void addFirst(final String seq) {
 		// not very performant, but an edge case
@@ -75,7 +75,7 @@ public class TokenQueue {
 	 * insensitive.
 	 * 
 	 * @param seq
-	 *           String to check queue for.
+	 *        String to check queue for.
 	 * @return true if the next characters match.
 	 */
 	public boolean matches(final String seq) {
@@ -86,7 +86,7 @@ public class TokenQueue {
 	 * Case sensitive match test.
 	 * 
 	 * @param seq
-	 *           string to case sensitively check for
+	 *        string to case sensitively check for
 	 * @return true if matched, false if not
 	 */
 	public boolean matchesCS(final String seq) {
@@ -97,7 +97,7 @@ public class TokenQueue {
 	 * Tests if the next characters match any of the sequences. Case insensitive.
 	 * 
 	 * @param seq
-	 *           list of strings to case insensitively check for
+	 *        list of strings to case insensitively check for
 	 * @return true of any matched, false if none did
 	 */
 	public boolean matchesAny(final String... seq) {
@@ -133,7 +133,7 @@ public class TokenQueue {
 	 * removes the matched string from the queue.
 	 * 
 	 * @param seq
-	 *           String to search for, and if found, remove from queue.
+	 *        String to search for, and if found, remove from queue.
 	 * @return true if found and removed, false if not found.
 	 */
 	public boolean matchChomp(final String seq) {
@@ -189,7 +189,7 @@ public class TokenQueue {
 	 * Case insensitive.
 	 * 
 	 * @param seq
-	 *           sequence to remove from head of queue.
+	 *        sequence to remove from head of queue.
 	 */
 	public void consume(final String seq) {
 		if (!matches(seq)) {
@@ -208,8 +208,8 @@ public class TokenQueue {
 	 * or to the queue running out.
 	 * 
 	 * @param seq
-	 *           String to end on (and not include in return, but leave on
-	 *           queue). <b>Case sensitive.</b>
+	 *        String to end on (and not include in return, but leave on
+	 *        queue). <b>Case sensitive.</b>
 	 * @return The matched data consumed from queue.
 	 */
 	public String consumeTo(final String seq) {
@@ -263,8 +263,8 @@ public class TokenQueue {
 	 * Leaves the terminator on the queue.
 	 * 
 	 * @param seq
-	 *           any number of terminators to consume to. <b>Case
-	 *           insensitive.</b>
+	 *        any number of terminators to consume to. <b>Case
+	 *        insensitive.</b>
 	 * @return consumed string
 	 */
 	// todo: method name. not good that consumeTo cares for case, and consume to
@@ -288,8 +288,8 @@ public class TokenQueue {
 	 * much as it can (and queue will go isEmpty() == true).
 	 * 
 	 * @param seq
-	 *           String to match up to, and not include in return, and to pull
-	 *           off queue. <b>Case sensitive.</b>
+	 *        String to match up to, and not include in return, and to pull
+	 *        off queue. <b>Case sensitive.</b>
 	 * @return Data matched from queue.
 	 */
 	public String chompTo(final String seq) {
@@ -313,9 +313,9 @@ public class TokenQueue {
 	 * contains text strings; use unescape for that.
 	 * 
 	 * @param open
-	 *           opener
+	 *        opener
 	 * @param close
-	 *           closer
+	 *        closer
 	 * @return data matched from the queue
 	 */
 	public String chompBalanced(final char open, final char close) {
@@ -352,7 +352,7 @@ public class TokenQueue {
 	 * Unescaped a \ escaped string.
 	 * 
 	 * @param in
-	 *           backslash escaped string
+	 *        backslash escaped string
 	 * @return unescaped string
 	 */
 	public static String unescape(final String in) {

@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -34,9 +34,9 @@ public interface VariableResolverFactory extends Serializable {
 	 * most scenarios. This is used for variable assignment.
 	 * 
 	 * @param name
-	 *           - name of the variable being created
+	 *        - name of the variable being created
 	 * @param value
-	 *           - value of the variable
+	 *        - value of the variable
 	 * @return instance of the variable resolver associated with the variable
 	 */
 	public VariableResolver createVariable(String name, Object value);
@@ -48,11 +48,11 @@ public interface VariableResolverFactory extends Serializable {
 	 * underlying factory and resolver will enforce this.
 	 * 
 	 * @param name
-	 *           - name of the variable being created
+	 *        - name of the variable being created
 	 * @param value
-	 *           - value of the variable
+	 *        - value of the variable
 	 * @param type
-	 *           - the static type
+	 *        - the static type
 	 * @return instance of the variable resolver associated with the variable
 	 */
 	public VariableResolver createVariable(String name, Object value, Class<?> type);
@@ -79,7 +79,7 @@ public interface VariableResolverFactory extends Serializable {
 	 * </code>
 	 * 
 	 * @param resolverFactory
-	 *           - instance of next resolver factory
+	 *        - instance of next resolver factory
 	 * @return - instance of next resolver factory
 	 */
 	public VariableResolverFactory setNextFactory(VariableResolverFactory resolverFactory);
@@ -89,7 +89,7 @@ public interface VariableResolverFactory extends Serializable {
 	 * expected to traverse the heirarchy of ResolverFactories.
 	 * 
 	 * @param name
-	 *           - variable name
+	 *        - variable name
 	 * @return - instance of the VariableResolver for the specified variable
 	 */
 	public VariableResolver getVariableResolver(String name);
@@ -101,7 +101,7 @@ public interface VariableResolverFactory extends Serializable {
 	 * physical target for the actual variable.
 	 * 
 	 * @param name
-	 *           - variable name
+	 *        - variable name
 	 * @return - boolean indicating whether or not factory is the physical target
 	 */
 	public boolean isTarget(String name);
@@ -111,7 +111,7 @@ public interface VariableResolverFactory extends Serializable {
 	 * factories.
 	 * 
 	 * @param name
-	 *           - variable name
+	 *        - variable name
 	 * @return - boolean
 	 */
 	public boolean isResolveable(String name);

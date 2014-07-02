@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -78,7 +78,7 @@ public class ParameterParser {
 	 * request.
 	 * 
 	 * @param req
-	 *           the servlet request
+	 *        the servlet request
 	 */
 	public ParameterParser(final ServletRequest req) {
 		this.req = req;
@@ -90,9 +90,9 @@ public class ParameterParser {
 	 * values, the same as would be returned by getParameter().
 	 * 
 	 * @param encoding
-	 *           the charset of the request
+	 *        the charset of the request
 	 * @exception UnsupportedEncodingException
-	 *               if the charset is not supported on this sytem
+	 *            if the charset is not supported on this sytem
 	 */
 	public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException {
 		// Test the encoding is valid
@@ -105,10 +105,10 @@ public class ParameterParser {
 	 * Gets the named parameter value as a String
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a String
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found or was the empty string
+	 *            if the parameter was not found or was the empty string
 	 */
 	public String getStringParameter(final String name) throws ParameterNotFoundException {
 		final String[] values = req.getParameterValues(name);
@@ -134,9 +134,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found or is the empty string.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a String, or the default
 	 */
 	public String getStringParameter(final String name, final String def) {
@@ -153,12 +153,12 @@ public class ParameterParser {
 	 * "off", or "no" in any letter case.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a boolean
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a boolean
+	 *            if the parameter could not be converted to a boolean
 	 */
 	public boolean getBooleanParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -180,9 +180,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a boolean, or the default
 	 */
 	public boolean getBooleanParameter(final String name, final boolean def) {
@@ -197,12 +197,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a byte
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a byte
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter value could not be converted to a byte
+	 *            if the parameter value could not be converted to a byte
 	 */
 	public byte getByteParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -215,9 +215,9 @@ public class ParameterParser {
 	 * byte.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a byte, or the default
 	 */
 	public byte getByteParameter(final String name, final byte def) {
@@ -232,10 +232,10 @@ public class ParameterParser {
 	 * Gets the named parameter value as a char
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a char
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found or was the empty string
+	 *            if the parameter was not found or was the empty string
 	 */
 	public char getCharParameter(final String name) throws ParameterNotFoundException {
 		final String param = getStringParameter(name);
@@ -251,9 +251,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a char, or the default
 	 */
 	public char getCharParameter(final String name, final char def) {
@@ -268,12 +268,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a double
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a double
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a double
+	 *            if the parameter could not be converted to a double
 	 */
 	public double getDoubleParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -285,9 +285,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a double, or the default
 	 */
 	public double getDoubleParameter(final String name, final double def) {
@@ -302,12 +302,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a float
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a float
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a float
+	 *            if the parameter could not be converted to a float
 	 */
 	public float getFloatParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -319,9 +319,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a float, or the default
 	 */
 	public float getFloatParameter(final String name, final float def) {
@@ -336,12 +336,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a int
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a int
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a int
+	 *            if the parameter could not be converted to a int
 	 */
 	public int getIntParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -353,9 +353,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a int, or the default
 	 */
 	public int getIntParameter(final String name, final int def) {
@@ -370,12 +370,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a long
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a long
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a long
+	 *            if the parameter could not be converted to a long
 	 */
 	public long getLongParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -387,9 +387,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a long, or the default
 	 */
 	public long getLongParameter(final String name, final long def) {
@@ -404,12 +404,12 @@ public class ParameterParser {
 	 * Gets the named parameter value as a short
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @return the parameter value as a short
 	 * @exception ParameterNotFoundException
-	 *               if the parameter was not found
+	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *               if the parameter could not be converted to a short
+	 *            if the parameter could not be converted to a short
 	 */
 	public short getShortParameter(final String name) throws ParameterNotFoundException,
 			NumberFormatException {
@@ -421,9 +421,9 @@ public class ParameterParser {
 	 * default value if the parameter is not found.
 	 * 
 	 * @param name
-	 *           the parameter name
+	 *        the parameter name
 	 * @param def
-	 *           the default parameter value
+	 *        the default parameter value
 	 * @return the parameter value as a short, or the default
 	 */
 	public short getShortParameter(final String name, final short def) {
@@ -439,7 +439,7 @@ public class ParameterParser {
 	 * Returns null if all the parameters are present.
 	 * 
 	 * @param an
-	 *           array of required parameters
+	 *        array of required parameters
 	 * @return an array of missing parameters, or null if none are missing
 	 */
 	public String[] getMissingParameters(final String[] required) {

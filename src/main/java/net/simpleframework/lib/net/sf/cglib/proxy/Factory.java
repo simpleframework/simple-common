@@ -1,13 +1,13 @@
 /*
  * Copyright 2002,2003 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -33,7 +33,7 @@ public interface Factory {
 	 * If multiple callbacks are required an exception will be thrown.
 	 * 
 	 * @param callback
-	 *           the new interceptor to use
+	 *        the new interceptor to use
 	 * @return new instance of the same type
 	 */
 	Object newInstance(Callback callback);
@@ -42,7 +42,7 @@ public interface Factory {
 	 * Creates new instance of the same type, using the no-arg constructor.
 	 * 
 	 * @param callbacks
-	 *           the new callbacks(s) to use
+	 *        the new callbacks(s) to use
 	 * @return new instance of the same type
 	 */
 	Object newInstance(Callback[] callbacks);
@@ -52,11 +52,11 @@ public interface Factory {
 	 * the given signature.
 	 * 
 	 * @param types
-	 *           the constructor argument types
+	 *        the constructor argument types
 	 * @param args
-	 *           the constructor arguments
+	 *        the constructor arguments
 	 * @param callbacks
-	 *           the new interceptor(s) to use
+	 *        the new interceptor(s) to use
 	 * @return new instance of the same type
 	 */
 	Object newInstance(Class[] types, Object[] args, Callback[] callbacks);
@@ -65,7 +65,7 @@ public interface Factory {
 	 * Return the <code>Callback</code> implementation at the specified index.
 	 * 
 	 * @param index
-	 *           the callback index
+	 *        the callback index
 	 * @return the callback implementation
 	 */
 	Callback getCallback(int index);
@@ -74,9 +74,9 @@ public interface Factory {
 	 * Set the callback for this object for the given type.
 	 * 
 	 * @param index
-	 *           the callback index to replace
+	 *        the callback index to replace
 	 * @param callback
-	 *           the new callback
+	 *        the new callback
 	 */
 	void setCallback(int index, Callback callback);
 
@@ -84,7 +84,7 @@ public interface Factory {
 	 * Replace all of the callbacks for this object at once.
 	 * 
 	 * @param callbacks
-	 *           the new callbacks(s) to use
+	 *        the new callbacks(s) to use
 	 */
 	void setCallbacks(Callback[] callbacks);
 

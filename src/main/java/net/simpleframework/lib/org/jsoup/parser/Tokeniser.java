@@ -13,11 +13,11 @@ class Tokeniser {
 	private final ParseErrorList errors; // errors found while tokenising
 
 	private TokeniserState state = TokeniserState.Data; // current tokenisation
-																			// state
+	// state
 	private Token emitPending; // the token we are about to emit on next read
 	private boolean isEmitPending = false;
 	private final StringBuilder charBuffer = new StringBuilder(); // buffers
-																						// characters
+	// characters
 	// to output as one
 	// token
 	StringBuilder dataBuffer; // buffers data looking for </script>
@@ -26,7 +26,7 @@ class Tokeniser {
 	Token.Doctype doctypePending; // doctype building up
 	Token.Comment commentPending; // comment building up
 	private Token.StartTag lastStartTag; // the last start tag emitted, to test
-														// appropriate end tag
+	// appropriate end tag
 	private boolean selfClosingFlagAcknowledged = true;
 
 	Tokeniser(final CharacterReader reader, final ParseErrorList errors) {

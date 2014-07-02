@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -523,7 +523,7 @@ final class Frame {
 	 * Returns the output frame local variable type at the given index.
 	 * 
 	 * @param local
-	 *           the index of the local that must be returned.
+	 *        the index of the local that must be returned.
 	 * @return the output frame local variable type at the given index.
 	 */
 	private int get(final int local) {
@@ -546,9 +546,9 @@ final class Frame {
 	 * Sets the output frame local variable type at the given index.
 	 * 
 	 * @param local
-	 *           the index of the local that must be set.
+	 *        the index of the local that must be set.
 	 * @param type
-	 *           the value of the local that must be set.
+	 *        the value of the local that must be set.
 	 */
 	private void set(final int local, final int type) {
 		// creates and/or resizes the output local variables array if necessary
@@ -569,7 +569,7 @@ final class Frame {
 	 * Pushes a new type onto the output frame stack.
 	 * 
 	 * @param type
-	 *           the type that must be pushed.
+	 *        the type that must be pushed.
 	 */
 	private void push(final int type) {
 		// creates and/or resizes the output stack array if necessary
@@ -595,11 +595,11 @@ final class Frame {
 	 * Pushes a new type onto the output frame stack.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param desc
-	 *           the descriptor of the type to be pushed. Can also be a method
-	 *           descriptor (in this case this method pushes its return type onto
-	 *           the output frame stack).
+	 *        the descriptor of the type to be pushed. Can also be a method
+	 *        descriptor (in this case this method pushes its return type onto
+	 *        the output frame stack).
 	 */
 	private void push(final ClassWriter cw, final String desc) {
 		final int type = type(cw, desc);
@@ -615,9 +615,9 @@ final class Frame {
 	 * Returns the int encoding of the given type.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param desc
-	 *           a type descriptor.
+	 *        a type descriptor.
 	 * @return the int encoding of the given type.
 	 */
 	private static int type(final ClassWriter cw, final String desc) {
@@ -703,7 +703,7 @@ final class Frame {
 	 * Pops the given number of types from the output frame stack.
 	 * 
 	 * @param elements
-	 *           the number of types that must be popped.
+	 *        the number of types that must be popped.
 	 */
 	private void pop(final int elements) {
 		if (outputStackTop >= elements) {
@@ -721,9 +721,9 @@ final class Frame {
 	 * Pops a type from the output frame stack.
 	 * 
 	 * @param desc
-	 *           the descriptor of the type to be popped. Can also be a method
-	 *           descriptor (in this case this method pops the types
-	 *           corresponding to the method arguments).
+	 *        the descriptor of the type to be popped. Can also be a method
+	 *        descriptor (in this case this method pops the types
+	 *        corresponding to the method arguments).
 	 */
 	private void pop(final String desc) {
 		final char c = desc.charAt(0);
@@ -741,7 +741,7 @@ final class Frame {
 	 * the basic block.
 	 * 
 	 * @param var
-	 *           a type on a which a constructor is invoked.
+	 *        a type on a which a constructor is invoked.
 	 */
 	private void init(final int var) {
 		// creates and/or resizes the initializations array if necessary
@@ -763,9 +763,9 @@ final class Frame {
 	 * types on which a constructor is invoked in the basic block.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param t
-	 *           a type
+	 *        a type
 	 * @return t or, if t is one of the types on which a constructor is invoked
 	 *         in the basic block, the type corresponding to this constructor.
 	 */
@@ -800,13 +800,13 @@ final class Frame {
 	 * descriptor.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param access
-	 *           the access flags of the method to which this label belongs.
+	 *        the access flags of the method to which this label belongs.
 	 * @param args
-	 *           the formal parameter types of this method.
+	 *        the formal parameter types of this method.
 	 * @param maxLocals
-	 *           the maximum number of local variables of this method.
+	 *        the maximum number of local variables of this method.
 	 */
 	void initInputFrame(final ClassWriter cw, final int access, final Type[] args,
 			final int maxLocals) {
@@ -836,13 +836,13 @@ final class Frame {
 	 * Simulates the action of the given instruction on the output stack frame.
 	 * 
 	 * @param opcode
-	 *           the opcode of the instruction.
+	 *        the opcode of the instruction.
 	 * @param arg
-	 *           the operand of the instruction, if any.
+	 *        the operand of the instruction, if any.
 	 * @param cw
-	 *           the class writer to which this label belongs.
+	 *        the class writer to which this label belongs.
 	 * @param item
-	 *           the operand of the instructions, if any.
+	 *        the operand of the instructions, if any.
 	 */
 	void execute(final int opcode, final int arg, final ClassWriter cw, final Item item) {
 		int t1, t2, t3, t4;
@@ -1270,12 +1270,12 @@ final class Frame {
 	 * the given label has been changed by this operation.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param frame
-	 *           the basic block whose input frame must be updated.
+	 *        the basic block whose input frame must be updated.
 	 * @param edge
-	 *           the kind of the {@link Edge} between this label and 'label'. See
-	 *           {@link Edge#info}.
+	 *        the kind of the {@link Edge} between this label and 'label'. See
+	 *        {@link Edge#info}.
 	 * @return <tt>true</tt> if the input frame of the given label has been
 	 *         changed by this operation.
 	 */
@@ -1376,13 +1376,13 @@ final class Frame {
 	 * operation.
 	 * 
 	 * @param cw
-	 *           the ClassWriter to which this label belongs.
+	 *        the ClassWriter to which this label belongs.
 	 * @param t
-	 *           the type with which the type array element must be merged.
+	 *        the type with which the type array element must be merged.
 	 * @param types
-	 *           an array of types.
+	 *        an array of types.
 	 * @param index
-	 *           the index of the type that must be merged in 'types'.
+	 *        the index of the type that must be merged in 'types'.
 	 * @return <tt>true</tt> if the type array has been modified by this
 	 *         operation.
 	 */

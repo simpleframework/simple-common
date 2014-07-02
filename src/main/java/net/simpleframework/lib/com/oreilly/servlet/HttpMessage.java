@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -64,8 +64,8 @@ public class HttpMessage {
 	 * servlet at the specified URL.
 	 * 
 	 * @param servlet
-	 *           the server resource (typically a servlet) with which to
-	 *           communicate
+	 *        the server resource (typically a servlet) with which to
+	 *        communicate
 	 */
 	public HttpMessage(final URL servlet) {
 		this.servlet = servlet;
@@ -76,7 +76,7 @@ public class HttpMessage {
 	 * 
 	 * @return an InputStream to read the response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public InputStream sendGetMessage() throws IOException {
 		return sendGetMessage(null);
@@ -87,10 +87,10 @@ public class HttpMessage {
 	 * supplied properties list.
 	 * 
 	 * @param args
-	 *           the properties list from which to build a query string
+	 *        the properties list from which to build a query string
 	 * @return an InputStream to read the response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public InputStream sendGetMessage(final Properties args) throws IOException {
 		String argString = ""; // default
@@ -115,7 +115,7 @@ public class HttpMessage {
 	 * 
 	 * @return an InputStream to read the response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public InputStream sendPostMessage() throws IOException {
 		return sendPostMessage(null);
@@ -126,10 +126,10 @@ public class HttpMessage {
 	 * supplied properties list.
 	 * 
 	 * @param args
-	 *           the properties list from which to build the post data
+	 *        the properties list from which to build the post data
 	 * @return an InputStream to read the response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public InputStream sendPostMessage(final Properties args) throws IOException {
 		String argString = ""; // default
@@ -175,10 +175,10 @@ public class HttpMessage {
 	 * The type of the uploaded object can be determined through introspection.
 	 * 
 	 * @param obj
-	 *           the serializable object to upload
+	 *        the serializable object to upload
 	 * @return an InputStream to read the response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public InputStream sendPostMessage(final Serializable obj) throws IOException {
 		final URLConnection con = servlet.openConnection();
@@ -211,9 +211,9 @@ public class HttpMessage {
 	 * no illegal characters in the name and value.
 	 * 
 	 * @param name
-	 *           the header name
+	 *        the header name
 	 * @param value
-	 *           the header value
+	 *        the header value
 	 */
 	public void setHeader(final String name, final String value) {
 		if (headers == null) {
@@ -240,9 +240,9 @@ public class HttpMessage {
 	 * no illegal characters in the name and value.
 	 * 
 	 * @param name
-	 *           the header name
+	 *        the header name
 	 * @param value
-	 *           the header value
+	 *        the header value
 	 */
 	public void setCookie(final String name, final String value) {
 		if (headers == null) {
@@ -262,9 +262,9 @@ public class HttpMessage {
 	 * persists across multiple requests.
 	 * 
 	 * @param name
-	 *           the user name
+	 *        the user name
 	 * @param name
-	 *           the user password
+	 *        the user password
 	 */
 	public void setAuthorization(final String name, final String password) {
 		final String authorization = Base64.encodeToString(name + ":" + password);

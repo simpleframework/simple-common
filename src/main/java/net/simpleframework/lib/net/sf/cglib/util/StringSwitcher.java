@@ -1,13 +1,13 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -53,15 +53,15 @@ abstract public class StringSwitcher {
 	 * of this static method.
 	 * 
 	 * @param strings
-	 *           the array of String keys; must be the same length as the value
-	 *           array
+	 *        the array of String keys; must be the same length as the value
+	 *        array
 	 * @param ints
-	 *           the array of integer results; must be the same length as the key
-	 *           array
+	 *        the array of integer results; must be the same length as the key
+	 *        array
 	 * @param fixedInput
-	 *           if false, an unknown key will be returned from {@link #intValue}
-	 *           as <code>-1</code>; if true, the result will be undefined, and
-	 *           the resulting code will be faster
+	 *        if false, an unknown key will be returned from {@link #intValue} as
+	 *        <code>-1</code>; if true, the result will be undefined, and
+	 *        the resulting code will be faster
 	 */
 	public static StringSwitcher create(final String[] strings, final int[] ints,
 			final boolean fixedInput) {
@@ -79,7 +79,7 @@ abstract public class StringSwitcher {
 	 * Return the integer associated with the given key.
 	 * 
 	 * @param s
-	 *           the key
+	 *        the key
 	 * @return the associated integer value, or <code>-1</code> if the key is
 	 *         unknown (unless <code>fixedInput</code> was specified when this
 	 *         <code>StringSwitcher</code> was created, in which case the return
@@ -102,8 +102,8 @@ abstract public class StringSwitcher {
 		 * Set the array of recognized Strings.
 		 * 
 		 * @param strings
-		 *           the array of String keys; must be the same length as the
-		 *           value array
+		 *        the array of String keys; must be the same length as the
+		 *        value array
 		 * @see #setInts
 		 */
 		public void setStrings(final String[] strings) {
@@ -114,8 +114,8 @@ abstract public class StringSwitcher {
 		 * Set the array of integer results.
 		 * 
 		 * @param ints
-		 *           the array of integer results; must be the same length as the
-		 *           key array
+		 *        the array of integer results; must be the same length as the
+		 *        key array
 		 * @see #setStrings
 		 */
 		public void setInts(final int[] ints) {
@@ -126,9 +126,9 @@ abstract public class StringSwitcher {
 		 * Configure how unknown String keys will be handled.
 		 * 
 		 * @param fixedInput
-		 *           if false, an unknown key will be returned from
-		 *           {@link #intValue} as <code>-1</code>; if true, the result
-		 *           will be undefined, and the resulting code will be faster
+		 *        if false, an unknown key will be returned from {@link #intValue}
+		 *        as <code>-1</code>; if true, the result
+		 *        will be undefined, and the resulting code will be faster
 		 */
 		public void setFixedInput(final boolean fixedInput) {
 			this.fixedInput = fixedInput;

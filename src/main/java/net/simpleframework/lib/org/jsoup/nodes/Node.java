@@ -30,9 +30,9 @@ public abstract class Node implements Cloneable {
 	 * Create a new Node.
 	 * 
 	 * @param baseUri
-	 *           base URI
+	 *        base URI
 	 * @param attributes
-	 *           attributes (not null, but may be empty)
+	 *        attributes (not null, but may be empty)
 	 */
 	protected Node(final String baseUri, final Attributes attributes) {
 		Validate.notNull(baseUri);
@@ -73,7 +73,7 @@ public abstract class Node implements Cloneable {
 	 * <code>String url = a.attr("abs:href");</code></blockquote>
 	 * 
 	 * @param attributeKey
-	 *           The attribute key.
+	 *        The attribute key.
 	 * @return The attribute, or empty string if not present (to avoid nulls).
 	 * @see #attributes()
 	 * @see #hasAttr(String)
@@ -106,9 +106,9 @@ public abstract class Node implements Cloneable {
 	 * replaced.
 	 * 
 	 * @param attributeKey
-	 *           The attribute key.
+	 *        The attribute key.
 	 * @param attributeValue
-	 *           The attribute value.
+	 *        The attribute value.
 	 * @return this (for chaining)
 	 */
 	public Node attr(final String attributeKey, final String attributeValue) {
@@ -120,7 +120,7 @@ public abstract class Node implements Cloneable {
 	 * Test if this element has an attribute.
 	 * 
 	 * @param attributeKey
-	 *           The attribute key to check.
+	 *        The attribute key to check.
 	 * @return true if the attribute exists, false if not.
 	 */
 	public boolean hasAttr(final String attributeKey) {
@@ -139,7 +139,7 @@ public abstract class Node implements Cloneable {
 	 * Remove an attribute from this element.
 	 * 
 	 * @param attributeKey
-	 *           The attribute to remove.
+	 *        The attribute to remove.
 	 * @return this (for chaining)
 	 */
 	public Node removeAttr(final String attributeKey) {
@@ -161,7 +161,7 @@ public abstract class Node implements Cloneable {
 	 * Update the base URI of this node and all of its descendants.
 	 * 
 	 * @param baseUri
-	 *           base URI to set
+	 *        base URI to set
 	 */
 	public void setBaseUri(final String baseUri) {
 		Validate.notNull(baseUri);
@@ -195,7 +195,7 @@ public abstract class Node implements Cloneable {
 	 * <code>String absUrl = linkEl.attr("abs:href");</code>
 	 * 
 	 * @param attributeKey
-	 *           The attribute key
+	 *        The attribute key
 	 * @return An absolute URL if one could be made, or an empty string (not
 	 *         null) if the attribute was missing or could not be made
 	 *         successfully into a URL.
@@ -236,7 +236,7 @@ public abstract class Node implements Cloneable {
 	 * Get a child node by its 0-based index.
 	 * 
 	 * @param index
-	 *           index of child node
+	 *        index of child node
 	 * @return the child node at this index. Throws a
 	 *         {@code IndexOutOfBoundsException} if the index is out of bounds.
 	 */
@@ -330,7 +330,7 @@ public abstract class Node implements Cloneable {
 	 * preceding sibling).
 	 * 
 	 * @param html
-	 *           HTML to add before this node
+	 *        HTML to add before this node
 	 * @return this node, for chaining
 	 * @see #after(String)
 	 */
@@ -344,7 +344,7 @@ public abstract class Node implements Cloneable {
 	 * preceding sibling).
 	 * 
 	 * @param node
-	 *           to add before this node
+	 *        to add before this node
 	 * @return this node, for chaining
 	 * @see #after(Node)
 	 */
@@ -361,7 +361,7 @@ public abstract class Node implements Cloneable {
 	 * following sibling).
 	 * 
 	 * @param html
-	 *           HTML to add after this node
+	 *        HTML to add after this node
 	 * @return this node, for chaining
 	 * @see #before(String)
 	 */
@@ -375,7 +375,7 @@ public abstract class Node implements Cloneable {
 	 * following sibling).
 	 * 
 	 * @param node
-	 *           to add after this node
+	 *        to add after this node
 	 * @return this node, for chaining
 	 * @see #before(Node)
 	 */
@@ -400,8 +400,8 @@ public abstract class Node implements Cloneable {
 	 * Wrap the supplied HTML around this node.
 	 * 
 	 * @param html
-	 *           HTML to wrap around this element, e.g.
-	 *           {@code <div class="head"></div>}. Can be arbitrarily deep.
+	 *        HTML to wrap around this element, e.g.
+	 *        {@code <div class="head"></div>}. Can be arbitrarily deep.
 	 * @return this node, for chaining.
 	 */
 	public Node wrap(final String html) {
@@ -472,7 +472,7 @@ public abstract class Node implements Cloneable {
 	 * Replace this node in the DOM with the supplied node.
 	 * 
 	 * @param in
-	 *           the node that will will replace the existing node.
+	 *        the node that will will replace the existing node.
 	 */
 	public void replaceWith(final Node in) {
 		Validate.notNull(in);
@@ -623,7 +623,7 @@ public abstract class Node implements Cloneable {
 	 * Perform a depth-first traversal through this node and its descendants.
 	 * 
 	 * @param nodeVisitor
-	 *           the visitor callbacks to perform on each node
+	 *        the visitor callbacks to perform on each node
 	 * @return this node, for chaining
 	 */
 	public Node traverse(final NodeVisitor nodeVisitor) {
@@ -659,7 +659,7 @@ public abstract class Node implements Cloneable {
 	 * Get the outer HTML of this node.
 	 * 
 	 * @param accum
-	 *           accumulator to place HTML into
+	 *        accumulator to place HTML into
 	 */
 	abstract void outerHtmlHead(StringBuilder accum, int depth, Document.OutputSettings out);
 

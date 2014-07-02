@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -41,9 +41,9 @@ public abstract class DaemonHttpServlet extends HttpServlet {
 	 * this method must be sure to first call <tt>super.init(config)</tt>.
 	 * 
 	 * @param config
-	 *           the servlet config
+	 *        the servlet config
 	 * @exception ServletException
-	 *               if a servlet exception occurs
+	 *            if a servlet exception occurs
 	 */
 	@Override
 	public void init(final ServletConfig config) throws ServletException {
@@ -78,7 +78,7 @@ public abstract class DaemonHttpServlet extends HttpServlet {
 	 * Handles a new socket connection. Subclasses must define this method.
 	 * 
 	 * @param client
-	 *           the client socket
+	 *        the client socket
 	 */
 	abstract public void handleClient(Socket client);
 

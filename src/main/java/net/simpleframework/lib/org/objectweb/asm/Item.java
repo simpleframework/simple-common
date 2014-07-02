@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -118,7 +118,7 @@ final class Item {
 	 * element at given position.
 	 * 
 	 * @param index
-	 *           index of the item to be constructed.
+	 *        index of the item to be constructed.
 	 */
 	Item(final int index) {
 		this.index = index;
@@ -128,9 +128,9 @@ final class Item {
 	 * Constructs a copy of the given item.
 	 * 
 	 * @param index
-	 *           index of the item to be constructed.
+	 *        index of the item to be constructed.
 	 * @param i
-	 *           the item that must be copied into the item to be constructed.
+	 *        the item that must be copied into the item to be constructed.
 	 */
 	Item(final int index, final Item i) {
 		this.index = index;
@@ -147,7 +147,7 @@ final class Item {
 	 * Sets this item to an integer item.
 	 * 
 	 * @param intVal
-	 *           the value of this item.
+	 *        the value of this item.
 	 */
 	void set(final int intVal) {
 		this.type = ClassWriter.INT;
@@ -159,7 +159,7 @@ final class Item {
 	 * Sets this item to a long item.
 	 * 
 	 * @param longVal
-	 *           the value of this item.
+	 *        the value of this item.
 	 */
 	void set(final long longVal) {
 		this.type = ClassWriter.LONG;
@@ -171,7 +171,7 @@ final class Item {
 	 * Sets this item to a float item.
 	 * 
 	 * @param floatVal
-	 *           the value of this item.
+	 *        the value of this item.
 	 */
 	void set(final float floatVal) {
 		this.type = ClassWriter.FLOAT;
@@ -183,7 +183,7 @@ final class Item {
 	 * Sets this item to a double item.
 	 * 
 	 * @param doubleVal
-	 *           the value of this item.
+	 *        the value of this item.
 	 */
 	void set(final double doubleVal) {
 		this.type = ClassWriter.DOUBLE;
@@ -195,13 +195,13 @@ final class Item {
 	 * Sets this item to an item that do not hold a primitive value.
 	 * 
 	 * @param type
-	 *           the type of this item.
+	 *        the type of this item.
 	 * @param strVal1
-	 *           first part of the value of this item.
+	 *        first part of the value of this item.
 	 * @param strVal2
-	 *           second part of the value of this item.
+	 *        second part of the value of this item.
 	 * @param strVal3
-	 *           third part of the value of this item.
+	 *        third part of the value of this item.
 	 */
 	void set(final int type, final String strVal1, final String strVal2, final String strVal3) {
 		this.type = type;
@@ -234,11 +234,11 @@ final class Item {
 	 * Sets the item to an InvokeDynamic item.
 	 * 
 	 * @param name
-	 *           invokedynamic's name.
+	 *        invokedynamic's name.
 	 * @param desc
-	 *           invokedynamic's desc.
+	 *        invokedynamic's desc.
 	 * @param bsmIndex
-	 *           zero based index into the class attribute BootrapMethods.
+	 *        zero based index into the class attribute BootrapMethods.
 	 */
 	void set(final String name, final String desc, final int bsmIndex) {
 		this.type = ClassWriter.INDY;
@@ -253,11 +253,11 @@ final class Item {
 	 * Sets the item to a BootstrapMethod item.
 	 * 
 	 * @param position
-	 *           position in byte in the class attribute BootrapMethods.
+	 *        position in byte in the class attribute BootrapMethods.
 	 * @param hashCode
-	 *           hashcode of the item. This hashcode is processed from the
-	 *           hashcode of the bootstrap method and the hashcode of all
-	 *           bootstrap arguments.
+	 *        hashcode of the item. This hashcode is processed from the
+	 *        hashcode of the bootstrap method and the hashcode of all
+	 *        bootstrap arguments.
 	 */
 	void set(final int position, final int hashCode) {
 		this.type = ClassWriter.BSM;
@@ -270,8 +270,8 @@ final class Item {
 	 * that the two items have the same {@link #type}</i>.
 	 * 
 	 * @param i
-	 *           the item to be compared to this one. Both items must have the
-	 *           same {@link #type}.
+	 *        the item to be compared to this one. Both items must have the
+	 *        same {@link #type}.
 	 * @return <tt>true</tt> if the given item if equal to this one,
 	 *         <tt>false</tt> otherwise.
 	 */

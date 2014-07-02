@@ -15,9 +15,9 @@ public final class StringUtil {
 	 * Join a collection of strings by a seperator
 	 * 
 	 * @param strings
-	 *           collection of string objects
+	 *        collection of string objects
 	 * @param sep
-	 *           string to place between strings
+	 *        string to place between strings
 	 * @return joined string
 	 */
 	public static String join(final Collection strings, final String sep) {
@@ -28,9 +28,9 @@ public final class StringUtil {
 	 * Join a collection of strings by a seperator
 	 * 
 	 * @param strings
-	 *           iterator of string objects
+	 *        iterator of string objects
 	 * @param sep
-	 *           string to place between strings
+	 *        string to place between strings
 	 * @return joined string
 	 */
 	public static String join(final Iterator strings, final String sep) {
@@ -55,7 +55,7 @@ public final class StringUtil {
 	 * Returns space padding
 	 * 
 	 * @param width
-	 *           amount of padding desired
+	 *        amount of padding desired
 	 * @return string of spaces * width
 	 */
 	public static String padding(final int width) {
@@ -79,7 +79,7 @@ public final class StringUtil {
 	 * \t, etc)
 	 * 
 	 * @param string
-	 *           string to test
+	 *        string to test
 	 * @return if string is blank
 	 */
 	public static boolean isBlank(final String string) {
@@ -100,7 +100,7 @@ public final class StringUtil {
 	 * Tests if a string is numeric, i.e. contains only digit characters
 	 * 
 	 * @param string
-	 *           string to test
+	 *        string to test
 	 * @return true if only digit chars, false if empty or null or contains
 	 *         non-digit chrs
 	 */
@@ -122,7 +122,7 @@ public final class StringUtil {
 	 * Tests if a code point is "whitespace" as defined in the HTML spec.
 	 * 
 	 * @param c
-	 *           code point to test
+	 *        code point to test
 	 * @return true if code point is whitespace, false otherwise
 	 */
 	public static boolean isWhitespace(final int c) {
@@ -135,7 +135,7 @@ public final class StringUtil {
 	 * simple space
 	 * 
 	 * @param string
-	 *           content to normalise
+	 *        content to normalise
 	 * @return normalised string
 	 */
 	public static String normaliseWhitespace(final String string) {
@@ -149,11 +149,11 @@ public final class StringUtil {
 	 * builder.
 	 * 
 	 * @param accum
-	 *           builder to append to
+	 *        builder to append to
 	 * @param string
-	 *           string to normalize whitespace within
+	 *        string to normalize whitespace within
 	 * @param stripLeading
-	 *           set to true if you wish to remove any leading whitespace
+	 *        set to true if you wish to remove any leading whitespace
 	 * @return
 	 */
 	public static void appendNormalisedWhitespace(final StringBuilder accum, final String string,

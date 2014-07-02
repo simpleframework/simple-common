@@ -21,11 +21,11 @@ public class FormElement extends Element {
 	 * Create a new, standalone form element.
 	 * 
 	 * @param tag
-	 *           tag of this element
+	 *        tag of this element
 	 * @param baseUri
-	 *           the base URI
+	 *        the base URI
 	 * @param attributes
-	 *           initial attributes
+	 *        initial attributes
 	 */
 	public FormElement(final Tag tag, final String baseUri, final Attributes attributes) {
 		super(tag, baseUri, attributes);
@@ -44,7 +44,7 @@ public class FormElement extends Element {
 	 * Add a form control element to this form.
 	 * 
 	 * @param element
-	 *           form control to add
+	 *        form control to add
 	 * @return this form element, for chaining
 	 */
 	public FormElement addElement(final Element element) {
@@ -59,8 +59,8 @@ public class FormElement extends Element {
 	 * 
 	 * @return a connection prepared from the values of this form.
 	 * @throws IllegalArgumentException
-	 *            if the form's absolute action URL cannot be determined. Make
-	 *            sure you pass the document's base URI when parsing.
+	 *         if the form's absolute action URL cannot be determined. Make
+	 *         sure you pass the document's base URI when parsing.
 	 */
 	public Connection submit() {
 		final String action = hasAttr("action") ? absUrl("action") : baseUri();

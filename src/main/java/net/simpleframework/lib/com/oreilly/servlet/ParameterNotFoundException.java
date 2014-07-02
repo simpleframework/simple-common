@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -26,7 +26,7 @@ public class ParameterNotFoundException extends Exception {
 	 * message.
 	 * 
 	 * @param s
-	 *           the detail message
+	 *        the detail message
 	 */
 	public ParameterNotFoundException(final String s) {
 		super(s);

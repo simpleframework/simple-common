@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -92,16 +92,16 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationWriter}.
 	 * 
 	 * @param cw
-	 *           the class writer to which this annotation must be added.
+	 *        the class writer to which this annotation must be added.
 	 * @param named
-	 *           <tt>true<tt> if values are named, <tt>false</tt> otherwise.
+	 *        <tt>true<tt> if values are named, <tt>false</tt> otherwise.
 	 * @param bv
-	 *           where the annotation values must be stored.
+	 *        where the annotation values must be stored.
 	 * @param parent
-	 *           where the number of annotation values must be stored.
+	 *        where the number of annotation values must be stored.
 	 * @param offset
-	 *           where in <tt>parent</tt> the number of annotation values must be
-	 *           stored.
+	 *        where in <tt>parent</tt> the number of annotation values must be
+	 *        stored.
 	 */
 	AnnotationWriter(final ClassWriter cw, final boolean named, final ByteVector bv,
 			final ByteVector parent, final int offset) {
@@ -254,7 +254,7 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * vector.
 	 * 
 	 * @param out
-	 *           where the annotations must be put.
+	 *        where the annotations must be put.
 	 */
 	void put(final ByteVector out) {
 		int n = 0;
@@ -282,11 +282,11 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * Puts the given annotation lists into the given byte vector.
 	 * 
 	 * @param panns
-	 *           an array of annotation writer lists.
+	 *        an array of annotation writer lists.
 	 * @param off
-	 *           index of the first annotation to be written.
+	 *        index of the first annotation to be written.
 	 * @param out
-	 *           where the annotations must be put.
+	 *        where the annotations must be put.
 	 */
 	static void put(final AnnotationWriter[] panns, final int off, final ByteVector out) {
 		int size = 1 + 2 * (panns.length - off);
@@ -319,13 +319,13 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * LOCAL_VARIABLE and RESOURCE_VARIABLE target types are not supported.
 	 * 
 	 * @param typeRef
-	 *           a reference to the annotated type. See {@link TypeReference}.
+	 *        a reference to the annotated type. See {@link TypeReference}.
 	 * @param typePath
-	 *           the path to the annotated type argument, wildcard bound, array
-	 *           element type, or static inner type within 'typeRef'. May be
-	 *           <tt>null</tt> if the annotation targets 'typeRef' as a whole.
+	 *        the path to the annotated type argument, wildcard bound, array
+	 *        element type, or static inner type within 'typeRef'. May be
+	 *        <tt>null</tt> if the annotation targets 'typeRef' as a whole.
 	 * @param out
-	 *           where the type reference and type path must be put.
+	 *        where the type reference and type path must be put.
 	 */
 	static void putTarget(final int typeRef, final TypePath typePath, final ByteVector out) {
 		switch (typeRef >>> 24) {

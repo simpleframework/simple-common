@@ -16,8 +16,8 @@ public class NodeTraversor {
 	 * Create a new traversor.
 	 * 
 	 * @param visitor
-	 *           a class implementing the {@link NodeVisitor} interface, to be
-	 *           called when visiting each node.
+	 *        a class implementing the {@link NodeVisitor} interface, to be
+	 *        called when visiting each node.
 	 */
 	public NodeTraversor(final NodeVisitor visitor) {
 		this.visitor = visitor;
@@ -27,7 +27,7 @@ public class NodeTraversor {
 	 * Start a depth-first traverse of the root and all of its descendants.
 	 * 
 	 * @param root
-	 *           the root node point to traverse.
+	 *        the root node point to traverse.
 	 */
 	public void traverse(final Node root) {
 		Node node = root;

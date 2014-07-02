@@ -1,13 +1,13 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -60,10 +60,10 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * arrays multiple times via the same ParallelSorter object.
 	 * 
 	 * @param arrays
-	 *           An array of arrays to sort. The arrays may be a mix of primitive
-	 *           and non-primitive types, but should all be the same length.
+	 *        An array of arrays to sort. The arrays may be a mix of primitive
+	 *        and non-primitive types, but should all be the same length.
 	 * @param loader
-	 *           ClassLoader for generated class, uses "current" if null
+	 *        ClassLoader for generated class, uses "current" if null
 	 */
 	public static ParallelSorter create(final Object[] arrays) {
 		final Generator gen = new Generator();
@@ -79,7 +79,7 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using the quicksort algorithm.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 */
 	public void quickSort(final int index) {
 		quickSort(index, 0, len(), null);
@@ -89,11 +89,11 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using the quicksort algorithm.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param lo
-	 *           starting array index (row), inclusive
+	 *        starting array index (row), inclusive
 	 * @param hi
-	 *           ending array index (row), exclusive
+	 *        ending array index (row), exclusive
 	 */
 	public void quickSort(final int index, final int lo, final int hi) {
 		quickSort(index, lo, hi, null);
@@ -103,9 +103,9 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using the quicksort algorithm.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param cmp
-	 *           Comparator to use if the specified column is non-primitive
+	 *        Comparator to use if the specified column is non-primitive
 	 */
 	public void quickSort(final int index, final Comparator cmp) {
 		quickSort(index, 0, len(), cmp);
@@ -115,13 +115,13 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using the quicksort algorithm.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param lo
-	 *           starting array index (row), inclusive
+	 *        starting array index (row), inclusive
 	 * @param hi
-	 *           ending array index (row), exclusive
+	 *        ending array index (row), exclusive
 	 * @param cmp
-	 *           Comparator to use if the specified column is non-primitive
+	 *        Comparator to use if the specified column is non-primitive
 	 */
 	public void quickSort(final int index, final int lo, final int hi, final Comparator cmp) {
 		chooseComparer(index, cmp);
@@ -130,7 +130,7 @@ abstract public class ParallelSorter extends SorterTemplate {
 
 	/**
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 */
 	public void mergeSort(final int index) {
 		mergeSort(index, 0, len(), null);
@@ -140,11 +140,11 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using an in-place merge sort.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param lo
-	 *           starting array index (row), inclusive
+	 *        starting array index (row), inclusive
 	 * @param hi
-	 *           ending array index (row), exclusive
+	 *        ending array index (row), exclusive
 	 */
 	public void mergeSort(final int index, final int lo, final int hi) {
 		mergeSort(index, lo, hi, null);
@@ -154,11 +154,11 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using an in-place merge sort.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param lo
-	 *           starting array index (row), inclusive
+	 *        starting array index (row), inclusive
 	 * @param hi
-	 *           ending array index (row), exclusive
+	 *        ending array index (row), exclusive
 	 */
 	public void mergeSort(final int index, final Comparator cmp) {
 		mergeSort(index, 0, len(), cmp);
@@ -168,13 +168,13 @@ abstract public class ParallelSorter extends SorterTemplate {
 	 * Sort the arrays using an in-place merge sort.
 	 * 
 	 * @param index
-	 *           array (column) to sort by
+	 *        array (column) to sort by
 	 * @param lo
-	 *           starting array index (row), inclusive
+	 *        starting array index (row), inclusive
 	 * @param hi
-	 *           ending array index (row), exclusive
+	 *        ending array index (row), exclusive
 	 * @param cmp
-	 *           Comparator to use if the specified column is non-primitive
+	 *        Comparator to use if the specified column is non-primitive
 	 */
 	public void mergeSort(final int index, final int lo, final int hi, final Comparator cmp) {
 		chooseComparer(index, cmp);

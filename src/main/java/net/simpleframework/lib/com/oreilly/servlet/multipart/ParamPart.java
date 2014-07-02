@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -32,13 +32,13 @@ public class ParamPart extends Part {
 	 * Constructs a parameter part; this is called by the parser.
 	 * 
 	 * @param name
-	 *           the name of the parameter.
+	 *        the name of the parameter.
 	 * @param in
-	 *           the servlet input stream to read the parameter value from.
+	 *        the servlet input stream to read the parameter value from.
 	 * @param boundary
-	 *           the MIME boundary that delimits the end of parameter value.
+	 *        the MIME boundary that delimits the end of parameter value.
 	 * @param encoding
-	 *           the byte-to-char encoding to use by default value.
+	 *        the byte-to-char encoding to use by default value.
 	 */
 	ParamPart(final String name, final ServletInputStream in, final String boundary,
 			final String encoding) throws IOException {

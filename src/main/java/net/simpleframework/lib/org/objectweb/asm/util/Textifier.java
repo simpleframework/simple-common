@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -151,7 +151,7 @@ public class Textifier extends Printer {
 	 * the {@link #Textifier(int)} version.
 	 * 
 	 * @throws IllegalStateException
-	 *            If a subclass calls this constructor.
+	 *         If a subclass calls this constructor.
 	 */
 	public Textifier() {
 		this(Opcodes.ASM5);
@@ -165,8 +165,8 @@ public class Textifier extends Printer {
 	 * {@link net.simpleframework.lib.org.objectweb.asm.util.Textifier}.
 	 * 
 	 * @param api
-	 *           the ASM API version implemented by this visitor. Must be one of
-	 *           {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one of
+	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	protected Textifier(final int api) {
 		super(api);
@@ -178,10 +178,10 @@ public class Textifier extends Printer {
 	 * Usage: Textifier [-debug] &lt;binary class name or class file name &gt;
 	 * 
 	 * @param args
-	 *           the command line arguments.
+	 *        the command line arguments.
 	 * 
 	 * @throws Exception
-	 *            if the class cannot be found, or if an IO exception occurs.
+	 *         if the class cannot be found, or if an IO exception occurs.
 	 */
 	public static void main(final String[] args) throws Exception {
 		int i = 0;
@@ -1071,9 +1071,9 @@ public class Textifier extends Printer {
 	 * Prints a disassembled view of the given annotation.
 	 * 
 	 * @param desc
-	 *           the class descriptor of the annotation class.
+	 *        the class descriptor of the annotation class.
 	 * @param visible
-	 *           <tt>true</tt> if the annotation is visible at runtime.
+	 *        <tt>true</tt> if the annotation is visible at runtime.
 	 * @return a visitor to visit the annotation values.
 	 */
 	public Textifier visitAnnotation(final String desc, final boolean visible) {
@@ -1092,15 +1092,15 @@ public class Textifier extends Printer {
 	 * Prints a disassembled view of the given type annotation.
 	 * 
 	 * @param typeRef
-	 *           a reference to the annotated type. See {@link TypeReference}.
+	 *        a reference to the annotated type. See {@link TypeReference}.
 	 * @param typePath
-	 *           the path to the annotated type argument, wildcard bound, array
-	 *           element type, or static inner type within 'typeRef'. May be
-	 *           <tt>null</tt> if the annotation targets 'typeRef' as a whole.
+	 *        the path to the annotated type argument, wildcard bound, array
+	 *        element type, or static inner type within 'typeRef'. May be
+	 *        <tt>null</tt> if the annotation targets 'typeRef' as a whole.
 	 * @param desc
-	 *           the class descriptor of the annotation class.
+	 *        the class descriptor of the annotation class.
 	 * @param visible
-	 *           <tt>true</tt> if the annotation is visible at runtime.
+	 *        <tt>true</tt> if the annotation is visible at runtime.
 	 * @return a visitor to visit the annotation values.
 	 */
 	public Textifier visitTypeAnnotation(final int typeRef, final TypePath typePath,
@@ -1125,7 +1125,7 @@ public class Textifier extends Printer {
 	 * Prints a disassembled view of the given attribute.
 	 * 
 	 * @param attr
-	 *           an attribute.
+	 *        an attribute.
 	 */
 	public void visitAttribute(final Attribute attr) {
 		buf.setLength(0);
@@ -1159,11 +1159,11 @@ public class Textifier extends Printer {
 	 * {@link #buf buf}.
 	 * 
 	 * @param type
-	 *           indicates if desc is an internal name, a field descriptor, a
-	 *           method descriptor, a class signature, ...
+	 *        indicates if desc is an internal name, a field descriptor, a
+	 *        method descriptor, a class signature, ...
 	 * @param desc
-	 *           an internal name, type descriptor, or type signature. May be
-	 *           <tt>null</tt>.
+	 *        an internal name, type descriptor, or type signature. May be
+	 *        <tt>null</tt>.
 	 */
 	protected void appendDescriptor(final int type, final String desc) {
 		if (type == CLASS_SIGNATURE || type == FIELD_SIGNATURE || type == METHOD_SIGNATURE) {
@@ -1180,7 +1180,7 @@ public class Textifier extends Printer {
 	 * label name if the given label does not yet have one.
 	 * 
 	 * @param l
-	 *           a label.
+	 *        a label.
 	 */
 	protected void appendLabel(final Label l) {
 		if (labelNames == null) {
@@ -1198,7 +1198,7 @@ public class Textifier extends Printer {
 	 * Appends the information about the given handle to {@link #buf buf}.
 	 * 
 	 * @param h
-	 *           a handle, non null.
+	 *        a handle, non null.
 	 */
 	protected void appendHandle(final Handle h) {
 		final int tag = h.getTag();
@@ -1257,7 +1257,7 @@ public class Textifier extends Printer {
 	 * {@link #buf buf}.
 	 * 
 	 * @param access
-	 *           some access modifiers.
+	 *        some access modifiers.
 	 */
 	private void appendAccess(final int access) {
 		if ((access & Opcodes.ACC_PUBLIC) != 0) {

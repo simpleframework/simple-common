@@ -1,19 +1,19 @@
 package net.simpleframework.lib.au.com.bytecode.opencsv;
 
 /**
- Copyright 2005 Bytecode Pty Ltd.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2005 Bytecode Pty Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import java.io.BufferedReader;
@@ -50,7 +50,7 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader using a comma for the separator.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 */
 	public CSVReader(final Reader reader) {
 		this(reader, CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER,
@@ -61,9 +61,9 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries.
+	 *        the delimiter to use for separating entries.
 	 */
 	public CSVReader(final Reader reader, final char separator) {
 		this(reader, separator, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
@@ -73,11 +73,11 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar) {
 		this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, DEFAULT_SKIP_LINES,
@@ -89,13 +89,13 @@ public class CSVReader implements Closeable {
 	 * handling behavior.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param strictQuotes
-	 *           sets if characters outside the quotes are ignored
+	 *        sets if characters outside the quotes are ignored
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar,
 			final boolean strictQuotes) {
@@ -107,13 +107,13 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 */
 
 	public CSVReader(final Reader reader, final char separator, final char quotechar,
@@ -126,13 +126,13 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param line
-	 *           the line number to skip for start reading
+	 *        the line number to skip for start reading
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar, final int line) {
 		this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, line,
@@ -143,15 +143,15 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 * @param line
-	 *           the line number to skip for start reading
+	 *        the line number to skip for start reading
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar,
 			final char escape, final int line) {
@@ -162,17 +162,17 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 * @param line
-	 *           the line number to skip for start reading
+	 *        the line number to skip for start reading
 	 * @param strictQuotes
-	 *           sets if characters outside the quotes are ignored
+	 *        sets if characters outside the quotes are ignored
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar,
 			final char escape, final int line, final boolean strictQuotes) {
@@ -184,20 +184,20 @@ public class CSVReader implements Closeable {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param reader
-	 *           the reader to an underlying CSV source.
+	 *        the reader to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 * @param line
-	 *           the line number to skip for start reading
+	 *        the line number to skip for start reading
 	 * @param strictQuotes
-	 *           sets if characters outside the quotes are ignored
+	 *        sets if characters outside the quotes are ignored
 	 * @param ignoreLeadingWhiteSpace
-	 *           it true, parser should ignore white space before a quote in a
-	 *           field
+	 *        it true, parser should ignore white space before a quote in a
+	 *        field
 	 */
 	public CSVReader(final Reader reader, final char separator, final char quotechar,
 			final char escape, final int line, final boolean strictQuotes,
@@ -216,7 +216,7 @@ public class CSVReader implements Closeable {
 	 *         file.
 	 * 
 	 * @throws IOException
-	 *            if bad things happen during the read
+	 *         if bad things happen during the read
 	 */
 	public List<String[]> readAll() throws IOException {
 
@@ -238,7 +238,7 @@ public class CSVReader implements Closeable {
 	 *         entry.
 	 * 
 	 * @throws IOException
-	 *            if bad things happen during the read
+	 *         if bad things happen during the read
 	 */
 	public String[] readNext() throws IOException {
 
@@ -268,7 +268,7 @@ public class CSVReader implements Closeable {
 	 * 
 	 * @return the next line from the file without trailing newline
 	 * @throws IOException
-	 *            if bad things happen during the read
+	 *         if bad things happen during the read
 	 */
 	private String getNextLine() throws IOException {
 		if (!this.linesSkiped) {
@@ -288,7 +288,7 @@ public class CSVReader implements Closeable {
 	 * Closes the underlying reader.
 	 * 
 	 * @throws IOException
-	 *            if the close fails
+	 *         if the close fails
 	 */
 	@Override
 	public void close() throws IOException {

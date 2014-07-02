@@ -60,7 +60,6 @@ public class ColumnData extends ObjectEx implements Serializable {
 		this.name = name;
 		this.text = text;
 		this.propertyClass = propertyClass;
-		enableAttributes();
 	}
 
 	public ColumnData(final String name, final EOrder order) {

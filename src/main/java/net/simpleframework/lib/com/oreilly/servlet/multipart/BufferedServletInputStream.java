@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet.multipart;
@@ -48,7 +48,7 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * <code>ServletInputStream</code>.
 	 * 
 	 * @param in
-	 *           a servlet input stream.
+	 *        a servlet input stream.
 	 */
 	public BufferedServletInputStream(final ServletInputStream in) {
 		this.in = in;
@@ -60,7 +60,7 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * method.
 	 * 
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	private void fill() throws IOException {
 		final int i = in.read(buf, 0, buf.length);
@@ -75,16 +75,16 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * wrapped <code>ServletInputStream</code>.
 	 * 
 	 * @param b
-	 *           an array of bytes into which data is read.
+	 *        an array of bytes into which data is read.
 	 * @param off
-	 *           an integer specifying the character at which this method begins
-	 *           reading.
+	 *        an integer specifying the character at which this method begins
+	 *        reading.
 	 * @param len
-	 *           an integer specifying the maximum number of bytes to read.
+	 *        an integer specifying the maximum number of bytes to read.
 	 * @return an integer specifying the actual number of bytes read, or -1 if
 	 *         the end of the stream is reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int readLine(final byte b[], final int off, final int len) throws IOException {
@@ -133,11 +133,11 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * the <code>readLine</code> method of <code>ServletInputStream</code>.
 	 * 
 	 * @param b
-	 *           byte array to search.
+	 *        byte array to search.
 	 * @param pos
-	 *           position in byte array to search from.
+	 *        position in byte array to search from.
 	 * @param len
-	 *           maximum number of bytes to search.
+	 *        maximum number of bytes to search.
 	 * 
 	 * @return the number of bytes including the \n, or -1 if none found.
 	 */
@@ -159,7 +159,7 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * @return the next byte of data, or <code>-1</code> if the end of the stream
 	 *         is reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read() throws IOException {
@@ -177,16 +177,16 @@ public class BufferedServletInputStream extends ServletInputStream {
 	 * <code>ServletInputStream</code>.
 	 * 
 	 * @param b
-	 *           the buffer into which the data is read.
+	 *        the buffer into which the data is read.
 	 * @param off
-	 *           the start offset of the data.
+	 *        the start offset of the data.
 	 * @param len
-	 *           the maximum number of bytes read.
+	 *        the maximum number of bytes read.
 	 * @return the total number of bytes read into the buffer, or <code>-1</code>
 	 *         if there is no more data because the end of the stream has been
 	 *         reached.
 	 * @exception IOException
-	 *               if an I/O error occurs.
+	 *            if an I/O error occurs.
 	 */
 	@Override
 	public int read(final byte b[], final int off, final int len) throws IOException {

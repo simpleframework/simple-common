@@ -1,13 +1,13 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -161,9 +161,9 @@ abstract public class FastClass {
 	 * 
 	 * @see #invoke(int, Object, Object[])
 	 * @param name
-	 *           the method name
+	 *        the method name
 	 * @param parameterTypes
-	 *           the parameter array
+	 *        the parameter array
 	 * @return the index, or <code>-1</code> if none is found.
 	 */
 	abstract public int getIndex(String name, Class[] parameterTypes);
@@ -174,7 +174,7 @@ abstract public class FastClass {
 	 * 
 	 * @see #newInstance(int, Object[])
 	 * @param parameterTypes
-	 *           the parameter array
+	 *        the parameter array
 	 * @return the constructor index, or <code>-1</code> if none is found.
 	 */
 	abstract public int getIndex(Class[] parameterTypes);
@@ -184,13 +184,13 @@ abstract public class FastClass {
 	 * 
 	 * @see getIndex(name, Class[])
 	 * @param index
-	 *           the method index
+	 *        the method index
 	 * @param obj
-	 *           the object the underlying method is invoked from
+	 *        the object the underlying method is invoked from
 	 * @param args
-	 *           the arguments used for the method call
+	 *        the arguments used for the method call
 	 * @throws java.lang.reflect.InvocationTargetException
-	 *            if the underlying method throws an exception
+	 *         if the underlying method throws an exception
 	 */
 	abstract public Object invoke(int index, Object obj, Object[] args)
 			throws InvocationTargetException;
@@ -200,11 +200,11 @@ abstract public class FastClass {
 	 * 
 	 * @see getIndex(Class[])
 	 * @param index
-	 *           the constructor index
+	 *        the constructor index
 	 * @param args
-	 *           the arguments passed to the constructor
+	 *        the arguments passed to the constructor
 	 * @throws java.lang.reflect.InvocationTargetException
-	 *            if the constructor throws an exception
+	 *         if the constructor throws an exception
 	 */
 	abstract public Object newInstance(int index, Object[] args) throws InvocationTargetException;
 

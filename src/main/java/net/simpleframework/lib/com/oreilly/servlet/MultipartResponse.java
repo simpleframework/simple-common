@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -83,9 +83,9 @@ public class MultipartResponse {
 	 * response.
 	 * 
 	 * @param response
-	 *           the servlet response
+	 *        the servlet response
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public MultipartResponse(final HttpServletResponse response) throws IOException {
 		// Save the response object and output stream
@@ -104,9 +104,9 @@ public class MultipartResponse {
 	 * necessary.
 	 * 
 	 * @param contentType
-	 *           the content type of this response part
+	 *        the content type of this response part
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public void startResponse(final String contentType) throws IOException {
 		// End the last response if necessary
@@ -123,7 +123,7 @@ public class MultipartResponse {
 	 * Ends a single response. Flushes the output.
 	 * 
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public void endResponse() throws IOException {
 		// End the last response, and flush so the client sees the content
@@ -138,7 +138,7 @@ public class MultipartResponse {
 	 * will be no more responses and flushes the output.
 	 * 
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public void finish() throws IOException {
 		out.println("--End--");

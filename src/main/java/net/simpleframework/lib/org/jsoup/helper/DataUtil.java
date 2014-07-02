@@ -24,7 +24,7 @@ public class DataUtil {
 	private static final Pattern charsetPattern = Pattern
 			.compile("(?i)\\bcharset=\\s*(?:\"|')?([^\\s,;\"']*)");
 	static final String defaultCharset = "UTF-8"; // used if not found in header
-																	// or meta charset
+	// or meta charset
 	private static final int bufferSize = 0x20000; // ~130K.
 
 	private DataUtil() {
@@ -34,14 +34,14 @@ public class DataUtil {
 	 * Loads a file to a Document.
 	 * 
 	 * @param in
-	 *           file to load
+	 *        file to load
 	 * @param charsetName
-	 *           character set of input
+	 *        character set of input
 	 * @param baseUri
-	 *           base URI of document, to resolve relative links against
+	 *        base URI of document, to resolve relative links against
 	 * @return Document
 	 * @throws IOException
-	 *            on IO error
+	 *         on IO error
 	 */
 	public static Document load(final File in, final String charsetName, final String baseUri)
 			throws IOException {
@@ -53,14 +53,14 @@ public class DataUtil {
 	 * Parses a Document from an input steam.
 	 * 
 	 * @param in
-	 *           input stream to parse. You will need to close it.
+	 *        input stream to parse. You will need to close it.
 	 * @param charsetName
-	 *           character set of input
+	 *        character set of input
 	 * @param baseUri
-	 *           base URI of document, to resolve relative links against
+	 *        base URI of document, to resolve relative links against
 	 * @return Document
 	 * @throws IOException
-	 *            on IO error
+	 *         on IO error
 	 */
 	public static Document load(final InputStream in, final String charsetName, final String baseUri)
 			throws IOException {
@@ -72,16 +72,16 @@ public class DataUtil {
 	 * Parses a Document from an input steam, using the provided Parser.
 	 * 
 	 * @param in
-	 *           input stream to parse. You will need to close it.
+	 *        input stream to parse. You will need to close it.
 	 * @param charsetName
-	 *           character set of input
+	 *        character set of input
 	 * @param baseUri
-	 *           base URI of document, to resolve relative links against
+	 *        base URI of document, to resolve relative links against
 	 * @param parser
-	 *           alternate {@link Parser#xmlParser() parser} to use.
+	 *        alternate {@link Parser#xmlParser() parser} to use.
 	 * @return Document
 	 * @throws IOException
-	 *            on IO error
+	 *         on IO error
 	 */
 	public static Document load(final InputStream in, final String charsetName,
 			final String baseUri, final Parser parser) throws IOException {
@@ -123,7 +123,7 @@ public class DataUtil {
 
 				if (foundCharset != null && foundCharset.length() != 0
 						&& !foundCharset.equals(defaultCharset)) { // need to
-																					// re-decode
+					// re-decode
 					foundCharset = foundCharset.trim().replaceAll("[\"']", "");
 					charsetName = foundCharset;
 					byteData.rewind();
@@ -158,13 +158,13 @@ public class DataUtil {
 	 * Read the input stream into a byte buffer.
 	 * 
 	 * @param inStream
-	 *           the input stream to read from
+	 *        the input stream to read from
 	 * @param maxSize
-	 *           the maximum size in bytes to read from the stream. Set to 0 to
-	 *           be unlimited.
+	 *        the maximum size in bytes to read from the stream. Set to 0 to
+	 *        be unlimited.
 	 * @return the filled byte buffer
 	 * @throws IOException
-	 *            if an exception occurs whilst reading from the input stream.
+	 *         if an exception occurs whilst reading from the input stream.
 	 */
 	static ByteBuffer readToByteBuffer(final InputStream inStream, final int maxSize)
 			throws IOException {
@@ -216,7 +216,7 @@ public class DataUtil {
 	 * supported, returns null (so the default will kick in.)
 	 * 
 	 * @param contentType
-	 *           e.g. "text/html; charset=EUC-JP"
+	 *        e.g. "text/html; charset=EUC-JP"
 	 * @return "EUC-JP", or null if not found. Charset is trimmed and uppercased.
 	 */
 	static String getCharsetFromContentType(final String contentType) {

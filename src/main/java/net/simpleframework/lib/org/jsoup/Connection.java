@@ -35,7 +35,7 @@ public interface Connection {
 	 * Set the request URL to fetch. The protocol must be HTTP or HTTPS.
 	 * 
 	 * @param url
-	 *           URL to connect to
+	 *        URL to connect to
 	 * @return this Connection, for chaining
 	 */
 	public Connection url(URL url);
@@ -44,7 +44,7 @@ public interface Connection {
 	 * Set the request URL to fetch. The protocol must be HTTP or HTTPS.
 	 * 
 	 * @param url
-	 *           URL to connect to
+	 *        URL to connect to
 	 * @return this Connection, for chaining
 	 */
 	public Connection url(String url);
@@ -53,7 +53,7 @@ public interface Connection {
 	 * Set the request user-agent header.
 	 * 
 	 * @param userAgent
-	 *           user-agent to use
+	 *        user-agent to use
 	 * @return this Connection, for chaining
 	 */
 	public Connection userAgent(String userAgent);
@@ -64,8 +64,8 @@ public interface Connection {
 	 * millis). A timeout of zero is treated as an infinite timeout.
 	 * 
 	 * @param millis
-	 *           number of milliseconds (thousandths of a second) before timing
-	 *           out connects or reads.
+	 *        number of milliseconds (thousandths of a second) before timing
+	 *        out connects or reads.
 	 * @return this Connection, for chaining
 	 */
 	public Connection timeout(int millis);
@@ -78,7 +78,7 @@ public interface Connection {
 	 * machine).
 	 * 
 	 * @param bytes
-	 *           number of bytes to read from the input before truncating
+	 *        number of bytes to read from the input before truncating
 	 * @return this Connection, for chaining
 	 */
 	public Connection maxBodySize(int bytes);
@@ -87,7 +87,7 @@ public interface Connection {
 	 * Set the request referrer (aka "referer") header.
 	 * 
 	 * @param referrer
-	 *           referrer to use
+	 *        referrer to use
 	 * @return this Connection, for chaining
 	 */
 	public Connection referrer(String referrer);
@@ -97,7 +97,7 @@ public interface Connection {
 	 * this is <b>true</b>.
 	 * 
 	 * @param followRedirects
-	 *           true if server redirects should be followed.
+	 *        true if server redirects should be followed.
 	 * @return this Connection, for chaining
 	 */
 	public Connection followRedirects(boolean followRedirects);
@@ -106,7 +106,7 @@ public interface Connection {
 	 * Set the request method to use, GET or POST. Default is GET.
 	 * 
 	 * @param method
-	 *           HTTP request method
+	 *        HTTP request method
 	 * @return this Connection, for chaining
 	 */
 	public Connection method(Method method);
@@ -119,7 +119,7 @@ public interface Connection {
 	 * reflect the error.
 	 * 
 	 * @param ignoreHttpErrors
-	 *           - false (default) if HTTP errors should be ignored.
+	 *        - false (default) if HTTP errors should be ignored.
 	 * @return this Connection, for chaining
 	 */
 	public Connection ignoreHttpErrors(boolean ignoreHttpErrors);
@@ -132,8 +132,8 @@ public interface Connection {
 	 * force a parse attempt regardless of content type.
 	 * 
 	 * @param ignoreContentType
-	 *           set to true if you would like the content type ignored on
-	 *           parsing the response into a Document.
+	 *        set to true if you would like the content type ignored on
+	 *        parsing the response into a Document.
 	 * @return this Connection, for chaining
 	 */
 	public Connection ignoreContentType(boolean ignoreContentType);
@@ -144,9 +144,9 @@ public interface Connection {
 	 * have multiple values of the same name.
 	 * 
 	 * @param key
-	 *           data key
+	 *        data key
 	 * @param value
-	 *           data value
+	 *        data value
 	 * @return this Connection, for chaining
 	 */
 	public Connection data(String key, String value);
@@ -155,7 +155,7 @@ public interface Connection {
 	 * Adds all of the supplied data to the request data parameters
 	 * 
 	 * @param data
-	 *           collection of data parameters
+	 *        collection of data parameters
 	 * @return this Connection, for chaining
 	 */
 	public Connection data(Collection<KeyVal> data);
@@ -164,7 +164,7 @@ public interface Connection {
 	 * Adds all of the supplied data to the request data parameters
 	 * 
 	 * @param data
-	 *           map of data parameters
+	 *        map of data parameters
 	 * @return this Connection, for chaining
 	 */
 	public Connection data(Map<String, String> data);
@@ -177,7 +177,7 @@ public interface Connection {
 	 * <code>?name=jsoup&language=Java&language=English</code>
 	 * 
 	 * @param keyvals
-	 *           a set of key value pairs.
+	 *        a set of key value pairs.
 	 * @return this Connection, for chaining
 	 */
 	public Connection data(String... keyvals);
@@ -186,9 +186,9 @@ public interface Connection {
 	 * Set a request header.
 	 * 
 	 * @param name
-	 *           header name
+	 *        header name
 	 * @param value
-	 *           header value
+	 *        header value
 	 * @return this Connection, for chaining
 	 * @see net.simpleframework.lib.org.jsoup.Connection.Request#headers()
 	 */
@@ -198,9 +198,9 @@ public interface Connection {
 	 * Set a cookie to be sent in the request.
 	 * 
 	 * @param name
-	 *           name of cookie
+	 *        name of cookie
 	 * @param value
-	 *           value of cookie
+	 *        value of cookie
 	 * @return this Connection, for chaining
 	 */
 	public Connection cookie(String name, String value);
@@ -209,7 +209,7 @@ public interface Connection {
 	 * Adds each of the supplied cookies to the request.
 	 * 
 	 * @param cookies
-	 *           map of cookie name -> value pairs
+	 *        map of cookie name -> value pairs
 	 * @return this Connection, for chaining
 	 */
 	public Connection cookies(Map<String, String> cookies);
@@ -219,7 +219,7 @@ public interface Connection {
 	 * Document.
 	 * 
 	 * @param parser
-	 *           alternate parser
+	 *        alternate parser
 	 * @return this Connection, for chaining
 	 */
 	public Connection parser(Parser parser);
@@ -229,18 +229,18 @@ public interface Connection {
 	 * 
 	 * @return parsed Document
 	 * @throws java.net.MalformedURLException
-	 *            if the request URL is not a HTTP or HTTPS URL, or is otherwise
-	 *            malformed
+	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
+	 *         malformed
 	 * @throws HttpStatusException
-	 *            if the response is not OK and HTTP response errors are not
-	 *            ignored
+	 *         if the response is not OK and HTTP response errors are not
+	 *         ignored
 	 * @throws UnsupportedMimeTypeException
-	 *            if the response mime type is not supported and those errors are
-	 *            not ignored
+	 *         if the response mime type is not supported and those errors are
+	 *         not ignored
 	 * @throws java.net.SocketTimeoutException
-	 *            if the connection times out
+	 *         if the connection times out
 	 * @throws IOException
-	 *            on error
+	 *         on error
 	 */
 	public Document get() throws IOException;
 
@@ -249,18 +249,18 @@ public interface Connection {
 	 * 
 	 * @return parsed Document
 	 * @throws java.net.MalformedURLException
-	 *            if the request URL is not a HTTP or HTTPS URL, or is otherwise
-	 *            malformed
+	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
+	 *         malformed
 	 * @throws HttpStatusException
-	 *            if the response is not OK and HTTP response errors are not
-	 *            ignored
+	 *         if the response is not OK and HTTP response errors are not
+	 *         ignored
 	 * @throws UnsupportedMimeTypeException
-	 *            if the response mime type is not supported and those errors are
-	 *            not ignored
+	 *         if the response mime type is not supported and those errors are
+	 *         not ignored
 	 * @throws java.net.SocketTimeoutException
-	 *            if the connection times out
+	 *         if the connection times out
 	 * @throws IOException
-	 *            on error
+	 *         on error
 	 */
 	public Document post() throws IOException;
 
@@ -269,18 +269,18 @@ public interface Connection {
 	 * 
 	 * @return a response object
 	 * @throws java.net.MalformedURLException
-	 *            if the request URL is not a HTTP or HTTPS URL, or is otherwise
-	 *            malformed
+	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
+	 *         malformed
 	 * @throws HttpStatusException
-	 *            if the response is not OK and HTTP response errors are not
-	 *            ignored
+	 *         if the response is not OK and HTTP response errors are not
+	 *         ignored
 	 * @throws UnsupportedMimeTypeException
-	 *            if the response mime type is not supported and those errors are
-	 *            not ignored
+	 *         if the response mime type is not supported and those errors are
+	 *         not ignored
 	 * @throws java.net.SocketTimeoutException
-	 *            if the connection times out
+	 *         if the connection times out
 	 * @throws IOException
-	 *            on error
+	 *         on error
 	 */
 	public Response execute() throws IOException;
 
@@ -295,7 +295,7 @@ public interface Connection {
 	 * Set the connection's request
 	 * 
 	 * @param request
-	 *           new request object
+	 *        new request object
 	 * @return this Connection, for chaining
 	 */
 	public Connection request(Request request);
@@ -311,7 +311,7 @@ public interface Connection {
 	 * Set the connection's response
 	 * 
 	 * @param response
-	 *           new response
+	 *        new response
 	 * @return this Connection, for chaining
 	 */
 	public Connection response(Response response);
@@ -320,7 +320,7 @@ public interface Connection {
 	 * Common methods for Requests and Responses
 	 * 
 	 * @param <T>
-	 *           Type of Base, either Request or Response
+	 *        Type of Base, either Request or Response
 	 */
 	interface Base<T extends Base> {
 
@@ -335,7 +335,7 @@ public interface Connection {
 		 * Set the URL
 		 * 
 		 * @param url
-		 *           new URL
+		 *        new URL
 		 * @return this, for chaining
 		 */
 		public T url(URL url);
@@ -351,7 +351,7 @@ public interface Connection {
 		 * Set the request method
 		 * 
 		 * @param method
-		 *           new method
+		 *        new method
 		 * @return this, for chaining
 		 */
 		public T method(Method method);
@@ -363,7 +363,7 @@ public interface Connection {
 		 * Header names are case insensitive.
 		 * 
 		 * @param name
-		 *           name of header (case insensitive)
+		 *        name of header (case insensitive)
 		 * @return value of header, or null if not set.
 		 * @see #hasHeader(String)
 		 * @see #cookie(String)
@@ -375,9 +375,9 @@ public interface Connection {
 		 * same case insensitive name.
 		 * 
 		 * @param name
-		 *           Name of header
+		 *        Name of header
 		 * @param value
-		 *           Value of header
+		 *        Value of header
 		 * @return this, for chaining
 		 */
 		public T header(String name, String value);
@@ -386,7 +386,7 @@ public interface Connection {
 		 * Check if a header is present
 		 * 
 		 * @param name
-		 *           name of header (case insensitive)
+		 *        name of header (case insensitive)
 		 * @return if the header is present in this request/response
 		 */
 		public boolean hasHeader(String name);
@@ -395,7 +395,7 @@ public interface Connection {
 		 * Remove a header by name
 		 * 
 		 * @param name
-		 *           name of header to remove (case insensitive)
+		 *        name of header to remove (case insensitive)
 		 * @return this, for chaining
 		 */
 		public T removeHeader(String name);
@@ -415,7 +415,7 @@ public interface Connection {
 		 * cookie's path, domain, and expiry date are ignored.
 		 * 
 		 * @param name
-		 *           name of cookie to retrieve.
+		 *        name of cookie to retrieve.
 		 * @return value of cookie, or null if not set
 		 */
 		public String cookie(String name);
@@ -424,9 +424,9 @@ public interface Connection {
 		 * Set a cookie in this request/response.
 		 * 
 		 * @param name
-		 *           name of cookie
+		 *        name of cookie
 		 * @param value
-		 *           value of cookie
+		 *        value of cookie
 		 * @return this, for chaining
 		 */
 		public T cookie(String name, String value);
@@ -435,7 +435,7 @@ public interface Connection {
 		 * Check if a cookie is present
 		 * 
 		 * @param name
-		 *           name of cookie
+		 *        name of cookie
 		 * @return if the cookie is present in this request/response
 		 */
 		public boolean hasCookie(String name);
@@ -444,7 +444,7 @@ public interface Connection {
 		 * Remove a cookie by name
 		 * 
 		 * @param name
-		 *           name of cookie to remove
+		 *        name of cookie to remove
 		 * @return this, for chaining
 		 */
 		public T removeCookie(String name);
@@ -473,7 +473,7 @@ public interface Connection {
 		 * Update the request timeout.
 		 * 
 		 * @param millis
-		 *           timeout, in milliseconds
+		 *        timeout, in milliseconds
 		 * @return this Request, for chaining
 		 */
 		public Request timeout(int millis);
@@ -489,7 +489,7 @@ public interface Connection {
 		 * Update the maximum body size, in bytes.
 		 * 
 		 * @param bytes
-		 *           maximum body size, in bytes.
+		 *        maximum body size, in bytes.
 		 * @return this Request, for chaining
 		 */
 		public Request maxBodySize(int bytes);
@@ -506,7 +506,7 @@ public interface Connection {
 		 * this is <b>true</b>.
 		 * 
 		 * @param followRedirects
-		 *           true if server redirects should be followed.
+		 *        true if server redirects should be followed.
 		 * @return this Request, for chaining
 		 */
 		public Request followRedirects(boolean followRedirects);
@@ -523,7 +523,7 @@ public interface Connection {
 		 * Configures the request to ignore HTTP errors in the response.
 		 * 
 		 * @param ignoreHttpErrors
-		 *           set to true to ignore HTTP errors.
+		 *        set to true to ignore HTTP errors.
 		 * @return this Request, for chaining
 		 */
 		public Request ignoreHttpErrors(boolean ignoreHttpErrors);
@@ -540,7 +540,7 @@ public interface Connection {
 		 * Configures the request to ignore the Content-Type of the response.
 		 * 
 		 * @param ignoreContentType
-		 *           set to true to ignore the content type.
+		 *        set to true to ignore the content type.
 		 * @return this Request, for chaining
 		 */
 		public Request ignoreContentType(boolean ignoreContentType);
@@ -549,7 +549,7 @@ public interface Connection {
 		 * Add a data parameter to the request
 		 * 
 		 * @param keyval
-		 *           data to add.
+		 *        data to add.
 		 * @return this Request, for chaining
 		 */
 		public Request data(KeyVal keyval);
@@ -565,7 +565,7 @@ public interface Connection {
 		 * Specify the parser to use when parsing the document.
 		 * 
 		 * @param parser
-		 *           parser to use.
+		 *        parser to use.
 		 * @return this Request, for chaining
 		 */
 		public Request parser(Parser parser);
@@ -616,7 +616,7 @@ public interface Connection {
 		 * 
 		 * @return a parsed Document
 		 * @throws IOException
-		 *            on error
+		 *         on error
 		 */
 		public Document parse() throws IOException;
 
@@ -644,7 +644,7 @@ public interface Connection {
 		 * Update the key of a keyval
 		 * 
 		 * @param key
-		 *           new key
+		 *        new key
 		 * @return this KeyVal, for chaining
 		 */
 		public KeyVal key(String key);
@@ -660,7 +660,7 @@ public interface Connection {
 		 * Update the value of a keyval
 		 * 
 		 * @param value
-		 *           the new value
+		 *        the new value
 		 * @return this KeyVal, for chaining
 		 */
 		public KeyVal value(String value);

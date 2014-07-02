@@ -1,5 +1,5 @@
 // Copyright (C) 1999-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -214,7 +214,7 @@ class CacheHttpServletResponse implements HttpServletResponse {
 		while (e.hasMoreElements()) {
 			final String name = (String) e.nextElement();
 			final Vector<?> values = (Vector<?>) headers.get(name); // may have
-																						// multiple
+			// multiple
 			// values
 			final Enumeration<?> enum2 = values.elements();
 			while (enum2.hasMoreElements()) {

@@ -25,10 +25,6 @@ public interface IParamsValue extends Serializable {
 			implements IParamsValue {
 		private Object[] values;
 
-		{
-			enableAttributes();
-		}
-
 		@Override
 		public Object[] getValues() {
 			return values;

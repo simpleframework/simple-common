@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -62,11 +62,11 @@ public class LocaleNegotiator {
 	 * list, and charset list.
 	 * 
 	 * @param bundleName
-	 *           the resource bundle name
+	 *        the resource bundle name
 	 * @param languages
-	 *           the Accept-Language header
+	 *        the Accept-Language header
 	 * @param charsets
-	 *           the Accept-Charset header
+	 *        the Accept-Charset header
 	 */
 	public LocaleNegotiator(final String bundleName, final String languages, final String charsets) {
 
@@ -235,9 +235,9 @@ public class LocaleNegotiator {
 	 * take the list into account.
 	 * 
 	 * @param loc
-	 *           the locale
+	 *        the locale
 	 * @param charsets
-	 *           a comma-separated charset list
+	 *        a comma-separated charset list
 	 * @return the best charset for the given locale from the given list
 	 */
 	protected String getCharsetForLocale(final Locale loc, final String charsets) {

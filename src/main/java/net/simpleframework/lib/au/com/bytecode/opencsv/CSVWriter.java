@@ -1,19 +1,19 @@
 package net.simpleframework.lib.au.com.bytecode.opencsv;
 
 /**
- Copyright 2005 Bytecode Pty Ltd.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2005 Bytecode Pty Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import java.io.Closeable;
@@ -72,7 +72,7 @@ public class CSVWriter implements Closeable {
 	 * Constructs CSVWriter using a comma for the separator.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 */
 	public CSVWriter(final Writer writer) {
 		this(writer, DEFAULT_SEPARATOR);
@@ -82,9 +82,9 @@ public class CSVWriter implements Closeable {
 	 * Constructs CSVWriter with supplied separator.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries.
+	 *        the delimiter to use for separating entries.
 	 */
 	public CSVWriter(final Writer writer, final char separator) {
 		this(writer, separator, DEFAULT_QUOTE_CHARACTER);
@@ -94,11 +94,11 @@ public class CSVWriter implements Closeable {
 	 * Constructs CSVWriter with supplied separator and quote char.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 */
 	public CSVWriter(final Writer writer, final char separator, final char quotechar) {
 		this(writer, separator, quotechar, DEFAULT_ESCAPE_CHARACTER);
@@ -108,13 +108,13 @@ public class CSVWriter implements Closeable {
 	 * Constructs CSVWriter with supplied separator and quote char.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escapechar
-	 *           the character to use for escaping quotechars or escapechars
+	 *        the character to use for escaping quotechars or escapechars
 	 */
 	public CSVWriter(final Writer writer, final char separator, final char quotechar,
 			final char escapechar) {
@@ -125,13 +125,13 @@ public class CSVWriter implements Closeable {
 	 * Constructs CSVWriter with supplied separator and quote char.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param lineEnd
-	 *           the line feed terminator to use
+	 *        the line feed terminator to use
 	 */
 	public CSVWriter(final Writer writer, final char separator, final char quotechar,
 			final String lineEnd) {
@@ -143,15 +143,15 @@ public class CSVWriter implements Closeable {
 	 * line ending.
 	 * 
 	 * @param writer
-	 *           the writer to an underlying CSV source.
+	 *        the writer to an underlying CSV source.
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escapechar
-	 *           the character to use for escaping quotechars or escapechars
+	 *        the character to use for escaping quotechars or escapechars
 	 * @param lineEnd
-	 *           the line feed terminator to use
+	 *        the line feed terminator to use
 	 */
 	public CSVWriter(final Writer writer, final char separator, final char quotechar,
 			final char escapechar, final String lineEnd) {
@@ -167,8 +167,8 @@ public class CSVWriter implements Closeable {
 	 * Writes the entire list to a CSV file. The list is assumed to be a String[]
 	 * 
 	 * @param allLines
-	 *           a List of String[], with each String[] representing a line of
-	 *           the file.
+	 *        a List of String[], with each String[] representing a line of
+	 *        the file.
 	 */
 	public void writeAll(final List<String[]> allLines) {
 		for (final String[] line : allLines) {
@@ -187,14 +187,14 @@ public class CSVWriter implements Closeable {
 	 * The caller is responsible for closing the ResultSet.
 	 * 
 	 * @param rs
-	 *           the recordset to write
+	 *        the recordset to write
 	 * @param includeColumnNames
-	 *           true if you want column names in the output, false otherwise
+	 *        true if you want column names in the output, false otherwise
 	 * 
 	 * @throws java.io.IOException
-	 *            thrown by getColumnValue
+	 *         thrown by getColumnValue
 	 * @throws java.sql.SQLException
-	 *            thrown by getColumnValue
+	 *         thrown by getColumnValue
 	 */
 	public void writeAll(final java.sql.ResultSet rs, final boolean includeColumnNames)
 			throws SQLException, IOException {
@@ -212,8 +212,8 @@ public class CSVWriter implements Closeable {
 	 * Writes the next line to the file.
 	 * 
 	 * @param nextLine
-	 *           a string array with each comma-separated element as a separate
-	 *           entry.
+	 *        a string array with each comma-separated element as a separate
+	 *        entry.
 	 */
 	public void writeNext(final String[] nextLine) {
 
@@ -273,7 +273,7 @@ public class CSVWriter implements Closeable {
 	 * Flush underlying stream to writer.
 	 * 
 	 * @throws IOException
-	 *            if bad things happen
+	 *         if bad things happen
 	 */
 	public void flush() throws IOException {
 
@@ -285,7 +285,7 @@ public class CSVWriter implements Closeable {
 	 * Close the underlying stream writer flushing any buffered content.
 	 * 
 	 * @throws IOException
-	 *            if bad things happen
+	 *         if bad things happen
 	 * 
 	 */
 	@Override

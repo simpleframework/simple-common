@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -174,9 +174,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 	 * Process bean property
 	 * 
 	 * @param ctx
-	 *           - the ingress type
+	 *        - the ingress type
 	 * @param property
-	 *           - the property component
+	 *        - the property component
 	 * @return known egress type.
 	 */
 	private Class getBeanProperty(Class ctx, final String property) {
@@ -417,9 +417,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 	 * Process collection property
 	 * 
 	 * @param ctx
-	 *           - the ingress type
+	 *        - the ingress type
 	 * @param property
-	 *           - the property component
+	 *        - the property component
 	 * @return known egress type
 	 */
 	private Class getCollectionProperty(Class ctx, final String property) {
@@ -481,9 +481,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 	 * Process method
 	 * 
 	 * @param ctx
-	 *           - the ingress type
+	 *        - the ingress type
 	 * @param name
-	 *           - the property component
+	 *        - the property component
 	 * @return known egress type.
 	 */
 	private Class getMethod(Class ctx, String name) {

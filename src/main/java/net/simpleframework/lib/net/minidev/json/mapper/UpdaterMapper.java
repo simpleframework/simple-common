@@ -41,7 +41,7 @@ public class UpdaterMapper<T> extends AMapper<T> {
 	 * called when json-smart parser start an array.
 	 * 
 	 * @param key
-	 *           the destination key name, or null.
+	 *        the destination key name, or null.
 	 */
 	@Override
 	public AMapper<?> startArray(final String key) throws ParseException, IOException {

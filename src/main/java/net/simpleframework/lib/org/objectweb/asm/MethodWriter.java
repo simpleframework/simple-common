@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -429,24 +429,24 @@ class MethodWriter extends MethodVisitor {
 	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodWriter}.
 	 * 
 	 * @param cw
-	 *           the class writer in which the method must be added.
+	 *        the class writer in which the method must be added.
 	 * @param access
-	 *           the method's access flags (see {@link Opcodes}).
+	 *        the method's access flags (see {@link Opcodes}).
 	 * @param name
-	 *           the method's name.
+	 *        the method's name.
 	 * @param desc
-	 *           the method's descriptor (see {@link Type}).
+	 *        the method's descriptor (see {@link Type}).
 	 * @param signature
-	 *           the method's signature. May be <tt>null</tt>.
+	 *        the method's signature. May be <tt>null</tt>.
 	 * @param exceptions
-	 *           the internal names of the method's exceptions. May be
-	 *           <tt>null</tt>.
+	 *        the internal names of the method's exceptions. May be <tt>null</tt>
+	 *        .
 	 * @param computeMaxs
-	 *           <tt>true</tt> if the maximum stack size and number of local
-	 *           variables must be automatically computed.
+	 *        <tt>true</tt> if the maximum stack size and number of local
+	 *        variables must be automatically computed.
 	 * @param computeFrames
-	 *           <tt>true</tt> if the stack map tables must be recomputed from
-	 *           scratch.
+	 *        <tt>true</tt> if the stack map tables must be recomputed from
+	 *        scratch.
 	 */
 	MethodWriter(final ClassWriter cw, final int access, final String name, final String desc,
 			final String signature, final String[] exceptions, final boolean computeMaxs,
@@ -1621,9 +1621,9 @@ class MethodWriter extends MethodVisitor {
 	 * Adds a successor to the {@link #currentBlock currentBlock} block.
 	 * 
 	 * @param info
-	 *           information about the control flow edge to be added.
+	 *        information about the control flow edge to be added.
 	 * @param successor
-	 *           the successor block to be added to the current block.
+	 *        the successor block to be added to the current block.
 	 */
 	private void addSuccessor(final int info, final Label successor) {
 		// creates and initializes an Edge object...
@@ -1661,7 +1661,7 @@ class MethodWriter extends MethodVisitor {
 	 * Visits a frame that has been computed from scratch.
 	 * 
 	 * @param f
-	 *           the frame that must be visited.
+	 *        the frame that must be visited.
 	 */
 	private void visitFrame(final Frame f) {
 		int i, t;
@@ -1775,11 +1775,11 @@ class MethodWriter extends MethodVisitor {
 	 * Starts the visit of a stack map frame.
 	 * 
 	 * @param offset
-	 *           the offset of the instruction to which the frame corresponds.
+	 *        the offset of the instruction to which the frame corresponds.
 	 * @param nLocal
-	 *           the number of local variables in the frame.
+	 *        the number of local variables in the frame.
 	 * @param nStack
-	 *           the number of stack elements in the frame.
+	 *        the number of stack elements in the frame.
 	 * @return the index of the next element to be written in this frame.
 	 */
 	private int startFrame(final int offset, final int nLocal, final int nStack) {
@@ -1903,9 +1903,9 @@ class MethodWriter extends MethodVisitor {
 	 * particular, it converts type table indexes to constant pool indexes.
 	 * 
 	 * @param start
-	 *           index of the first type in {@link #frame} to write.
+	 *        index of the first type in {@link #frame} to write.
 	 * @param end
-	 *           index of last type in {@link #frame} to write (exclusive).
+	 *        index of last type in {@link #frame} to write (exclusive).
 	 */
 	private void writeFrameTypes(final int start, final int end) {
 		for (int i = start; i < end; ++i) {
@@ -2100,8 +2100,8 @@ class MethodWriter extends MethodVisitor {
 	 * Puts the bytecode of this method in the given byte vector.
 	 * 
 	 * @param out
-	 *           the byte vector into which the bytecode of this method must be
-	 *           copied.
+	 *        the byte vector into which the bytecode of this method must be
+	 *        copied.
 	 */
 	final void put(final ByteVector out) {
 		final int FACTOR = ClassWriter.TO_ACC_SYNTHETIC;
@@ -2740,9 +2740,9 @@ class MethodWriter extends MethodVisitor {
 	 * Reads an unsigned short value in the given byte array.
 	 * 
 	 * @param b
-	 *           a byte array.
+	 *        a byte array.
 	 * @param index
-	 *           the start index of the value to be read.
+	 *        the start index of the value to be read.
 	 * @return the read value.
 	 */
 	static int readUnsignedShort(final byte[] b, final int index) {
@@ -2753,9 +2753,9 @@ class MethodWriter extends MethodVisitor {
 	 * Reads a signed short value in the given byte array.
 	 * 
 	 * @param b
-	 *           a byte array.
+	 *        a byte array.
 	 * @param index
-	 *           the start index of the value to be read.
+	 *        the start index of the value to be read.
 	 * @return the read value.
 	 */
 	static short readShort(final byte[] b, final int index) {
@@ -2766,9 +2766,9 @@ class MethodWriter extends MethodVisitor {
 	 * Reads a signed int value in the given byte array.
 	 * 
 	 * @param b
-	 *           a byte array.
+	 *        a byte array.
 	 * @param index
-	 *           the start index of the value to be read.
+	 *        the start index of the value to be read.
 	 * @return the read value.
 	 */
 	static int readInt(final byte[] b, final int index) {
@@ -2780,11 +2780,11 @@ class MethodWriter extends MethodVisitor {
 	 * Writes a short value in the given byte array.
 	 * 
 	 * @param b
-	 *           a byte array.
+	 *        a byte array.
 	 * @param index
-	 *           where the first byte of the short value must be written.
+	 *        where the first byte of the short value must be written.
 	 * @param s
-	 *           the value to be written in the given byte array.
+	 *        the value to be written in the given byte array.
 	 */
 	static void writeShort(final byte[] b, final int index, final int s) {
 		b[index] = (byte) (s >>> 8);
@@ -2799,22 +2799,22 @@ class MethodWriter extends MethodVisitor {
 	 * (index=a,size=b') are equivalent to a single entry (index=a,size=b+b').
 	 * 
 	 * @param indexes
-	 *           current positions of the instructions to be resized. Each
-	 *           instruction must be designated by the index of its <i>last</i>
-	 *           byte, plus one (or, in other words, by the index of the
-	 *           <i>first</i> byte of the <i>next</i> instruction).
+	 *        current positions of the instructions to be resized. Each
+	 *        instruction must be designated by the index of its <i>last</i>
+	 *        byte, plus one (or, in other words, by the index of the
+	 *        <i>first</i> byte of the <i>next</i> instruction).
 	 * @param sizes
-	 *           the number of bytes to be <i>added</i> to the above
-	 *           instructions. More precisely, for each i < <tt>len</tt>,
-	 *           <tt>sizes</tt>[i] bytes will be added at the end of the
-	 *           instruction designated by <tt>indexes</tt>[i] or, if
-	 *           <tt>sizes</tt>[i] is negative, the <i>last</i> |
-	 *           <tt>sizes[i]</tt>| bytes of the instruction will be removed (the
-	 *           instruction size <i>must not</i> become negative or null).
+	 *        the number of bytes to be <i>added</i> to the above
+	 *        instructions. More precisely, for each i < <tt>len</tt>,
+	 *        <tt>sizes</tt>[i] bytes will be added at the end of the
+	 *        instruction designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>
+	 *        [i] is negative, the <i>last</i> | <tt>sizes[i]</tt>| bytes of the
+	 *        instruction will be removed (the
+	 *        instruction size <i>must not</i> become negative or null).
 	 * @param begin
-	 *           index of the first byte of the source instruction.
+	 *        index of the first byte of the source instruction.
 	 * @param end
-	 *           index of the first byte of the target instruction.
+	 *        index of the first byte of the target instruction.
 	 * @return the future value of the given bytecode offset.
 	 */
 	static int getNewOffset(final int[] indexes, final int[] sizes, final int begin, final int end) {
@@ -2835,20 +2835,20 @@ class MethodWriter extends MethodVisitor {
 	 * Updates the offset of the given label.
 	 * 
 	 * @param indexes
-	 *           current positions of the instructions to be resized. Each
-	 *           instruction must be designated by the index of its <i>last</i>
-	 *           byte, plus one (or, in other words, by the index of the
-	 *           <i>first</i> byte of the <i>next</i> instruction).
+	 *        current positions of the instructions to be resized. Each
+	 *        instruction must be designated by the index of its <i>last</i>
+	 *        byte, plus one (or, in other words, by the index of the
+	 *        <i>first</i> byte of the <i>next</i> instruction).
 	 * @param sizes
-	 *           the number of bytes to be <i>added</i> to the above
-	 *           instructions. More precisely, for each i < <tt>len</tt>,
-	 *           <tt>sizes</tt>[i] bytes will be added at the end of the
-	 *           instruction designated by <tt>indexes</tt>[i] or, if
-	 *           <tt>sizes</tt>[i] is negative, the <i>last</i> |
-	 *           <tt>sizes[i]</tt>| bytes of the instruction will be removed (the
-	 *           instruction size <i>must not</i> become negative or null).
+	 *        the number of bytes to be <i>added</i> to the above
+	 *        instructions. More precisely, for each i < <tt>len</tt>,
+	 *        <tt>sizes</tt>[i] bytes will be added at the end of the
+	 *        instruction designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>
+	 *        [i] is negative, the <i>last</i> | <tt>sizes[i]</tt>| bytes of the
+	 *        instruction will be removed (the
+	 *        instruction size <i>must not</i> become negative or null).
 	 * @param label
-	 *           the label whose offset must be updated.
+	 *        the label whose offset must be updated.
 	 */
 	static void getNewOffset(final int[] indexes, final int[] sizes, final Label label) {
 		if ((label.status & Label.RESIZED) == 0) {

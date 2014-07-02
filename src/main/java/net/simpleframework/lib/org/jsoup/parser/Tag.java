@@ -12,25 +12,26 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
  */
 public class Tag {
 	private static final Map<String, Tag> tags = new HashMap<String, Tag>(); // map
-																										// of
-																										// known
-																										// tags
+	// of
+	// known
+	// tags
 
 	private final String tagName;
 	private boolean isBlock = true; // block or inline
 	private boolean formatAsBlock = true; // should be formatted as a block
 	private boolean canContainBlock = true; // Can this tag hold block level
-															// tags?
+	// tags?
 	private boolean canContainInline = true; // only pcdata if not
 	private boolean empty = false; // can hold nothing; e.g. img
 	private boolean selfClosing = false; // can self close (<foo />). used for
-														// unknown tags that self close,
-														// without forcing them as empty.
+	// unknown tags that self close,
+	// without forcing them as empty.
 	private boolean preserveWhitespace = false; // for pre, textarea, script etc
 	private boolean formList = false; // a control that appears in forms: input,
-													// textarea, output etc
+	// textarea, output etc
 	private boolean formSubmit = false; // a control that can be submitted in a
-													// form: input etc
+
+	// form: input etc
 
 	private Tag(final String tagName) {
 		this.tagName = tagName.toLowerCase();
@@ -53,7 +54,7 @@ public class Tag {
 	 * registered and will only .equals().
 	 * 
 	 * @param tagName
-	 *           Name of tag, e.g. "p". Case insensitive.
+	 *        Name of tag, e.g. "p". Case insensitive.
 	 * @return The tag, either defined or new generic.
 	 */
 	public static Tag valueOf(String tagName) {
@@ -152,7 +153,7 @@ public class Tag {
 	 * Check if this tagname is a known tag.
 	 * 
 	 * @param tagName
-	 *           name of tag
+	 *        name of tag
 	 * @return if known HTML tag
 	 */
 	public static boolean isKnownTag(final String tagName) {

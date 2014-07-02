@@ -54,8 +54,8 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 	 * returns transformation for source class
 	 * 
 	 * @param classInfo
-	 *           class information class name := classInfo[ 0 ] super class name
-	 *           := classInfo[ 1 ] interfaces := classInfo[ >1 ]
+	 *        class information class name := classInfo[ 0 ] super class name
+	 *        := classInfo[ 1 ] interfaces := classInfo[ >1 ]
 	 */
 	abstract protected ClassTransformer getClassTransformer(String[] classInfo);
 

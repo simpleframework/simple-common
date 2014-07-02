@@ -24,7 +24,7 @@ class QueryParser {
 	 * Create a new QueryParser.
 	 * 
 	 * @param query
-	 *           CSS query
+	 *        CSS query
 	 */
 	private QueryParser(final String query) {
 		this.query = query;
@@ -35,7 +35,7 @@ class QueryParser {
 	 * Parse a CSS query into an Evaluator.
 	 * 
 	 * @param query
-	 *           CSS query
+	 *        CSS query
 	 * @return Evaluator
 	 */
 	public static Evaluator parse(final String query) {
@@ -52,7 +52,7 @@ class QueryParser {
 		tq.consumeWhitespace();
 
 		if (tq.matchesAny(combinators)) { // if starts with a combinator, use root
-														// as elements
+			// as elements
 			evals.add(new StructuralEvaluator.Root());
 			combinator(tq.consume());
 		} else {
@@ -85,9 +85,9 @@ class QueryParser {
 
 		Evaluator rootEval; // the new topmost evaluator
 		Evaluator currentEval; // the evaluator the new eval will be combined to.
-										// could be root, or rightmost or.
+		// could be root, or rightmost or.
 		final Evaluator newEval = parse(subQuery); // the evaluator to add into
-																	// target
+		// target
 		// evaluator
 		boolean replaceRightMost = false;
 
@@ -246,7 +246,7 @@ class QueryParser {
 		final TokenQueue cq = new TokenQueue(tq.chompBalanced('[', ']')); // content
 		// queue
 		final String key = cq.consumeToAny(AttributeEvals); // eq, not, start,
-																				// end,
+		// end,
 		// contain, match, (no
 		// val)
 		Validate.notEmpty(key);
@@ -367,7 +367,7 @@ class QueryParser {
 	private void matches(final boolean own) {
 		tq.consume(own ? ":matchesOwn" : ":matches");
 		final String regex = tq.chompBalanced('(', ')'); // don't unescape, as
-																			// regex
+		// regex
 		// bits will be escaped
 		Validate.notEmpty(regex, ":matches(regex) query must not be empty");
 

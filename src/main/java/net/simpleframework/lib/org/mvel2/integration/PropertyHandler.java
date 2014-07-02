@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -29,11 +29,11 @@ public interface PropertyHandler {
 	 * Retrieves the value of the property.
 	 * 
 	 * @param name
-	 *           - the name of the property to be resolved.
+	 *        - the name of the property to be resolved.
 	 * @param contextObj
-	 *           - the current context object.
+	 *        - the current context object.
 	 * @param variableFactory
-	 *           - the root variable factory provided by the runtime.
+	 *        - the root variable factory provided by the runtime.
 	 * @return - the value of the property.
 	 */
 	public Object getProperty(String name, Object contextObj, VariableResolverFactory variableFactory);
@@ -42,13 +42,13 @@ public interface PropertyHandler {
 	 * Sets the value of the property.
 	 * 
 	 * @param name
-	 *           - the name of the property to be resolved.
+	 *        - the name of the property to be resolved.
 	 * @param contextObj
-	 *           - the current context object.
+	 *        - the current context object.
 	 * @param variableFactory
-	 *           - the root variable factory provided by the runtime.
+	 *        - the root variable factory provided by the runtime.
 	 * @param value
-	 *           - the value to be set to the resolved property
+	 *        - the value to be set to the resolved property
 	 * @return - the resultant value of the property (should normally be the same
 	 *         as the value passed)
 	 */

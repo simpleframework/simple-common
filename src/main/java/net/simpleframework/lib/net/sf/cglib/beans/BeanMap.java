@@ -1,13 +1,13 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -61,7 +61,7 @@ abstract public class BeanMap implements Map {
 	 * <code>BeanMap.Generator</code> instead of this static method.
 	 * 
 	 * @param bean
-	 *           the JavaBean underlying the map
+	 *        the JavaBean underlying the map
 	 * @return a new <code>BeanMap</code> instance
 	 */
 	public static BeanMap create(final Object bean) {
@@ -96,7 +96,7 @@ abstract public class BeanMap implements Map {
 		 * {@link #setBeanClass} before {@link #create}.
 		 * 
 		 * @param bean
-		 *           the initial bean
+		 *        the initial bean
 		 */
 		public void setBean(final Object bean) {
 			this.bean = bean;
@@ -111,7 +111,7 @@ abstract public class BeanMap implements Map {
 		 * {@link #create}.
 		 * 
 		 * @param beanClass
-		 *           the class of the bean
+		 *        the class of the bean
 		 */
 		public void setBeanClass(final Class beanClass) {
 			this.beanClass = beanClass;
@@ -121,9 +121,9 @@ abstract public class BeanMap implements Map {
 		 * Limit the properties reflected by the generated map.
 		 * 
 		 * @param require
-		 *           any combination of {@link #REQUIRE_GETTER} and
-		 *           {@link #REQUIRE_SETTER}; default is zero (any property
-		 *           allowed)
+		 *        any combination of {@link #REQUIRE_GETTER} and
+		 *        {@link #REQUIRE_SETTER}; default is zero (any property
+		 *        allowed)
 		 */
 		public void setRequire(final int require) {
 			this.require = require;
@@ -167,7 +167,7 @@ abstract public class BeanMap implements Map {
 	 * is faster than using the {@link #create} static method.
 	 * 
 	 * @param bean
-	 *           the JavaBean underlying the map
+	 *        the JavaBean underlying the map
 	 * @return a new <code>BeanMap</code> instance
 	 */
 	abstract public BeanMap newInstance(Object bean);
@@ -176,7 +176,7 @@ abstract public class BeanMap implements Map {
 	 * Get the type of a property.
 	 * 
 	 * @param name
-	 *           the name of the JavaBean property
+	 *        the name of the JavaBean property
 	 * @return the type of the property, or null if the property does not exist
 	 */
 	abstract public Class getPropertyType(String name);
@@ -206,10 +206,10 @@ abstract public class BeanMap implements Map {
 	 * ignored and the bean passed to this method is used instead.
 	 * 
 	 * @param bean
-	 *           the bean to query; must be compatible with the type of this
-	 *           <code>BeanMap</code>
+	 *        the bean to query; must be compatible with the type of this
+	 *        <code>BeanMap</code>
 	 * @param key
-	 *           must be a String
+	 *        must be a String
 	 * @return the current value, or null if there is no matching property
 	 */
 	abstract public Object get(Object bean, Object key);
@@ -220,7 +220,7 @@ abstract public class BeanMap implements Map {
 	 * ignored and the bean passed to this method is used instead.
 	 * 
 	 * @param key
-	 *           must be a String
+	 *        must be a String
 	 * @return the old value, if there was one, or null
 	 */
 	abstract public Object put(Object bean, Object key, Object value);
@@ -229,7 +229,7 @@ abstract public class BeanMap implements Map {
 	 * Change the underlying bean this map should use.
 	 * 
 	 * @param bean
-	 *           the new JavaBean
+	 *        the new JavaBean
 	 * @see #getBean
 	 */
 	public void setBean(final Object bean) {

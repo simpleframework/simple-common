@@ -39,11 +39,11 @@ public class Element extends Node {
 	 * Create a new, standalone Element. (Standalone in that is has no parent.)
 	 * 
 	 * @param tag
-	 *           tag of this element
+	 *        tag of this element
 	 * @param baseUri
-	 *           the base URI
+	 *        the base URI
 	 * @param attributes
-	 *           initial attributes
+	 *        initial attributes
 	 * @see #appendChild(Node)
 	 * @see #appendElement(String)
 	 */
@@ -58,10 +58,10 @@ public class Element extends Node {
 	 * Create a new Element from a tag and a base URI.
 	 * 
 	 * @param tag
-	 *           element tag
+	 *        element tag
 	 * @param baseUri
-	 *           the base URI of this element. It is acceptable for the base URI
-	 *           to be an empty string, but not null.
+	 *        the base URI of this element. It is acceptable for the base URI
+	 *        to be an empty string, but not null.
 	 * @see Tag#valueOf(String)
 	 */
 	public Element(final Tag tag, final String baseUri) {
@@ -87,7 +87,7 @@ public class Element extends Node {
 	 * {@code <div>} with {@code el.tagName("div");}.
 	 * 
 	 * @param tagName
-	 *           new tag name for this element
+	 *        new tag name for this element
 	 * @return this element, for chaining
 	 */
 	public Element tagName(final String tagName) {
@@ -190,7 +190,7 @@ public class Element extends Node {
 	 * the index is based on that filtered list.
 	 * 
 	 * @param index
-	 *           the index number of the element to retrieve
+	 *        the index number of the element to retrieve
 	 * @return the child element, if it exists, otherwise throws an
 	 *         {@code IndexOutOfBoundsException}
 	 * @see #childNode(int)
@@ -293,7 +293,7 @@ public class Element extends Node {
 	 * {@link net.simpleframework.lib.org.jsoup.select.Selector}.
 	 * 
 	 * @param cssQuery
-	 *           a {@link Selector} CSS-like query
+	 *        a {@link Selector} CSS-like query
 	 * @return elements that match the query (empty if none match)
 	 * @see net.simpleframework.lib.org.jsoup.select.Selector
 	 */
@@ -305,7 +305,7 @@ public class Element extends Node {
 	 * Add a node child node to this element.
 	 * 
 	 * @param child
-	 *           node to add.
+	 *        node to add.
 	 * @return this element, so that you can add more child nodes or elements.
 	 */
 	public Element appendChild(final Node child) {
@@ -319,7 +319,7 @@ public class Element extends Node {
 	 * Add a node to the start of this element's children.
 	 * 
 	 * @param child
-	 *           node to add.
+	 *        node to add.
 	 * @return this element, so that you can add more child nodes or elements.
 	 */
 	public Element prependChild(final Node child) {
@@ -335,10 +335,10 @@ public class Element extends Node {
 	 * moved from their current parent. To prevent moving, copy the nodes first.
 	 * 
 	 * @param index
-	 *           0-based index to insert children at. Specify {@code 0} to insert
-	 *           at the start, {@code -1} at the end
+	 *        0-based index to insert children at. Specify {@code 0} to insert
+	 *        at the start, {@code -1} at the end
 	 * @param children
-	 *           child nodes to insert
+	 *        child nodes to insert
 	 * @return this element, for chaining.
 	 */
 	public Element insertChildren(int index, final Collection<? extends Node> children) {
@@ -359,7 +359,7 @@ public class Element extends Node {
 	 * Create a new element by tag name, and add it as the last child.
 	 * 
 	 * @param tagName
-	 *           the name of the tag (e.g. {@code div}).
+	 *        the name of the tag (e.g. {@code div}).
 	 * @return the new element, to allow you to add content to it, e.g.:
 	 *         {@code parent.appendElement("h1").attr("id", "header").text("Welcome");}
 	 */
@@ -373,7 +373,7 @@ public class Element extends Node {
 	 * Create a new element by tag name, and add it as the first child.
 	 * 
 	 * @param tagName
-	 *           the name of the tag (e.g. {@code div}).
+	 *        the name of the tag (e.g. {@code div}).
 	 * @return the new element, to allow you to add content to it, e.g.:
 	 *         {@code parent.prependElement("h1").attr("id", "header").text("Welcome");}
 	 */
@@ -387,7 +387,7 @@ public class Element extends Node {
 	 * Create and append a new TextNode to this element.
 	 * 
 	 * @param text
-	 *           the unencoded text to add
+	 *        the unencoded text to add
 	 * @return this element
 	 */
 	public Element appendText(final String text) {
@@ -400,7 +400,7 @@ public class Element extends Node {
 	 * Create and prepend a new TextNode to this element.
 	 * 
 	 * @param text
-	 *           the unencoded text to add
+	 *        the unencoded text to add
 	 * @return this element
 	 */
 	public Element prependText(final String text) {
@@ -414,7 +414,7 @@ public class Element extends Node {
 	 * node appended to the end of the children.
 	 * 
 	 * @param html
-	 *           HTML to add inside this element, after the existing HTML
+	 *        HTML to add inside this element, after the existing HTML
 	 * @return this element
 	 * @see #html(String)
 	 */
@@ -431,7 +431,7 @@ public class Element extends Node {
 	 * each node prepended to the start of the element's children.
 	 * 
 	 * @param html
-	 *           HTML to add inside this element, before the existing HTML
+	 *        HTML to add inside this element, before the existing HTML
 	 * @return this element
 	 * @see #html(String)
 	 */
@@ -448,7 +448,7 @@ public class Element extends Node {
 	 * sibling).
 	 * 
 	 * @param html
-	 *           HTML to add before this element
+	 *        HTML to add before this element
 	 * @return this element, for chaining
 	 * @see #after(String)
 	 */
@@ -462,7 +462,7 @@ public class Element extends Node {
 	 * sibling).
 	 * 
 	 * @param node
-	 *           to add before this element
+	 *        to add before this element
 	 * @return this Element, for chaining
 	 * @see #after(Node)
 	 */
@@ -476,7 +476,7 @@ public class Element extends Node {
 	 * sibling).
 	 * 
 	 * @param html
-	 *           HTML to add after this element
+	 *        HTML to add after this element
 	 * @return this element, for chaining
 	 * @see #before(String)
 	 */
@@ -490,7 +490,7 @@ public class Element extends Node {
 	 * sibling).
 	 * 
 	 * @param node
-	 *           to add after this element
+	 *        to add after this element
 	 * @return this element, for chaining
 	 * @see #before(Node)
 	 */
@@ -513,8 +513,8 @@ public class Element extends Node {
 	 * Wrap the supplied HTML around this element.
 	 * 
 	 * @param html
-	 *           HTML to wrap around this element, e.g.
-	 *           {@code <div class="head"></div>}. Can be arbitrarily deep.
+	 *        HTML to wrap around this element, e.g.
+	 *        {@code <div class="head"></div>}. Can be arbitrarily deep.
 	 * @return this element, for chaining.
 	 */
 	@Override
@@ -646,7 +646,7 @@ public class Element extends Node {
 	 * specified tag name.
 	 * 
 	 * @param tagName
-	 *           The tag name to search for (case insensitively).
+	 *        The tag name to search for (case insensitively).
 	 * @return a matching unmodifiable list of elements. Will be empty if this
 	 *         element and none of its children match.
 	 */
@@ -666,7 +666,7 @@ public class Element extends Node {
 	 * {@link Document#getElementById(String)}
 	 * 
 	 * @param id
-	 *           The ID to search for.
+	 *        The ID to search for.
 	 * @return The first matching element by ID, starting with this element, or
 	 *         null if none found.
 	 */
@@ -690,7 +690,7 @@ public class Element extends Node {
 	 * so you can find the above with {@code el.getElementsByClass("header");}.
 	 * 
 	 * @param className
-	 *           the name of the class to search for.
+	 *        the name of the class to search for.
 	 * @return elements with the supplied class name, empty if none
 	 * @see #hasClass(String)
 	 * @see #classNames()
@@ -705,7 +705,7 @@ public class Element extends Node {
 	 * Find elements that have a named attribute set. Case insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute, e.g. {@code href}
+	 *        name of the attribute, e.g. {@code href}
 	 * @return elements that have this attribute, empty if none
 	 */
 	public Elements getElementsByAttribute(String key) {
@@ -720,7 +720,7 @@ public class Element extends Node {
 	 * prefix. Use {@code data-} to find elements that have HTML5 datasets.
 	 * 
 	 * @param keyPrefix
-	 *           name prefix of the attribute e.g. {@code data-}
+	 *        name prefix of the attribute e.g. {@code data-}
 	 * @return elements that have attribute names that start with with the
 	 *         prefix, empty if none.
 	 */
@@ -736,9 +736,9 @@ public class Element extends Node {
 	 * insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param value
-	 *           value of the attribute
+	 *        value of the attribute
 	 * @return elements that have this attribute with this value, empty if none
 	 */
 	public Elements getElementsByAttributeValue(final String key, final String value) {
@@ -750,9 +750,9 @@ public class Element extends Node {
 	 * different value. Case insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param value
-	 *           value of the attribute
+	 *        value of the attribute
 	 * @return elements that do not have a matching attribute
 	 */
 	public Elements getElementsByAttributeValueNot(final String key, final String value) {
@@ -764,9 +764,9 @@ public class Element extends Node {
 	 * insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param valuePrefix
-	 *           start of attribute value
+	 *        start of attribute value
 	 * @return elements that have attributes that start with the value prefix
 	 */
 	public Elements getElementsByAttributeValueStarting(final String key, final String valuePrefix) {
@@ -778,9 +778,9 @@ public class Element extends Node {
 	 * insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param valueSuffix
-	 *           end of the attribute value
+	 *        end of the attribute value
 	 * @return elements that have attributes that end with the value suffix
 	 */
 	public Elements getElementsByAttributeValueEnding(final String key, final String valueSuffix) {
@@ -792,9 +792,9 @@ public class Element extends Node {
 	 * Case insensitive.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param match
-	 *           substring of value to search for
+	 *        substring of value to search for
 	 * @return elements that have attributes containing this text
 	 */
 	public Elements getElementsByAttributeValueContaining(final String key, final String match) {
@@ -806,9 +806,9 @@ public class Element extends Node {
 	 * expression.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param pattern
-	 *           compiled regular expression to match against attribute values
+	 *        compiled regular expression to match against attribute values
 	 * @return elements that have attributes matching this regular expression
 	 */
 	public Elements getElementsByAttributeValueMatching(final String key, final Pattern pattern) {
@@ -821,13 +821,13 @@ public class Element extends Node {
 	 * expression.
 	 * 
 	 * @param key
-	 *           name of the attribute
+	 *        name of the attribute
 	 * @param regex
-	 *           regular expression to match against attribute values. You can
-	 *           use <a href=
-	 *           "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *           >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *           options.
+	 *        regular expression to match against attribute values. You can
+	 *        use <a href=
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
+	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
+	 *        options.
 	 * @return elements that have attributes matching this regular expression
 	 */
 	public Elements getElementsByAttributeValueMatching(final String key, final String regex) {
@@ -844,7 +844,7 @@ public class Element extends Node {
 	 * Find elements whose sibling index is less than the supplied index.
 	 * 
 	 * @param index
-	 *           0-based index
+	 *        0-based index
 	 * @return elements less than index
 	 */
 	public Elements getElementsByIndexLessThan(final int index) {
@@ -855,7 +855,7 @@ public class Element extends Node {
 	 * Find elements whose sibling index is greater than the supplied index.
 	 * 
 	 * @param index
-	 *           0-based index
+	 *        0-based index
 	 * @return elements greater than index
 	 */
 	public Elements getElementsByIndexGreaterThan(final int index) {
@@ -866,7 +866,7 @@ public class Element extends Node {
 	 * Find elements whose sibling index is equal to the supplied index.
 	 * 
 	 * @param index
-	 *           0-based index
+	 *        0-based index
 	 * @return elements equal to index
 	 */
 	public Elements getElementsByIndexEquals(final int index) {
@@ -879,7 +879,7 @@ public class Element extends Node {
 	 * descendants.
 	 * 
 	 * @param searchText
-	 *           to look for in the element's text
+	 *        to look for in the element's text
 	 * @return elements that contain the string, case insensitive.
 	 * @see Element#text()
 	 */
@@ -893,7 +893,7 @@ public class Element extends Node {
 	 * of its descendants.
 	 * 
 	 * @param searchText
-	 *           to look for in the element's own text
+	 *        to look for in the element's own text
 	 * @return elements that contain the string, case insensitive.
 	 * @see Element#ownText()
 	 */
@@ -905,7 +905,7 @@ public class Element extends Node {
 	 * Find elements whose text matches the supplied regular expression.
 	 * 
 	 * @param pattern
-	 *           regular expression to match text against
+	 *        regular expression to match text against
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#text()
 	 */
@@ -917,10 +917,10 @@ public class Element extends Node {
 	 * Find elements whose text matches the supplied regular expression.
 	 * 
 	 * @param regex
-	 *           regular expression to match text against. You can use <a href=
-	 *           "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *           >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *           options.
+	 *        regular expression to match text against. You can use <a href=
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
+	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
+	 *        options.
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#text()
 	 */
@@ -938,7 +938,7 @@ public class Element extends Node {
 	 * Find elements whose own text matches the supplied regular expression.
 	 * 
 	 * @param pattern
-	 *           regular expression to match text against
+	 *        regular expression to match text against
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#ownText()
 	 */
@@ -950,10 +950,10 @@ public class Element extends Node {
 	 * Find elements whose text matches the supplied regular expression.
 	 * 
 	 * @param regex
-	 *           regular expression to match text against. You can use <a href=
-	 *           "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *           >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *           options.
+	 *        regular expression to match text against. You can use <a href=
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
+	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
+	 *        options.
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#ownText()
 	 */
@@ -1074,7 +1074,7 @@ public class Element extends Node {
 	 * will be cleared
 	 * 
 	 * @param text
-	 *           unencoded text
+	 *        unencoded text
 	 * @return this element
 	 */
 	public Element text(final String text) {
@@ -1167,7 +1167,7 @@ public class Element extends Node {
 	 * Set the element's {@code class} attribute to the supplied class names.
 	 * 
 	 * @param classNames
-	 *           set of classes
+	 *        set of classes
 	 * @return this element, for chaining
 	 */
 	public Element classNames(final Set<String> classNames) {
@@ -1180,7 +1180,7 @@ public class Element extends Node {
 	 * Tests if this element has a class. Case insensitive.
 	 * 
 	 * @param className
-	 *           name of class to check for
+	 *        name of class to check for
 	 * @return true if it does, false if not
 	 */
 	public boolean hasClass(final String className) {
@@ -1197,7 +1197,7 @@ public class Element extends Node {
 	 * Add a class name to this element's {@code class} attribute.
 	 * 
 	 * @param className
-	 *           class name to add
+	 *        class name to add
 	 * @return this element
 	 */
 	public Element addClass(final String className) {
@@ -1214,7 +1214,7 @@ public class Element extends Node {
 	 * Remove a class name from this element's {@code class} attribute.
 	 * 
 	 * @param className
-	 *           class name to remove
+	 *        class name to remove
 	 * @return this element
 	 */
 	public Element removeClass(final String className) {
@@ -1232,7 +1232,7 @@ public class Element extends Node {
 	 * remove it; otherwise add it.
 	 * 
 	 * @param className
-	 *           class name to toggle
+	 *        class name to toggle
 	 * @return this element
 	 */
 	public Element toggleClass(final String className) {
@@ -1266,7 +1266,7 @@ public class Element extends Node {
 	 * Set the value of a form element (input, textarea, etc).
 	 * 
 	 * @param value
-	 *           value to set
+	 *        value to set
 	 * @return this element (for chaining)
 	 */
 	public Element val(final String value) {
@@ -1340,7 +1340,7 @@ public class Element extends Node {
 	 * Set this element's inner HTML. Clears the existing HTML first.
 	 * 
 	 * @param html
-	 *           HTML to parse and set into this element
+	 *        HTML to parse and set into this element
 	 * @return this element
 	 * @see #append(String)
 	 */
@@ -1372,7 +1372,7 @@ public class Element extends Node {
 	public Element clone() {
 		final Element clone = (Element) super.clone();
 		clone.classNames = null; // derived on first hit, otherwise gets a pointer
-											// to source classnames
+		// to source classnames
 		return clone;
 	}
 }

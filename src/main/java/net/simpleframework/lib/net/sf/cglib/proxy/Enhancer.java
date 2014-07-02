@@ -1,13 +1,13 @@
 /*
  * Copyright 2002,2003,2004 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -179,7 +179,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * have an accessible constructor.
 	 * 
 	 * @param superclass
-	 *           class to extend or interface to implement
+	 *        class to extend or interface to implement
 	 * @see #setInterfaces(Class[])
 	 */
 	public void setSuperclass(final Class superclass) {
@@ -198,7 +198,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * always be implemented regardless of what is specified here.
 	 * 
 	 * @param interfaces
-	 *           array of interfaces to implement, or null
+	 *        array of interfaces to implement, or null
 	 * @see Factory
 	 */
 	public void setInterfaces(final Class[] interfaces) {
@@ -211,7 +211,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * mapping, but may use different actual callback objects.
 	 * 
 	 * @param filter
-	 *           the callback filter to use when generating a new class
+	 *        the callback filter to use when generating a new class
 	 * @see #setCallbacks
 	 */
 	public void setCallbackFilter(final CallbackFilter filter) {
@@ -223,7 +223,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * {@link #createClass}.
 	 * 
 	 * @param callback
-	 *           the callback to use for all methods
+	 *        the callback to use for all methods
 	 * @see #setCallbacks
 	 */
 	public void setCallback(final Callback callback) {
@@ -236,7 +236,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * array for each method in the proxied class.
 	 * 
 	 * @param callbacks
-	 *           the callback array
+	 *        the callback array
 	 * @see #setCallbackFilter
 	 * @see #setCallback
 	 */
@@ -255,8 +255,8 @@ public class Enhancer extends AbstractClassGenerator {
 	 * code from changing the underlying callbacks.
 	 * 
 	 * @param useFactory
-	 *           whether to implement <code>Factory</code>; default is
-	 *           <code>true</code>
+	 *        whether to implement <code>Factory</code>; default is
+	 *        <code>true</code>
 	 */
 	public void setUseFactory(final boolean useFactory) {
 		this.useFactory = useFactory;
@@ -268,7 +268,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * the method of the proxy's base class, if it exists.
 	 * 
 	 * @param interceptDuringConstruction
-	 *           whether to intercept methods called from the constructor
+	 *        whether to intercept methods called from the constructor
 	 */
 	public void setInterceptDuringConstruction(final boolean interceptDuringConstruction) {
 		this.interceptDuringConstruction = interceptDuringConstruction;
@@ -280,7 +280,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * not be possible to have an array of actual callback instances.
 	 * 
 	 * @param callbackType
-	 *           the type of callback to use for all methods
+	 *        the type of callback to use for all methods
 	 * @see #setCallbackTypes
 	 */
 	public void setCallbackType(final Class callbackType) {
@@ -295,7 +295,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * method in the proxied class.
 	 * 
 	 * @param callbackTypes
-	 *           the array of callback types
+	 *        the array of callback types
 	 */
 	public void setCallbackTypes(final Class[] callbackTypes) {
 		if (callbackTypes != null && callbackTypes.length == 0) {
@@ -324,9 +324,9 @@ public class Enhancer extends AbstractClassGenerator {
 	 * given arguments.
 	 * 
 	 * @param argumentTypes
-	 *           constructor signature
+	 *        constructor signature
 	 * @param arguments
-	 *           compatible wrapped arguments to pass to constructor
+	 *        compatible wrapped arguments to pass to constructor
 	 * @return a new instance
 	 */
 	public Object create(final Class[] argumentTypes, final Object[] arguments) {
@@ -357,7 +357,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * Insert a static serialVersionUID field into the generated class.
 	 * 
 	 * @param sUID
-	 *           the field value, or null to avoid generating field.
+	 *        the field value, or null to avoid generating field.
 	 */
 	public void setSerialVersionUID(final Long sUID) {
 		serialVersionUID = sUID;
@@ -445,11 +445,11 @@ public class Enhancer extends AbstractClassGenerator {
 	 * in multiple classes.
 	 * 
 	 * @param superclass
-	 *           the class that will be extended, or null
+	 *        the class that will be extended, or null
 	 * @param interfaces
-	 *           the list of interfaces that will be implemented, or null
+	 *        the list of interfaces that will be implemented, or null
 	 * @param methods
-	 *           the list into which to copy the applicable methods
+	 *        the list into which to copy the applicable methods
 	 */
 	public static void getMethods(final Class superclass, final Class[] interfaces,
 			final List methods) {
@@ -563,11 +563,11 @@ public class Enhancer extends AbstractClassGenerator {
 	 * may extend Enhancer to override this behavior.
 	 * 
 	 * @param sc
-	 *           the superclass
+	 *        the superclass
 	 * @param constructors
-	 *           the list of all declared constructors from the superclass
+	 *        the list of all declared constructors from the superclass
 	 * @throws IllegalArgumentException
-	 *            if there are no non-private constructors
+	 *         if there are no non-private constructors
 	 */
 	protected void filterConstructors(final Class sc, final List constructors) {
 		CollectionUtils.filter(constructors, new VisibilityPredicate(sc, true));
@@ -622,10 +622,10 @@ public class Enhancer extends AbstractClassGenerator {
 	 * leakage is a concern.
 	 * 
 	 * @param generatedClass
-	 *           a class previously created by {@link Enhancer}
+	 *        a class previously created by {@link Enhancer}
 	 * @param callbacks
-	 *           the array of callbacks to use when instances of the generated
-	 *           class are created
+	 *        the array of callbacks to use when instances of the generated
+	 *        class are created
 	 * @see #setUseFactory
 	 */
 	public static void registerCallbacks(final Class generatedClass, final Callback[] callbacks) {
@@ -639,10 +639,10 @@ public class Enhancer extends AbstractClassGenerator {
 	 * callbacks are never cleared.
 	 * 
 	 * @param generatedClass
-	 *           a class previously created by {@link Enhancer}
+	 *        a class previously created by {@link Enhancer}
 	 * @param callbacks
-	 *           the array of callbacks to use when instances of the generated
-	 *           class are created
+	 *        the array of callbacks to use when instances of the generated
+	 *        class are created
 	 */
 	public static void registerStaticCallbacks(final Class generatedClass, final Callback[] callbacks) {
 		setCallbacksHelper(generatedClass, callbacks, SET_STATIC_CALLBACKS_NAME);
@@ -652,7 +652,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 * Determine if a class was generated using <code>Enhancer</code>.
 	 * 
 	 * @param type
-	 *           any class
+	 *        any class
 	 * @return whether the class was generated using <code>Enhancer</code>
 	 */
 	public static boolean isEnhanced(final Class type) {
@@ -713,9 +713,9 @@ public class Enhancer extends AbstractClassGenerator {
 	 * this static method.
 	 * 
 	 * @param type
-	 *           class to extend or interface to implement
+	 *        class to extend or interface to implement
 	 * @param callback
-	 *           the callback to use for all methods
+	 *        the callback to use for all methods
 	 */
 	public static Object create(final Class type, final Callback callback) {
 		final Enhancer e = new Enhancer();
@@ -730,11 +730,11 @@ public class Enhancer extends AbstractClassGenerator {
 	 * this static method.
 	 * 
 	 * @param type
-	 *           class to extend or interface to implement
+	 *        class to extend or interface to implement
 	 * @param interfaces
-	 *           array of interfaces to implement, or null
+	 *        array of interfaces to implement, or null
 	 * @param callback
-	 *           the callback to use for all methods
+	 *        the callback to use for all methods
 	 */
 	public static Object create(final Class superclass, final Class interfaces[],
 			final Callback callback) {
@@ -751,13 +751,13 @@ public class Enhancer extends AbstractClassGenerator {
 	 * this static method.
 	 * 
 	 * @param type
-	 *           class to extend or interface to implement
+	 *        class to extend or interface to implement
 	 * @param interfaces
-	 *           array of interfaces to implement, or null
+	 *        array of interfaces to implement, or null
 	 * @param filter
-	 *           the callback filter to use when generating a new class
+	 *        the callback filter to use when generating a new class
 	 * @param callbacks
-	 *           callback implementations to use for the enhanced object
+	 *        callback implementations to use for the enhanced object
 	 */
 	public static Object create(final Class superclass, final Class[] interfaces,
 			final CallbackFilter filter, final Callback[] callbacks) {

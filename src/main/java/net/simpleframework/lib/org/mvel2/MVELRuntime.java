@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -47,13 +47,13 @@ public class MVELRuntime {
 	 * Main interpreter.
 	 * 
 	 * @param debugger
-	 *           Run in debug mode
+	 *        Run in debug mode
 	 * @param expression
-	 *           The compiled expression object
+	 *        The compiled expression object
 	 * @param ctx
-	 *           The root context object
+	 *        The root context object
 	 * @param variableFactory
-	 *           The variable factory to be injected
+	 *        The variable factory to be injected
 	 * @return The resultant value
 	 * @see net.simpleframework.lib.org.mvel2.MVEL
 	 */
@@ -183,9 +183,9 @@ public class MVELRuntime {
 	 * Register a debugger breakpoint.
 	 * 
 	 * @param source
-	 *           - the source file the breakpoint is registered in
+	 *        - the source file the breakpoint is registered in
 	 * @param line
-	 *           - the line number of the breakpoint
+	 *        - the line number of the breakpoint
 	 */
 	public static void registerBreakpoint(final String source, final int line) {
 		ensureDebuggerContext();
@@ -196,9 +196,9 @@ public class MVELRuntime {
 	 * Remove a specific breakpoint.
 	 * 
 	 * @param source
-	 *           - the source file the breakpoint is registered in
+	 *        - the source file the breakpoint is registered in
 	 * @param line
-	 *           - the line number of the breakpoint to be removed
+	 *        - the line number of the breakpoint to be removed
 	 */
 	public static void removeBreakpoint(final String source, final int line) {
 		if (hasDebuggerContext()) {
@@ -252,7 +252,7 @@ public class MVELRuntime {
 	 * the Debugger, you must call {@link #resetDebugger}
 	 * 
 	 * @param debugger
-	 *           - debugger instance
+	 *        - debugger instance
 	 */
 	public static void setThreadDebugger(final Debugger debugger) {
 		ensureDebuggerContext();

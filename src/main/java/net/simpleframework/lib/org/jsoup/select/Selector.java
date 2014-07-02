@@ -313,9 +313,9 @@ public class Selector {
 	 * Find elements matching selector.
 	 * 
 	 * @param query
-	 *           CSS selector
+	 *        CSS selector
 	 * @param root
-	 *           root element to descend into
+	 *        root element to descend into
 	 * @return matching elements, empty if not
 	 */
 	public static Elements select(final String query, final Element root) {
@@ -326,9 +326,9 @@ public class Selector {
 	 * Find elements matching selector.
 	 * 
 	 * @param query
-	 *           CSS selector
+	 *        CSS selector
 	 * @param roots
-	 *           root elements to descend into
+	 *        root elements to descend into
 	 * @return matching elements, empty if not
 	 */
 	public static Elements select(final String query, final Iterable<Element> roots) {

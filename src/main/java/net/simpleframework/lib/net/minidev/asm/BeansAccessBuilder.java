@@ -101,11 +101,11 @@ public class BeansAccessBuilder {
 	 * Build reflect bytecode from accessor list.
 	 * 
 	 * @param type
-	 *           type to be access
+	 *        type to be access
 	 * @param accs
-	 *           used accessor
+	 *        used accessor
 	 * @param loader
-	 *           Loader used to store the generated class
+	 *        Loader used to store the generated class
 	 * 
 	 * @return the new reflect class
 	 */

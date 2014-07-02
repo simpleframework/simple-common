@@ -1,49 +1,51 @@
 // Copyright (C) 2000 by Matt Towers <eBozo_AT_hotmail_DOT_com>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 /*
- The source code and object code, of the HttpsMessage class is copyright and
- owned by Matt Towers. 
-
- Feel free to use the HttpsMessage class in the development of any development
- project. For this use you are granted a non-exclusive, non-transferable 
- limited license at no cost.
-
- Redistribution of the HttpsMessage source code is permitted provided that the
- following conditions are met: 
-
- 1.You maintain the original copyright notice in the source code. 
- 2.This license file is redistributed with the source code. 
- 3.You acknowledge that the parent HttpMessage class, with which this class
- is intended to be used, is owned and copyrighted by Jason Hunter
- <jhunter_AT_acm_DOT_org>. (For more information see
- http://www.servlets.com) 
-
- To clarify, you may use the HttpsMessage class to build new software and may
- distribute the object code as you see fit. You may NOT distribute the source
- code as part of a software development kit, other library, or development tool
- without consent of the copyright holder. Any modified form of the HttpsMessage
- class is bound by these same restrictions.
-
- Note that the HttpsMessage class is provided "as is" and the author will not
- be liable for any damages suffered as a result of your use. 
- Furthermore, you understand the source code comes without any technical
- support.
-
- THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
- OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
- WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
-
- Matt Towers <eBozo_AT_hotmail_DOT_com> 
+ * The source code and object code, of the HttpsMessage class is copyright and
+ * owned by Matt Towers.
+ * 
+ * Feel free to use the HttpsMessage class in the development of any development
+ * project. For this use you are granted a non-exclusive, non-transferable
+ * limited license at no cost.
+ * 
+ * Redistribution of the HttpsMessage source code is permitted provided that the
+ * following conditions are met:
+ * 
+ * 1.You maintain the original copyright notice in the source code.
+ * 2.This license file is redistributed with the source code.
+ * 3.You acknowledge that the parent HttpMessage class, with which this class
+ * is intended to be used, is owned and copyrighted by Jason Hunter
+ * <jhunter_AT_acm_DOT_org>. (For more information see
+ * http://www.servlets.com)
+ * 
+ * To clarify, you may use the HttpsMessage class to build new software and may
+ * distribute the object code as you see fit. You may NOT distribute the source
+ * code as part of a software development kit, other library, or development
+ * tool
+ * without consent of the copyright holder. Any modified form of the
+ * HttpsMessage
+ * class is bound by these same restrictions.
+ * 
+ * Note that the HttpsMessage class is provided "as is" and the author will not
+ * be liable for any damages suffered as a result of your use.
+ * Furthermore, you understand the source code comes without any technical
+ * support.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * Matt Towers <eBozo_AT_hotmail_DOT_com>
  */
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -90,8 +92,8 @@ public class HttpsMessage extends net.simpleframework.lib.com.oreilly.servlet.Ht
 	 * servlet at the specified URL using HTTPS.
 	 * 
 	 * @param szURL
-	 *           the server resource (typically a servlet) with which to
-	 *           communicate
+	 *        the server resource (typically a servlet) with which to
+	 *        communicate
 	 */
 	public HttpsMessage(final String szURL) throws Exception {
 		super(null);

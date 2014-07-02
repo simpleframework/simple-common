@@ -1,5 +1,5 @@
 // Copyright (C) 1998-2001 by Jason Hunter <jhunter_AT_acm_DOT_org>.
-// All rights reserved.  Use of this class is limited.
+// All rights reserved. Use of this class is limited.
 // Please see the LICENSE for more information.
 
 package net.simpleframework.lib.com.oreilly.servlet;
@@ -38,13 +38,13 @@ public class ServletUtils {
 	 * Sends the contents of the specified file to the output stream
 	 * 
 	 * @param filename
-	 *           the file to send
+	 *        the file to send
 	 * @param out
-	 *           the output stream to write the file
+	 *        the output stream to write the file
 	 * @exception FileNotFoundException
-	 *               if the file does not exist
+	 *            if the file does not exist
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public static void returnFile(final String filename, final OutputStream out)
 			throws FileNotFoundException, IOException {
@@ -68,11 +68,11 @@ public class ServletUtils {
 	 * Sends the contents of the specified URL to the output stream
 	 * 
 	 * @param URL
-	 *           whose contents are to be sent
+	 *        whose contents are to be sent
 	 * @param out
-	 *           the output stream to write the contents
+	 *        the output stream to write the contents
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public static void returnURL(final URL url, final OutputStream out) throws IOException {
 		final InputStream in = url.openStream();
@@ -88,11 +88,11 @@ public class ServletUtils {
 	 * PrintWriter or JspWriter)
 	 * 
 	 * @param URL
-	 *           whose contents are to be sent
+	 *        whose contents are to be sent
 	 * @param out
-	 *           the Writer to write the contents
+	 *        the Writer to write the contents
 	 * @exception IOException
-	 *               if an I/O error occurs
+	 *            if an I/O error occurs
 	 */
 	public static void returnURL(final URL url, final Writer out) throws IOException {
 		// Determine the URL's content encoding
@@ -118,7 +118,7 @@ public class ServletUtils {
 	 * Gets an exception's stack trace as a String
 	 * 
 	 * @param e
-	 *           the exception
+	 *        the exception
 	 * @return the stack trace of the exception
 	 */
 	public static String getStackTraceAsString(final Throwable t) {
@@ -134,12 +134,12 @@ public class ServletUtils {
 	 * file source. Throws an IOException if the resource can't be read.
 	 * 
 	 * @param context
-	 *           the context containing the resource
+	 *        the context containing the resource
 	 * @param resource
-	 *           the resource to be read
+	 *        the resource to be read
 	 * @return a URL reference to the resource
 	 * @exception IOException
-	 *               if there's any problem accessing the resource
+	 *            if there's any problem accessing the resource
 	 */
 	public static URL getResource(final ServletContext context, final String resource)
 			throws IOException {

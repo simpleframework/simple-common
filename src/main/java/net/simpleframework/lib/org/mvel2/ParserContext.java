@@ -7,11 +7,11 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -241,7 +241,7 @@ public class ParserContext implements Serializable {
 	 * context.
 	 * 
 	 * @param name
-	 *           The name of the identifier.
+	 *        The name of the identifier.
 	 * @return boolean
 	 */
 	public boolean hasVarOrInput(final String name) {
@@ -254,7 +254,7 @@ public class ParserContext implements Serializable {
 	 * Returns <tt>Object.class</tt> if the type cannot be determined.
 	 * 
 	 * @param name
-	 *           The name of the identifier
+	 *        The name of the identifier
 	 * @return boolean
 	 */
 	public Class getVarOrInputType(final String name) {
@@ -289,7 +289,7 @@ public class ParserContext implements Serializable {
 	 * used by the compiler)
 	 * 
 	 * @param lineCount
-	 *           The number of lines
+	 *        The number of lines
 	 * @return int of lines
 	 */
 	public int setLineCount(final int lineCount) {
@@ -300,7 +300,7 @@ public class ParserContext implements Serializable {
 	 * Increments the current line count by the specified amount
 	 * 
 	 * @param increment
-	 *           The number of lines to increment
+	 *        The number of lines to increment
 	 * @return int of lines
 	 */
 	public int incrementLineCount(final int increment) {
@@ -321,7 +321,7 @@ public class ParserContext implements Serializable {
 	 * Sets the current line offset. (Generally only used by the compiler)
 	 * 
 	 * @param lineOffset
-	 *           The offset amount
+	 *        The offset amount
 	 */
 	public void setLineOffset(final int lineOffset) {
 		this.lineOffset = lineOffset;
@@ -331,9 +331,9 @@ public class ParserContext implements Serializable {
 	 * Sets both the current line count and line offset
 	 * 
 	 * @param lineCount
-	 *           The line count
+	 *        The line count
 	 * @param lineOffset
-	 *           The line offset
+	 *        The line offset
 	 */
 	public void setLineAndOffset(final int lineCount, final int lineOffset) {
 		// addKnownLine(this.lineCount = lineCount);
@@ -345,7 +345,7 @@ public class ParserContext implements Serializable {
 	 * programatically
 	 * 
 	 * @param name
-	 *           The name identifier for the imported class (ie. "HashMap")
+	 *        The name identifier for the imported class (ie. "HashMap")
 	 * @return An instance of <tt>Class</tt> denoting the imported class.
 	 */
 	public Class getImport(final String name) {
@@ -356,7 +356,7 @@ public class ParserContext implements Serializable {
 	 * Get a {@link MethodStub} which wraps a static method import.
 	 * 
 	 * @param name
-	 *           The name identifier
+	 *        The name identifier
 	 * @return An instance of {@link MethodStub}
 	 */
 	public MethodStub getStaticImport(final String name) {
@@ -368,7 +368,7 @@ public class ParserContext implements Serializable {
 	 * (whichever matches).
 	 * 
 	 * @param name
-	 *           The name identifier.
+	 *        The name identifier.
 	 * @return An instance of <tt>Class</tt> or {@link MethodStub}
 	 */
 	public Object getStaticOrClassImport(final String name) {
@@ -379,7 +379,7 @@ public class ParserContext implements Serializable {
 	 * Adds a package import to a parse session.
 	 * 
 	 * @param packageName
-	 *           A fully qualified package (eg. <tt>java.util.concurrent</tt>).
+	 *        A fully qualified package (eg. <tt>java.util.concurrent</tt>).
 	 */
 	public void addPackageImport(final String packageName) {
 		parserConfiguration.addPackageImport(packageName);
@@ -389,7 +389,7 @@ public class ParserContext implements Serializable {
 	 * Tests to see if the specified import exists.
 	 * 
 	 * @param name
-	 *           A name identifier
+	 *        A name identifier
 	 * @return boolean
 	 */
 	public boolean hasImport(final String name) {
@@ -412,8 +412,8 @@ public class ParserContext implements Serializable {
 	 * Adds an import for the specified <tt>Class</tt>.
 	 * 
 	 * @param cls
-	 *           The instance of the <tt>Class</tt> which represents the imported
-	 *           class.
+	 *        The instance of the <tt>Class</tt> which represents the imported
+	 *        class.
 	 */
 	public void addImport(final Class cls) {
 		addImport(cls.getSimpleName(), cls);
@@ -442,10 +442,10 @@ public class ParserContext implements Serializable {
 	 * </pre>
 	 * 
 	 * @param name
-	 *           The alias to use
+	 *        The alias to use
 	 * @param cls
-	 *           The instance of the <tt>Class</tt> which represents the imported
-	 *           class.
+	 *        The instance of the <tt>Class</tt> which represents the imported
+	 *        class.
 	 */
 	public void addImport(final String name, final Class cls) {
 		parserConfiguration.addImport(name, cls);
@@ -466,10 +466,10 @@ public class ParserContext implements Serializable {
 	 * executed in a script simply by writing <tt>time()</tt>.
 	 * 
 	 * @param name
-	 *           The alias to use
+	 *        The alias to use
 	 * @param method
-	 *           The instance of <tt>Method</tt> which represents the static
-	 *           import.
+	 *        The instance of <tt>Method</tt> which represents the static
+	 *        import.
 	 */
 	public void addImport(final String name, final Method method) {
 		addImport(name, new MethodStub(method));
@@ -480,10 +480,10 @@ public class ParserContext implements Serializable {
 	 * Adds a static import for the specified {@link MethodStub} with an alias.
 	 * 
 	 * @param name
-	 *           The alias to use
+	 *        The alias to use
 	 * @param method
-	 *           The instance of <tt>Method</tt> which represents the static
-	 *           import.
+	 *        The instance of <tt>Method</tt> which represents the static
+	 *        import.
 	 * @see #addImport(String, net.simpleframework.lib.org.mvel2.util.MethodStub)
 	 */
 	public void addImport(final String name, final MethodStub method) {
@@ -684,7 +684,7 @@ public class ParserContext implements Serializable {
 	 * Enables strict type enforcement -
 	 * 
 	 * @param strictTypeEnforcement
-	 *           -
+	 *        -
 	 */
 	public void setStrictTypeEnforcement(final boolean strictTypeEnforcement) {
 		this.strictTypeEnforcement = strictTypeEnforcement;
@@ -698,7 +698,7 @@ public class ParserContext implements Serializable {
 	 * Enables strong type enforcement.
 	 * 
 	 * @param strongTyping
-	 *           -
+	 *        -
 	 */
 	public void setStrongTyping(final boolean strongTyping) {
 		if (this.strongTyping = strongTyping) {

@@ -118,7 +118,7 @@ public abstract class LngLatUtils {
 	 * 
 	 * @param A
 	 * @param distance
-	 *           米
+	 *        米
 	 * @param angle
 	 * @return
 	 */

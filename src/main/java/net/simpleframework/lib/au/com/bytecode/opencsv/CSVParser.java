@@ -1,19 +1,19 @@
 package net.simpleframework.lib.au.com.bytecode.opencsv;
 
 /**
- Copyright 2005 Bytecode Pty Ltd.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2005 Bytecode Pty Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class CSVParser {
 	 * Constructs CSVParser with supplied separator.
 	 * 
 	 * @param separator
-	 *           the delimiter to use for separating entries.
+	 *        the delimiter to use for separating entries.
 	 */
 	public CSVParser(final char separator) {
 		this(separator, DEFAULT_QUOTE_CHARACTER, DEFAULT_ESCAPE_CHARACTER);
@@ -100,9 +100,9 @@ public class CSVParser {
 	 * Constructs CSVParser with supplied separator and quote char.
 	 * 
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 */
 	public CSVParser(final char separator, final char quotechar) {
 		this(separator, quotechar, DEFAULT_ESCAPE_CHARACTER);
@@ -112,11 +112,11 @@ public class CSVParser {
 	 * Constructs CSVReader with supplied separator and quote char.
 	 * 
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 */
 	public CSVParser(final char separator, final char quotechar, final char escape) {
 		this(separator, quotechar, escape, DEFAULT_STRICT_QUOTES);
@@ -127,13 +127,13 @@ public class CSVParser {
 	 * setting the "strict quotes" flag
 	 * 
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 * @param strictQuotes
-	 *           if true, characters outside the quotes are ignored
+	 *        if true, characters outside the quotes are ignored
 	 */
 	public CSVParser(final char separator, final char quotechar, final char escape,
 			final boolean strictQuotes) {
@@ -145,15 +145,15 @@ public class CSVParser {
 	 * setting the "strict quotes" and "ignore leading whitespace" flags
 	 * 
 	 * @param separator
-	 *           the delimiter to use for separating entries
+	 *        the delimiter to use for separating entries
 	 * @param quotechar
-	 *           the character to use for quoted elements
+	 *        the character to use for quoted elements
 	 * @param escape
-	 *           the character to use for escaping a separator or quote
+	 *        the character to use for escaping a separator or quote
 	 * @param strictQuotes
-	 *           if true, characters outside the quotes are ignored
+	 *        if true, characters outside the quotes are ignored
 	 * @param ignoreLeadingWhiteSpace
-	 *           if true, white space in front of a quote in a field is ignored
+	 *        if true, white space in front of a quote in a field is ignored
 	 */
 	public CSVParser(final char separator, final char quotechar, final char escape,
 			final boolean strictQuotes, final boolean ignoreLeadingWhiteSpace) {
@@ -200,11 +200,11 @@ public class CSVParser {
 	 * Parses an incoming String and returns an array of elements.
 	 * 
 	 * @param nextLine
-	 *           the string to parse
+	 *        the string to parse
 	 * @param multi
 	 * @return the comma-tokenized list of elements, or null if nextLine is null
 	 * @throws IOException
-	 *            if bad things happen during the read
+	 *         if bad things happen during the read
 	 */
 	private String[] parseLine(final String nextLine, final boolean multi) throws IOException {
 
@@ -250,24 +250,24 @@ public class CSVParser {
 					if (!strictQuotes) {
 						if (i > 2 // not on the beginning of the line
 								&& nextLine.charAt(i - 1) != this.separator // not at
-																							// the
-																							// beginning
-																							// of an
-																							// escape
-																							// sequence
+								// the
+								// beginning
+								// of an
+								// escape
+								// sequence
 								&& nextLine.length() > (i + 1) && nextLine.charAt(i + 1) != this.separator // not
-																																	// at
-																																	// the
-																																	// end
-																																	// of
-																																	// an
-																																	// escape
-																																	// sequence
+						// at
+						// the
+						// end
+						// of
+						// an
+						// escape
+						// sequence
 						) {
 
 							if (ignoreLeadingWhiteSpace && sb.length() > 0 && isAllWhiteSpace(sb)) {
 								sb.setLength(0); // discard white space leading up to
-														// quote
+								// quote
 							} else {
 								sb.append(c);
 								// continue;
@@ -297,7 +297,7 @@ public class CSVParser {
 				sb.append("\n");
 				pending = sb.toString();
 				sb = null; // this partial content is not to be added to field list
-								// yet
+				// yet
 			} else {
 				throw new IOException("Un-terminated quoted field at end of CSV line");
 			}
@@ -313,19 +313,19 @@ public class CSVParser {
 	 * precondition: the current character is a quote or an escape
 	 * 
 	 * @param nextLine
-	 *           the current line
+	 *        the current line
 	 * @param inQuotes
-	 *           true if the current context is quoted
+	 *        true if the current context is quoted
 	 * @param i
-	 *           current index in line
+	 *        current index in line
 	 * @return true if the following character is a quote
 	 */
 	private boolean isNextCharacterEscapedQuote(final String nextLine, final boolean inQuotes,
 			final int i) {
 		return inQuotes // we are in quotes, therefore there can be escaped quotes
-								// in here.
+				// in here.
 				&& nextLine.length() > (i + 1) // there is indeed another character
-															// to check.
+				// to check.
 				&& nextLine.charAt(i + 1) == quotechar;
 	}
 
@@ -333,19 +333,19 @@ public class CSVParser {
 	 * precondition: the current character is an escape
 	 * 
 	 * @param nextLine
-	 *           the current line
+	 *        the current line
 	 * @param inQuotes
-	 *           true if the current context is quoted
+	 *        true if the current context is quoted
 	 * @param i
-	 *           current index in line
+	 *        current index in line
 	 * @return true if the following character is a quote
 	 */
 	protected boolean isNextCharacterEscapable(final String nextLine, final boolean inQuotes,
 			final int i) {
 		return inQuotes // we are in quotes, therefore there can be escaped quotes
-								// in here.
+				// in here.
 				&& nextLine.length() > (i + 1) // there is indeed another character
-															// to check.
+				// to check.
 				&& (nextLine.charAt(i + 1) == quotechar || nextLine.charAt(i + 1) == this.escape);
 	}
 
@@ -353,7 +353,7 @@ public class CSVParser {
 	 * precondition: sb.length() > 0
 	 * 
 	 * @param sb
-	 *           A sequence of characters to examine
+	 *        A sequence of characters to examine
 	 * @return true if every character in the sequence is whitespace
 	 */
 	protected boolean isAllWhiteSpace(final CharSequence sb) {

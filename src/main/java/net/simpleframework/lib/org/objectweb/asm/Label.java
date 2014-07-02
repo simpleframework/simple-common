@@ -7,13 +7,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the copyright holders nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -267,7 +267,7 @@ public class Label {
 	 * 
 	 * @return the offset corresponding to this label.
 	 * @throws IllegalStateException
-	 *            if this label is not resolved yet.
+	 *         if this label is not resolved yet.
 	 */
 	public int getOffset() {
 		if ((status & RESOLVED) == 0) {
@@ -283,17 +283,17 @@ public class Label {
 	 * is declared for this label.
 	 * 
 	 * @param owner
-	 *           the code writer that calls this method.
+	 *        the code writer that calls this method.
 	 * @param out
-	 *           the bytecode of the method.
+	 *        the bytecode of the method.
 	 * @param source
-	 *           the position of first byte of the bytecode instruction that
-	 *           contains this label.
+	 *        the position of first byte of the bytecode instruction that
+	 *        contains this label.
 	 * @param wideOffset
-	 *           <tt>true</tt> if the reference must be stored in 4 bytes, or
-	 *           <tt>false</tt> if it must be stored with 2 bytes.
+	 *        <tt>true</tt> if the reference must be stored in 4 bytes, or
+	 *        <tt>false</tt> if it must be stored with 2 bytes.
 	 * @throws IllegalArgumentException
-	 *            if this label has not been created by the given code writer.
+	 *         if this label has not been created by the given code writer.
 	 */
 	void put(final MethodWriter owner, final ByteVector out, final int source,
 			final boolean wideOffset) {
@@ -321,11 +321,11 @@ public class Label {
 	 * computed and stored directly.
 	 * 
 	 * @param sourcePosition
-	 *           the position of the referencing instruction. This position will
-	 *           be used to compute the offset of this forward reference.
+	 *        the position of the referencing instruction. This position will
+	 *        be used to compute the offset of this forward reference.
 	 * @param referencePosition
-	 *           the position where the offset for this forward reference must be
-	 *           stored.
+	 *        the position where the offset for this forward reference must be
+	 *        stored.
 	 */
 	private void addReference(final int sourcePosition, final int referencePosition) {
 		if (srcAndRefPositions == null) {
@@ -347,11 +347,11 @@ public class Label {
 	 * the bytecode by each forward reference previously added to this label.
 	 * 
 	 * @param owner
-	 *           the code writer that calls this method.
+	 *        the code writer that calls this method.
 	 * @param position
-	 *           the position of this label in the bytecode.
+	 *        the position of this label in the bytecode.
 	 * @param data
-	 *           the bytecode of the method.
+	 *        the bytecode of the method.
 	 * @return <tt>true</tt> if a blank that was left for this label was to small
 	 *         to store the offset. In such a case the corresponding jump
 	 *         instruction is replaced with a pseudo instruction (using unused
@@ -360,8 +360,8 @@ public class Label {
 	 *         wider offsets (4 bytes instead of 2). This is done in
 	 *         {@link MethodWriter#resizeInstructions}.
 	 * @throws IllegalArgumentException
-	 *            if this label has already been resolved, or if it has not been
-	 *            created by the given code writer.
+	 *         if this label has already been resolved, or if it has not been
+	 *         created by the given code writer.
 	 */
 	boolean resolve(final MethodWriter owner, final int position, final byte[] data) {
 		boolean needUpdate = false;
@@ -427,7 +427,7 @@ public class Label {
 	 * Returns true is this basic block belongs to the given subroutine.
 	 * 
 	 * @param id
-	 *           a subroutine id.
+	 *        a subroutine id.
 	 * @return true is this basic block belongs to the given subroutine.
 	 */
 	boolean inSubroutine(final long id) {
@@ -442,7 +442,7 @@ public class Label {
 	 * subroutine.
 	 * 
 	 * @param block
-	 *           another basic block.
+	 *        another basic block.
 	 * @return true if this basic block and the given one belong to a common
 	 *         subroutine.
 	 */
@@ -462,9 +462,9 @@ public class Label {
 	 * Marks this basic block as belonging to the given subroutine.
 	 * 
 	 * @param id
-	 *           a subroutine id.
+	 *        a subroutine id.
 	 * @param nbSubroutines
-	 *           the total number of subroutines in the method.
+	 *        the total number of subroutines in the method.
 	 */
 	void addToSubroutine(final long id, final int nbSubroutines) {
 		if ((status & VISITED) == 0) {
@@ -481,13 +481,13 @@ public class Label {
 	 * block WITHOUT following any JSR target.
 	 * 
 	 * @param JSR
-	 *           a JSR block that jumps to this subroutine. If this JSR is not
-	 *           null it is added to the successor of the RET blocks found in the
-	 *           subroutine.
+	 *        a JSR block that jumps to this subroutine. If this JSR is not
+	 *        null it is added to the successor of the RET blocks found in the
+	 *        subroutine.
 	 * @param id
-	 *           the id of this subroutine.
+	 *        the id of this subroutine.
 	 * @param nbSubroutines
-	 *           the total number of subroutines in the method.
+	 *        the total number of subroutines in the method.
 	 */
 	void visitSubroutine(final Label JSR, final long id, final int nbSubroutines) {
 		// user managed stack of labels, to avoid using a recursive method
