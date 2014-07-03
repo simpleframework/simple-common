@@ -75,8 +75,23 @@ public abstract class ArrayUtils {
 		return -1;
 	}
 
+	public static int indexOf(final String[] array, final String value, final boolean ignoreCase) {
+		if (array != null) {
+			for (int i = 0; i < array.length; i++) {
+				if ((ignoreCase && array[i].equalsIgnoreCase(value)) || array[i].equals(value)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
 	public static boolean contains(final Object[] array, final Object value) {
 		return indexOf(array, value) != -1;
+	}
+
+	public static boolean contains(final String[] array, final String value, final boolean ignoreCase) {
+		return indexOf(array, value, ignoreCase) != -1;
 	}
 
 	public static int indexOf(final int[] array, final int value) {
