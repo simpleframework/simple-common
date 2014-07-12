@@ -30,7 +30,11 @@ public abstract class ID {
 		} else if (id instanceof Number || Number.class.isAssignableFrom(_type)) {
 			return new IntegerID(Convert.toInt(id));
 		} else {
-			return new StringID(Convert.toString(id));
+			if (id == null) {
+				return null;
+			}
+			final String _id = Convert.toString(id);
+			return StringUtils.hasText(_id) ? new StringID(_id) : null;
 		}
 	}
 
