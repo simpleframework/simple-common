@@ -40,6 +40,10 @@ public abstract class AbstractIdBean extends ObjectEx implements IIdBeanAware {
 		return id != null ? id.hashCode() : super.hashCode();
 	}
 
+	public Object lock() {
+		return getId().getValue();
+	}
+
 	@Override
 	public AbstractIdBean clone() {
 		return BeanUtils.clone(this);
