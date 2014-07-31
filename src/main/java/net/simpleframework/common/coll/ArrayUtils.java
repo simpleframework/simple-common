@@ -138,6 +138,10 @@ public abstract class ArrayUtils {
 		return i == 0;
 	}
 
+	public static List<Object> toParams(final Object... a) {
+		return (List<Object>) _setColl(new ArrayList<Object>(), a);
+	}
+
 	public static <T> List<T> asList(final T... a) {
 		return (List<T>) _setColl(new ArrayList<T>(), a);
 	}
