@@ -18,7 +18,7 @@
       <email>cknet@126.com</email>
     </developer>
   </developers>
-  
+
   <!--仓库配置 -->
   <repositories>
     <repository>
@@ -43,6 +43,13 @@
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <version>1.4.5</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.5.1</version>
       <optional>true</optional>
     </dependency>
 
@@ -80,7 +87,7 @@
       <version>4.10</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
