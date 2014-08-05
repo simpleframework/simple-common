@@ -119,5 +119,12 @@ public abstract class ObjectEx {
 		private static final long serialVersionUID = 6418478949274739685L;
 	}
 
-	protected final Log log = LogFactory.getLogger(getClass());
+	private Log log;
+
+	protected Log getLog() {
+		if (log == null) {
+			log = LogFactory.getLogger(getClass());
+		}
+		return log;
+	}
 }
