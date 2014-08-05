@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.simpleframework.common.logger.Log;
+import net.simpleframework.common.logger.LogFactory;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -27,6 +30,8 @@ import java.util.regex.Pattern;
  *         http://www.simpleframework.net
  */
 public abstract class IoUtils {
+	static Log log = LogFactory.getLogger(IoUtils.class);
+
 	static final int BUFFER = 8 * 1024;
 
 	public static String getStringFromInputStream(final InputStream inputStream) throws IOException {
@@ -95,13 +100,28 @@ public abstract class IoUtils {
 
 	/********************************* Serializable **********************************/
 
+	static boolean hessianEnabled = false;
+	static {
+		try {
+			Class.forName("com.caucho.hessian.io.HessianInput");
+			hessianEnabled = true;
+		} catch (final Exception ex) {
+			log.warn("Hessian serialize disabled!");
+		}
+	}
+
 	public static byte[] serialize(final Object obj) throws IOException {
 		if (obj == null) {
 			return null;
 		}
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		final ObjectOutputStream oos = new ObjectOutputStream(bos);
-		oos.writeObject(obj);
+		if (hessianEnabled) {
+			final com.caucho.hessian.io.HessianOutput ho = new com.caucho.hessian.io.HessianOutput(bos);
+			ho.writeObject(obj);
+		} else {
+			final ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(obj);
+		}
 		return bos.toByteArray();
 	}
 
@@ -109,9 +129,15 @@ public abstract class IoUtils {
 		if (bytes == null || bytes.length == 0) {
 			return null;
 		}
-		final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		final ObjectInputStream ois = new ObjectInputStream(bis);
-		return ois.readObject();
+		if (hessianEnabled) {
+			final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+			final com.caucho.hessian.io.HessianInput hi = new com.caucho.hessian.io.HessianInput(is);
+			return hi.readObject();
+		} else {
+			final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+			final ObjectInputStream ois = new ObjectInputStream(bis);
+			return ois.readObject();
+		}
 	}
 
 	/********************************* MacAddress **********************************/
