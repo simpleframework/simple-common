@@ -119,7 +119,7 @@ public abstract class ObjectEx {
 		private static final long serialVersionUID = 6418478949274739685L;
 	}
 
-	private Log log;
+	private transient Log log;
 
 	protected Log getLog() {
 		if (log == null) {
