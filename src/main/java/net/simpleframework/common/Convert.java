@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import net.simpleframework.common.logger.Log;
+import net.simpleframework.common.logger.LogFactory;
 import net.simpleframework.lib.org.mvel2.DataConversion;
 
 /**
@@ -18,6 +20,8 @@ import net.simpleframework.lib.org.mvel2.DataConversion;
  *         http://www.simpleframework.net
  */
 public abstract class Convert {
+	static Log log = LogFactory.getLogger(Convert.class);
+
 	public static <T> T convert(final Object value, final Class<T> clazz) {
 		return convert(value, clazz, null);
 	}
@@ -49,6 +53,8 @@ public abstract class Convert {
 		try {
 			t = DataConversion.convert(value, targetClass);
 		} catch (final Exception e) {
+			log.warn("Convert " + targetClass + ", val: " + value);
+			log.warn(e);
 		}
 		if ((t == null || value == t) && defaultValue != null) {
 			return defaultValue;
