@@ -183,15 +183,7 @@ public abstract class BeanUtils {
 	}
 
 	private static Object convert(final Object value, final Class<?> parameterType) {
-		if (Enum.class.isAssignableFrom(parameterType) && value instanceof Number) {
-			final int i = ((Number) value).intValue();
-			try {
-				return ((Class<? extends Enum>) parameterType).getEnumConstants()[i];
-			} catch (final Exception e) {
-				log.warn("Convert " + parameterType + ", val: " + value);
-				log.warn(e);
-			}
-		} else if (ID.class.isAssignableFrom(parameterType)) {
+		if (ID.class.isAssignableFrom(parameterType)) {
 			return ID.of(value);
 		} else if (Version.class.isAssignableFrom(parameterType)) {
 			return Version.getVersion(String.valueOf(value));

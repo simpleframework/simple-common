@@ -53,8 +53,7 @@ public abstract class Convert {
 		try {
 			t = DataConversion.convert(value, targetClass);
 		} catch (final Exception e) {
-			log.warn("Convert " + targetClass + ", val: " + value);
-			log.warn(e);
+			log.warn("Conversion error: " + targetClass + ", val: " + value);
 		}
 		if ((t == null || value == t) && defaultValue != null) {
 			return defaultValue;
@@ -123,22 +122,20 @@ public abstract class Convert {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Enum<T>> T toEnum(final Class<T> enumClazz, final Object obj,
+	public static <T extends Enum<T>> T toEnum(final Class<T> enumClazz, final Object val,
 			final T defaultValue) {
-		if (obj == null) {
-			return defaultValue;
-		}
-		if (enumClazz.isAssignableFrom(obj.getClass())) {
-			return (T) obj;
-		}
-		try {
-			return Enum.valueOf(enumClazz, toString(obj));
-		} catch (final Throwable e) {
-			if (defaultValue != null) {
-				return defaultValue;
+		if (val != null) {
+			if (enumClazz.isAssignableFrom(val.getClass())) {
+				return (T) val;
 			}
-			return enumClazz.getEnumConstants()[toInt(obj)];
+			try {
+				return val instanceof Number ? enumClazz.getEnumConstants()[((Number) val).intValue()]
+						: Enum.valueOf(enumClazz, toString(val));
+			} catch (final Throwable e) {
+				log.warn("Conversion error: " + enumClazz + ", val: " + val);
+			}
 		}
+		return defaultValue;
 	}
 
 	public static final String toString(final Object obj) {
