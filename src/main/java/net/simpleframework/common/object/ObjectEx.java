@@ -112,7 +112,7 @@ public abstract class ObjectEx {
 			super(msg, cause);
 		}
 
-		public static RuntimeException of(final Throwable throwable) {
+		public static IsolationException of(final Throwable throwable) {
 			return _of(IsolationException.class, null, throwable);
 		}
 

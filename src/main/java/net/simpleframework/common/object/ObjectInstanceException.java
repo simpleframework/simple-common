@@ -13,7 +13,7 @@ public class ObjectInstanceException extends RuntimeExceptionEx {
 		super(msg, cause);
 	}
 
-	public static RuntimeException of(final Throwable throwable) {
+	public static ObjectInstanceException of(final Throwable throwable) {
 		return _of(ObjectInstanceException.class, null, throwable);
 	}
 

@@ -12,7 +12,7 @@ public class ClassException extends RuntimeExceptionEx {
 		super(msg, cause);
 	}
 
-	public static RuntimeException of(final Throwable throwable) {
+	public static ClassException of(final Throwable throwable) {
 		return _of(ClassException.class, null, throwable);
 	}
 

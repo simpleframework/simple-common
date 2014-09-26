@@ -12,11 +12,11 @@ public class ParserException extends RuntimeExceptionEx {
 		super(msg, cause);
 	}
 
-	public static RuntimeException of(final Throwable throwable) {
+	public static ParserException of(final Throwable throwable) {
 		return _of(ParserException.class, null, throwable);
 	}
 
-	public static RuntimeException of(final String msg) {
+	public static ParserException of(final String msg) {
 		return _of(ParserException.class, msg);
 	}
 
