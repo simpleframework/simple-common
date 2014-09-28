@@ -3,6 +3,7 @@ package net.simpleframework.lib.org.jsoup.safety;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
+import net.simpleframework.lib.org.jsoup.nodes.DataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
@@ -13,8 +14,8 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
 
 /**
  * The whitelist based HTML cleaner. Use to ensure that end-user provided HTML
- * contains only the elements and attributes that you are expecting; no junk,
- * and no cross-site scripting attacks!
+ * contains only the elements and attributes
+ * that you are expecting; no junk, and no cross-site scripting attacks!
  * <p/>
  * The HTML cleaner parses the input as HTML and then runs it through a
  * white-list, so the output HTML can only contain HTML that is allowed by the
@@ -25,7 +26,7 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
  * contained tags.
  * <p/>
  * Rather than interacting directly with a Cleaner object, generally see the
- * {@code clean} methods in {@link net.simpleframework.lib.org.jsoup.Jsoup}.
+ * {@code clean} methods in {@link org.jsoup.Jsoup}.
  */
 public class Cleaner {
 	private final Whitelist whitelist;
@@ -44,9 +45,9 @@ public class Cleaner {
 
 	/**
 	 * Creates a new, clean document, from the original dirty document,
-	 * containing only elements allowed by the whitelist. The original document
-	 * is not modified. Only elements from the dirt document's <code>body</code>
-	 * are used.
+	 * containing only elements allowed by the whitelist.
+	 * The original document is not modified. Only elements from the dirt
+	 * document's <code>body</code> are used.
 	 * 
 	 * @param dirtyDocument
 	 *        Untrusted base document to clean.
@@ -66,8 +67,8 @@ public class Cleaner {
 
 	/**
 	 * Determines if the input document is valid, against the whitelist. It is
-	 * considered valid if all the tags and attributes in the input HTML are
-	 * allowed by the whitelist.
+	 * considered valid if all the tags and attributes
+	 * in the input HTML are allowed by the whitelist.
 	 * <p/>
 	 * This method can be used as a validator for user input forms. An invalid
 	 * document will still be cleaned successfully using the
@@ -107,7 +108,7 @@ public class Cleaner {
 				final Element sourceEl = (Element) source;
 
 				if (whitelist.isSafeTag(sourceEl.tagName())) { // safe, clone and
-					// copy safe attrs
+																				// copy safe attrs
 					final ElementMeta meta = createSafeElement(sourceEl);
 					final Element destChild = meta.el;
 					destination.appendChild(destChild);
@@ -115,15 +116,19 @@ public class Cleaner {
 					numDiscarded += meta.numAttribsDiscarded;
 					destination = destChild;
 				} else if (source != root) { // not a safe tag, so don't add. don't
-					// count root against discarded.
+														// count root against discarded.
 					numDiscarded++;
 				}
 			} else if (source instanceof TextNode) {
 				final TextNode sourceText = (TextNode) source;
 				final TextNode destText = new TextNode(sourceText.getWholeText(), source.baseUri());
 				destination.appendChild(destText);
+			} else if (source instanceof DataNode && whitelist.isSafeTag(source.parent().nodeName())) {
+				final DataNode sourceData = (DataNode) source;
+				final DataNode destData = new DataNode(sourceData.getWholeData(), source.baseUri());
+				destination.appendChild(destData);
 			} else { // else, we don't care about comments, xml proc instructions,
-				// etc
+						// etc
 				numDiscarded++;
 			}
 		}
@@ -132,7 +137,7 @@ public class Cleaner {
 		public void tail(final Node source, final int depth) {
 			if (source instanceof Element && whitelist.isSafeTag(source.nodeName())) {
 				destination = destination.parent(); // would have descended, so pop
-				// destination stack
+																// destination stack
 			}
 		}
 	}

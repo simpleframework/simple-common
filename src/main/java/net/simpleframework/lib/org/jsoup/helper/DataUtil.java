@@ -18,13 +18,13 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
 
 /**
  * Internal static utilities for handling data.
- * 
+ *
  */
 public class DataUtil {
 	private static final Pattern charsetPattern = Pattern
 			.compile("(?i)\\bcharset=\\s*(?:\"|')?([^\\s,;\"']*)");
 	static final String defaultCharset = "UTF-8"; // used if not found in header
-	// or meta charset
+																	// or meta charset
 	private static final int bufferSize = 0x20000; // ~130K.
 
 	private DataUtil() {
@@ -123,7 +123,7 @@ public class DataUtil {
 
 				if (foundCharset != null && foundCharset.length() != 0
 						&& !foundCharset.equals(defaultCharset)) { // need to
-					// re-decode
+																					// re-decode
 					foundCharset = foundCharset.trim().replaceAll("[\"']", "");
 					charsetName = foundCharset;
 					byteData.rewind();
@@ -160,8 +160,8 @@ public class DataUtil {
 	 * @param inStream
 	 *        the input stream to read from
 	 * @param maxSize
-	 *        the maximum size in bytes to read from the stream. Set to 0 to
-	 *        be unlimited.
+	 *        the maximum size in bytes to read from the stream. Set to 0 to be
+	 *        unlimited.
 	 * @return the filled byte buffer
 	 * @throws IOException
 	 *         if an exception occurs whilst reading from the input stream.
@@ -213,7 +213,8 @@ public class DataUtil {
 
 	/**
 	 * Parse out a charset from a content type header. If the charset is not
-	 * supported, returns null (so the default will kick in.)
+	 * supported, returns null (so the default
+	 * will kick in.)
 	 * 
 	 * @param contentType
 	 *        e.g. "text/html; charset=EUC-JP"
@@ -227,7 +228,7 @@ public class DataUtil {
 		if (m.find()) {
 			String charset = m.group(1).trim();
 			charset = charset.replace("charset=", "");
-			if (charset.isEmpty()) {
+			if (charset.length() == 0) {
 				return null;
 			}
 			try {

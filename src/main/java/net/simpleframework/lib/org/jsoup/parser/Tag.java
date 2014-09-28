@@ -7,31 +7,30 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 /**
  * HTML Tag capabilities.
- * 
+ *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public class Tag {
 	private static final Map<String, Tag> tags = new HashMap<String, Tag>(); // map
-	// of
-	// known
-	// tags
+																										// of
+																										// known
+																										// tags
 
 	private final String tagName;
 	private boolean isBlock = true; // block or inline
 	private boolean formatAsBlock = true; // should be formatted as a block
 	private boolean canContainBlock = true; // Can this tag hold block level
-	// tags?
+															// tags?
 	private boolean canContainInline = true; // only pcdata if not
 	private boolean empty = false; // can hold nothing; e.g. img
 	private boolean selfClosing = false; // can self close (<foo />). used for
-	// unknown tags that self close,
-	// without forcing them as empty.
+														// unknown tags that self close,
+														// without forcing them as empty.
 	private boolean preserveWhitespace = false; // for pre, textarea, script etc
 	private boolean formList = false; // a control that appears in forms: input,
-	// textarea, output etc
+													// textarea, output etc
 	private boolean formSubmit = false; // a control that can be submitted in a
-
-	// form: input etc
+													// form: input etc
 
 	private Tag(final String tagName) {
 		this.tagName = tagName.toLowerCase();
@@ -39,7 +38,7 @@ public class Tag {
 
 	/**
 	 * Get this tag's name.
-	 * 
+	 *
 	 * @return the tag's name
 	 */
 	public String getName() {
@@ -52,7 +51,7 @@ public class Tag {
 	 * <p/>
 	 * Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not
 	 * registered and will only .equals().
-	 * 
+	 *
 	 * @param tagName
 	 *        Name of tag, e.g. "p". Case insensitive.
 	 * @return The tag, either defined or new generic.
@@ -79,7 +78,7 @@ public class Tag {
 
 	/**
 	 * Gets if this is a block tag.
-	 * 
+	 *
 	 * @return if block tag
 	 */
 	public boolean isBlock() {
@@ -88,7 +87,7 @@ public class Tag {
 
 	/**
 	 * Gets if this tag should be formatted as a block (or as inline)
-	 * 
+	 *
 	 * @return if should be formatted as block or inline
 	 */
 	public boolean formatAsBlock() {
@@ -97,7 +96,7 @@ public class Tag {
 
 	/**
 	 * Gets if this tag can contain block tags.
-	 * 
+	 *
 	 * @return if tag can contain block tags
 	 */
 	public boolean canContainBlock() {
@@ -106,7 +105,7 @@ public class Tag {
 
 	/**
 	 * Gets if this tag is an inline tag.
-	 * 
+	 *
 	 * @return if this tag is an inline tag.
 	 */
 	public boolean isInline() {
@@ -115,7 +114,7 @@ public class Tag {
 
 	/**
 	 * Gets if this tag is a data only tag.
-	 * 
+	 *
 	 * @return if this tag is a data only tag
 	 */
 	public boolean isData() {
@@ -124,7 +123,7 @@ public class Tag {
 
 	/**
 	 * Get if this is an empty tag
-	 * 
+	 *
 	 * @return if this is an empty tag
 	 */
 	public boolean isEmpty() {
@@ -133,7 +132,7 @@ public class Tag {
 
 	/**
 	 * Get if this tag is self closing.
-	 * 
+	 *
 	 * @return if this tag should be output as self closing.
 	 */
 	public boolean isSelfClosing() {
@@ -142,7 +141,7 @@ public class Tag {
 
 	/**
 	 * Get if this is a pre-defined tag, or was auto created on parsing.
-	 * 
+	 *
 	 * @return if a known tag
 	 */
 	public boolean isKnownTag() {
@@ -151,7 +150,7 @@ public class Tag {
 
 	/**
 	 * Check if this tagname is a known tag.
-	 * 
+	 *
 	 * @param tagName
 	 *        name of tag
 	 * @return if known HTML tag
@@ -162,7 +161,7 @@ public class Tag {
 
 	/**
 	 * Get if this tag should preserve whitespace within child text nodes.
-	 * 
+	 *
 	 * @return if preserve whitepace
 	 */
 	public boolean preserveWhitespace() {

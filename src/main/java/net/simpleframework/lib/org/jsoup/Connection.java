@@ -12,10 +12,10 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
  * A Connection provides a convenient interface to fetch content from the web,
  * and parse them into Documents.
  * <p>
- * To get a new Connection, use
- * {@link net.simpleframework.lib.org.jsoup.Jsoup#connect(String)}. Connections
- * contain {@link Connection.Request} and {@link Connection.Response} objects.
- * The request objects are reusable as prototype requests.
+ * To get a new Connection, use {@link org.jsoup.Jsoup#connect(String)}.
+ * Connections contain {@link Connection.Request} and
+ * {@link Connection.Response} objects. The request objects are reusable as
+ * prototype requests.
  * <p>
  * Request configuration can be made using either the shortcut methods in
  * Connection (e.g. {@link #userAgent(String)}), or by methods in the
@@ -60,22 +60,23 @@ public interface Connection {
 
 	/**
 	 * Set the request timeouts (connect and read). If a timeout occurs, an
-	 * IOException will be thrown. The default timeout is 3 seconds (3000
-	 * millis). A timeout of zero is treated as an infinite timeout.
+	 * IOException will be thrown. The default
+	 * timeout is 3 seconds (3000 millis). A timeout of zero is treated as an
+	 * infinite timeout.
 	 * 
 	 * @param millis
-	 *        number of milliseconds (thousandths of a second) before timing
-	 *        out connects or reads.
+	 *        number of milliseconds (thousandths of a second) before timing out
+	 *        connects or reads.
 	 * @return this Connection, for chaining
 	 */
 	public Connection timeout(int millis);
 
 	/**
 	 * Set the maximum bytes to read from the (uncompressed) connection into the
-	 * body, before the connection is closed, and the input truncated. The
-	 * default maximum is 1MB. A max size of zero is treated as an infinite
-	 * amount (bounded only by your patience and the memory available on your
-	 * machine).
+	 * body, before the connection is closed,
+	 * and the input truncated. The default maximum is 1MB. A max size of zero is
+	 * treated as an infinite amount (bounded
+	 * only by your patience and the memory available on your machine).
 	 * 
 	 * @param bytes
 	 *        number of bytes to read from the input before truncating
@@ -113,9 +114,10 @@ public interface Connection {
 
 	/**
 	 * Configures the connection to not throw exceptions when a HTTP error
-	 * occurs. (4xx - 5xx, e.g. 404 or 500). By default this is <b>false</b>; an
-	 * IOException is thrown if an error is encountered. If set to <b>true</b>,
-	 * the response is populated with the error body, and the status message will
+	 * occurs. (4xx - 5xx, e.g. 404 or 500). By
+	 * default this is <b>false</b>; an IOException is thrown if an error is
+	 * encountered. If set to <b>true</b>, the
+	 * response is populated with the error body, and the status message will
 	 * reflect the error.
 	 * 
 	 * @param ignoreHttpErrors
@@ -126,22 +128,24 @@ public interface Connection {
 
 	/**
 	 * Ignore the document's Content-Type when parsing the response. By default
-	 * this is <b>false</b>, an unrecognised content-type will cause an
-	 * IOException to be thrown. (This is to prevent producing garbage by
-	 * attempting to parse a JPEG binary image, for example.) Set to true to
-	 * force a parse attempt regardless of content type.
+	 * this is <b>false</b>, an unrecognised
+	 * content-type will cause an IOException to be thrown. (This is to prevent
+	 * producing garbage by attempting to parse
+	 * a JPEG binary image, for example.) Set to true to force a parse attempt
+	 * regardless of content type.
 	 * 
 	 * @param ignoreContentType
-	 *        set to true if you would like the content type ignored on
-	 *        parsing the response into a Document.
+	 *        set to true if you would like the content type ignored on parsing
+	 *        the response into a
+	 *        Document.
 	 * @return this Connection, for chaining
 	 */
 	public Connection ignoreContentType(boolean ignoreContentType);
 
 	/**
 	 * Add a request data parameter. Request parameters are sent in the request
-	 * query string for GETs, and in the request body for POSTs. A request may
-	 * have multiple values of the same name.
+	 * query string for GETs, and in the request
+	 * body for POSTs. A request may have multiple values of the same name.
 	 * 
 	 * @param key
 	 *        data key
@@ -190,7 +194,7 @@ public interface Connection {
 	 * @param value
 	 *        header value
 	 * @return this Connection, for chaining
-	 * @see net.simpleframework.lib.org.jsoup.Connection.Request#headers()
+	 * @see org.jsoup.Connection.Request#headers()
 	 */
 	public Connection header(String name, String value);
 
@@ -232,8 +236,7 @@ public interface Connection {
 	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
 	 *         malformed
 	 * @throws HttpStatusException
-	 *         if the response is not OK and HTTP response errors are not
-	 *         ignored
+	 *         if the response is not OK and HTTP response errors are not ignored
 	 * @throws UnsupportedMimeTypeException
 	 *         if the response mime type is not supported and those errors are
 	 *         not ignored
@@ -252,8 +255,7 @@ public interface Connection {
 	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
 	 *         malformed
 	 * @throws HttpStatusException
-	 *         if the response is not OK and HTTP response errors are not
-	 *         ignored
+	 *         if the response is not OK and HTTP response errors are not ignored
 	 * @throws UnsupportedMimeTypeException
 	 *         if the response mime type is not supported and those errors are
 	 *         not ignored
@@ -272,8 +274,7 @@ public interface Connection {
 	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
 	 *         malformed
 	 * @throws HttpStatusException
-	 *         if the response is not OK and HTTP response errors are not
-	 *         ignored
+	 *         if the response is not OK and HTTP response errors are not ignored
 	 * @throws UnsupportedMimeTypeException
 	 *         if the response mime type is not supported and those errors are
 	 *         not ignored
@@ -504,7 +505,7 @@ public interface Connection {
 		/**
 		 * Configures the request to (not) follow server redirects. By default
 		 * this is <b>true</b>.
-		 * 
+		 *
 		 * @param followRedirects
 		 *        true if server redirects should be followed.
 		 * @return this Request, for chaining

@@ -232,7 +232,8 @@ enum TokeniserState {
 			if (r.matches('/')) {
 				t.createTempBuffer();
 				t.advanceTransition(RCDATAEndTagOpen);
-			} else if (r.matchesLetter() && !r.containsIgnoreCase("</" + t.appropriateEndTagName())) {
+			} else if (r.matchesLetter() && t.appropriateEndTagName() != null
+					&& !r.containsIgnoreCase("</" + t.appropriateEndTagName())) {
 				// diverge from spec: got a start tag, but there's no appropriate
 				// end tag (</title>), so rather than
 				// consuming to EOF; break out here
@@ -1022,8 +1023,8 @@ enum TokeniserState {
 			} else {
 				t.error(this);
 				t.advanceTransition(BogusComment); // advance so this character gets
-				// in bogus comment data's
-				// rewind
+																// in bogus comment data's
+																// rewind
 			}
 		}
 	},
@@ -1209,6 +1210,9 @@ enum TokeniserState {
 				break;
 			case eof:
 				t.eofError(this);
+				// note: fall through to > case
+			case '>': // catch invalid <!DOCTYPE>
+				t.error(this);
 				t.createDoctypePending();
 				t.doctypePending.forceQuirks = true;
 				t.emitDoctypePending();
@@ -1238,6 +1242,7 @@ enum TokeniserState {
 				break; // ignore whitespace
 			case nullChar:
 				t.error(this);
+				t.createDoctypePending();
 				t.doctypePending.name.append(replacementChar);
 				t.transition(DoctypeName);
 				break;
@@ -1735,8 +1740,8 @@ enum TokeniserState {
 
 	/**
 	 * Handles RawtextEndTagName, ScriptDataEndTagName, and
-	 * ScriptDataEscapedEndTagName. Same body impl, just different else exit
-	 * transitions.
+	 * ScriptDataEscapedEndTagName. Same body impl, just
+	 * different else exit transitions.
 	 */
 	private static final void handleDataEndTag(final Tokeniser t, final CharacterReader r,
 			final TokeniserState elseTransition) {

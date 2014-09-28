@@ -24,7 +24,8 @@ import net.simpleframework.lib.org.jsoup.select.Selector;
 
 /**
  * A HTML element consists of a tag name, attributes, and child nodes (including
- * text nodes and other elements).
+ * text nodes and
+ * other elements).
  * 
  * From an Element, you can extract data, traverse the node graph, and
  * manipulate the HTML.
@@ -60,8 +61,9 @@ public class Element extends Node {
 	 * @param tag
 	 *        element tag
 	 * @param baseUri
-	 *        the base URI of this element. It is acceptable for the base URI
-	 *        to be an empty string, but not null.
+	 *        the base URI of this element. It is acceptable for the base URI to
+	 *        be an empty
+	 *        string, but not null.
 	 * @see Tag#valueOf(String)
 	 */
 	public Element(final Tag tag, final String baseUri) {
@@ -85,7 +87,7 @@ public class Element extends Node {
 	/**
 	 * Change the tag of this element. For example, convert a {@code <span>} to a
 	 * {@code <div>} with {@code el.tagName("div");}.
-	 * 
+	 *
 	 * @param tagName
 	 *        new tag name for this element
 	 * @return this element, for chaining
@@ -127,8 +129,8 @@ public class Element extends Node {
 
 	/**
 	 * Set an attribute value on this element. If this element already has an
-	 * attribute with the key, its value is updated; otherwise, a new attribute
-	 * is added.
+	 * attribute with the
+	 * key, its value is updated; otherwise, a new attribute is added.
 	 * 
 	 * @return this element
 	 */
@@ -140,7 +142,8 @@ public class Element extends Node {
 
 	/**
 	 * Get this element's HTML5 custom data attributes. Each attribute in the
-	 * element that has a key starting with "data-" is included the dataset.
+	 * element that has a key
+	 * starting with "data-" is included the dataset.
 	 * <p>
 	 * E.g., the element
 	 * {@code <div data-package="jsoup" data-language="Java" class="group">...}
@@ -205,14 +208,14 @@ public class Element extends Node {
 	 * This is effectively a filter on {@link #childNodes()} to get Element
 	 * nodes.
 	 * 
-	 * @return child elements. If this element has no children, returns an empty
-	 *         list.
+	 * @return child elements. If this element has no children, returns an
+	 *         empty list.
 	 * @see #childNodes()
 	 */
 	public Elements children() {
 		// create on the fly rather than maintaining two lists. if gets slow,
 		// memoize, and mark dirty on change
-		final List<Element> elements = new ArrayList<Element>();
+		final List<Element> elements = new ArrayList<Element>(childNodes.size());
 		for (final Node node : childNodes) {
 			if (node instanceof Element) {
 				elements.add((Element) node);
@@ -276,8 +279,8 @@ public class Element extends Node {
 
 	/**
 	 * Find elements that match the {@link Selector} CSS query, with this element
-	 * as the starting context. Matched elements may include this element, or any
-	 * of its children.
+	 * as the starting context. Matched elements
+	 * may include this element, or any of its children.
 	 * <p/>
 	 * This method is generally more powerful to use than the DOM-type
 	 * {@code getElementBy*} methods, because multiple filters can be combined,
@@ -289,13 +292,12 @@ public class Element extends Node {
 	 * example.com (loosely)
 	 * </ul>
 	 * <p/>
-	 * See the query syntax documentation in
-	 * {@link net.simpleframework.lib.org.jsoup.select.Selector}.
-	 * 
+	 * See the query syntax documentation in {@link org.jsoup.select.Selector}.
+	 *
 	 * @param cssQuery
 	 *        a {@link Selector} CSS-like query
 	 * @return elements that match the query (empty if none match)
-	 * @see net.simpleframework.lib.org.jsoup.select.Selector
+	 * @see org.jsoup.select.Selector
 	 */
 	public Elements select(final String cssQuery) {
 		return Selector.select(cssQuery, this);
@@ -331,12 +333,14 @@ public class Element extends Node {
 
 	/**
 	 * Inserts the given child nodes into this element at the specified index.
-	 * Current nodes will be shifted to the right. The inserted nodes will be
-	 * moved from their current parent. To prevent moving, copy the nodes first.
-	 * 
+	 * Current nodes will be shifted to the
+	 * right. The inserted nodes will be moved from their current parent. To
+	 * prevent moving, copy the nodes first.
+	 *
 	 * @param index
-	 *        0-based index to insert children at. Specify {@code 0} to insert
-	 *        at the start, {@code -1} at the end
+	 *        0-based index to insert children at. Specify {@code 0} to insert at
+	 *        the start, {@code -1} at the
+	 *        end
 	 * @param children
 	 *        child nodes to insert
 	 * @return this element, for chaining.
@@ -446,7 +450,7 @@ public class Element extends Node {
 	/**
 	 * Insert the specified HTML into the DOM before this element (as a preceding
 	 * sibling).
-	 * 
+	 *
 	 * @param html
 	 *        HTML to add before this element
 	 * @return this element, for chaining
@@ -474,7 +478,7 @@ public class Element extends Node {
 	/**
 	 * Insert the specified HTML into the DOM after this element (as a following
 	 * sibling).
-	 * 
+	 *
 	 * @param html
 	 *        HTML to add after this element
 	 * @return this element, for chaining
@@ -511,7 +515,7 @@ public class Element extends Node {
 
 	/**
 	 * Wrap the supplied HTML around this element.
-	 * 
+	 *
 	 * @param html
 	 *        HTML to wrap around this element, e.g.
 	 *        {@code <div class="head"></div>}. Can be arbitrarily deep.
@@ -523,9 +527,46 @@ public class Element extends Node {
 	}
 
 	/**
+	 * Get a CSS selector that will uniquely select this element.
+	 * <p/>
+	 * If the element has an ID, returns #id; otherwise returns the parent (if
+	 * any) CSS selector, followed by '>', followed by a unique selector for the
+	 * element (tag.class.class:nth-child(n)).
+	 *
+	 * @return the CSS Path that can be used to retrieve the element in a
+	 *         selector.
+	 */
+	public String cssSelector() {
+		if (id().length() > 0) {
+			return "#" + id();
+		}
+
+		final StringBuilder selector = new StringBuilder(tagName());
+		final String classes = StringUtil.join(classNames(), ".");
+		if (classes.length() > 0) {
+			selector.append('.').append(classes);
+		}
+
+		if (parent() == null || parent() instanceof Document) {
+			// Document to
+			// selector, as will
+			// always have a
+			// html node
+			return selector.toString();
+		}
+
+		selector.insert(0, " > ");
+		if (parent().select(selector.toString()).size() > 1) {
+			selector.append(String.format(":nth-child(%d)", elementSiblingIndex() + 1));
+		}
+
+		return parent().cssSelector() + selector.toString();
+	}
+
+	/**
 	 * Get sibling elements. If the element has no sibling elements, returns an
-	 * empty list. An element is not a sibling of itself, so will not be included
-	 * in the returned list.
+	 * empty list. An element is not a sibling
+	 * of itself, so will not be included in the returned list.
 	 * 
 	 * @return sibling elements
 	 */
@@ -546,8 +587,9 @@ public class Element extends Node {
 
 	/**
 	 * Gets the next sibling element of this element. E.g., if a {@code div}
-	 * contains two {@code p}s, the {@code nextElementSibling} of the first
-	 * {@code p} is the second {@code p}.
+	 * contains two {@code p}s,
+	 * the {@code nextElementSibling} of the first {@code p} is the second
+	 * {@code p}.
 	 * <p/>
 	 * This is similar to {@link #nextSibling()}, but specifically finds only
 	 * Elements
@@ -603,7 +645,8 @@ public class Element extends Node {
 
 	/**
 	 * Get the list index of this element in its element sibling list. I.e. if
-	 * this is the first element sibling, returns 0.
+	 * this is the first element
+	 * sibling, returns 0.
 	 * 
 	 * @return position in element sibling list
 	 */
@@ -703,7 +746,7 @@ public class Element extends Node {
 
 	/**
 	 * Find elements that have a named attribute set. Case insensitive.
-	 * 
+	 *
 	 * @param key
 	 *        name of the attribute, e.g. {@code href}
 	 * @return elements that have this attribute, empty if none
@@ -717,7 +760,8 @@ public class Element extends Node {
 
 	/**
 	 * Find elements that have an attribute name starting with the supplied
-	 * prefix. Use {@code data-} to find elements that have HTML5 datasets.
+	 * prefix. Use {@code data-} to find elements
+	 * that have HTML5 datasets.
 	 * 
 	 * @param keyPrefix
 	 *        name prefix of the attribute e.g. {@code data-}
@@ -823,8 +867,8 @@ public class Element extends Node {
 	 * @param key
 	 *        name of the attribute
 	 * @param regex
-	 *        regular expression to match against attribute values. You can
-	 *        use <a href=
+	 *        regular expression to match against attribute values. You can use
+	 *        <a href=
 	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
 	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
 	 *        options.
@@ -875,8 +919,8 @@ public class Element extends Node {
 
 	/**
 	 * Find elements that contain the specified string. The search is case
-	 * insensitive. The text may appear directly in the element, or in any of its
-	 * descendants.
+	 * insensitive. The text may appear directly
+	 * in the element, or in any of its descendants.
 	 * 
 	 * @param searchText
 	 *        to look for in the element's text
@@ -889,8 +933,8 @@ public class Element extends Node {
 
 	/**
 	 * Find elements that directly contain the specified string. The search is
-	 * case insensitive. The text must appear directly in the element, not in any
-	 * of its descendants.
+	 * case insensitive. The text must appear directly
+	 * in the element, not in any of its descendants.
 	 * 
 	 * @param searchText
 	 *        to look for in the element's own text
@@ -978,11 +1022,12 @@ public class Element extends Node {
 	}
 
 	/**
-	 * Gets the combined text of this element and all its children.
+	 * Gets the combined text of this element and all its children. Whitespace is
+	 * normalized and trimmed.
 	 * <p>
-	 * For example, given HTML {@code <p>Hello <b>there</b> now!</p>},
+	 * For example, given HTML {@code <p>Hello  <b>there</b> now! </p>},
 	 * {@code p.text()} returns {@code "Hello there now!"}
-	 * 
+	 *
 	 * @return unencoded text, or empty string if none.
 	 * @see #ownText()
 	 * @see #textNodes()
@@ -1020,7 +1065,7 @@ public class Element extends Node {
 	 * returns {@code "Hello there now!"}. Note that the text within the
 	 * {@code b} element is not returned, as it is not a direct child of the
 	 * {@code p} element.
-	 * 
+	 *
 	 * @return unencoded text, or empty string if none.
 	 * @see #text()
 	 * @see #textNodes()
@@ -1114,7 +1159,7 @@ public class Element extends Node {
 	 * {@code script} tag.
 	 * 
 	 * @return the data, or empty string if none
-	 * 
+	 *
 	 * @see #dataNodes()
 	 */
 	public String data() {
@@ -1135,8 +1180,8 @@ public class Element extends Node {
 
 	/**
 	 * Gets the literal value of this element's "class" attribute, which may
-	 * include multiple class names, space separated. (E.g. on
-	 * <code>&lt;div class="header gray"></code> returns, "
+	 * include multiple class names, space
+	 * separated. (E.g. on <code>&lt;div class="header gray"></code> returns, "
 	 * <code>header gray</code>")
 	 * 
 	 * @return The literal class attribute, or <b>empty string</b> if no class
@@ -1148,9 +1193,10 @@ public class Element extends Node {
 
 	/**
 	 * Get all of the element's class names. E.g. on element
-	 * {@code <div class="header gray"}>}, returns a set of two elements
-	 * {@code "header", "gray"}. Note that modifications to this set are not
-	 * pushed to the backing {@code class} attribute; use the
+	 * {@code <div class="header gray"}>},
+	 * returns a set of two elements {@code "header", "gray"}. Note that
+	 * modifications to this set are not pushed to
+	 * the backing {@code class} attribute; use the
 	 * {@link #classNames(java.util.Set)} method to persist them.
 	 * 
 	 * @return set of classnames, empty if no class attribute
@@ -1372,7 +1418,7 @@ public class Element extends Node {
 	public Element clone() {
 		final Element clone = (Element) super.clone();
 		clone.classNames = null; // derived on first hit, otherwise gets a pointer
-		// to source classnames
+											// to source classnames
 		return clone;
 	}
 }

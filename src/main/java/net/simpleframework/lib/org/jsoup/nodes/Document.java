@@ -25,7 +25,7 @@ public class Document extends Element {
 	 * 
 	 * @param baseUri
 	 *        base URI of document
-	 * @see net.simpleframework.lib.org.jsoup.Jsoup#parse
+	 * @see org.jsoup.Jsoup#parse
 	 * @see #createShell
 	 */
 	public Document(final String baseUri) {
@@ -54,8 +54,8 @@ public class Document extends Element {
 
 	/**
 	 * Get the URL this Document was parsed from. If the starting URL is a
-	 * redirect, this will return the final URL from which the document was
-	 * served from.
+	 * redirect,
+	 * this will return the final URL from which the document was served from.
 	 * 
 	 * @return location
 	 */
@@ -95,7 +95,8 @@ public class Document extends Element {
 
 	/**
 	 * Set the document's {@code title} element. Updates the existing element, or
-	 * adds {@code title} to {@code head} if not present
+	 * adds {@code title} to {@code head} if
+	 * not present
 	 * 
 	 * @param title
 	 *        string to set as title
@@ -124,8 +125,8 @@ public class Document extends Element {
 
 	/**
 	 * Normalise the document. This happens after the parse phase so generally
-	 * does not need to be called. Moves any text content that is not in the body
-	 * element into the body.
+	 * does not need to be called.
+	 * Moves any text content that is not in the body element into the body.
 	 * 
 	 * @return this document after normalisation
 	 */
@@ -179,7 +180,7 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-		// created
+																// created
 		// above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<Node>();
@@ -272,10 +273,10 @@ public class Document extends Element {
 
 		/**
 		 * Get the document's current HTML escape mode: <code>base</code>, which
-		 * provides a limited set of named HTML entities and escapes other
-		 * characters as numbered entities for maximum compatibility; or
-		 * <code>extended</code>, which uses the complete set of HTML named
-		 * entities.
+		 * provides a limited set of named HTML
+		 * entities and escapes other characters as numbered entities for maximum
+		 * compatibility; or <code>extended</code>,
+		 * which uses the complete set of HTML named entities.
 		 * <p>
 		 * The default escape mode is <code>base</code>.
 		 * 
@@ -287,8 +288,9 @@ public class Document extends Element {
 
 		/**
 		 * Set the document's escape mode, which determines how characters are
-		 * escaped when the output character set does not support a given
-		 * character:- using either a named or a numbered escape.
+		 * escaped when the output character set
+		 * does not support a given character:- using either a named or a numbered
+		 * escape.
 		 * 
 		 * @param escapeMode
 		 *        the new escape mode to use
@@ -301,8 +303,9 @@ public class Document extends Element {
 
 		/**
 		 * Get the document's current output charset, which is used to control
-		 * which characters are escaped when generating HTML (via the
-		 * <code>html()</code> methods), and which are kept intact.
+		 * which characters are escaped when
+		 * generating HTML (via the <code>html()</code> methods), and which are
+		 * kept intact.
 		 * <p>
 		 * Where possible (when parsing from a URL or File), the document's output
 		 * charset is automatically set to the input charset. Otherwise, it
@@ -368,8 +371,8 @@ public class Document extends Element {
 
 		/**
 		 * Get if pretty printing is enabled. Default is true. If disabled, the
-		 * HTML output methods will not re-format the output, and the output will
-		 * generally look like the input.
+		 * HTML output methods will not re-format
+		 * the output, and the output will generally look like the input.
 		 * 
 		 * @return if pretty printing is enabled.
 		 */
@@ -391,7 +394,8 @@ public class Document extends Element {
 
 		/**
 		 * Get if outline mode is enabled. Default is false. If enabled, the HTML
-		 * output methods will consider all tags as block.
+		 * output methods will consider
+		 * all tags as block.
 		 * 
 		 * @return if outline mode is enabled.
 		 */
@@ -424,8 +428,7 @@ public class Document extends Element {
 		 * Set the indent amount for pretty printing
 		 * 
 		 * @param indentAmount
-		 *        number of spaces to use for indenting each level. Must be >=
-		 *        0.
+		 *        number of spaces to use for indenting each level. Must be >= 0.
 		 * @return this, for chaining
 		 */
 		public OutputSettings indentAmount(final int indentAmount) {

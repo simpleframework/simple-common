@@ -52,7 +52,7 @@ public class DataNode extends Node {
 	@Override
 	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
 		accum.append(getWholeData()); // data is not escaped in return from data
-		// nodes, so " in script, style is plain
+												// nodes, so " in script, style is plain
 	}
 
 	@Override

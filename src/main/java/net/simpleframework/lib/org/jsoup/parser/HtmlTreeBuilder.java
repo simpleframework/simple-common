@@ -48,18 +48,18 @@ class HtmlTreeBuilder extends TreeBuilder {
 	private Element headElement; // the current head element
 	private FormElement formElement; // the current form element
 	private Element contextElement; // fragment parse context -- could be null
-	// even if fragment parsing
+												// even if fragment parsing
 	private final DescendableLinkedList<Element> formattingElements = new DescendableLinkedList<Element>(); // active
 	// (open)
 	// formatting
 	// elements
 	private List<Token.Character> pendingTableCharacters = new ArrayList<Token.Character>(); // chars
-	// in
-	// table
-	// to
-	// be
-	// shifted
-	// out
+																															// in
+																															// table
+																															// to
+																															// be
+																															// shifted
+																															// out
 
 	private boolean framesetOk = true; // if ok to go into frameset
 	private boolean fosterInserts = false; // if next inserts should be fostered
@@ -71,6 +71,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 	@Override
 	Document parse(final String input, final String baseUri, final ParseErrorList errors) {
 		state = HtmlTreeBuilderState.Initial;
+		baseUriSetFromDoc = false;
 		return super.parse(input, baseUri, errors);
 	}
 
@@ -183,8 +184,8 @@ class HtmlTreeBuilder extends TreeBuilder {
 			baseUri = href;
 			baseUriSetFromDoc = true;
 			doc.setBaseUri(href); // set on the doc so doc.createElement(Tag) will
-			// get updated base, and to update all
-			// descendants
+											// get updated base, and to update all
+											// descendants
 		}
 	}
 
@@ -207,13 +208,13 @@ class HtmlTreeBuilder extends TreeBuilder {
 			final Element el = insertEmpty(startTag);
 			stack.add(el);
 			tokeniser.transition(TokeniserState.Data); // handles <script />,
-			// otherwise needs
-			// breakout steps from
-			// script data
+																		// otherwise needs
+																		// breakout steps from
+																		// script data
 			tokeniser.emit(new Token.EndTag(el.tagName())); // ensure we get out of
-			// whatever state we
-			// are in. emitted for
-			// yielded processing
+																			// whatever state we
+																			// are in. emitted for
+																			// yielded processing
 			return el;
 		}
 
@@ -241,7 +242,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 			if (tag.isKnownTag()) {
 				if (tag.isSelfClosing()) {
 					tokeniser.acknowledgeSelfClosingFlag(); // if not acked,
-					// promulagates error
+																			// promulagates error
 				}
 			} else {
 				// unknown tag, remember this is self closing for output
@@ -278,8 +279,8 @@ class HtmlTreeBuilder extends TreeBuilder {
 			node = new TextNode(characterToken.getData(), baseUri);
 		}
 		currentElement().appendChild(node); // doesn't use insertNode, because we
-		// don't foster these; and will always
-		// have a stack.
+														// don't foster these; and will always
+														// have a stack.
 	}
 
 	private void insertNode(final Node node) {
@@ -614,9 +615,10 @@ class HtmlTreeBuilder extends TreeBuilder {
 	 * element, the UA must pop the current node off the stack of open elements.
 	 * 
 	 * @param excludeTag
-	 *        If a step requires the UA to generate implied end tags but lists
-	 *        an element to exclude from the process, then the UA must perform
-	 *        the above steps as if that element was not in the above list.
+	 *        If a step requires the UA to generate implied end tags but lists an
+	 *        element to exclude from the
+	 *        process, then the UA must perform the above steps as if that
+	 *        element was not in the above list.
 	 */
 	void generateImpliedEndTags(final String excludeTag) {
 		while ((excludeTag != null && !currentElement().nodeName().equals(excludeTag))
@@ -683,7 +685,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 				break;
 			}
 			entry = formattingElements.get(--pos); // step 5. one earlier than
-			// entry
+																// entry
 			if (entry == null || onStack(entry)) {
 				// stack
 				break; // jump to 8, else continue back to 4
@@ -694,13 +696,13 @@ class HtmlTreeBuilder extends TreeBuilder {
 				entry = formattingElements.get(++pos);
 			}
 			Validate.notNull(entry); // should not occur, as we break at last
-			// element
+												// element
 
 			// 8. create new element from element, 9 insert into current node, onto
 			// stack
 			skip = false; // can only skip increment from 4.
 			final Element newEl = insert(entry.nodeName()); // todo: avoid
-			// fostering
+																			// fostering
 			// here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
@@ -779,7 +781,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 
 		if (isLastTableParent) {
 			Validate.notNull(lastTable); // last table cannot be null by this
-			// point.
+													// point.
 			lastTable.before(in);
 		} else {
 			fosterParent.appendChild(in);

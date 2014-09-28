@@ -7,13 +7,13 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
 
 /**
- * Parses HTML into a {@link net.simpleframework.lib.org.jsoup.nodes.Document}.
- * Generally best to use one of the more convenient parse methods in
- * {@link net.simpleframework.lib.org.jsoup.Jsoup}.
+ * Parses HTML into a {@link org.jsoup.nodes.Document}. Generally best to use
+ * one of the more convenient parse methods
+ * in {@link org.jsoup.Jsoup}.
  */
 public class Parser {
 	private static final int DEFAULT_MAX_ERRORS = 0; // by default, error
-	// tracking is disabled.
+																		// tracking is disabled.
 
 	private TreeBuilder treeBuilder;
 	private int maxErrors = DEFAULT_MAX_ERRORS;
@@ -91,13 +91,13 @@ public class Parser {
 	// static parse functions below
 	/**
 	 * Parse HTML into a Document.
-	 * 
+	 *
 	 * @param html
 	 *        HTML to parse
 	 * @param baseUri
-	 *        base URI of document (i.e. original fetch location), for
-	 *        resolving relative URLs.
-	 * 
+	 *        base URI of document (i.e. original fetch location), for resolving
+	 *        relative URLs.
+	 *
 	 * @return parsed Document
 	 */
 	public static Document parse(final String html, final String baseUri) {
@@ -108,17 +108,17 @@ public class Parser {
 	/**
 	 * Parse a fragment of HTML into a list of nodes. The context element, if
 	 * supplied, supplies parsing context.
-	 * 
+	 *
 	 * @param fragmentHtml
 	 *        the fragment of HTML to parse
 	 * @param context
-	 *        (optional) the element that this HTML fragment is being parsed
-	 *        for (i.e. for inner HTML). This provides stack context (for
-	 *        implicit element creation).
+	 *        (optional) the element that this HTML fragment is being parsed for
+	 *        (i.e. for inner HTML). This
+	 *        provides stack context (for implicit element creation).
 	 * @param baseUri
-	 *        base URI of document (i.e. original fetch location), for
-	 *        resolving relative URLs.
-	 * 
+	 *        base URI of document (i.e. original fetch location), for resolving
+	 *        relative URLs.
+	 *
 	 * @return list of nodes parsed from the input HTML. Note that the context
 	 *         element, if supplied, is not modified.
 	 */
@@ -130,12 +130,12 @@ public class Parser {
 
 	/**
 	 * Parse a fragment of XML into a list of nodes.
-	 * 
+	 *
 	 * @param fragmentXml
 	 *        the fragment of XML to parse
 	 * @param baseUri
-	 *        base URI of document (i.e. original fetch location), for
-	 *        resolving relative URLs.
+	 *        base URI of document (i.e. original fetch location), for resolving
+	 *        relative URLs.
 	 * @return list of nodes parsed from the input XML.
 	 */
 	public static List<Node> parseXmlFragment(final String fragmentXml, final String baseUri) {
@@ -145,13 +145,13 @@ public class Parser {
 
 	/**
 	 * Parse a fragment of HTML into the {@code body} of a Document.
-	 * 
+	 *
 	 * @param bodyHtml
 	 *        fragment of HTML
 	 * @param baseUri
-	 *        base URI of document (i.e. original fetch location), for
-	 *        resolving relative URLs.
-	 * 
+	 *        base URI of document (i.e. original fetch location), for resolving
+	 *        relative URLs.
+	 *
 	 * @return Document, with empty head, and HTML parsed into body
 	 */
 	public static Document parseBodyFragment(final String bodyHtml, final String baseUri) {
@@ -159,7 +159,7 @@ public class Parser {
 		final Element body = doc.body();
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
 		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
-		// node
+																								// node
 		// list gets
 		// modified
 		// when
@@ -176,8 +176,7 @@ public class Parser {
 	 * @param string
 	 *        HTML escaped string
 	 * @param inAttribute
-	 *        if the string is to be escaped in strict mode (as attributes
-	 *        are)
+	 *        if the string is to be escaped in strict mode (as attributes are)
 	 * @return an unescaped string
 	 */
 	public static String unescapeEntities(final String string, final boolean inAttribute) {
@@ -192,7 +191,7 @@ public class Parser {
 	 * @param baseUri
 	 *        baseUri base URI of document (i.e. original fetch location), for
 	 *        resolving relative URLs.
-	 * 
+	 *
 	 * @return parsed Document
 	 * @deprecated Use {@link #parseBodyFragment} or {@link #parseFragment}
 	 *             instead.
@@ -206,8 +205,8 @@ public class Parser {
 
 	/**
 	 * Create a new HTML parser. This parser treats input as HTML5, and enforces
-	 * the creation of a normalised document, based on a knowledge of the
-	 * semantics of the incoming tags.
+	 * the creation of a normalised document,
+	 * based on a knowledge of the semantics of the incoming tags.
 	 * 
 	 * @return a new HTML parser.
 	 */
@@ -217,8 +216,8 @@ public class Parser {
 
 	/**
 	 * Create a new XML parser. This parser assumes no knowledge of the incoming
-	 * tags and does not treat it as HTML, rather creates a simple tree directly
-	 * from the input.
+	 * tags and does not treat it as HTML,
+	 * rather creates a simple tree directly from the input.
 	 * 
 	 * @return a new simple XML parser.
 	 */

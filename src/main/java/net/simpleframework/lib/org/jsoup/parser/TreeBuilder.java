@@ -15,7 +15,7 @@ abstract class TreeBuilder {
 	protected DescendableLinkedList<Element> stack; // the stack of open elements
 	protected String baseUri; // current base uri, for creating new elements
 	protected Token currentToken; // currentToken is used only for error
-	// tracking.
+											// tracking.
 	protected ParseErrorList errors; // null when not tracking errors
 
 	protected void initialiseParse(final String input, final String baseUri,

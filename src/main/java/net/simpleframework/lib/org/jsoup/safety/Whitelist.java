@@ -54,10 +54,10 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-	// br,
+														// br,
 	// span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
-	// attribute[].
+																					// attribute[].
 	// allowed attributes
 	// [href] for a tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
@@ -83,8 +83,8 @@ public class Whitelist {
 
 	/**
 	 * This whitelist allows only simple text formatting:
-	 * <code>b, em, i, strong, u</code>. All other HTML (tags and attributes)
-	 * will be removed.
+	 * <code>b, em, i, strong, u</code>. All other HTML (tags and
+	 * attributes) will be removed.
 	 * 
 	 * @return whitelist
 	 */
@@ -95,7 +95,7 @@ public class Whitelist {
 	/**
 	 * This whitelist allows a fuller range of text nodes:
 	 * <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
-     ol, p, pre, q, small, strike, strong, sub, sup, u, ul</code>, and
+     ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
 	 * appropriate attributes.
 	 * <p/>
 	 * Links (<code>a</code> elements) can point to
@@ -109,7 +109,8 @@ public class Whitelist {
 	public static Whitelist basic() {
 		return new Whitelist()
 				.addTags("a", "b", "blockquote", "br", "cite", "code", "dd", "dl", "dt", "em", "i",
-						"li", "ol", "p", "pre", "q", "small", "strike", "strong", "sub", "sup", "u", "ul")
+						"li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub", "sup",
+						"u", "ul")
 
 				.addAttributes("a", "href").addAttributes("blockquote", "cite")
 				.addAttributes("q", "cite")
@@ -124,8 +125,9 @@ public class Whitelist {
 
 	/**
 	 * This whitelist allows the same text tags as {@link #basic}, and also
-	 * allows <code>img</code> tags, with appropriate attributes, with
-	 * <code>src</code> pointing to <code>http</code> or <code>https</code>.
+	 * allows <code>img</code> tags, with appropriate
+	 * attributes, with <code>src</code> pointing to <code>http</code> or
+	 * <code>https</code>.
 	 * 
 	 * @return whitelist
 	 */
@@ -138,7 +140,7 @@ public class Whitelist {
 	/**
 	 * This whitelist allows a full range of text and structural body HTML:
 	 * <code>a, b, blockquote, br, caption, cite,
-     code, col, colgroup, dd, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, strike, strong, sub,
+     code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
      sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
 	 * <p/>
 	 * Links do not have an enforced <code>rel=nofollow</code> attribute, but you
@@ -150,8 +152,8 @@ public class Whitelist {
 		return new Whitelist()
 				.addTags("a", "b", "blockquote", "br", "caption", "cite", "code", "col", "colgroup",
 						"dd", "div", "dl", "dt", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img",
-						"li", "ol", "p", "pre", "q", "small", "strike", "strong", "sub", "sup", "table",
-						"tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul")
+						"li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub", "sup",
+						"table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul")
 
 				.addAttributes("a", "href", "title").addAttributes("blockquote", "cite")
 				.addAttributes("col", "span", "width").addAttributes("colgroup", "span", "width")
@@ -246,16 +248,16 @@ public class Whitelist {
 
 	/**
 	 * Add an enforced attribute to a tag. An enforced attribute will always be
-	 * added to the element. If the element already has the attribute set, it
-	 * will be overridden.
+	 * added to the element. If the element
+	 * already has the attribute set, it will be overridden.
 	 * <p/>
 	 * E.g.: <code>addEnforcedAttribute("a", "rel", "nofollow")</code> will make
 	 * all <code>a</code> tags output as
 	 * <code>&lt;a href="..." rel="nofollow"></code>
 	 * 
 	 * @param tag
-	 *        The tag the enforced attribute is for. The tag will be added to
-	 *        the allowed tag list if necessary.
+	 *        The tag the enforced attribute is for. The tag will be added to the
+	 *        allowed tag list if necessary.
 	 * @param key
 	 *        The attribute key
 	 * @param value
@@ -286,9 +288,10 @@ public class Whitelist {
 
 	/**
 	 * Configure this Whitelist to preserve relative links in an element's URL
-	 * attribute, or convert them to absolute links. By default, this is
-	 * <b>false</b>: URLs will be made absolute (e.g. start with an allowed
-	 * protocol, like e.g. {@code http://}.
+	 * attribute, or convert them to absolute
+	 * links. By default, this is <b>false</b>: URLs will be made absolute (e.g.
+	 * start with an allowed protocol, like
+	 * e.g. {@code http://}.
 	 * <p />
 	 * Note that when handling relative links, the input document must have an
 	 * appropriate {@code base URI} set when parsing, so that the link's protocol
@@ -296,7 +299,7 @@ public class Whitelist {
 	 * {@code preserve relative
 	 * links} option, the link must be resolvable against the base URI to an
 	 * allowed protocol; otherwise the attribute will be removed.
-	 * 
+	 *
 	 * @param preserve
 	 *        {@code true} to allow relative links, {@code false} (default) to
 	 *        deny
@@ -310,7 +313,8 @@ public class Whitelist {
 
 	/**
 	 * Add allowed URL protocols for an element's URL attribute. This restricts
-	 * the possible values of the attribute to URLs with the defined protocol.
+	 * the possible values of the attribute to
+	 * URLs with the defined protocol.
 	 * <p/>
 	 * E.g.: <code>addProtocols("a", "href", "ftp", "http", "https")</code>
 	 * 

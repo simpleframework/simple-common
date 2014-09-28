@@ -28,9 +28,9 @@ public class Jsoup {
 	 * @param html
 	 *        HTML to parse
 	 * @param baseUri
-	 *        The URL where the HTML was retrieved from. Used to resolve
-	 *        relative URLs to absolute URLs, that occur before the HTML
-	 *        declares a {@code <base href>} tag.
+	 *        The URL where the HTML was retrieved from. Used to resolve relative
+	 *        URLs to absolute URLs, that occur
+	 *        before the HTML declares a {@code <base href>} tag.
 	 * @return sane HTML
 	 */
 	public static Document parse(final String html, final String baseUri) {
@@ -39,14 +39,15 @@ public class Jsoup {
 
 	/**
 	 * Parse HTML into a Document, using the provided Parser. You can provide an
-	 * alternate parser, such as a simple XML (non-HTML) parser.
+	 * alternate parser, such as a simple XML
+	 * (non-HTML) parser.
 	 * 
 	 * @param html
 	 *        HTML to parse
 	 * @param baseUri
-	 *        The URL where the HTML was retrieved from. Used to resolve
-	 *        relative URLs to absolute URLs, that occur before the HTML
-	 *        declares a {@code <base href>} tag.
+	 *        The URL where the HTML was retrieved from. Used to resolve relative
+	 *        URLs to absolute URLs, that occur
+	 *        before the HTML declares a {@code <base href>} tag.
 	 * @param parser
 	 *        alternate {@link Parser#xmlParser() parser} to use.
 	 * @return sane HTML
@@ -99,15 +100,15 @@ public class Jsoup {
 	 *        file to load HTML from
 	 * @param charsetName
 	 *        (optional) character set of file contents. Set to {@code null} to
-	 *        determine from {@code http-equiv} meta tag, if present, or
-	 *        fall back to {@code UTF-8} (which is often safe to do).
+	 *        determine from {@code http-equiv} meta tag, if
+	 *        present, or fall back to {@code UTF-8} (which is often safe to do).
 	 * @param baseUri
 	 *        The URL where the HTML was retrieved from, to resolve relative
 	 *        links against.
 	 * @return sane HTML
 	 * @throws IOException
-	 *         if the file could not be found, or read, or if the charsetName
-	 *         is invalid.
+	 *         if the file could not be found, or read, or if the charsetName is
+	 *         invalid.
 	 */
 	public static Document parse(final File in, final String charsetName, final String baseUri)
 			throws IOException {
@@ -122,12 +123,12 @@ public class Jsoup {
 	 *        file to load HTML from
 	 * @param charsetName
 	 *        (optional) character set of file contents. Set to {@code null} to
-	 *        determine from {@code http-equiv} meta tag, if present, or
-	 *        fall back to {@code UTF-8} (which is often safe to do).
+	 *        determine from {@code http-equiv} meta tag, if
+	 *        present, or fall back to {@code UTF-8} (which is often safe to do).
 	 * @return sane HTML
 	 * @throws IOException
-	 *         if the file could not be found, or read, or if the charsetName
-	 *         is invalid.
+	 *         if the file could not be found, or read, or if the charsetName is
+	 *         invalid.
 	 * @see #parse(File, String, String)
 	 */
 	public static Document parse(final File in, final String charsetName) throws IOException {
@@ -141,15 +142,15 @@ public class Jsoup {
 	 *        input stream to read. Make sure to close it after parsing.
 	 * @param charsetName
 	 *        (optional) character set of file contents. Set to {@code null} to
-	 *        determine from {@code http-equiv} meta tag, if present, or
-	 *        fall back to {@code UTF-8} (which is often safe to do).
+	 *        determine from {@code http-equiv} meta tag, if
+	 *        present, or fall back to {@code UTF-8} (which is often safe to do).
 	 * @param baseUri
 	 *        The URL where the HTML was retrieved from, to resolve relative
 	 *        links against.
 	 * @return sane HTML
 	 * @throws IOException
-	 *         if the file could not be found, or read, or if the charsetName
-	 *         is invalid.
+	 *         if the file could not be found, or read, or if the charsetName is
+	 *         invalid.
 	 */
 	public static Document parse(final InputStream in, final String charsetName, final String baseUri)
 			throws IOException {
@@ -158,14 +159,15 @@ public class Jsoup {
 
 	/**
 	 * Read an input stream, and parse it to a Document. You can provide an
-	 * alternate parser, such as a simple XML (non-HTML) parser.
+	 * alternate parser, such as a simple XML
+	 * (non-HTML) parser.
 	 * 
 	 * @param in
 	 *        input stream to read. Make sure to close it after parsing.
 	 * @param charsetName
 	 *        (optional) character set of file contents. Set to {@code null} to
-	 *        determine from {@code http-equiv} meta tag, if present, or
-	 *        fall back to {@code UTF-8} (which is often safe to do).
+	 *        determine from {@code http-equiv} meta tag, if
+	 *        present, or fall back to {@code UTF-8} (which is often safe to do).
 	 * @param baseUri
 	 *        The URL where the HTML was retrieved from, to resolve relative
 	 *        links against.
@@ -173,8 +175,8 @@ public class Jsoup {
 	 *        alternate {@link Parser#xmlParser() parser} to use.
 	 * @return sane HTML
 	 * @throws IOException
-	 *         if the file could not be found, or read, or if the charsetName
-	 *         is invalid.
+	 *         if the file could not be found, or read, or if the charsetName is
+	 *         invalid.
 	 */
 	public static Document parse(final InputStream in, final String charsetName,
 			final String baseUri, final Parser parser) throws IOException {
@@ -227,8 +229,7 @@ public class Jsoup {
 	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
 	 *         malformed
 	 * @throws HttpStatusException
-	 *         if the response is not OK and HTTP response errors are not
-	 *         ignored
+	 *         if the response is not OK and HTTP response errors are not ignored
 	 * @throws UnsupportedMimeTypeException
 	 *         if the response mime type is not supported and those errors are
 	 *         not ignored
@@ -246,7 +247,8 @@ public class Jsoup {
 
 	/**
 	 * Get safe HTML from untrusted input HTML, by parsing input HTML and
-	 * filtering it through a white-list of permitted tags and attributes.
+	 * filtering it through a white-list of permitted
+	 * tags and attributes.
 	 * 
 	 * @param bodyHtml
 	 *        input untrusted HTML (body fragment)
@@ -266,7 +268,8 @@ public class Jsoup {
 
 	/**
 	 * Get safe HTML from untrusted input HTML, by parsing input HTML and
-	 * filtering it through a white-list of permitted tags and attributes.
+	 * filtering it through a white-list of permitted
+	 * tags and attributes.
 	 * 
 	 * @param bodyHtml
 	 *        input untrusted HTML (body fragment)
@@ -281,8 +284,10 @@ public class Jsoup {
 
 	/**
 	 * Get safe HTML from untrusted input HTML, by parsing input HTML and
-	 * filtering it through a white-list of permitted tags and attributes.
-	 * 
+	 * filtering it through a white-list of
+	 * permitted
+	 * tags and attributes.
+	 *
 	 * @param bodyHtml
 	 *        input untrusted HTML (body fragment)
 	 * @param baseUri
@@ -290,8 +295,8 @@ public class Jsoup {
 	 * @param whitelist
 	 *        white-list of permitted HTML elements
 	 * @param outputSettings
-	 *        document output settings; use to control pretty-printing and
-	 *        entity escape modes
+	 *        document output settings; use to control pretty-printing and entity
+	 *        escape modes
 	 * @return safe HTML (body fragment)
 	 * @see Cleaner#clean(Document)
 	 */
@@ -306,15 +311,16 @@ public class Jsoup {
 
 	/**
 	 * Test if the input HTML has only tags and attributes allowed by the
-	 * Whitelist. Useful for form validation. The input HTML should still be run
-	 * through the cleaner to set up enforced attributes, and to tidy the output.
+	 * Whitelist. Useful for form validation. The input HTML should
+	 * still be run through the cleaner to set up enforced attributes, and to
+	 * tidy the output.
 	 * 
 	 * @param bodyHtml
 	 *        HTML to test
 	 * @param whitelist
 	 *        whitelist to test against
 	 * @return true if no tags or attributes were removed; false otherwise
-	 * @see #clean(String, net.simpleframework.lib.org.jsoup.safety.Whitelist)
+	 * @see #clean(String, org.jsoup.safety.Whitelist)
 	 */
 	public static boolean isValid(final String bodyHtml, final Whitelist whitelist) {
 		final Document dirty = parseBodyFragment(bodyHtml, "");

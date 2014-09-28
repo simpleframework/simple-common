@@ -5,7 +5,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Node;
 
 /**
  * Collects a list of elements that match the supplied criteria.
- * 
+ *
  * @author Jonathan Hedley
  */
 public class Collector {

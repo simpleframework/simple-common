@@ -47,17 +47,16 @@ abstract class Token {
 	static abstract class Tag extends Token {
 		protected String tagName;
 		private String pendingAttributeName; // attribute names are generally
-		// caught in one hop, not
-		// accumulated
+															// caught in one hop, not
+															// accumulated
 		private StringBuilder pendingAttributeValue; // but values are
-		// accumulated, from e.g. &
-		// in hrefs
+																	// accumulated, from e.g. &
+																	// in hrefs
 
 		boolean selfClosing = false;
 		Attributes attributes; // start tags get attributes on construction. End
-
-		// tags get attributes on first new attribute (but
-		// only for parser convenience, not used).
+										// tags get attributes on first new attribute (but
+										// only for parser convenience, not used).
 
 		void newAttribute() {
 			if (attributes == null) {
@@ -88,7 +87,7 @@ abstract class Token {
 		}
 
 		String name() {
-			Validate.isFalse(tagName.length() == 0);
+			Validate.isFalse(tagName == null || tagName.length() == 0);
 			return tagName;
 		}
 

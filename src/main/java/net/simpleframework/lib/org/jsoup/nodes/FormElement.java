@@ -12,14 +12,15 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 
 /**
  * A HTML Form Element provides ready access to the form fields/controls that
- * are associated with it. It also allows a form to easily be submitted.
+ * are associated with it. It also allows a
+ * form to easily be submitted.
  */
 public class FormElement extends Element {
 	private final Elements elements = new Elements();
 
 	/**
 	 * Create a new, standalone form element.
-	 * 
+	 *
 	 * @param tag
 	 *        tag of this element
 	 * @param baseUri
@@ -54,13 +55,15 @@ public class FormElement extends Element {
 
 	/**
 	 * Prepare to submit this form. A Connection object is created with the
-	 * request set up from the form values. You can then set up other options
-	 * (like user-agent, timeout, cookies), then execute it.
+	 * request set up from the form values. You
+	 * can then set up other options (like user-agent, timeout, cookies), then
+	 * execute it.
 	 * 
 	 * @return a connection prepared from the values of this form.
 	 * @throws IllegalArgumentException
-	 *         if the form's absolute action URL cannot be determined. Make
-	 *         sure you pass the document's base URI when parsing.
+	 *         if the form's absolute action URL cannot be determined. Make sure
+	 *         you pass the
+	 *         document's base URI when parsing.
 	 */
 	public Connection submit() {
 		final String action = hasAttr("action") ? absUrl("action") : baseUri();
@@ -77,8 +80,8 @@ public class FormElement extends Element {
 
 	/**
 	 * Get the data that this form submits. The returned list is a copy of the
-	 * data, and changes to the contents of the list will not be reflected in the
-	 * DOM.
+	 * data, and changes to the contents of the
+	 * list will not be reflected in the DOM.
 	 * 
 	 * @return a list of key vals
 	 */

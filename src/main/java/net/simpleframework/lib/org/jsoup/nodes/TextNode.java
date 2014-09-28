@@ -11,9 +11,10 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
 public class TextNode extends Node {
 	/*
 	 * TextNode is a node, and so by default comes with attributes and children.
-	 * The attributes are seldom used, but use memory, and the child nodes are
-	 * never used. So we don't have them, and override accessors to attributes to
-	 * create them as needed on the fly.
+	 * The attributes are seldom used, but use
+	 * memory, and the child nodes are never used. So we don't have them, and
+	 * override accessors to attributes to create
+	 * them as needed on the fly.
 	 */
 	private static final String TEXT_KEY = "text";
 	String text;
@@ -85,8 +86,9 @@ public class TextNode extends Node {
 
 	/**
 	 * Split this text node into two nodes at the specified string offset. After
-	 * splitting, this node will contain the original text up to the offset, and
-	 * will have a new text node sibling containing the text after the offset.
+	 * splitting, this node will contain the
+	 * original text up to the offset, and will have a new text node sibling
+	 * containing the text after the offset.
 	 * 
 	 * @param offset
 	 *        string offset point to split node at.

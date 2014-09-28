@@ -5,7 +5,7 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 /**
  * A character queue with parsing helpers.
- * 
+ *
  * @author Jonathan Hedley
  */
 public class TokenQueue {
@@ -130,7 +130,8 @@ public class TokenQueue {
 
 	/**
 	 * Tests if the queue matches the sequence (as with match), and if they do,
-	 * removes the matched string from the queue.
+	 * removes the matched string from the
+	 * queue.
 	 * 
 	 * @param seq
 	 *        String to search for, and if found, remove from queue.
@@ -183,8 +184,9 @@ public class TokenQueue {
 
 	/**
 	 * Consumes the supplied sequence of the queue. If the queue does not start
-	 * with the supplied sequence, will throw an illegal state exception -- but
-	 * you should be running match() against that condition.
+	 * with the supplied sequence, will
+	 * throw an illegal state exception -- but you should be running match()
+	 * against that condition.
 	 * <p>
 	 * Case insensitive.
 	 * 
@@ -208,8 +210,8 @@ public class TokenQueue {
 	 * or to the queue running out.
 	 * 
 	 * @param seq
-	 *        String to end on (and not include in return, but leave on
-	 *        queue). <b>Case sensitive.</b>
+	 *        String to end on (and not include in return, but leave on queue).
+	 *        <b>Case sensitive.</b>
 	 * @return The matched data consumed from queue.
 	 */
 	public String consumeTo(final String seq) {
@@ -263,8 +265,7 @@ public class TokenQueue {
 	 * Leaves the terminator on the queue.
 	 * 
 	 * @param seq
-	 *        any number of terminators to consume to. <b>Case
-	 *        insensitive.</b>
+	 *        any number of terminators to consume to. <b>Case insensitive.</b>
 	 * @return consumed string
 	 */
 	// todo: method name. not good that consumeTo cares for case, and consume to
@@ -288,8 +289,8 @@ public class TokenQueue {
 	 * much as it can (and queue will go isEmpty() == true).
 	 * 
 	 * @param seq
-	 *        String to match up to, and not include in return, and to pull
-	 *        off queue. <b>Case sensitive.</b>
+	 *        String to match up to, and not include in return, and to pull off
+	 *        queue. <b>Case sensitive.</b>
 	 * @return Data matched from queue.
 	 */
 	public String chompTo(final String seq) {
@@ -306,10 +307,11 @@ public class TokenQueue {
 
 	/**
 	 * Pulls a balanced string off the queue. E.g. if queue is
-	 * "(one (two) three) four", (,) will return "one (two) three", and leave
-	 * " four" on the queue. Unbalanced openers and closers can be escaped (with
-	 * \). Those escapes will be left in the returned string, which is suitable
-	 * for regexes (where we need to preserve the escape), but unsuitable for
+	 * "(one (two) three) four", (,) will return "one (two) three",
+	 * and leave " four" on the queue. Unbalanced openers and closers can be
+	 * escaped (with \). Those escapes will be left
+	 * in the returned string, which is suitable for regexes (where we need to
+	 * preserve the escape), but unsuitable for
 	 * contains text strings; use unescape for that.
 	 * 
 	 * @param open

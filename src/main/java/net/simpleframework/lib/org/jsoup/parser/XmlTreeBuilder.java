@@ -14,12 +14,13 @@ import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
 
 /**
  * Use the {@code XmlTreeBuilder} when you want to parse XML without any of the
- * HTML DOM rules being applied to the document.
+ * HTML DOM rules being applied to the
+ * document.
  * <p>
  * Usage example:
  * {@code Document xmlDoc = Jsoup.parse(html, baseUrl, Parser.xmlParser());}
  * </p>
- * 
+ *
  * @author Jonathan Hedley
  */
 public class XmlTreeBuilder extends TreeBuilder {
@@ -28,7 +29,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 			final ParseErrorList errors) {
 		super.initialiseParse(input, baseUri, errors);
 		stack.add(doc); // place the document onto the stack. differs from
-		// HtmlTreeBuilder (not on stack)
+								// HtmlTreeBuilder (not on stack)
 		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
 	}
 
@@ -85,8 +86,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 		final Comment comment = new Comment(commentToken.getData(), baseUri);
 		Node insert = comment;
 		if (commentToken.bogus) { // xml declarations are emitted as bogus
-			// comments (which is right for html, but not
-			// xml)
+											// comments (which is right for html, but not
+											// xml)
 			final String data = comment.getData();
 			if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
 				final String declaration = data.substring(1);
@@ -109,8 +110,9 @@ public class XmlTreeBuilder extends TreeBuilder {
 
 	/**
 	 * If the stack contains an element with this tag's name, pop up the stack to
-	 * remove the first occurrence. If not found, skips.
-	 * 
+	 * remove the first occurrence. If not
+	 * found, skips.
+	 *
 	 * @param endTag
 	 */
 	private void popStackToClose(final Token.EndTag endTag) {

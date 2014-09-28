@@ -193,12 +193,12 @@ public abstract class Node implements Cloneable {
 	 * As an alternate, you can use the {@link #attr} method with the
 	 * <code>abs:</code> prefix, e.g.:
 	 * <code>String absUrl = linkEl.attr("abs:href");</code>
-	 * 
+	 *
 	 * @param attributeKey
 	 *        The attribute key
 	 * @return An absolute URL if one could be made, or an empty string (not
-	 *         null) if the attribute was missing or could not be made
-	 *         successfully into a URL.
+	 *         null) if the attribute was missing or
+	 *         could not be made successfully into a URL.
 	 * @see #attr
 	 * @see java.net.URL#URL(java.net.URL, String)
 	 */
@@ -246,7 +246,8 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Get this node's children. Presented as an unmodifiable list: new children
-	 * can not be added, but the child nodes themselves can be manipulated.
+	 * can not be added, but the child nodes
+	 * themselves can be manipulated.
 	 * 
 	 * @return list of children. If no children, returns an empty list.
 	 */
@@ -256,7 +257,8 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Returns a deep copy of this node's children. Changes made to these nodes
-	 * will not be reflected in the original nodes
+	 * will not be reflected in the original
+	 * nodes
 	 * 
 	 * @return a deep copy of this node's children
 	 */
@@ -434,7 +436,8 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Removes this node from the DOM, and moves its children up into the node's
-	 * parent. This has the effect of dropping the node but keeping its children.
+	 * parent. This has the effect of dropping
+	 * the node but keeping its children.
 	 * <p/>
 	 * For example, with the input html:<br/>
 	 * {@code <div>One <span>Two <b>Three</b></span></div>}<br/>
@@ -544,8 +547,8 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Retrieves this node's sibling nodes. Similar to {@link #childNodes()
-	 * node.parent.childNodes()}, but does not include this node (a node is not a
-	 * sibling of itself).
+	 * node.parent.childNodes()}, but does not
+	 * include this node (a node is not a sibling of itself).
 	 * 
 	 * @return node siblings. If the node has no parent, returns an empty list.
 	 */
@@ -606,10 +609,11 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Get the list index of this node in its node sibling list. I.e. if this is
-	 * the first node sibling, returns 0.
+	 * the first node
+	 * sibling, returns 0.
 	 * 
 	 * @return position in node sibling list
-	 * @see net.simpleframework.lib.org.jsoup.nodes.Element#elementSiblingIndex()
+	 * @see org.jsoup.nodes.Element#elementSiblingIndex()
 	 */
 	public int siblingIndex() {
 		return siblingIndex;
@@ -695,8 +699,9 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Create a stand-alone, deep copy of this node, and all of its children. The
-	 * cloned node will have no siblings or parent node. As a stand-alone object,
-	 * any changes made to the clone or any of its children will not impact the
+	 * cloned node will have no siblings or
+	 * parent node. As a stand-alone object, any changes made to the clone or any
+	 * of its children will not impact the
 	 * original node.
 	 * <p>
 	 * The cloned node may be adopted into another Document or node structure
@@ -726,8 +731,8 @@ public abstract class Node implements Cloneable {
 	}
 
 	/*
-	 * Return a clone of the node using the given parent (which can be null). Not
-	 * a deep copy of children.
+	 * Return a clone of the node using the given parent (which can be null).
+	 * Not a deep copy of children.
 	 */
 	protected Node doClone(final Node parent) {
 		Node clone;

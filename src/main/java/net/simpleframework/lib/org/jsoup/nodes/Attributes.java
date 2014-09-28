@@ -138,8 +138,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 
 	/**
 	 * Get the attributes as a List, for iteration. Do not modify the keys of the
-	 * attributes via this view, as changes to keys will not be recognised in the
-	 * containing set.
+	 * attributes via this view, as changes
+	 * to keys will not be recognised in the containing set.
 	 * 
 	 * @return an view of the attributes as a List.
 	 */
@@ -157,7 +157,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 
 	/**
 	 * Retrieves a filtered view of attributes that are HTML5 custom data
-	 * attributes; that is, attributes with keys starting with {@code data-}.
+	 * attributes; that is, attributes with keys
+	 * starting with {@code data-}.
 	 * 
 	 * @return map of custom data attributes.
 	 */
@@ -173,8 +174,8 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	public String html() {
 		final StringBuilder accum = new StringBuilder();
 		html(accum, (new Document("")).outputSettings()); // output settings a bit
-		// funky, but this
-		// html() seldom used
+																			// funky, but this
+																			// html() seldom used
 		return accum.toString();
 	}
 

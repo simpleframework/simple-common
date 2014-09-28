@@ -65,6 +65,12 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>img[width=500]</code>, <code>a[rel=nofollow]</code></td>
  * </tr>
  * <tr>
+ * <td><code>[attr=&quot;val&quot;]</code></td>
+ * <td>elements with an attribute named "attr", and value equal to "val"</td>
+ * <td><code>span[hello="Cleveland"][goodbye="Columbus"]</code>,
+ * <code>a[rel=&quot;nofollow&quot;]</code></td>
+ * </tr>
+ * <tr>
  * <td><code>[attr^=valPrefix]</code></td>
  * <td>elements with an attribute named "attr", and value starting with
  * "valPrefix"</td>
@@ -290,7 +296,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td></td>
  * </tr>
  * </table>
- * 
+ *
  * @author Jonathan Hedley, jonathan@hedley.net
  * @see Element#select(String)
  */
@@ -311,7 +317,7 @@ public class Selector {
 
 	/**
 	 * Find elements matching selector.
-	 * 
+	 *
 	 * @param query
 	 *        CSS selector
 	 * @param root
@@ -324,7 +330,7 @@ public class Selector {
 
 	/**
 	 * Find elements matching selector.
-	 * 
+	 *
 	 * @param query
 	 *        CSS selector
 	 * @param roots

@@ -21,7 +21,7 @@ public abstract class Evaluator {
 
 	/**
 	 * Test if the element meets the evaluator's requirements.
-	 * 
+	 *
 	 * @param root
 	 *        Root of the matching subtree
 	 * @param element
@@ -196,10 +196,10 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().startsWith(value); // value
-			// is
-			// lower
-			// case
-			// already
+																															// is
+																															// lower
+																															// case
+																															// already
 		}
 
 		@Override
@@ -220,9 +220,9 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().endsWith(value); // value
-			// is
-			// lower
-			// case
+																														// is
+																														// lower
+																														// case
 		}
 
 		@Override
@@ -243,9 +243,9 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			return element.hasAttr(key) && element.attr(key).toLowerCase().contains(value); // value
-			// is
-			// lower
-			// case
+																														// is
+																														// lower
+																														// case
 		}
 
 		@Override
@@ -286,11 +286,14 @@ public abstract class Evaluator {
 		String key;
 		String value;
 
-		public AttributeKeyPair(final String key, final String value) {
+		public AttributeKeyPair(final String key, String value) {
 			Validate.notEmpty(key);
 			Validate.notEmpty(value);
 
 			this.key = key.trim().toLowerCase();
+			if (value.startsWith("\"") && value.endsWith("\"")) {
+				value = value.substring(1, value.length() - 1);
+			}
 			this.value = value.trim().toLowerCase();
 		}
 	}
@@ -510,7 +513,7 @@ public abstract class Evaluator {
 			int pos = 0;
 			final Elements family = element.parent().children();
 			for (int i = 0; i < family.size(); i++) {
-				if (family.get(i).tag() == element.tag()) {
+				if (family.get(i).tag().equals(element.tag())) {
 					pos++;
 				}
 				if (family.get(i) == element) {
@@ -537,7 +540,7 @@ public abstract class Evaluator {
 			int pos = 0;
 			final Elements family = element.parent().children();
 			for (int i = element.elementSiblingIndex(); i < family.size(); i++) {
-				if (family.get(i).tag() == element.tag()) {
+				if (family.get(i).tag().equals(element.tag())) {
 					pos++;
 				}
 			}
@@ -571,7 +574,7 @@ public abstract class Evaluator {
 	 * 
 	 * @see <a href="http://www.w3.org/TR/selectors/#root-pseudo">:root
 	 *      selector</a>
-	 * 
+	 *
 	 */
 	public static final class IsRoot extends Evaluator {
 		@Override
@@ -644,7 +647,7 @@ public abstract class Evaluator {
 
 	/**
 	 * Abstract evaluator for sibling index matching
-	 * 
+	 *
 	 * @author ant
 	 */
 	public abstract static class IndexEvaluator extends Evaluator {

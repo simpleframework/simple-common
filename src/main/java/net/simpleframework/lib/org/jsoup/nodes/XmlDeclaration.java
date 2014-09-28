@@ -8,9 +8,8 @@ package net.simpleframework.lib.org.jsoup.nodes;
 public class XmlDeclaration extends Node {
 	private static final String DECL_KEY = "declaration";
 	private final boolean isProcessingInstruction; // <! if true, <? if false,
-
-	// declaration (and last data
-	// char should be ?)
+																	// declaration (and last data
+																	// char should be ?)
 
 	/**
 	 * Create a new XML declaration

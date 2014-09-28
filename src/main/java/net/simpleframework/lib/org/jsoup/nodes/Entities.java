@@ -12,9 +12,11 @@ import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 
 /**
- * HTML entities, and escape routines. Source: <a href=
+ * HTML entities, and escape routines.
+ * Source: <a href=
  * "http://www.w3.org/TR/html5/named-character-references.html#named-character-references"
- * >W3C HTML named character references</a>.
+ * >W3C HTML
+ * named character references</a>.
  */
 public class Entities {
 	public enum EscapeMode {
@@ -72,10 +74,10 @@ public class Entities {
 	}
 
 /**
-	 * Get the Character value of the named entity
-	 * @param name named entity (e.g. "lt" or "amp")
-	 * @return the Character value of the named entity (e.g. '<' or '&')
-	 */
+     * Get the Character value of the named entity
+     * @param name named entity (e.g. "lt" or "amp")
+     * @return the Character value of the named entity (e.g. '<' or '&')
+     */
 	public static Character getCharacterByName(final String name) {
 		return full.get(name);
 	}
@@ -182,8 +184,8 @@ public class Entities {
 	 * 
 	 * @param string
 	 * @param strict
-	 *        if "strict" (that is, requires trailing ';' char, otherwise
-	 *        that's optional)
+	 *        if "strict" (that is, requires trailing ';' char, otherwise that's
+	 *        optional)
 	 * @return
 	 */
 	static String unescape(final String string, final boolean strict) {
@@ -199,7 +201,7 @@ public class Entities {
 		base = loadEntities("entities-base.properties"); // most common / default
 		baseByVal = toCharacterKey(base);
 		full = loadEntities("entities-full.properties"); // extended and
-		// overblown.
+																			// overblown.
 		fullByVal = toCharacterKey(full);
 
 		for (final Object[] entity : xhtmlArray) {
