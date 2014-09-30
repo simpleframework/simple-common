@@ -9,9 +9,9 @@ public abstract class LngLatUtils {
 	/**
 	 * 根据圆心、半径算出经纬度范围
 	 * 
-	 * @param lng
-	 *        圆心经度
 	 * @param lat
+	 *        圆心经度
+	 * @param lng
 	 *        圆心纬度
 	 * @param r
 	 *        半径（米）
@@ -20,15 +20,21 @@ public abstract class LngLatUtils {
 	public static double[] getRange(final double lng, final double lat, final double r) {
 		final double[] range = new double[4];
 		// 角度转换为弧度
-		final double ns = lat * DEF_PI180;
+		final double ns = lng * DEF_PI180;
 		final double sinNs = Math.sin(ns);
 		final double cosNs = Math.cos(ns);
 		final double cosTmp = Math.cos(r / DEF_R);
 		// 经度的差值
-		final double lonDif = Math.acos((cosTmp - sinNs * sinNs) / (cosNs * cosNs)) / DEF_PI180;
+		double a = (cosTmp - sinNs * sinNs) / (cosNs * cosNs);
+		if (a > 1.0) {
+			a = 1.0;
+		} else if (a < -1.0) {
+			a = -1.0;
+		}
+		final double lngDif = Math.acos(a) / DEF_PI180;
 		// 保存经度
-		range[0] = lng - lonDif;
-		range[1] = lng + lonDif;
+		range[0] = lat - lngDif;
+		range[1] = lat + lngDif;
 		final double m = 0 - 2 * cosTmp * sinNs;
 		final double n = cosTmp * cosTmp - cosNs * cosNs;
 		final double o1 = (0 - m - Math.sqrt(m * m - 4 * (n))) / 2;
