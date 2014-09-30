@@ -20,10 +20,11 @@ public abstract class LngLatUtils {
 	public static double[] getRange(final double lng, final double lat, final double r) {
 		final double[] range = new double[4];
 		// 角度转换为弧度
-		final double ns = lng * DEF_PI180;
+		final double ns = lat * DEF_PI180;
 		final double sinNs = Math.sin(ns);
 		final double cosNs = Math.cos(ns);
 		final double cosTmp = Math.cos(r / DEF_R);
+
 		// 经度的差值
 		double a = (cosTmp - sinNs * sinNs) / (cosNs * cosNs);
 		if (a > 1.0) {
@@ -33,8 +34,9 @@ public abstract class LngLatUtils {
 		}
 		final double lngDif = Math.acos(a) / DEF_PI180;
 		// 保存经度
-		range[0] = lat - lngDif;
-		range[1] = lat + lngDif;
+		range[0] = lng - lngDif;
+		range[1] = lng + lngDif;
+
 		final double m = 0 - 2 * cosTmp * sinNs;
 		final double n = cosTmp * cosTmp - cosNs * cosNs;
 		final double o1 = (0 - m - Math.sqrt(m * m - 4 * (n))) / 2;
@@ -45,6 +47,7 @@ public abstract class LngLatUtils {
 		// 保存
 		range[2] = lat1;
 		range[3] = lat2;
+
 		return range;
 	}
 
@@ -73,11 +76,10 @@ public abstract class LngLatUtils {
 		distance = Math.sin(ns1) * Math.sin(ns2) + Math.cos(ns1) * Math.cos(ns2)
 				* Math.cos(ew1 - ew2);
 		// 调整到[-1..1]范围内，避免溢出
-		if (distance > 1.0) {
+		if (distance > 1.0)
 			distance = 1.0;
-		} else if (distance < -1.0) {
+		else if (distance < -1.0)
 			distance = -1.0;
-		}
 		// 求大圆劣弧长度
 		distance = DEF_R * Math.acos(distance);
 		return distance;
