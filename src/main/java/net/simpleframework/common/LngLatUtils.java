@@ -75,6 +75,7 @@ public abstract class LngLatUtils {
 		// 求大圆劣弧与球心所夹的角(弧度)
 		distance = Math.sin(ns1) * Math.sin(ns2) + Math.cos(ns1) * Math.cos(ns2)
 				* Math.cos(ew1 - ew2);
+
 		// 调整到[-1..1]范围内，避免溢出
 		if (distance > 1.0)
 			distance = 1.0;
