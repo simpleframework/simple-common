@@ -31,9 +31,11 @@ public abstract class StringUtils {
 
 	private static final String defaultDelimiter = ";";
 
+	private static String[] BLANK_STRARR = new String[0];
+
 	public static String[] split(final String src, final String delim) {
-		if (src == null) {
-			return new String[0];
+		if (isBlank(src)) {
+			return BLANK_STRARR;
 		}
 
 		final int maxparts = (src.length() / delim.length()) + 2;
