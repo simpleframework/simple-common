@@ -77,10 +77,11 @@ public abstract class LngLatUtils {
 				* Math.cos(ew1 - ew2);
 
 		// 调整到[-1..1]范围内，避免溢出
-		if (distance > 1.0)
+		if (distance > 1.0) {
 			distance = 1.0;
-		else if (distance < -1.0)
+		} else if (distance < -1.0) {
 			distance = -1.0;
+		}
 		// 求大圆劣弧长度
 		distance = DEF_R * Math.acos(distance);
 		return distance;
