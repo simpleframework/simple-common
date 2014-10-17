@@ -291,7 +291,7 @@ public abstract class HttpUtils implements HtmlConst {
 			final String[] tmpArr = StringUtils.split(param, "=");
 			if (tmpArr.length == 1) {
 				map.put(tmpArr[0], "");
-			} else {
+			} else if (tmpArr.length > 1) {
 				try {
 					map.put(tmpArr[0], URLDecoder.decode(tmpArr[1], charset));
 				} catch (final UnsupportedEncodingException e) {
