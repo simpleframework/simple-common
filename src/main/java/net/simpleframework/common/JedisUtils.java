@@ -48,6 +48,10 @@ public abstract class JedisUtils {
 		return null;
 	}
 
+	public static void putCache(final JedisPool pool, final String key, final Object val) {
+		putCache(pool, key, val, 0);
+	}
+
 	public static void putCache(final JedisPool pool, final String key, final Object val,
 			final int expire) {
 		final Jedis jedis = pool.getResource();
