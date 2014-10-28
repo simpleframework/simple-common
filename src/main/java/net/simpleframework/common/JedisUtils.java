@@ -34,5 +34,52 @@ public abstract class JedisUtils {
 		}
 	}
 
+	public static Object getCache(final JedisPool pool, final String key) {
+		final Jedis jedis = pool.getResource();
+		try {
+			return IoUtils.deserialize(jedis.get(key.getBytes()));
+		} catch (final Exception e) {
+			// 释放redis对象
+			doJedisException(pool, jedis, e);
+		} finally {
+			// 返还到连接池
+			returnResource(pool, jedis);
+		}
+		return null;
+	}
+
+	public static void putCache(final JedisPool pool, final String key, final Object val,
+			final int expire) {
+		final Jedis jedis = pool.getResource();
+		try {
+			if (val instanceof String) {
+				if (expire > 0) {
+					jedis.setex(key, expire, (String) val);
+				} else {
+					jedis.set(key, (String) val);
+				}
+			} else {
+				if (expire > 0) {
+					jedis.setex(key.getBytes(), expire, IoUtils.serialize(val));
+				} else {
+					jedis.set(key.getBytes(), IoUtils.serialize(val));
+				}
+			}
+		} catch (final Exception e) {
+			doJedisException(pool, jedis, e);
+		} finally {
+			returnResource(pool, jedis);
+		}
+	}
+
+	public static void removeCache(final JedisPool pool, final String key) {
+		final Jedis jedis = pool.getResource();
+		try {
+			jedis.del(key.getBytes());
+		} finally {
+			returnResource(pool, jedis);
+		}
+	}
+
 	static Log log = LogFactory.getLogger(JedisUtils.class);
 }
