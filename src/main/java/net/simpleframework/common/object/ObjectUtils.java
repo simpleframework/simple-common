@@ -87,6 +87,10 @@ public abstract class ObjectUtils {
 		return hash > 0 ? String.valueOf(hash) : "0" + Math.abs(hash);
 	}
 
+	public static String hashStr() {
+		return hashStr(new Object());
+	}
+
 	public static int hashInt(final Object object) {
 		return Convert.toInt(hashStr(object));
 	}
