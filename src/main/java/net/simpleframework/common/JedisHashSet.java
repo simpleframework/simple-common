@@ -3,7 +3,6 @@ package net.simpleframework.common;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.simpleframework.common.object.ObjectUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -18,8 +17,8 @@ public class JedisHashSet extends HashSet<String> {
 
 	private final String key;
 
-	public JedisHashSet(final JedisPool _pool) {
-		key = getClass().getSimpleName() + ":" + ObjectUtils.hashStr(new Object());
+	public JedisHashSet(final JedisPool _pool, final String _key) {
+		key = getClass().getSimpleName() + ":" + _key;
 		pool = _pool;
 		try {
 			JedisUtils.returnResource(pool, pool.getResource());
