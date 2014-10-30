@@ -64,7 +64,7 @@ public class JedisHashSet extends HashSet<String> {
 		if (pool != null) {
 			final Jedis jedis = pool.getResource();
 			try {
-				jedis.srem(o.toString());
+				jedis.srem(key, o.toString());
 				return true;
 			} finally {
 				JedisUtils.returnResource(pool, jedis);
