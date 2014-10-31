@@ -3,6 +3,9 @@ package net.simpleframework.common.th;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
+import net.simpleframework.common.Convert;
+import net.simpleframework.common.StringUtils;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -18,6 +21,32 @@ public abstract class ThrowableUtils {
 			break;
 		}
 		return cause;
+	}
+
+	public static String getThrowableMessage(final Throwable th, final boolean sline) {
+		String message = null;
+		Throwable th0 = th;
+		while (th0 != null) {
+			message = th0.getMessage();
+			if (StringUtils.hasText(message)) {
+				break;
+			}
+			th0 = th0.getCause();
+		}
+		if (!StringUtils.hasText(message)) {
+			message = Convert.toString(th);
+			if (sline) {
+				int pos = message.indexOf("\r");
+				if (pos < 0) {
+					pos = message.indexOf("\n");
+				}
+				if (pos > 0) {
+					message = message.substring(0, pos);
+				}
+				message = message.trim();
+			}
+		}
+		return message;
 	}
 
 	public static Throwable convertThrowable(Throwable th) {
