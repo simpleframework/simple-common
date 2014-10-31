@@ -22,12 +22,13 @@ public abstract class AlgorithmUtils {
 
 	static final int BUFFER = 8 * 1024;
 
-	public static String md5Hex(final InputStream inputStream) throws IOException {
+	public static String md(final InputStream inputStream, final String algorithm)
+			throws IOException {
 		if (inputStream == null) {
 			return null;
 		}
 		try {
-			final MessageDigest digest = MessageDigest.getInstance("MD5");
+			final MessageDigest digest = MessageDigest.getInstance(algorithm);
 			final byte[] buf = new byte[BUFFER];
 			for (;;) {
 				final int numRead = inputStream.read(buf);
@@ -42,9 +43,13 @@ public abstract class AlgorithmUtils {
 		}
 	}
 
-	public static String md5Hex(final byte[] bytes) {
+	public static String md5Hex(final InputStream inputStream) throws IOException {
+		return md(inputStream, "MD5");
+	}
+
+	public static String md(final byte[] bytes, final String algorithm) {
 		try {
-			final MessageDigest digest = MessageDigest.getInstance("MD5");
+			final MessageDigest digest = MessageDigest.getInstance(algorithm);
 			digest.update(bytes);
 			return StringUtils.encodeHex(digest.digest());
 		} catch (final NoSuchAlgorithmException e) {
@@ -52,7 +57,19 @@ public abstract class AlgorithmUtils {
 		}
 	}
 
+	public static String md5Hex(final byte[] bytes) {
+		return md(bytes, "MD5");
+	}
+
 	public static String md5Hex(final String message) {
 		return md5Hex(message.getBytes());
+	}
+
+	public static String sha1Hex(final byte[] bytes) {
+		return md(bytes, "SHA1");
+	}
+
+	public static String sha1Hex(final String message) {
+		return sha1Hex(message.getBytes());
 	}
 }

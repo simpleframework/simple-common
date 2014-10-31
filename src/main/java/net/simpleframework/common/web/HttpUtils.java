@@ -301,14 +301,14 @@ public abstract class HttpUtils implements HtmlConst {
 		return map;
 	}
 
-	public static String toQueryString(final Map<String, Object> params) {
+	public static String toQueryString(final Map<String, ?> params) {
 		return toQueryString(params, "utf-8");
 	}
 
-	public static String toQueryString(final Map<String, Object> params, final String charset) {
+	public static String toQueryString(final Map<String, ?> params, final String charset) {
 		final StringBuilder sb = new StringBuilder();
 		if (params != null) {
-			for (final Entry<String, Object> entry : params.entrySet()) {
+			for (final Entry<String, ?> entry : params.entrySet()) {
 				if (sb.length() > 0) {
 					sb.append("&");
 				}
