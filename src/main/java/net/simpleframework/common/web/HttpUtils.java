@@ -313,7 +313,11 @@ public abstract class HttpUtils implements HtmlConst {
 					sb.append("&");
 				}
 				sb.append(entry.getKey()).append("=");
-				sb.append(encodeUrl(Convert.toString(entry.getValue()), charset));
+				if (StringUtils.hasText(charset)) {
+					sb.append(encodeUrl(Convert.toString(entry.getValue()), charset));
+				} else {
+					sb.append(entry.getValue());
+				}
 			}
 		}
 		return sb.toString();
