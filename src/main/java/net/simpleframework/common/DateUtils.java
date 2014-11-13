@@ -2,6 +2,7 @@ package net.simpleframework.common;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -137,5 +138,10 @@ public abstract class DateUtils {
 			return $m("DateUtils.10");
 		}
 		return $m("DateUtils.11");
+	}
+
+	public static int dateToTimestamp(final Date time) {
+		final Timestamp ts = new Timestamp(time.getTime());
+		return (int) ((ts.getTime()) / 1000);
 	}
 }
