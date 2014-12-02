@@ -17,15 +17,11 @@ import net.simpleframework.lib.org.jsoup.Jsoup;
  *         http://www.simpleframework.net
  */
 public class HttpClient extends ObjectEx {
-	public static HttpClient of(final String url) {
-		return new HttpClient(url);
-	}
-
 	private String url;
 
 	private String jsessionid;
 
-	private HttpClient(final String url) {
+	public HttpClient(final String url) {
 		setUrl(url);
 	}
 
@@ -33,18 +29,20 @@ public class HttpClient extends ObjectEx {
 		return url;
 	}
 
-	public void setUrl(final String url) {
+	public HttpClient setUrl(final String url) {
 		if (url != null) {
 			this.url = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
 		}
+		return this;
 	}
 
 	public String getJsessionid() {
 		return jsessionid;
 	}
 
-	public void setJsessionid(final String jsessionid) {
+	public HttpClient setJsessionid(final String jsessionid) {
 		this.jsessionid = jsessionid;
+		return this;
 	}
 
 	/** --------------- get --------------- **/
