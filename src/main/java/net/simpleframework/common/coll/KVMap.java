@@ -1,6 +1,5 @@
 package net.simpleframework.common.coll;
 
-import net.simpleframework.common.ID;
 import net.simpleframework.common.JsonUtils;
 
 /**
@@ -24,9 +23,7 @@ public class KVMap extends AbstractKVMap<Object, KVMap> {
 
 	@Override
 	public Object put(final String key, Object value) {
-		if (value instanceof ID) {
-			value = ((ID) value).getValue();
-		} else if (value instanceof AbstractKVMap) {
+		if (value instanceof AbstractKVMap) {
 			value = ((AbstractKVMap<?, ?>) value).map();
 		}
 		return super.put(key, value);
