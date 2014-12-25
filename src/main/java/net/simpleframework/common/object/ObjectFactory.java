@@ -66,10 +66,11 @@ public class ObjectFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T _singleton(final Class<T> oClass, final IObjectCreatorListener... listeners) {
+	private <T> T _singleton(Class<T> oClass, final IObjectCreatorListener... listeners) {
 		if (oClass == null) {
 			return null;
 		}
+		oClass = (Class<T>) original(oClass);
 		synchronized (singletonCache) {
 			T o = (T) singletonCache.get(oClass);
 			if (o == null) {
@@ -95,14 +96,13 @@ public class ObjectFactory {
 			return null;
 		}
 		try {
-			final Class<?> nClass = original(oClass);
 			if (!ArrayUtils.isEmpty(listeners)) {
 				for (final IObjectCreatorListener l : listeners) {
-					l.onBefore(nClass);
+					l.onBefore(oClass);
 				}
 			}
 			for (final IObjectCreatorListener l : listenerSet) {
-				l.onBefore(nClass);
+				l.onBefore(oClass);
 			}
 
 			if (_creator == null) {
@@ -115,7 +115,7 @@ public class ObjectFactory {
 			}
 
 			@SuppressWarnings("unchecked")
-			final T t = (T) _creator.create(nClass);
+			final T t = (T) _creator.create(oClass);
 
 			if (!ArrayUtils.isEmpty(listeners)) {
 				for (final IObjectCreatorListener l : listeners) {
@@ -139,10 +139,12 @@ public class ObjectFactory {
 		}
 	}
 
-	private <T> T _newInstance(final Class<T> oClass) {
+	@SuppressWarnings("unchecked")
+	private <T> T _newInstance(Class<T> oClass) {
 		if (isAbstract(oClass)) {
 			return null;
 		}
+		oClass = (Class<T>) original(oClass);
 		try {
 			return oClass.newInstance();
 		} catch (final Exception e) {

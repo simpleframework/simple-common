@@ -21,8 +21,10 @@ public class FilterItems extends AbstractArrayListEx<FilterItems, FilterItem> {
 	public FilterItems addEqual(final String key, final Object val) {
 		if (val != null) {
 			add(new FilterItem(key, val));
+			return this;
+		} else {
+			return addIsNull(key);
 		}
-		return this;
 	}
 
 	public FilterItems addIsNull(final String key) {
