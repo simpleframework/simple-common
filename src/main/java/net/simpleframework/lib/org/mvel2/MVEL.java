@@ -44,8 +44,9 @@ import net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes.GetterAccess
 
 /**
  * The MVEL convienence class is a collection of static methods that provides a
- * set of easy integration points for MVEL. The vast majority of MVEL's core
- * functionality can be directly accessed through methods in this class.
+ * set of easy integration points for
+ * MVEL. The vast majority of MVEL's core functionality can be directly accessed
+ * through methods in this class.
  */
 public class MVEL {
 	public static final String NAME = "MVEL (MVFLEX Expression Language)";
@@ -90,7 +91,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression and return the value.
-	 * 
+	 *
 	 * @param expression
 	 *        A String containing the expression to be evaluated.
 	 * @return the resultant value
@@ -101,8 +102,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression against a context object. Expressions evaluated
-	 * against a context object are designed to treat members of that context
-	 * object as variables in the expression. For example:
+	 * against a context object are designed
+	 * to treat members of that context object as variables in the expression.
+	 * For example:
 	 * 
 	 * <pre>
 	 * <code>
@@ -111,9 +113,9 @@ public class MVEL {
 	 * </pre>
 	 * 
 	 * In this case, the identifier <tt>foo</tt> would be resolved against the
-	 * <tt>ctx</tt> object. So it would have the equivalent of:
-	 * <tt>ctc.getFoo() == 1</tt> in Java.
-	 * 
+	 * <tt>ctx</tt> object. So it would have
+	 * the equivalent of: <tt>ctc.getFoo() == 1</tt> in Java.
+	 *
 	 * @param expression
 	 *        A String containing the expression to be evaluated.
 	 * @param ctx
@@ -126,11 +128,12 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with externally injected variables via a
-	 * {@link VariableResolverFactory}. A factory provides the means by which
-	 * MVEL can resolve external variables. MVEL contains a straight-forward
-	 * implementation for wrapping Maps: {@link MapVariableResolverFactory},
-	 * which is used implicitly when calling overloaded methods in this class
-	 * that use Maps.
+	 * {@link VariableResolverFactory}. A factory
+	 * provides the means by which MVEL can resolve external variables. MVEL
+	 * contains a straight-forward implementation
+	 * for wrapping Maps: {@link MapVariableResolverFactory}, which is used
+	 * implicitly when calling overloaded methods
+	 * in this class that use Maps.
 	 * <p/>
 	 * An example:
 	 * 
@@ -147,7 +150,7 @@ public class MVEL {
 	 * assert i == 10;
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param expression
 	 *        A String containing the expression to be evaluated.
 	 * @param resolverFactory
@@ -160,10 +163,10 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against a context object and injected variables
-	 * from a {@link VariableResolverFactory}. This method of execution will
-	 * prefer to find variables from the factory and <em>then</em> from the
-	 * context.
-	 * 
+	 * from a {@link VariableResolverFactory}.
+	 * This method of execution will prefer to find variables from the factory
+	 * and <em>then</em> from the context.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated
 	 * @param ctx
@@ -181,9 +184,9 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against externally injected variables. This is a
-	 * wrapper convenience method which wraps the provided Map of vars in a
-	 * {@link MapVariableResolverFactory}
-	 * 
+	 * wrapper convenience method which
+	 * wraps the provided Map of vars in a {@link MapVariableResolverFactory}
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param vars
@@ -203,9 +206,10 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against a context object and externally injected
-	 * variables. This is a wrapper convenience method which wraps the provided
-	 * Map of vars in a {@link MapVariableResolverFactory}
-	 * 
+	 * variables. This is a wrapper
+	 * convenience method which wraps the provided Map of vars in a
+	 * {@link MapVariableResolverFactory}
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -237,12 +241,12 @@ public class MVEL {
 	 * <p/>
 	 * This converts an expression that would otherwise return an
 	 * <tt>Integer</tt> to a <tt>Float</tt>.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param toType
-	 *        The target type that the resultant value will be converted to,
-	 *        if necessary.
+	 *        The target type that the resultant value will be converted to, if
+	 *        necessary.
 	 * @return The resultant value.
 	 */
 	public static <T> T eval(final String expression, final Class<T> toType) {
@@ -251,15 +255,16 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against a context object and, if necessary,
-	 * coerces the resultant value to the specified type.
-	 * 
+	 * coerces the resultant value to the specified
+	 * type.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
 	 *        The context object to evaluate against.
 	 * @param toType
-	 *        The target type that the resultant value will be converted to,
-	 *        if necessary.
+	 *        The target type that the resultant value will be converted to, if
+	 *        necessary.
 	 * @return The resultant value
 	 * @see #eval(String, Class)
 	 */
@@ -269,15 +274,16 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against externally injected variables and, if
-	 * necessary, coerces the resultant value to the specified type.
-	 * 
+	 * necessary, coerces the resultant value
+	 * to the specified type.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated
 	 * @param vars
 	 *        The variables to be injected
 	 * @param toType
-	 *        The target type that the resultant value will be converted to,
-	 *        if necessary.
+	 *        The target type that the resultant value will be converted to, if
+	 *        necessary.
 	 * @return The resultant value
 	 * @see #eval(String, VariableResolverFactory)
 	 * @see #eval(String, Class)
@@ -289,10 +295,10 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against externally injected variables. The
-	 * resultant value is coerced to the specified type if necessary. This is a
-	 * wrapper convenience method which wraps the provided Map of vars in a
-	 * {@link MapVariableResolverFactory}
-	 * 
+	 * resultant value is coerced to the specified
+	 * type if necessary. This is a wrapper convenience method which wraps the
+	 * provided Map of vars in a{@link MapVariableResolverFactory}
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param vars
@@ -316,9 +322,9 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against a context object and externally injected
-	 * variables. If necessary, the resultant value is coerced to the specified
-	 * type.
-	 * 
+	 * variables. If necessary, the resultant
+	 * value is coerced to the specified type.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -326,8 +332,8 @@ public class MVEL {
 	 * @param vars
 	 *        The vars to be injected
 	 * @param toType
-	 *        The target type that the resultant value will be converted to,
-	 *        if necessary.
+	 *        The target type that the resultant value will be converted to, if
+	 *        necessary.
 	 * @return The resultant value.
 	 * @see #eval(String, Object, VariableResolverFactory)
 	 * @see #eval(String, Class)
@@ -339,9 +345,9 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression against a context object and externally injected
-	 * variables. If necessary, the resultant value is coerced to the specified
-	 * type.
-	 * 
+	 * variables. If necessary, the resultant
+	 * value is coerced to the specified type.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -349,8 +355,8 @@ public class MVEL {
 	 * @param vars
 	 *        A Map of variables to be injected.
 	 * @param toType
-	 *        The target type that the resultant value will be converted to,
-	 *        if necessary.
+	 *        The target type that the resultant value will be converted to, if
+	 *        necessary.
 	 * @return The resultant value.
 	 * @see #eval(String, Object, VariableResolverFactory)
 	 * @see #eval(String, Class)
@@ -367,7 +373,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @return The resultant value
@@ -378,7 +384,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @param ctx
@@ -392,7 +398,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @param vars
@@ -406,7 +412,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @param vars
@@ -420,7 +426,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @param ctx
@@ -437,7 +443,7 @@ public class MVEL {
 
 	/**
 	 * Evaluates an expression and returns the resultant value as a String.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expressino to be evaluated.
 	 * @param ctx
@@ -453,7 +459,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression and return the value.
-	 * 
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @return The resultant value
@@ -465,7 +471,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression against a context object and return the value
-	 * 
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -483,7 +489,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression against a context object and return the value
-	 * 
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -511,7 +517,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression against a context object and return the value
-	 * 
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -527,9 +533,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with a context object and injected variables and
-	 * return the value. If necessary convert the resultant value to the
-	 * specified type.
-	 * 
+	 * return the value. If necessary convert
+	 * the resultant value to the specified type.
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -549,8 +555,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with a context object and return the value. If
-	 * necessary convert the resultant value to the specified type.
-	 * 
+	 * necessary convert
+	 * the resultant value to the specified type.
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -567,9 +574,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with a context object and injected variables and
-	 * return the value. If necessary convert the resultant value to the
-	 * specified type.
-	 * 
+	 * return the value. If necessary convert
+	 * the resultant value to the specified type.
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param ctx
@@ -589,8 +596,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with injected variables and return the value. If
-	 * necessary convert the resultant value to the specified type.
-	 * 
+	 * necessary convert
+	 * the resultant value to the specified type.
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param vars
@@ -608,8 +616,9 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression with injected variables and return the resultant
-	 * value. If necessary convert the resultant value to the specified type.
-	 * 
+	 * value. If necessary convert
+	 * the resultant value to the specified type.
+	 *
 	 * @param expression
 	 *        A char[] containing the expression to be evaluated.
 	 * @param vars
@@ -627,7 +636,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate a script from a file and return the resultant value.
-	 * 
+	 *
 	 * @param file
 	 *        The file to process
 	 * @return The resultant value
@@ -645,7 +654,7 @@ public class MVEL {
 	/**
 	 * Evaluate a script from a file, against a context object and return the
 	 * resultant value.
-	 * 
+	 *
 	 * @param file
 	 *        The file to process
 	 * @param ctx
@@ -666,7 +675,7 @@ public class MVEL {
 	/**
 	 * Evaluate a script from a file with injected variables and return the
 	 * resultant value.
-	 * 
+	 *
 	 * @param file
 	 *        The file to process
 	 * @param vars
@@ -688,7 +697,7 @@ public class MVEL {
 	/**
 	 * Evaluate a script from a file with injected variables and a context
 	 * object, then return the resultant value.
-	 * 
+	 *
 	 * @param file
 	 *        The file to process
 	 * @param ctx
@@ -722,7 +731,7 @@ public class MVEL {
 	/**
 	 * Evaluate a script from a file with injected variables and a context
 	 * object, then return the resultant value.
-	 * 
+	 *
 	 * @param file
 	 *        The file to process
 	 * @param ctx
@@ -756,7 +765,7 @@ public class MVEL {
 	/**
 	 * Evaluate an expression in Boolean-only mode against a root context object
 	 * and injected variables.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -772,7 +781,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression in Boolean-only mode against a root context object.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -786,7 +795,7 @@ public class MVEL {
 	/**
 	 * Evaluate an expression in Boolean-only mode against a root context object
 	 * and injected variables.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param ctx
@@ -802,7 +811,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression in Boolean-only with injected variables.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param vars
@@ -815,7 +824,7 @@ public class MVEL {
 
 	/**
 	 * Evaluate an expression in Boolean-only with injected variables.
-	 * 
+	 *
 	 * @param expression
 	 *        A string containing the expression to be evaluated.
 	 * @param vars
@@ -828,8 +837,9 @@ public class MVEL {
 
 	/**
 	 * Performs an analysis compileShared, which will populate the ParserContext
-	 * with type, input and variable information, but will not produce a payload.
-	 * 
+	 * with type, input and variable information,
+	 * but will not produce a payload.
+	 *
 	 * @param expression
 	 *        - the expression to analyze
 	 * @param ctx
@@ -858,9 +868,9 @@ public class MVEL {
 
 	/**
 	 * Compiles an expression and returns a Serializable object containing the
-	 * compiled expression. The returned value can be reused for
-	 * higher-performance evaluation of the expression. It is used in a straight
-	 * forward way:
+	 * compiled expression. The returned value
+	 * can be reused for higher-performance evaluation of the expression. It is
+	 * used in a straight forward way:
 	 * 
 	 * <pre>
 	 * <code>
@@ -892,7 +902,7 @@ public class MVEL {
 	 * tight, closed, loop. Doing this greatly improves performance as re-parsing
 	 * of the expression is not required, and the runtime can dynamically
 	 * compileShared the expression to bytecode of necessary.
-	 * 
+	 *
 	 * @param expression
 	 *        A String contaiing the expression to be compiled.
 	 * @return The cacheable compiled payload.
@@ -903,11 +913,12 @@ public class MVEL {
 
 	/**
 	 * Compiles an expression and returns a Serializable object containing the
-	 * compiled expression. This method also accept a Map of imports. The Map's
-	 * keys are String's representing the imported, short-form name of the
+	 * compiled expression. This method
+	 * also accept a Map of imports. The Map's keys are String's representing the
+	 * imported, short-form name of the
 	 * Classes or Methods imported. An import of a Method is essentially a static
-	 * import. This is a substitute for needing to declare <tt>import</tt>
-	 * statements within the actual script.
+	 * import. This is a substitute for
+	 * needing to declare <tt>import</tt> statements within the actual script.
 	 * <p/>
 	 * 
 	 * <pre>
@@ -925,7 +936,7 @@ public class MVEL {
 	 * assert val > 0;
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param expression
 	 *        A String contaiing the expression to be compiled.
 	 * @param imports
@@ -940,10 +951,11 @@ public class MVEL {
 
 	/**
 	 * Compiles an expression and returns a Serializable object containing the
-	 * compiled expression. This method accepts a Map of imports and
-	 * Interceptors. See {@link #compileExpression(String, Map)} for information
-	 * on imports. The imports parameter in this method is <em>optional</em> and
-	 * it is safe to pass a <tt>null</tt> value.<br/>
+	 * compiled expression. This method
+	 * accepts a Map of imports and Interceptors. See
+	 * {@link #compileExpression(String, Map)} for information on
+	 * imports. The imports parameter in this method is <em>optional</em> and it
+	 * is safe to pass a <tt>null</tt> value.<br/>
 	 * {@link net.simpleframework.lib.org.mvel2.integration.Interceptor
 	 * Interceptors} are markers within an expression that allow external hooks
 	 * to be tied into the expression.
@@ -982,7 +994,7 @@ public class MVEL {
 	 * code. The <tt>@log</tt> interceptor wraps the subsequent statement. In
 	 * this case, the interceptor is fired before the <tt>for</tt> loop and after
 	 * the <tt>for</tt> loop finishes.
-	 * 
+	 *
 	 * @param expression
 	 *        A String containing the expression to be evaluated.
 	 * @param imports
@@ -999,9 +1011,9 @@ public class MVEL {
 
 	/**
 	 * Compiles an expression, and accepts a {@link ParserContext} instance. The
-	 * ParserContext object is the fine-grained configuration object for the MVEL
-	 * parser and compiler.
-	 * 
+	 * ParserContext object is the
+	 * fine-grained configuration object for the MVEL parser and compiler.
+	 *
 	 * @param expression
 	 *        A string containing the expression to be compiled.
 	 * @param ctx
@@ -1033,8 +1045,9 @@ public class MVEL {
 
 	/**
 	 * Compiles an expression and returns a Serializable object containing the
-	 * compiled expression.
-	 * 
+	 * compiled
+	 * expression.
+	 *
 	 * @param expression
 	 *        The expression to be compiled
 	 * @param imports
@@ -1130,7 +1143,7 @@ public class MVEL {
 
 	/**
 	 * Executes a compiled expression.
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param ctx
@@ -1161,7 +1174,7 @@ public class MVEL {
 
 	/**
 	 * Executes a compiled expression.
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param factory
@@ -1176,7 +1189,7 @@ public class MVEL {
 
 	/**
 	 * Executes a compiled expression.
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param ctx
@@ -1191,7 +1204,7 @@ public class MVEL {
 
 	/**
 	 * Executes a compiled expression.
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param vars
@@ -1211,7 +1224,7 @@ public class MVEL {
 
 	/**
 	 * Execute a compiled expression and convert the result to a type
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param ctx
@@ -1235,7 +1248,7 @@ public class MVEL {
 
 	/**
 	 * Execute a compiled expression and convert the result to a type
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param vars
@@ -1252,7 +1265,7 @@ public class MVEL {
 
 	/**
 	 * Execute a compiled expression and convert the result to a type.
-	 * 
+	 *
 	 * @param compiledExpression
 	 *        -
 	 * @param ctx
@@ -1348,9 +1361,9 @@ public class MVEL {
 
 	/**
 	 * A simple utility method to get a static method from a class with no
-	 * checked exception. With throw a RuntimeException if the method is not
-	 * found or is not a static method.
-	 * 
+	 * checked exception. With throw a
+	 * RuntimeException if the method is not found or is not a static method.
+	 *
 	 * @param cls
 	 *        The class containing the static method
 	 * @param methodName

@@ -45,7 +45,7 @@ public class MVELRuntime {
 
 	/**
 	 * Main interpreter.
-	 * 
+	 *
 	 * @param debugger
 	 *        Run in debug mode
 	 * @param expression
@@ -74,16 +74,19 @@ public class MVELRuntime {
 				if (tk.fields == -1) {
 					/**
 					 * This may seem silly and redundant, however, when an MVEL
-					 * script recurses into a block or substatement, a new runtime
-					 * loop is entered. Since the debugger state is not passed
-					 * through the AST, it is not possible to forward the state
-					 * directly. So when we encounter a debugging symbol, we check
-					 * the thread local to see if there is are registered
+					 * script recurses into a block
+					 * or substatement, a new runtime loop is entered. Since the
+					 * debugger state is not
+					 * passed through the AST, it is not possible to forward the
+					 * state directly. So when we
+					 * encounter a debugging symbol, we check the thread local to see
+					 * if there is are registered
 					 * breakpoints. If we find them, we assume that we are debugging.
-					 * 
+					 *
 					 * The consequence of this of course, is that it's not ideal to
-					 * compileShared expressions with debugging symbols which you
-					 * plan to use in a production enviroment.
+					 * compileShared expressions with
+					 * debugging symbols which you plan to use in a production
+					 * enviroment.
 					 */
 					if (debugger || (debugger = hasDebuggerContext())) {
 						try {
@@ -105,7 +108,6 @@ public class MVELRuntime {
 				case RETURN:
 					variableFactory.setTiltFlag(true);
 					return stk.pop();
-					// throw new EndWithValue(stk.pop());
 
 				case NOOP:
 					continue;
@@ -126,9 +128,11 @@ public class MVELRuntime {
 				case END_OF_STMT:
 					/**
 					 * If the program doesn't end here then we wipe anything off the
-					 * stack that remains. Althought it may seem like intuitive stack
-					 * optimizations could be leveraged by leaving hanging values on
-					 * the stack, trust me it's not a good idea.
+					 * stack that remains.
+					 * Althought it may seem like intuitive stack optimizations could
+					 * be leveraged by
+					 * leaving hanging values on the stack, trust me it's not a good
+					 * idea.
 					 */
 					if (tk.nextASTNode != null) {
 						stk.clear();
@@ -181,7 +185,7 @@ public class MVELRuntime {
 
 	/**
 	 * Register a debugger breakpoint.
-	 * 
+	 *
 	 * @param source
 	 *        - the source file the breakpoint is registered in
 	 * @param line
@@ -194,7 +198,7 @@ public class MVELRuntime {
 
 	/**
 	 * Remove a specific breakpoint.
-	 * 
+	 *
 	 * @param source
 	 *        - the source file the breakpoint is registered in
 	 * @param line
@@ -208,7 +212,7 @@ public class MVELRuntime {
 
 	/**
 	 * Tests whether or not a debugger context exist.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private static boolean hasDebuggerContext() {
@@ -238,7 +242,7 @@ public class MVELRuntime {
 
 	/**
 	 * Tests whether or not breakpoints have been declared.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static boolean hasBreakpoints() {
@@ -247,10 +251,11 @@ public class MVELRuntime {
 
 	/**
 	 * Sets the Debugger instance to handle breakpoints. A debugger may only be
-	 * registered once per thread. Calling this method more than once will result
-	 * in the second and subsequent calls to simply fail silently. To re-register
-	 * the Debugger, you must call {@link #resetDebugger}
-	 * 
+	 * registered once per thread.
+	 * Calling this method more than once will result in the second and
+	 * subsequent calls to simply fail silently.
+	 * To re-register the Debugger, you must call {@link #resetDebugger}
+	 *
 	 * @param debugger
 	 *        - debugger instance
 	 */
@@ -261,7 +266,8 @@ public class MVELRuntime {
 
 	/**
 	 * Reset all information registered in the debugger, including the actual
-	 * attached Debugger and registered breakpoints.
+	 * attached Debugger and registered
+	 * breakpoints.
 	 */
 	public static void resetDebugger() {
 		debuggerContext = null;

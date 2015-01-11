@@ -189,7 +189,8 @@ public class NewObjectNode extends ASTNode {
 			if (egressType == null) {
 				/**
 				 * This means we couldn't resolve the type at the time this AST node
-				 * was created, which means we have to attempt runtime resolution.
+				 * was created, which means
+				 * we have to attempt runtime resolution.
 				 */
 
 				if (factory != null && factory.isResolveable(typeDescr.getClassName())) {
@@ -234,7 +235,8 @@ public class NewObjectNode extends ASTNode {
 
 				/**
 				 * Check to see if the optimizer actually produced the object during
-				 * optimization. If so, we return that value now.
+				 * optimization. If so,
+				 * we return that value now.
 				 */
 				if (optimizer.getResultOptPass() != null) {
 					egressType = optimizer.getEgressType();

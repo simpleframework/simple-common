@@ -65,7 +65,8 @@ public class DefaultLocalVariableResolverFactory extends MapVariableResolverFact
 		if (indexedVariableResolvers[index] == null) {
 			/**
 			 * If the register is null, this means we need to forward-allocate the
-			 * variable onto the register table.
+			 * variable onto the
+			 * register table.
 			 */
 			return indexedVariableResolvers[index] = super
 					.getVariableResolver(indexedVariableNames[index]);

@@ -24,4 +24,10 @@ public class PrototypalFunctionInstance extends FunctionInstance {
 	public VariableResolverFactory getResolverFactory() {
 		return resolverFactory;
 	}
+
+	@Override
+	public String toString() {
+		return "function_prototype:" + function.getName();
+	}
+
 }

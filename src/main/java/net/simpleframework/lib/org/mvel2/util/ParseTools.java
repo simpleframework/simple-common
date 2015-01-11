@@ -77,7 +77,6 @@ import net.simpleframework.lib.org.mvel2.math.MathProcessor;
 
 @SuppressWarnings({ "ManualArrayCopy" })
 public class ParseTools {
-	public static final String[] EMPTY_STR_ARR = new String[0];
 	public static final Object[] EMPTY_OBJ_ARR = new Object[0];
 	public static final Class[] EMPTY_CLS_ARR = new Class[0];
 
@@ -236,9 +235,6 @@ public class ParseTools {
 		return list;
 	}
 
-	private static final Map<String, Map<Integer, WeakReference<Method>>> RESOLVED_METH_CACHE = Collections
-			.synchronizedMap(new WeakHashMap<String, Map<Integer, WeakReference<Method>>>(10));
-
 	public static Method getBestCandidate(final Object[] arguments, final String method,
 			final Class decl, final Method[] methods, final boolean requireExact) {
 		final Class[] targetParms = new Class[arguments.length];
@@ -262,19 +258,8 @@ public class ParseTools {
 
 		Class[] parmTypes;
 		Method bestCandidate = null;
-		int bestScore = 0;
+		int bestScore = -1;
 		boolean retry = false;
-
-		final Integer hash = createClassSignatureHash(decl, arguments);
-
-		Map<Integer, WeakReference<Method>> methCache = RESOLVED_METH_CACHE.get(method);
-
-		WeakReference<Method> ref;
-
-		if (methCache != null && (ref = methCache.get(hash)) != null
-				&& (bestCandidate = ref.get()) != null) {
-			return bestCandidate;
-		}
 
 		do {
 			for (final Method meth : methods) {
@@ -283,14 +268,13 @@ public class ParseTools {
 				}
 
 				if (method.equals(meth.getName())) {
+					if ((parmTypes = meth.getParameterTypes()).length == 0 && arguments.length == 0) {
+						bestCandidate = meth;
+						break;
+					}
+
 					final boolean isVarArgs = meth.isVarArgs();
-					if ((parmTypes = meth.getParameterTypes()).length != arguments.length && !isVarArgs) {
-						continue;
-					} else if (arguments.length == 0 && parmTypes.length == 0) {
-						if (bestCandidate == null
-								|| bestCandidate.getReturnType().isAssignableFrom(meth.getReturnType())) {
-							bestCandidate = meth;
-						}
+					if (parmTypes.length != arguments.length && !isVarArgs) {
 						continue;
 					}
 
@@ -300,9 +284,8 @@ public class ParseTools {
 							bestCandidate = meth;
 							bestScore = score;
 						} else if (score == bestScore) {
-							if (bestCandidate == null
-									|| (bestCandidate.getReturnType() != meth.getReturnType() && bestCandidate
-											.getReturnType().isAssignableFrom(meth.getReturnType()))) {
+							if (bestCandidate.getReturnType().isAssignableFrom(meth.getReturnType())
+									&& !isVarArgs) {
 								bestCandidate = meth;
 							}
 						}
@@ -311,15 +294,6 @@ public class ParseTools {
 			}
 
 			if (bestCandidate != null) {
-				if (methCache == null) {
-					RESOLVED_METH_CACHE.put(
-							method,
-							methCache = Collections
-									.synchronizedMap(new WeakHashMap<Integer, WeakReference<Method>>()));
-				}
-
-				methCache.put(hash, new WeakReference<Method>(bestCandidate));
-
 				break;
 			}
 
@@ -469,8 +443,6 @@ public class ParseTools {
 		return best;
 	}
 
-	private static final Map<Class, Map<Integer, WeakReference<Constructor>>> RESOLVED_CONST_CACHE = Collections
-			.synchronizedMap(new WeakHashMap<Class, Map<Integer, WeakReference<Constructor>>>(10));
 	private static final Map<Constructor, WeakReference<Class[]>> CONSTRUCTOR_PARMS_CACHE = Collections
 			.synchronizedMap(new WeakHashMap<Constructor, WeakReference<Class[]>>(10));
 
@@ -505,14 +477,6 @@ public class ParseTools {
 		Constructor bestCandidate = null;
 		int bestScore = 0;
 
-		final Integer hash = createClassSignatureHash(cls, arguments);
-
-		Map<Integer, WeakReference<Constructor>> cache = RESOLVED_CONST_CACHE.get(cls);
-		WeakReference<Constructor> ref;
-		if (cache != null && (ref = cache.get(hash)) != null && (bestCandidate = ref.get()) != null) {
-			return bestCandidate;
-		}
-
 		for (final Constructor construct : getConstructors(cls)) {
 			final boolean isVarArgs = construct.isVarArgs();
 			if ((parmTypes = getConstructors(construct)).length != arguments.length
@@ -527,16 +491,6 @@ public class ParseTools {
 				bestCandidate = construct;
 				bestScore = score;
 			}
-		}
-
-		if (bestCandidate != null) {
-			if (cache == null) {
-				RESOLVED_CONST_CACHE.put(
-						cls,
-						cache = Collections
-								.synchronizedMap(new WeakHashMap<Integer, WeakReference<Constructor>>()));
-			}
-			cache.put(hash, new WeakReference<Constructor>(bestCandidate));
 		}
 
 		return bestCandidate;
@@ -843,20 +797,9 @@ public class ParseTools {
 		return false;
 	}
 
-	public static int createClassSignatureHash(final Class declaring, final Class[] sig) {
-		int hash = 0;
-		for (int i = 0; i < sig.length; i++) {
-			if (sig[i] != null) {
-				hash += (sig[i].hashCode() * (i * 2 + 3));
-			}
-		}
-
-		return hash + sig.length + declaring.hashCode();
-	}
-
 	/**
 	 * Replace escape sequences and return trim required.
-	 * 
+	 *
 	 * @param escapeStr
 	 *        -
 	 * @param pos
@@ -1184,13 +1127,17 @@ public class ParseTools {
 	}
 
 	public static Method determineActualTargetMethod(final Method method) {
+		return determineActualTargetMethod(method.getDeclaringClass(), method);
+	}
+
+	private static Method determineActualTargetMethod(final Class clazz, final Method method) {
 		final String name = method.getName();
 
 		/**
 		 * Follow our way up the class heirarchy until we find the physical target
 		 * method.
 		 */
-		for (final Class cls : method.getDeclaringClass().getInterfaces()) {
+		for (final Class cls : clazz.getInterfaces()) {
 			for (final Method meth : cls.getMethods()) {
 				if (meth.getParameterTypes().length == 0 && name.equals(meth.getName())) {
 					return meth;
@@ -1198,7 +1145,8 @@ public class ParseTools {
 			}
 		}
 
-		return null;
+		return clazz.getSuperclass() != null ? determineActualTargetMethod(clazz.getSuperclass(),
+				method) : null;
 	}
 
 	public static int captureToNextTokenJunction(final char[] expr, int cursor, final int end,
@@ -1320,8 +1268,9 @@ public class ParseTools {
 
 	/**
 	 * From the specified cursor position, trim out any whitespace between the
-	 * current position and the end of the last non-whitespace character.
-	 * 
+	 * current position and the end of the
+	 * last non-whitespace character.
+	 *
 	 * @param expr
 	 *        -
 	 * @param start
@@ -1342,8 +1291,9 @@ public class ParseTools {
 
 	/**
 	 * From the specified cursor position, trim out any whitespace between the
-	 * current position and beginning of the first non-whitespace character.
-	 * 
+	 * current position and beginning of the
+	 * first non-whitespace character.
+	 *
 	 * @param expr
 	 *        -
 	 * @param pos
@@ -1372,9 +1322,9 @@ public class ParseTools {
 
 	/**
 	 * This is an important aspect of the core parser tools. This method is used
-	 * throughout the core parser and sub-lexical parsers to capture a balanced
-	 * capture between opening and terminating tokens such as:
-	 * <em>( [ { ' " </em> <br>
+	 * throughout the core parser
+	 * and sub-lexical parsers to capture a balanced capture between opening and
+	 * terminating tokens such as: <em>( [ { ' " </em> <br>
 	 * <br>
 	 * For example: ((foo + bar + (bar - foo)) * 20;<br>
 	 * <br>
@@ -1384,7 +1334,7 @@ public class ParseTools {
 	 * If a balanced capture is performed from position 15, we get "(bar - foo)"
 	 * back.<br>
 	 * Etc.
-	 * 
+	 *
 	 * @param chars
 	 *        -
 	 * @param start
@@ -1605,10 +1555,10 @@ public class ParseTools {
 	public static void parseWithExpressions(final String nestParm, final char[] block,
 			final int start, final int offset, final Object ctx, final VariableResolverFactory factory) {
 		/**
-		 * 
+		 *
 		 * MAINTENANCE NOTE: A COMPILING VERSION OF THIS CODE IS DUPLICATED IN:
 		 * WithNode
-		 * 
+		 *
 		 */
 		int _st = start;
 		int _end = -1;
@@ -2158,7 +2108,7 @@ public class ParseTools {
 
 	/**
 	 * Check if the specified string is a reserved word in the parser.
-	 * 
+	 *
 	 * @param name
 	 *        -
 	 * @return -
@@ -2169,7 +2119,7 @@ public class ParseTools {
 
 	/**
 	 * Check if the specfied string represents a valid name of label.
-	 * 
+	 *
 	 * @param name
 	 *        -
 	 * @return -

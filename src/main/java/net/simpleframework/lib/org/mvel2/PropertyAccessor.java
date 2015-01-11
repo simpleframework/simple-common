@@ -782,7 +782,7 @@ public class PropertyAccessor {
 
 	/**
 	 * Handle accessing a property embedded in a collections, map, or array
-	 * 
+	 *
 	 * @param ctx
 	 *        -
 	 * @param prop
@@ -915,7 +915,7 @@ public class PropertyAccessor {
 
 	/**
 	 * Find an appropriate method, execute it, and return it's response.
-	 * 
+	 *
 	 * @param ctx
 	 *        -
 	 * @param name
@@ -970,7 +970,8 @@ public class PropertyAccessor {
 
 		/**
 		 * If the target object is an instance of java.lang.Class itself then do
-		 * not adjust the Class scope target.
+		 * not
+		 * adjust the Class scope target.
 		 */
 		Class cls = currType != null ? currType : ((ctx instanceof Class ? (Class) ctx : ctx
 				.getClass()));
@@ -1015,7 +1016,7 @@ public class PropertyAccessor {
 				 * If we didn't find anything, maybe we're looking for the actual
 				 * java.lang.Class methods.
 				 */
-				if ((m = getBestCandidate(args, name, cls, cls.getClass().getDeclaredMethods(), false)) != null) {
+				if ((m = getBestCandidate(args, name, cls, cls.getDeclaredMethods(), false)) != null) {
 					addMethodCache(cls, createSignature(name, tk), m);
 					parameterTypes = m.getParameterTypes();
 				}
@@ -1026,7 +1027,7 @@ public class PropertyAccessor {
 		// actual one try also with the actual one
 		if (m == null && cls != ctx.getClass() && !(ctx instanceof Class)) {
 			cls = ctx.getClass();
-			if ((m = getBestCandidate(args, name, cls, cls.getClass().getDeclaredMethods(), false)) != null) {
+			if ((m = getBestCandidate(args, name, cls, cls.getDeclaredMethods(), false)) != null) {
 				addMethodCache(cls, createSignature(name, tk), m);
 				parameterTypes = m.getParameterTypes();
 			}
@@ -1100,7 +1101,7 @@ public class PropertyAccessor {
 	/**
 	 * Try static access of the property, and return an instance of the Field,
 	 * Method of Class if successful.
-	 * 
+	 *
 	 * @return - Field, Method or Class instance.
 	 */
 	protected Object tryStaticAccess() {
@@ -1108,15 +1109,17 @@ public class PropertyAccessor {
 		try {
 			/**
 			 * Try to resolve this *smartly* as a static class reference.
-			 * 
+			 *
 			 * This starts at the end of the token and starts to step backwards to
-			 * figure out whether or not this may be a static class reference. We
-			 * search for method calls simply by inspecting for ()'s. The first
-			 * union area we come to where no brackets are present is our
+			 * figure out whether
+			 * or not this may be a static class reference. We search for method
+			 * calls simply by
+			 * inspecting for ()'s. The first union area we come to where no
+			 * brackets are present is our
 			 * test-point for a class reference. If we find a class, we pass the
-			 * reference to the property accessor along with trailing methods (if
-			 * any).
-			 * 
+			 * reference to the
+			 * property accessor along with trailing methods (if any).
+			 *
 			 */
 			boolean meth = false;
 			int last = end;

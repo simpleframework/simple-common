@@ -21,13 +21,13 @@ package net.simpleframework.lib.org.mvel2;
 /**
  * The conversion handler interface defines the basic interface for implementing
  * conversion handlers in MVEL.
- * 
+ *
  * @see net.simpleframework.lib.org.mvel2.DataConversion
  */
 public interface ConversionHandler {
 	/**
 	 * Converts the passed argument to the type represented by the handler.
-	 * 
+	 *
 	 * @param in
 	 *        - the input type
 	 * @return - the converted type
@@ -36,8 +36,9 @@ public interface ConversionHandler {
 
 	/**
 	 * This method is used to indicate to the runtime whehter or not the handler
-	 * knows how to convert from the specified type.
-	 * 
+	 * knows how to convert
+	 * from the specified type.
+	 *
 	 * @param cls
 	 *        - the source type
 	 * @return - true if the converter supports converting from the specified

@@ -42,7 +42,7 @@ public class OptimizerFactory {
 		 */
 		try {
 			OptimizerFactory.class.getClassLoader().loadClass(
-					"net.simpleframework.lib.org.objectweb.asm.ClassWriter");
+					"net.simpleframework.lib.org.mvel2.asm.ClassWriter");
 			accessorCompilers.put("ASM", new ASMAccessorOptimizer());
 		} catch (final ClassNotFoundException e) {
 			defaultOptimizer = SAFE_REFLECTIVE;

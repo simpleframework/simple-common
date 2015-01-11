@@ -23,7 +23,7 @@ import static java.lang.System.arraycopy;
 import java.io.UnsupportedEncodingException;
 
 /**
- * 
+ *
  * @author Mike Brock
  */
 public class StringAppender implements CharSequence {

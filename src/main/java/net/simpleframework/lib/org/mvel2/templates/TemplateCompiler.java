@@ -59,7 +59,7 @@ import net.simpleframework.lib.org.mvel2.util.ParseTools;
 /**
  * The TemplateCompiler class is used for pre-compiling MVEL Templates. To
  * execute a compiled template see {@link TemplateRuntime}
- * 
+ *
  * @author Mike Brock
  */
 @SuppressWarnings({ "ManualArrayCopy" })

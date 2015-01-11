@@ -40,7 +40,20 @@ public class ArrayAccessor implements AccessorNode {
 		if (nextNode != null) {
 			return nextNode.getValue(Array.get(ctx, index), elCtx, vars);
 		} else {
-			return Array.get(ctx, index);
+			try {
+				return Array.get(ctx, index);
+			} catch (final IllegalArgumentException e) {
+				// This isn't great, but the mechanism for deoptimizing a stale
+				// accessor is currently based on
+				// Accessor's throwing a ClassCastException. Catching
+				// IllegalArgumentException in
+				// net.simpleframework.lib.org.mvel2.ast.ASTNode.getReducedValueAccelerated(Object,
+				// Object, VariableResolverFactory)
+				// is a bad idea and currently there is nowhere to easily introduce
+				// pre-emptive accessor validity.
+				throw new ClassCastException("Argument of type '" + ctx.getClass()
+						+ "' is not an Array");
+			}
 		}
 	}
 

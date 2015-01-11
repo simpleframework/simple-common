@@ -55,9 +55,9 @@ import net.simpleframework.lib.org.mvel2.util.StringAppender;
 
 /**
  * This verifier is used by the compiler to enforce rules such as type
- * strictness. It is, as side-effect, also responsible for extracting type
- * information.
- * 
+ * strictness. It is, as side-effect, also
+ * responsible for extracting type information.
+ *
  * @author Mike Brock
  * @author Dhanji Prasanna
  */
@@ -122,7 +122,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 	/**
 	 * Analyze the statement and return the known egress type.
-	 * 
+	 *
 	 * @return known engress type
 	 */
 	public Class analyze() {
@@ -172,7 +172,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 	/**
 	 * Process bean property
-	 * 
+	 *
 	 * @param ctx
 	 *        - the ingress type
 	 * @param property
@@ -246,14 +246,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 		}
 
 		if (member != null) {
-			final Method method = (Method) member;
-
-			if (pCtx.isStrictTypeEnforcement()) {
-				// if not a field, then this is a property getter
-				recordParametricReturnedType(method.getGenericReturnType());
-			}
-
-			return getReturnType(ctx, method);
+			return getReturnType(ctx, (Method) member);
 		}
 
 		if (pCtx != null && first && pCtx.hasImport(property)) {
@@ -306,12 +299,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 			}
 		}
 
-		if (ctx != null && ctx.getClass() == Class.class) {
-			for (final Method m : ctx.getMethods()) {
-				if (property.equals(m.getName())) {
-					return returnGenericType(m);
-				}
-			}
+		if (ctx != null) {
 			try {
 				return findClass(variableFactory, ctx.getName() + "$" + property, pCtx);
 			} catch (final ClassNotFoundException cnfe) {
@@ -338,7 +326,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 	private Class getReturnType(final Class context, final Method m) {
 		final Class declaringClass = m.getDeclaringClass();
 		if (context == declaringClass) {
-			return m.getReturnType();
+			return returnGenericType(m);
 		}
 		final Type returnType = m.getGenericReturnType();
 		if (returnType instanceof TypeVariable) {
@@ -350,7 +338,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 				superClass = superClass.getSuperclass();
 			}
 			if (superClass == null) {
-				return m.getReturnType();
+				return returnGenericType(m);
 			}
 			if (superType instanceof ParameterizedType) {
 				final TypeVariable[] typeParams = superClass.getTypeParameters();
@@ -362,13 +350,13 @@ public class PropertyVerifier extends AbstractOptimizer {
 					}
 				}
 				if (typePos < 0) {
-					return m.getReturnType();
+					return returnGenericType(m);
 				}
 				final Type actualType = ((ParameterizedType) superType).getActualTypeArguments()[typePos];
-				return actualType instanceof Class ? (Class) actualType : m.getReturnType();
+				return actualType instanceof Class ? (Class) actualType : returnGenericType(m);
 			}
 		}
-		return m.getReturnType();
+		return returnGenericType(m);
 	}
 
 	private void recordParametricReturnedType(final Type parametricReturnType) {
@@ -415,7 +403,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 	/**
 	 * Process collection property
-	 * 
+	 *
 	 * @param ctx
 	 *        - the ingress type
 	 * @param property
@@ -479,7 +467,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 	/**
 	 * Process method
-	 * 
+	 *
 	 * @param ctx
 	 *        - the ingress type
 	 * @param name
@@ -498,8 +486,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 			/**
 			 * It's the first element in the statement, therefore we check to see
-			 * if there is a static import of a native Java method or an MVEL
-			 * function.
+			 * if there is a static import of a
+			 * native Java method or an MVEL function.
 			 */
 			if (pCtx.hasImport(name)) {
 				final Method m = pCtx.getStaticImport(name).getMethod();
@@ -596,7 +584,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 
 		/**
 		 * If the target object is an instance of java.lang.Class itself then do
-		 * not adjust the Class scope target.
+		 * not
+		 * adjust the Class scope target.
 		 */
 
 		Method m;
@@ -695,7 +684,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 			} else if (typeArgs.containsKey(returnTypeArg)) {
 				/**
 				 * If the generic type was declared as part of the method, it will
-				 * be in this Map.
+				 * be in this
+				 * Map.
 				 */
 				return typeArgs.get(returnTypeArg);
 			}

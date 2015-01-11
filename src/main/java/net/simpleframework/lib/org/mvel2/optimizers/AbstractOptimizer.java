@@ -47,7 +47,7 @@ public class AbstractOptimizer extends AbstractParser {
 	/**
 	 * Try static access of the property, and return an instance of the Field,
 	 * Method of Class if successful.
-	 * 
+	 *
 	 * @return - Field, Method or Class instance.
 	 */
 	protected Object tryStaticAccess() {
@@ -55,15 +55,17 @@ public class AbstractOptimizer extends AbstractParser {
 		try {
 			/**
 			 * Try to resolve this *smartly* as a static class reference.
-			 * 
+			 *
 			 * This starts at the end of the token and starts to step backwards to
-			 * figure out whether or not this may be a static class reference. We
-			 * search for method calls simply by inspecting for ()'s. The first
-			 * union area we come to where no brackets are present is our
+			 * figure out whether
+			 * or not this may be a static class reference. We search for method
+			 * calls simply by
+			 * inspecting for ()'s. The first union area we come to where no
+			 * brackets are present is our
 			 * test-point for a class reference. If we find a class, we pass the
-			 * reference to the property accessor along with trailing methods (if
-			 * any).
-			 * 
+			 * reference to the
+			 * property accessor along with trailing methods (if any).
+			 *
 			 */
 			boolean meth = false;
 			// int end = start + length;

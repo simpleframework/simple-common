@@ -68,8 +68,8 @@ public class Function extends ASTNode implements Safe {
 		}
 
 		/**
-		 * To prevent the function parameters from being counted as external
-		 * inputs, we must add them explicitly here.
+		 * To prevent the function parameters from being counted as
+		 * external inputs, we must add them explicitly here.
 		 */
 		for (final String s : this.parameters) {
 			ctx.addVariable(s, Object.class);

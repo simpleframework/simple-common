@@ -76,12 +76,12 @@ public class SimpleVariableResolverFactory extends BaseVariableResolverFactory {
 	@Override
 	public int variableIndexOf(final String name) {
 		return 0; // To change body of implemented methods use File | Settings |
-		// File Templates.
+						// File Templates.
 	}
 
 	@Override
 	public boolean isIndexedFactory() {
 		return false; // To change body of implemented methods use File | Settings
-		// | File Templates.
+							// | File Templates.
 	}
 }

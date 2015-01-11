@@ -25,8 +25,9 @@ public interface Operator {
 	public static final int NOOP = -1;
 
 	/**
-	 * The index positions of the operator precedence values correspond to the
-	 * actual operator itself. So ADD is PTABLE[0], SUB is PTABLE[1] and so on.
+	 * The index positions of the operator precedence values
+	 * correspond to the actual operator itself. So ADD is PTABLE[0],
+	 * SUB is PTABLE[1] and so on.
 	 */
 	public static final int[] PTABLE = { 10, // ADD
 			10, // SUB
@@ -163,5 +164,7 @@ public interface Operator {
 	public static final int JUMP = 112;
 	public static final int JUMPIF = 113;
 	public static final int REDUCE = 114;
+	public static final int SWAP = 115;
+	public static final int XSWAP = 116;
 
 }

@@ -24,6 +24,7 @@ import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.AccessorOptimizer;
+import net.simpleframework.lib.org.mvel2.optimizers.OptimizationNotSupported;
 import net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory;
 
 public class DynamicGetAccessor implements DynamicAccessor {
@@ -63,7 +64,12 @@ public class DynamicGetAccessor implements DynamicAccessor {
 			if (++runcount > DynamicOptimizer.tenuringThreshold) {
 				if ((currentTimeMillis() - stamp) < DynamicOptimizer.timeSpan) {
 					opt = true;
-					return optimize(ctx, elCtx, variableFactory);
+					try {
+						return optimize(ctx, elCtx, variableFactory);
+					} catch (final OptimizationNotSupported ex) {
+						// If optimization fails then, rather than fail evaluation,
+						// fallback to use safe reflective accessor
+					}
 				} else {
 					runcount = 0;
 					stamp = currentTimeMillis();

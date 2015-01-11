@@ -18,36 +18,13 @@
 
 package net.simpleframework.lib.org.mvel2.util;
 
-import java.lang.reflect.Field;
-
-import sun.misc.Unsafe;
-
 public class JITClassLoader extends ClassLoader implements MVELClassLoader {
-	private static boolean sunJVM;
-	private static Object sunUnsafe;
-
-	static {
-		try {
-			final Field f = Unsafe.class.getDeclaredField("theUnsafe");
-			f.setAccessible(true);
-			sunUnsafe = f.get(null);
-			sunJVM = true;
-		} catch (final Throwable t) {
-			// t.printStackTrace();
-			sunJVM = false;
-		}
-	}
-
 	public JITClassLoader(final ClassLoader classLoader) {
 		super(classLoader);
 	}
 
 	@Override
 	public Class<?> defineClassX(final String className, final byte[] b, final int off, final int len) {
-		if (sunJVM) {
-			return ((Unsafe) sunUnsafe).defineClass(className, b, off, len);
-		} else {
-			return super.defineClass(className, b, off, len);
-		}
+		return super.defineClass(className, b, off, len);
 	}
 }

@@ -61,7 +61,7 @@ public class CompilerTools {
 	/**
 	 * Finalize the payload, by reducing any stack-based-operations to dedicated
 	 * nodes where possible.
-	 * 
+	 *
 	 * @param astLinkedList
 	 *        - AST to be optimized.
 	 * @param secondPassOptimization
@@ -152,7 +152,8 @@ public class CompilerTools {
 
 					/**
 					 * If we have a chain of math/comparitive operators then we fill
-					 * them into the tree right here.
+					 * them into the tree
+					 * right here.
 					 */
 					while (astLinkedList.hasMoreNodes()
 							&& (tkOp2 = astLinkedList.nextNode()).isOperator() && tkOp2.getFields() != -1
@@ -366,7 +367,7 @@ public class CompilerTools {
 	/**
 	 * Returns an ordered Map of all functions declared within an compiled
 	 * script.
-	 * 
+	 *
 	 * @param compile
 	 * @return - ordered Map
 	 */

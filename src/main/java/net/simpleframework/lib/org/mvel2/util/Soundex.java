@@ -25,8 +25,9 @@ package net.simpleframework.lib.org.mvel2.util;
 public class Soundex {
 
 	/*
-	 * Implements the mapping from: AEHIOUWYBFPVCGJKQSXZDTLMNR to:
-	 * 00000000111122222222334556
+	 * Implements the mapping
+	 * from: AEHIOUWYBFPVCGJKQSXZDTLMNR
+	 * to: 00000000111122222222334556
 	 */
 	public static final char[] MAP = {
 			// A B C D E F G H I J K L M
@@ -36,7 +37,7 @@ public class Soundex {
 
 	/**
 	 * Convert the given String to its Soundex code.
-	 * 
+	 *
 	 * @param s
 	 *        input string
 	 * @return null If the given string can't be mapped to Soundex.

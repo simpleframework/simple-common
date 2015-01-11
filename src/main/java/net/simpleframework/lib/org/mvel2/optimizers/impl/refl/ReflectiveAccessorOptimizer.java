@@ -761,7 +761,7 @@ public class ReflectiveAccessorOptimizer extends AbstractOptimizer implements Ac
 
 	/**
 	 * Handle accessing a property embedded in a collections, map, or array
-	 * 
+	 *
 	 * @param ctx
 	 *        -
 	 * @param prop
@@ -974,7 +974,7 @@ public class ReflectiveAccessorOptimizer extends AbstractOptimizer implements Ac
 
 	/**
 	 * Find an appropriate method, execute it, and return it's response.
-	 * 
+	 *
 	 * @param ctx
 	 *        -
 	 * @param name

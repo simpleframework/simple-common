@@ -31,8 +31,8 @@ import net.simpleframework.lib.org.mvel2.ConversionHandler;
 
 public class ShortCH implements ConversionHandler {
 	/**
-	 * This is purely because Eclipse sucks, and has a serious bug with it's java
-	 * parser.
+	 * This is purely because Eclipse sucks, and has a serious bug with
+	 * it's java parser.
 	 */
 	private static final Short TRUE = (short) 1;
 	private static final Short FALSE = (short) 0;

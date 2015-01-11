@@ -169,7 +169,8 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 /**
  * Implementation of the MVEL Just-in-Time (JIT) compiler for Property Accessors
- * using the ASM bytecode engineering library.
+ * using the ASM bytecode
+ * engineering library.
  * <p/>
  */
 @SuppressWarnings({ "TypeParameterExplicitlyExtendsObject", "unchecked", "UnusedDeclaration" })
@@ -188,6 +189,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			OPCODES_VERSION = Opcodes.V1_5;
 		} else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
 			OPCODES_VERSION = Opcodes.V1_6;
+		} else if (javaVersion.startsWith("1.8")) {
+			OPCODES_VERSION = Opcodes.V1_8;
 		} else {
 			OPCODES_VERSION = Opcodes.V1_2;
 		}
@@ -446,7 +449,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 						assert debug("ALOAD 4");
 						mv.visitVarInsn(ALOAD, 4);
 
-						if (value != null & returnType != value.getClass()) {
+						if (value != null && returnType != value.getClass()) {
 							dataConversion(returnType);
 							checkcast(returnType);
 						}
@@ -476,7 +479,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 						assert debug("ALOAD 4");
 						mv.visitVarInsn(ALOAD, 4);
 
-						if (value != null & !value.getClass().isAssignableFrom(returnType)) {
+						if (value != null && !value.getClass().isAssignableFrom(returnType)) {
 							dataConversion(returnType);
 							checkcast(returnType);
 						}
@@ -645,7 +648,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 				final Class targetType = meth.getParameterTypes()[0];
 
-				Label jmp = null;
+				Label jmp;
 				final Label jmp2 = new Label();
 				if (value != null && !targetType.isAssignableFrom(value.getClass())) {
 					if (!canConvert(targetType, value.getClass())) {
@@ -694,7 +697,6 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 					}
 
 					meth.invoke(ctx, value);
-
 				}
 
 				assert debug("INVOKEVIRTUAL " + getInternalName(meth.getDeclaringClass()) + "."
@@ -717,8 +719,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				assert debug("ALOAD 4");
 				mv.visitVarInsn(ALOAD, 4);
 
-				assert debug("INVOKEVIRTUAL java/util/HashMap.put");
-				mv.visitMethodInsn(INVOKEVIRTUAL, "java/util/HashMap", "put",
+				assert debug("INVOKEINTERFACE java/util/Map.put");
+				mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "put",
 						"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
 
 				assert debug("ALOAD 4");
@@ -807,7 +809,6 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		}
 
 		cw.visitEnd();
-
 	}
 
 	private void visitConstantClass(Class<?> clazz) {
@@ -857,7 +858,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 		} catch (final VerifyError e) {
 			System.out
-					.println("**** COMPILER BUG! REPORT THIS IMMEDIATELY AT http://jira.codehaus.org/browse/mvel2");
+					.println("**** COMPILER BUG! REPORT THIS IMMEDIATELY AT http://jira.codehaus.org/browse/MVEL");
 			System.out.println("Expression: " + (expr == null ? null : new String(expr)));
 			throw e;
 		}
@@ -1165,55 +1166,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		}
 
 		if (member instanceof Field) {
-			Object o = ((Field) member).get(ctx);
-
-			if (((member.getModifiers() & STATIC) != 0)) {
-				// Check if the static field reference is a constant and a
-				// primitive.
-				if ((member.getModifiers() & FINAL) != 0
-						&& (o instanceof String || ((Field) member).getType().isPrimitive())) {
-					o = ((Field) member).get(null);
-					assert debug("LDC " + valueOf(o));
-					mv.visitLdcInsn(o);
-					wrapPrimitive(o.getClass());
-
-					if (hasNullPropertyHandler()) {
-						if (o == null) {
-							o = getNullPropertyHandler().getProperty(member.getName(), ctx,
-									variableFactory);
-						}
-
-						writeOutNullHandler(member, 0);
-					}
-					return o;
-				} else {
-					assert debug("GETSTATIC " + getDescriptor(member.getDeclaringClass()) + "."
-							+ member.getName() + "::" + getDescriptor(((Field) member).getType()));
-
-					mv.visitFieldInsn(GETSTATIC, getInternalName(member.getDeclaringClass()),
-							member.getName(), getDescriptor(returnType = ((Field) member).getType()));
-				}
-			} else {
-				assert debug("CHECKCAST " + getInternalName(cls));
-				mv.visitTypeInsn(CHECKCAST, getInternalName(cls));
-
-				assert debug("GETFIELD " + property + ":" + getDescriptor(((Field) member).getType()));
-				mv.visitFieldInsn(GETFIELD, getInternalName(cls), property,
-						getDescriptor(returnType = ((Field) member).getType()));
-			}
-
-			returnType = ((Field) member).getType();
-
-			if (hasNullPropertyHandler()) {
-				if (o == null) {
-					o = getNullPropertyHandler().getProperty(member.getName(), ctx, variableFactory);
-				}
-
-				writeOutNullHandler(member, 0);
-			}
-
-			currType = toNonPrimitiveType(returnType);
-			return o;
+			return optimizeFieldMethodProperty(ctx, property, cls, member);
 		} else if (member != null) {
 			Object o;
 
@@ -1321,27 +1274,13 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 					return ts;
 				} else {
 					final Field f = (Field) ts;
-
-					if ((f.getModifiers() & FINAL) != 0) {
-						final Object finalVal = f.get(null);
-						assert debug("LDC " + valueOf(finalVal));
-						mv.visitLdcInsn(finalVal);
-						wrapPrimitive(finalVal.getClass());
-						return finalVal;
-					} else {
-						assert debug("GETSTATIC " + getInternalName(f.getDeclaringClass()) + "."
-								+ ((Field) ts).getName() + "::" + getDescriptor(f.getType()));
-
-						mv.visitFieldInsn(GETSTATIC, getInternalName(f.getDeclaringClass()), f.getName(),
-								getDescriptor(returnType = f.getType()));
-
-						return f.get(null);
-					}
+					return optimizeFieldMethodProperty(ctx, property, cls, f);
 				}
 			} else if (ctx instanceof Class) {
 				/**
 				 * This is our ugly support for function pointers. This works but
-				 * needs to be re-thought out at some point.
+				 * needs to be re-thought out at some
+				 * point.
 				 */
 				final Class c = (Class) ctx;
 				for (final Method m : c.getMethods()) {
@@ -1387,6 +1326,57 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 						+ ctx.getClass().getName(), expr, st);
 			}
 		}
+	}
+
+	private Object optimizeFieldMethodProperty(final Object ctx, final String property,
+			final Class<?> cls, final Member member) throws IllegalAccessException {
+		Object o = ((Field) member).get(ctx);
+
+		if (((member.getModifiers() & STATIC) != 0)) {
+			// Check if the static field reference is a constant and a primitive.
+			if ((member.getModifiers() & FINAL) != 0
+					&& (o instanceof String || ((Field) member).getType().isPrimitive())) {
+				o = ((Field) member).get(null);
+				assert debug("LDC " + valueOf(o));
+				mv.visitLdcInsn(o);
+				wrapPrimitive(o.getClass());
+
+				if (hasNullPropertyHandler()) {
+					if (o == null) {
+						o = getNullPropertyHandler().getProperty(member.getName(), ctx, variableFactory);
+					}
+
+					writeOutNullHandler(member, 0);
+				}
+				return o;
+			} else {
+				assert debug("GETSTATIC " + getDescriptor(member.getDeclaringClass()) + "."
+						+ member.getName() + "::" + getDescriptor(((Field) member).getType()));
+
+				mv.visitFieldInsn(GETSTATIC, getInternalName(member.getDeclaringClass()),
+						member.getName(), getDescriptor(returnType = ((Field) member).getType()));
+			}
+		} else {
+			assert debug("CHECKCAST " + getInternalName(cls));
+			mv.visitTypeInsn(CHECKCAST, getInternalName(cls));
+
+			assert debug("GETFIELD " + property + ":" + getDescriptor(((Field) member).getType()));
+			mv.visitFieldInsn(GETFIELD, getInternalName(cls), property,
+					getDescriptor(returnType = ((Field) member).getType()));
+		}
+
+		returnType = ((Field) member).getType();
+
+		if (hasNullPropertyHandler()) {
+			if (o == null) {
+				o = getNullPropertyHandler().getProperty(member.getName(), ctx, variableFactory);
+			}
+
+			writeOutNullHandler(member, 0);
+		}
+
+		currType = toNonPrimitiveType(returnType);
+		return o;
 	}
 
 	private void writeFunctionPointerStub(final Class c, final Method m) {
@@ -1920,7 +1910,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 		/**
 		 * If the target object is an instance of java.lang.Class itself then do
-		 * not adjust the Class scope target.
+		 * not
+		 * adjust the Class scope target.
 		 */
 
 		boolean classTarget = false;
@@ -2954,6 +2945,12 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		if (stmt instanceof ExecutableLiteral) {
 			final Object literalValue = ((ExecutableLiteral) stmt).getLiteral();
 
+			// Handle the case when the literal is null MVEL-312
+			if (literalValue == null) {
+				mv.visitInsn(ACONST_NULL);
+				return null;
+			}
+
 			Class type = literalValue == null ? desiredTarget : literalValue.getClass();
 
 			assert debug("*** type:" + type + ";desired:" + desiredTarget);
@@ -3055,7 +3052,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 	}
 
 	private void intPush(final int index) {
-		if (index < 6) {
+		if (index >= 0 && index < 6) {
 			switch (index) {
 			case 0:
 				assert debug("ICONST_0");

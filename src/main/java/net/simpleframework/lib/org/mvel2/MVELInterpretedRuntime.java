@@ -75,7 +75,7 @@ public class MVELInterpretedRuntime extends AbstractParser {
 
 	/**
 	 * Main interpreter loop.
-	 * 
+	 *
 	 * @return value
 	 */
 	private Object parseAndExecuteInterpreted() {
@@ -93,7 +93,8 @@ public class MVELInterpretedRuntime extends AbstractParser {
 
 				/**
 				 * If we are at the beginning of a statement, then we immediately
-				 * push the first token onto the stack.
+				 * push the first token
+				 * onto the stack.
 				 */
 				if (stk.isEmpty()) {
 					if ((tk.fields & ASTNode.STACKLANG) != 0) {
@@ -108,7 +109,8 @@ public class MVELInterpretedRuntime extends AbstractParser {
 
 					/**
 					 * If this is a substatement, we need to move the result into the
-					 * d-stack to preserve proper execution order.
+					 * d-stack to preserve
+					 * proper execution order.
 					 */
 					if (tk instanceof Substatement && (tk = nextToken()) != null) {
 						if (isArithmeticOperator(operator = tk.getOperator())) {
@@ -249,15 +251,18 @@ public class MVELInterpretedRuntime extends AbstractParser {
 		case END_OF_STMT:
 			/**
 			 * Assignments are a special scenario for dealing with the stack.
-			 * Assignments are basically like held-over failures that basically
-			 * kickstart the parser when an assignment operator is is encountered.
-			 * The originating token is captured, and the the parser is told to
-			 * march on. The resultant value on the stack is then used to populate
-			 * the target variable.
-			 * 
+			 * Assignments are basically like
+			 * held-over failures that basically kickstart the parser when an
+			 * assignment operator is is
+			 * encountered. The originating token is captured, and the the parser
+			 * is told to march on. The
+			 * resultant value on the stack is then used to populate the target
+			 * variable.
+			 *
 			 * The other scenario in which we don't want to wipe the stack, is when
-			 * we hit the end of the statement, because that top stack value is the
-			 * value we want back from the parser.
+			 * we hit the end of the
+			 * statement, because that top stack value is the value we want back
+			 * from the parser.
 			 */
 
 			if (hasMore()) {
@@ -273,8 +278,10 @@ public class MVELInterpretedRuntime extends AbstractParser {
 
 	/**
 	 * This method peforms the equivilent of an XSWAP operation to flip the
-	 * operator over to the top of the stack, and loads the stored values on the
-	 * d-stack onto the main program stack.
+	 * operator
+	 * over to the top of the stack, and loads the stored values on the d-stack
+	 * onto
+	 * the main program stack.
 	 */
 	private void reduceRight() {
 		if (dStack.isEmpty()) {
@@ -294,7 +301,7 @@ public class MVELInterpretedRuntime extends AbstractParser {
 	/**
 	 * This method is called to unwind the current statement without any
 	 * reduction or further parsing.
-	 * 
+	 *
 	 * @param operator
 	 *        -
 	 * @return -

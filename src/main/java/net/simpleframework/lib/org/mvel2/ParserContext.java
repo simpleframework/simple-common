@@ -39,6 +39,7 @@ import net.simpleframework.lib.org.mvel2.ast.Function;
 import net.simpleframework.lib.org.mvel2.ast.LineLabel;
 import net.simpleframework.lib.org.mvel2.ast.Proto;
 import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
+import net.simpleframework.lib.org.mvel2.compiler.CompiledExpression;
 import net.simpleframework.lib.org.mvel2.compiler.Parser;
 import net.simpleframework.lib.org.mvel2.integration.Interceptor;
 import net.simpleframework.lib.org.mvel2.util.LineMapper;
@@ -47,7 +48,8 @@ import net.simpleframework.lib.org.mvel2.util.ReflectionUtil;
 
 /**
  * The <tt>ParserContext</tt> is the main environment object used for sharing
- * state throughout the entire parser/compileShared process.<br/>
+ * state throughout the entire
+ * parser/compileShared process.<br/>
  * <br/>
  * The <tt>ParserContext</tt> is used to configure the parser/compiler. For
  * example:
@@ -89,6 +91,8 @@ public class ParserContext implements Serializable {
 	private LineLabel lastLineLabel;
 
 	private transient Parser rootParser;
+	private transient Map<String, CompiledExpression> compiledExpressionCache;
+	private transient Map<String, Class> returnTypeCache;
 
 	private boolean functionContext = false;
 	private boolean compiled = false;
@@ -239,7 +243,7 @@ public class ParserContext implements Serializable {
 	/**
 	 * Tests whether or not a variable or input exists in the current parser
 	 * context.
-	 * 
+	 *
 	 * @param name
 	 *        The name of the identifier.
 	 * @return boolean
@@ -251,8 +255,9 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Return the variable or input type froom the current parser context.
-	 * Returns <tt>Object.class</tt> if the type cannot be determined.
-	 * 
+	 * Returns <tt>Object.class</tt> if the
+	 * type cannot be determined.
+	 *
 	 * @param name
 	 *        The name of the identifier
 	 * @return boolean
@@ -277,7 +282,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Get total number of lines declared in the current context.
-	 * 
+	 *
 	 * @return int of lines
 	 */
 	public int getLineCount() {
@@ -287,7 +292,7 @@ public class ParserContext implements Serializable {
 	/**
 	 * Set the current number of lines in the current context. (Generally only
 	 * used by the compiler)
-	 * 
+	 *
 	 * @param lineCount
 	 *        The number of lines
 	 * @return int of lines
@@ -298,7 +303,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Increments the current line count by the specified amount
-	 * 
+	 *
 	 * @param increment
 	 *        The number of lines to increment
 	 * @return int of lines
@@ -310,7 +315,7 @@ public class ParserContext implements Serializable {
 	/**
 	 * Get the current line offset. This measures the number of cursor positions
 	 * back to the beginning of the line.
-	 * 
+	 *
 	 * @return int offset
 	 */
 	public int getLineOffset() {
@@ -319,7 +324,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Sets the current line offset. (Generally only used by the compiler)
-	 * 
+	 *
 	 * @param lineOffset
 	 *        The offset amount
 	 */
@@ -329,7 +334,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Sets both the current line count and line offset
-	 * 
+	 *
 	 * @param lineCount
 	 *        The line count
 	 * @param lineOffset
@@ -343,7 +348,7 @@ public class ParserContext implements Serializable {
 	/**
 	 * Get an import that has been declared, either in the parsed script or
 	 * programatically
-	 * 
+	 *
 	 * @param name
 	 *        The name identifier for the imported class (ie. "HashMap")
 	 * @return An instance of <tt>Class</tt> denoting the imported class.
@@ -354,7 +359,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Get a {@link MethodStub} which wraps a static method import.
-	 * 
+	 *
 	 * @param name
 	 *        The name identifier
 	 * @return An instance of {@link MethodStub}
@@ -366,7 +371,7 @@ public class ParserContext implements Serializable {
 	/**
 	 * Returns either an instance of <tt>Class</tt> or {@link MethodStub}
 	 * (whichever matches).
-	 * 
+	 *
 	 * @param name
 	 *        The name identifier.
 	 * @return An instance of <tt>Class</tt> or {@link MethodStub}
@@ -377,7 +382,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Adds a package import to a parse session.
-	 * 
+	 *
 	 * @param packageName
 	 *        A fully qualified package (eg. <tt>java.util.concurrent</tt>).
 	 */
@@ -387,7 +392,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Tests to see if the specified import exists.
-	 * 
+	 *
 	 * @param name
 	 *        A name identifier
 	 * @return boolean
@@ -410,7 +415,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Adds an import for the specified <tt>Class</tt>.
-	 * 
+	 *
 	 * @param cls
 	 *        The instance of the <tt>Class</tt> which represents the imported
 	 *        class.
@@ -440,7 +445,7 @@ public class ParserContext implements Serializable {
 	 * sys.currentTimeMillis();
 	 * </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param name
 	 *        The alias to use
 	 * @param cls
@@ -464,12 +469,11 @@ public class ParserContext implements Serializable {
 	 * 
 	 * ... doing this allows the <tt>System.currentTimeMillis()</tt> method to be
 	 * executed in a script simply by writing <tt>time()</tt>.
-	 * 
+	 *
 	 * @param name
 	 *        The alias to use
 	 * @param method
-	 *        The instance of <tt>Method</tt> which represents the static
-	 *        import.
+	 *        The instance of <tt>Method</tt> which represents the static import.
 	 */
 	public void addImport(final String name, final Method method) {
 		addImport(name, new MethodStub(method));
@@ -478,12 +482,11 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Adds a static import for the specified {@link MethodStub} with an alias.
-	 * 
+	 *
 	 * @param name
 	 *        The alias to use
 	 * @param method
-	 *        The instance of <tt>Method</tt> which represents the static
-	 *        import.
+	 *        The instance of <tt>Method</tt> which represents the static import.
 	 * @see #addImport(String, net.simpleframework.lib.org.mvel2.util.MethodStub)
 	 */
 	public void addImport(final String name, final MethodStub method) {
@@ -682,7 +685,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Enables strict type enforcement -
-	 * 
+	 *
 	 * @param strictTypeEnforcement
 	 *        -
 	 */
@@ -696,7 +699,7 @@ public class ParserContext implements Serializable {
 
 	/**
 	 * Enables strong type enforcement.
-	 * 
+	 *
 	 * @param strongTyping
 	 *        -
 	 */
@@ -1129,6 +1132,20 @@ public class ParserContext implements Serializable {
 		final String[] s = new String[indexedInputs.size()];
 		indexedInputs.toArray(s);
 		return s;
+	}
+
+	public Map<String, CompiledExpression> getCompiledExpressionCache() {
+		if (compiledExpressionCache == null) {
+			compiledExpressionCache = new HashMap<String, CompiledExpression>();
+		}
+		return compiledExpressionCache;
+	}
+
+	public Map<String, Class> getReturnTypeCache() {
+		if (returnTypeCache == null) {
+			returnTypeCache = new HashMap<String, Class>();
+		}
+		return returnTypeCache;
 	}
 
 	// Introduce some new Fluent API stuff here.

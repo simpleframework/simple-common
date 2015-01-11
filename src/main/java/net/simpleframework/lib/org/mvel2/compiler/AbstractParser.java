@@ -176,7 +176,7 @@ import net.simpleframework.lib.org.mvel2.util.ProtoParser;
 
 /**
  * This is the core parser that the subparsers extend.
- * 
+ *
  * @author Christopher Brock
  */
 public class AbstractParser implements Parser, Serializable {
@@ -232,9 +232,10 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * This method is internally called by the static initializer for
-	 * AbstractParser in order to setup the parser. The static initialization
-	 * populates the operator and literal tables for the parser. In some
-	 * situations, like OSGi, it may be necessary to utilize this manually.
+	 * AbstractParser in order to setup the parser.
+	 * The static initialization populates the operator and literal tables for
+	 * the parser. In some situations, like
+	 * OSGi, it may be necessary to utilize this manually.
 	 */
 	public static void setupParser() {
 		if (LITERALS == null || LITERALS.isEmpty()) {
@@ -325,14 +326,15 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Retrieve the next token in the expression.
-	 * 
+	 *
 	 * @return -
 	 */
 	protected ASTNode nextToken() {
 		try {
 			/**
 			 * If the cursor is at the end of the expression, we have nothing more
-			 * to do: return null.
+			 * to do:
+			 * return null.
 			 */
 			if (!splitAccumulator.isEmpty()) {
 				lastNode = (ASTNode) splitAccumulator.pop();
@@ -351,8 +353,10 @@ public class AbstractParser implements Parser, Serializable {
 			String name;
 			/**
 			 * Because of parser recursion for sub-expression parsing, we sometimes
-			 * need to remain certain field states. We do not reset for
-			 * assignments, boolean mode, list creation or a capture only mode.
+			 * need to remain
+			 * certain field states. We do not reset for assignments, boolean mode,
+			 * list creation or
+			 * a capture only mode.
 			 */
 
 			boolean capture = false, union = false;
@@ -401,8 +405,8 @@ public class AbstractParser implements Parser, Serializable {
 
 			/**
 			 * From here to the end of the method is the core MVEL parsing code.
-			 * Fiddling around here is asking for trouble unless you really know
-			 * what you're doing.
+			 * Fiddling around here is asking for
+			 * trouble unless you really know what you're doing.
 			 */
 
 			st = cursor;
@@ -418,8 +422,8 @@ public class AbstractParser implements Parser, Serializable {
 				}
 
 				/**
-				 * If the current character under the cursor is a valid part of an
-				 * identifier, we keep capturing.
+				 * If the current character under the cursor is a valid
+				 * part of an identifier, we keep capturing.
 				 */
 
 				if (capture) {
@@ -633,7 +637,8 @@ public class AbstractParser implements Parser, Serializable {
 
 					/**
 					 * If we *were* capturing a token, and we just hit a
-					 * non-identifier character, we stop and figure out what to do.
+					 * non-identifier
+					 * character, we stop and figure out what to do.
 					 */
 					if (cursor != end && expr[cursor] == '(') {
 						cursor = balancedCaptureWithLineAccounting(expr, cursor, end, '(', pCtx) + 1;
@@ -641,7 +646,8 @@ public class AbstractParser implements Parser, Serializable {
 
 					/**
 					 * If we encounter any of the following cases, we are still
-					 * dealing with a contiguous token.
+					 * dealing with
+					 * a contiguous token.
 					 */
 					CaptureLoop: while (cursor != end) {
 						switch (expr[cursor]) {
@@ -1146,7 +1152,8 @@ public class AbstractParser implements Parser, Serializable {
 							default:
 								/**
 								 * Check to see if we should disqualify this current
-								 * token as a potential type-cast candidate.
+								 * token as a potential
+								 * type-cast candidate.
 								 */
 
 								if (expr[cursor] != '.') {
@@ -1377,7 +1384,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Handle a union between a closed statement and a residual property chain.
-	 * 
+	 *
 	 * @param node
 	 *        an ast node
 	 * @return ASTNode
@@ -1408,7 +1415,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Create an operator node.
-	 * 
+	 *
 	 * @param expr
 	 *        an char[] containing the expression
 	 * @param start
@@ -1425,9 +1432,9 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Create a copy of an array based on a sub-range. Works faster than
-	 * System.arrayCopy() for arrays shorter than 1000 elements in most cases, so
-	 * the parser uses this internally.
-	 * 
+	 * System.arrayCopy() for arrays shorter than
+	 * 1000 elements in most cases, so the parser uses this internally.
+	 *
 	 * @param start
 	 *        the start offset
 	 * @param end
@@ -1449,7 +1456,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Generate a property token
-	 * 
+	 *
 	 * @param st
 	 *        the start offset
 	 * @param end
@@ -1510,7 +1517,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Process the current typed node
-	 * 
+	 *
 	 * @param decl
 	 *        node is a declaration or not
 	 * @return and ast node
@@ -1596,7 +1603,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Generate a code block token.
-	 * 
+	 *
 	 * @param condStart
 	 *        the start offset for the condition
 	 * @param condEnd
@@ -1654,7 +1661,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Capture a code block by type.
-	 * 
+	 *
 	 * @param type
 	 *        the block type
 	 * @return an ast node
@@ -1888,7 +1895,7 @@ public class AbstractParser implements Parser, Serializable {
 	/**
 	 * Checking from the current cursor position, check to see if the
 	 * if-then-else block continues.
-	 * 
+	 *
 	 * @return boolean value
 	 */
 	protected boolean ifThenElseBlockContinues() {
@@ -1908,7 +1915,7 @@ public class AbstractParser implements Parser, Serializable {
 	/**
 	 * Checking from the current cursor position, check to see if we're inside a
 	 * contiguous identifier.
-	 * 
+	 *
 	 * @return -
 	 */
 	protected boolean tokenContinues() {
@@ -1987,7 +1994,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Checks to see if the next part of the statement is an identifier part.
-	 * 
+	 *
 	 * @return boolean true if next part is identifier part.
 	 */
 	protected boolean isNextIdentifier() {
@@ -2130,8 +2137,9 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * From the specified cursor position, trim out any whitespace between the
-	 * current position and the end of the last non-whitespace character.
-	 * 
+	 * current position and the end of the
+	 * last non-whitespace character.
+	 *
 	 * @param pos
 	 *        - current position
 	 * @return new position.
@@ -2148,8 +2156,9 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * From the specified cursor position, trim out any whitespace between the
-	 * current position and beginning of the first non-whitespace character.
-	 * 
+	 * current position and beginning of the
+	 * first non-whitespace character.
+	 *
 	 * @param pos
 	 *        -
 	 * @return -
@@ -2163,8 +2172,9 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * If the cursor is currently pointing to whitespace, move the cursor forward
-	 * to the first non-whitespace character, but account for carriage returns in
-	 * the script (updates parser field: line).
+	 * to the first non-whitespace
+	 * character, but account for carriage returns in the script (updates parser
+	 * field: line).
 	 */
 	protected void skipWhitespace() {
 		Skip: while (cursor != end) {
@@ -2265,7 +2275,7 @@ public class AbstractParser implements Parser, Serializable {
 	/**
 	 * Set and finesse the expression, trimming an leading or proceeding
 	 * whitespace.
-	 * 
+	 *
 	 * @param expression
 	 *        the expression
 	 */
@@ -2301,7 +2311,7 @@ public class AbstractParser implements Parser, Serializable {
 	/**
 	 * Set and finesse the expression, trimming an leading or proceeding
 	 * whitespace.
-	 * 
+	 *
 	 * @param expression
 	 *        the expression
 	 */
@@ -2317,7 +2327,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Return the previous non-whitespace character.
-	 * 
+	 *
 	 * @return -
 	 */
 	protected char lookToLast() {
@@ -2335,7 +2345,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Return the last character (delta -1 of cursor position).
-	 * 
+	 *
 	 * @return -
 	 */
 	protected char lookBehind() {
@@ -2348,7 +2358,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Return the next character (delta 1 of cursor position).
-	 * 
+	 *
 	 * @return -
 	 */
 	protected char lookAhead() {
@@ -2362,7 +2372,7 @@ public class AbstractParser implements Parser, Serializable {
 	/**
 	 * Return the character, forward of the currrent cursor position based on the
 	 * specified range delta.
-	 * 
+	 *
 	 * @param range
 	 *        -
 	 * @return -
@@ -2377,7 +2387,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Returns true if the next is an identifier or literal.
-	 * 
+	 *
 	 * @return true of false
 	 */
 	protected boolean isNextIdentifierOrLiteral() {
@@ -2398,7 +2408,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Increment one cursor position, and move cursor to next non-blank part.
-	 * 
+	 *
 	 * @return cursor position
 	 */
 	public int incNextNonBlank() {
@@ -2408,7 +2418,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Move to next cursor position from current cursor position.
-	 * 
+	 *
 	 * @return cursor position
 	 */
 	public int nextNonBlank() {
@@ -2424,7 +2434,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Expect the next specified character or fail
-	 * 
+	 *
 	 * @param c
 	 *        character
 	 */
@@ -2441,11 +2451,12 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * NOTE: This method assumes that the current position of the cursor is at
-	 * the end of a logical statement, to begin with.
+	 * the end of a logical statement, to
+	 * begin with.
 	 * <p/>
 	 * Determines whether or not the logical statement is manually terminated
 	 * with a statement separator (';').
-	 * 
+	 *
 	 * @return -
 	 */
 	protected boolean isStatementNotManuallyTerminated() {
@@ -2483,7 +2494,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Create a new ParserContext in the current thread, using the one specified.
-	 * 
+	 *
 	 * @param pCtx
 	 *        -
 	 */
@@ -2588,7 +2599,7 @@ public class AbstractParser implements Parser, Serializable {
 			operatorsTable.put(";", END_OF_STMT);
 
 		case 1: // boolean, math ops, projection, assertion, objection creation,
-			// block setters, imports
+					// block setters, imports
 			operatorsTable.put("+", ADD);
 			operatorsTable.put("-", SUB);
 			operatorsTable.put("*", MULT);
@@ -2655,7 +2666,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * Reduce the current operations on the stack.
-	 * 
+	 *
 	 * @param operator
 	 *        the operator
 	 * @return a stack control code
@@ -2680,7 +2691,8 @@ public class AbstractParser implements Parser, Serializable {
 
 				/**
 				 * Check to see if we're compiling or executing interpretively. If
-				 * we're compiling, we really need to stop if this is not a literal.
+				 * we're compiling, we really
+				 * need to stop if this is not a literal.
 				 */
 				if (compileMode && !tk.isLiteral()) {
 
@@ -2816,11 +2828,12 @@ public class AbstractParser implements Parser, Serializable {
 
 	/**
 	 * This method is called when we reach the point where we must subEval a
-	 * trinary operation in the expression. (ie. val1 op val2). This is not the
-	 * same as a binary operation, although binary operations would appear to
-	 * have 3 structures as well. A binary structure (or also a junction in the
-	 * expression) compares the current state against 2 downrange structures
-	 * (usually an op and a val).
+	 * trinary operation in the expression.
+	 * (ie. val1 op val2). This is not the same as a binary operation, although
+	 * binary operations would appear
+	 * to have 3 structures as well. A binary structure (or also a junction in
+	 * the expression) compares the
+	 * current state against 2 downrange structures (usually an op and a val).
 	 */
 	protected void reduce() {
 		Object v1, v2;

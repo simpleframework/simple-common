@@ -71,6 +71,7 @@ public class BinaryOperation extends BooleanNode {
 			}
 
 		default:
+			egressType = getReturnTypeFromOp(operation, this.left.egressType, this.right.egressType);
 			if (!ctx.isStrongTyping()) {
 				break;
 			}
@@ -78,9 +79,10 @@ public class BinaryOperation extends BooleanNode {
 			if (!left.getEgressType().isAssignableFrom(right.getEgressType())
 					&& !right.getEgressType().isAssignableFrom(left.getEgressType())) {
 				if (right.isLiteral() && canConvert(left.getEgressType(), right.getEgressType())) {
+					final Class targetType = isAritmeticOperation(operation) ? egressType : left
+							.getEgressType();
 					this.right = new LiteralNode(convert(
-							right.getReducedValueAccelerated(null, null, null), left.getEgressType()),
-							pCtx);
+							right.getReducedValueAccelerated(null, null, null), targetType), pCtx);
 				} else if (!(areCompatible(left.getEgressType(), right.getEgressType()) || ((operation == Operator.EQUAL || operation == Operator.NEQUAL) && CompatibilityStrategy
 						.areEqualityCompatible(left.getEgressType(), right.getEgressType())))) {
 
@@ -102,9 +104,10 @@ public class BinaryOperation extends BooleanNode {
 				rType = ParseTools.__resolveType(this.right.egressType);
 			}
 		}
+	}
 
-		egressType = getReturnTypeFromOp(operation, this.left.egressType, this.right.egressType);
-
+	private boolean isAritmeticOperation(final int operation) {
+		return operation <= Operator.POWER;
 	}
 
 	private boolean areCompatible(final Class<?> leftClass, final Class<?> rightClass) {

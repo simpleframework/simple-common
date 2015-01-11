@@ -46,22 +46,22 @@ public class ExecutionStack {
 	public void push(final Object o) {
 		size++;
 		element = new StackElement(element, o);
-	}
+		assert size == deepCount();
 
-	public Object pushAndPeek(final Object o) {
-		size++;
-		element = new StackElement(element, o);
-		return o;
 	}
 
 	public void push(final Object obj1, final Object obj2) {
 		size += 2;
 		element = new StackElement(new StackElement(element, obj1), obj2);
+		assert size == deepCount();
+
 	}
 
 	public void push(final Object obj1, final Object obj2, final Object obj3) {
 		size += 3;
 		element = new StackElement(new StackElement(new StackElement(element, obj1), obj2), obj3);
+		assert size == deepCount();
+
 	}
 
 	public Object peek() {
@@ -75,6 +75,8 @@ public class ExecutionStack {
 	public void dup() {
 		size++;
 		element = new StackElement(element, element.value);
+		assert size == deepCount();
+
 	}
 
 	public Boolean peekBoolean() {
@@ -107,13 +109,15 @@ public class ExecutionStack {
 	}
 
 	public Object pop() {
-		if (size-- == 0) {
+		if (size == 0) {
 			return null;
 		}
 		try {
+			size--;
 			return element.value;
 		} finally {
 			element = element.next;
+			assert size == deepCount();
 		}
 	}
 
@@ -129,6 +133,8 @@ public class ExecutionStack {
 					+ (element.value == null ? "null" : element.value.getClass().getName()));
 		} finally {
 			element = element.next;
+			assert size == deepCount();
+
 		}
 	}
 
@@ -138,6 +144,7 @@ public class ExecutionStack {
 			return element.value;
 		} finally {
 			element = element.next.next;
+			assert size == deepCount();
 		}
 	}
 
@@ -165,19 +172,21 @@ public class ExecutionStack {
 		element = new StackElement(element.next.next.next, doOperations(element.next.next.value,
 				(Integer) element.next.value, element.value));
 		size -= 2;
+		assert size == deepCount();
 	}
 
 	public void op() {
 		element = new StackElement(element.next.next.next, doOperations(element.next.next.value,
 				(Integer) element.value, element.next.value));
 		size -= 2;
-
+		assert size == deepCount();
 	}
 
 	public void op(final int operator) {
 		element = new StackElement(element.next.next, doOperations(element.next.value, operator,
 				element.value));
 		size--;
+		assert size == deepCount();
 	}
 
 	public void xswap() {
@@ -185,6 +194,31 @@ public class ExecutionStack {
 		final StackElement relink = e.next;
 		e.next = element;
 		(element = e).next.next = relink;
+	}
+
+	public void xswap2() {
+		final StackElement node2 = element.next;
+		final StackElement node3 = node2.next;
+
+		(node2.next = element).next = node3.next;
+		element = node3;
+		element.next = node2;
+	}
+
+	public int deepCount() {
+		int count = 0;
+
+		if (element == null) {
+			return 0;
+		} else {
+			count++;
+		}
+
+		StackElement element = this.element;
+		while ((element = element.next) != null) {
+			count++;
+		}
+		return count;
 	}
 
 	@Override

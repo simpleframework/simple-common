@@ -30,6 +30,7 @@ import static net.simpleframework.lib.org.mvel2.util.ParseTools.unboxPrimitive;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.ErrorDetail;
@@ -111,7 +112,7 @@ public class ExpressionCompiler extends AbstractParser {
 	/**
 	 * Initiate an in-context compileShared. This method should really only be
 	 * called by the internal API.
-	 * 
+	 *
 	 * @return compiled expression object
 	 */
 	public CompiledExpression _compile() {
@@ -157,17 +158,28 @@ public class ExpressionCompiler extends AbstractParser {
 				returnType = tk.getEgressType();
 
 				if (tk instanceof Substatement) {
-					final ExpressionCompiler subCompiler = new ExpressionCompiler(expr, tk.getStart(),
-							tk.getOffset(), pCtx);
-					tk.setAccessor(subCompiler._compile());
-
-					returnType = subCompiler.getReturnType();
+					final String key = new String(expr, tk.getStart(), tk.getOffset());
+					final Map<String, CompiledExpression> cec = pCtx.getCompiledExpressionCache();
+					final Map<String, Class> rtc = pCtx.getReturnTypeCache();
+					CompiledExpression compiled = cec.get(key);
+					Class rt = rtc.get(key);
+					if (compiled == null) {
+						final ExpressionCompiler subCompiler = new ExpressionCompiler(expr,
+								tk.getStart(), tk.getOffset(), pCtx);
+						compiled = subCompiler._compile();
+						rt = subCompiler.getReturnType();
+						cec.put(key, compiled);
+						rtc.put(key, rt);
+					}
+					tk.setAccessor(compiled);
+					returnType = rt;
 				}
 
 				/**
 				 * This kludge of code is to handle compileShared-time literal
-				 * reduction. We need to avoid reducing for certain literals like,
-				 * 'this', ternary and ternary else.
+				 * reduction. We need to avoid
+				 * reducing for certain literals like, 'this', ternary and ternary
+				 * else.
 				 */
 				if (!verifyOnly && tk.isLiteral()) {
 					if (literalOnly == -1) {
@@ -180,7 +192,8 @@ public class ExpressionCompiler extends AbstractParser {
 
 						/**
 						 * If the next token is ALSO a literal, then we have a
-						 * candidate for a compileShared-time literal reduction.
+						 * candidate for a compileShared-time literal
+						 * reduction.
 						 */
 						if ((tkLA = nextTokenSkipSymbols()) != null
 								&& tkLA.isLiteral()
@@ -224,8 +237,8 @@ public class ExpressionCompiler extends AbstractParser {
 									} else {
 										/**
 										 * A reducable line of literals has ended. We must
-										 * now terminate here and leave the rest to be
-										 * determined at runtime.
+										 * now terminate here and
+										 * leave the rest to be determined at runtime.
 										 */
 										if (!stk.isEmpty()) {
 											astBuild
@@ -243,14 +256,15 @@ public class ExpressionCompiler extends AbstractParser {
 									if (firstLA) {
 										/**
 										 * There are more tokens, but we can't reduce
-										 * anymore. So we create a reduced token for what
-										 * we've got.
+										 * anymore. So
+										 * we create a reduced token for what we've got.
 										 */
 										astBuild.addTokenNode(new LiteralNode(getStackValueResult(), pCtx));
 									} else {
 										/**
 										 * We have reduced additional tokens, but we can't
-										 * reduce anymore.
+										 * reduce
+										 * anymore.
 										 */
 										astBuild.addTokenNode(new LiteralNode(getStackValueResult(), pCtx),
 												tkOp2);
@@ -266,8 +280,10 @@ public class ExpressionCompiler extends AbstractParser {
 
 							/**
 							 * If there are no more tokens left to parse, we check to
-							 * see if we've been doing any reducing, and if so we
-							 * create the token now.
+							 * see if
+							 * we've been doing any reducing, and if so we create the
+							 * token
+							 * now.
 							 */
 							if (!stk.isEmpty()) {
 								astBuild.addTokenNode(new LiteralNode(getStackValueResult(), pCtx));
@@ -348,8 +364,8 @@ public class ExpressionCompiler extends AbstractParser {
 		switch (arithmeticFunctionReduction(opCode)) {
 		case -1:
 			/**
-			 * The reduction failed because we encountered a non-literal, so we
-			 * must now back out and cleanup.
+			 * The reduction failed because we encountered a non-literal,
+			 * so we must now back out and cleanup.
 			 */
 
 			stk.xswap_op();
@@ -361,7 +377,8 @@ public class ExpressionCompiler extends AbstractParser {
 		case -2:
 			/**
 			 * Back out completely, pull everything back off the stack and add the
-			 * instructions to the output payload as they are.
+			 * instructions
+			 * to the output payload as they are.
 			 */
 
 			final LiteralNode rightValue = new LiteralNode(stk.pop(), pCtx);
@@ -448,7 +465,8 @@ public class ExpressionCompiler extends AbstractParser {
 					if (pCtx.isStrictTypeEnforcement()) {
 						/**
 						 * If we're using strict type enforcement, we need to see if
-						 * this coercion can be done now, or fail epicly.
+						 * this coercion can be done now,
+						 * or fail epicly.
 						 */
 						if (!returnType.isAssignableFrom(c.getKnownEgressType()) && c.isLiteralOnly()) {
 							if (canConvert(c.getKnownEgressType(), returnType)) {

@@ -25,7 +25,7 @@ public interface Debugger {
 
 	/**
 	 * When a breakpoint is recached,
-	 * 
+	 *
 	 * @param frame
 	 * @return continuation command
 	 */

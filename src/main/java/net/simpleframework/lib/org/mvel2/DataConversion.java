@@ -57,7 +57,7 @@ import net.simpleframework.lib.org.mvel2.util.FastList;
 /**
  * The DataConversion factory is where all of MVEL's type converters are
  * registered with the runtime.
- * 
+ *
  * @author Mike Brock
  * @see ConversionHandler
  */
@@ -160,7 +160,7 @@ public class DataConversion {
 
 	/**
 	 * Register a new {@link ConversionHandler} with the factory.
-	 * 
+	 *
 	 * @param type
 	 *        - Target type represented by the conversion handler.
 	 * @param handler

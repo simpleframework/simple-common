@@ -49,7 +49,8 @@ public class FunctionParser {
 		if (expr[cursor = ParseTools.nextNonBlank(expr, cursor)] == '(') {
 			/**
 			 * If we discover an opening bracket after the function name, we check
-			 * to see if this function accepts parameters.
+			 * to see
+			 * if this function accepts parameters.
 			 */
 			endCond = cursor = balancedCaptureWithLineAccounting(expr, startCond = cursor, end, '(',
 					pCtx);

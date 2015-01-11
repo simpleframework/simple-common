@@ -29,8 +29,8 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
 /**
  * Use this class to extend you own VariableResolverFactories. It contains most
- * of the baseline implementation needed for the vast majority of integration
- * needs.
+ * of the baseline implementation needed
+ * for the vast majority of integration needs.
  */
 public abstract class BaseVariableResolverFactory implements VariableResolverFactory {
 	protected Map<String, VariableResolver> variableResolvers = new HashMap<String, VariableResolver>();

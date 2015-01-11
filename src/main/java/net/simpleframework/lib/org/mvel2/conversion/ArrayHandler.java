@@ -48,8 +48,9 @@ public class ArrayHandler implements ConversionHandler {
 
 	/**
 	 * Messy method to handle primitive boxing for conversion. If someone can
-	 * re-write this more elegantly, be my guest.
-	 * 
+	 * re-write this more
+	 * elegantly, be my guest.
+	 *
 	 * @param sourceType
 	 * @param input
 	 * @param targetType

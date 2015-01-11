@@ -22,11 +22,11 @@ public class ConversionException extends RuntimeException {
 
 	public ConversionException(final String message) {
 		super(message); // To change body of overridden methods use File |
-		// Settings | File Templates.
+								// Settings | File Templates.
 	}
 
 	public ConversionException(final String message, final Throwable cause) {
 		super(message, cause); // To change body of overridden methods use File |
-		// Settings | File Templates.
+										// Settings | File Templates.
 	}
 }

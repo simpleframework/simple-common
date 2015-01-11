@@ -111,8 +111,9 @@ public class ProtoParser {
 				if (interpreted && type == DeferredTypeResolve.class) {
 					/**
 					 * If this type could not be immediately resolved, it may be a
-					 * look-ahead case, so we defer resolution of the type until
-					 * later and place it in the wait queue.
+					 * look-ahead case, so
+					 * we defer resolution of the type until later and place it in
+					 * the wait queue.
 					 */
 					enqueueReceiverForLateResolution(deferredName,
 							proto.declareReceiver(name, Proto.ReceiverType.DEFERRED, null), null);
@@ -265,8 +266,9 @@ public class ProtoParser {
 
 	/**
 	 * This is such a horrible hack, but it's more performant than any other
-	 * horrible hack I can think of right now.
-	 * 
+	 * horrible hack I can think of
+	 * right now.
+	 *
 	 * @param expr
 	 * @param cursor
 	 * @param pCtx

@@ -21,21 +21,21 @@ package net.simpleframework.lib.org.mvel2.templates;
 public class TemplateSyntaxError extends RuntimeException {
 	public TemplateSyntaxError() {
 		super(); // To change body of overridden methods use File | Settings |
-		// File Templates.
+					// File Templates.
 	}
 
 	public TemplateSyntaxError(final String s) {
 		super(s); // To change body of overridden methods use File | Settings |
-		// File Templates.
+						// File Templates.
 	}
 
 	public TemplateSyntaxError(final String s, final Throwable throwable) {
 		super(s, throwable); // To change body of overridden methods use File |
-		// Settings | File Templates.
+									// Settings | File Templates.
 	}
 
 	public TemplateSyntaxError(final Throwable throwable) {
 		super(throwable); // To change body of overridden methods use File |
-		// Settings | File Templates.
+								// Settings | File Templates.
 	}
 }

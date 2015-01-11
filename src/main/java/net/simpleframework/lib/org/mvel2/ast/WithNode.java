@@ -92,10 +92,10 @@ public class WithNode extends BlockNode implements NestedStatement {
 	public static ParmValuePair[] compileWithExpressions(final char[] block, final int start,
 			final int offset, final String nestParm, final Class egressType, final ParserContext pCtx) {
 		/**
-		 * 
+		 *
 		 * MAINTENANCE NOTE: AN INTERPRETED MODE VERSION OF THIS CODE IS
 		 * DUPLICATED IN: ParseTools
-		 * 
+		 *
 		 */
 
 		final List<ParmValuePair> parms = new ArrayList<ParmValuePair>();

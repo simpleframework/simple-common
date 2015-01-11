@@ -22,6 +22,11 @@ import static java.lang.Thread.currentThread;
 import static net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory.SAFE_REFLECTIVE;
 import static net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory.getAccessorCompiler;
 import static net.simpleframework.lib.org.mvel2.optimizers.impl.asm.ASMAccessorOptimizer.setMVELClassLoader;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
@@ -38,6 +43,9 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	public static int maximumTenure = 1500;
 	public static int totalRecycled = 0;
 	private static volatile boolean useSafeClassloading = false;
+	private static ReadWriteLock lock = new ReentrantReadWriteLock();
+	private static Lock readLock = lock.readLock();
+	private static Lock writeLock = lock.writeLock();
 
 	@Override
 	public void init() {
@@ -50,12 +58,15 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	}
 
 	public static void enforceTenureLimit() {
-		if (classLoader.isOverloaded()) {
-			synchronized (oLock) {
+		writeLock.lock();
+		try {
+			if (classLoader.isOverloaded()) {
 				classLoader.deoptimizeAll();
 				totalRecycled = +classLoader.getTotalClasses();
 				_init();
 			}
+		} finally {
+			writeLock.unlock();
 		}
 	}
 
@@ -65,11 +76,14 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	public Accessor optimizeAccessor(final ParserContext pCtx, final char[] property,
 			final int start, final int offset, final Object ctx, final Object thisRef,
 			final VariableResolverFactory factory, final boolean rootThisRef, final Class ingressType) {
-		synchronized (oLock) {
+		readLock.lock();
+		try {
 			pCtx.optimizationNotify();
 			return classLoader.registerDynamicAccessor(new DynamicGetAccessor(pCtx, property, start,
 					offset, 0, firstStage.optimizeAccessor(pCtx, property, start, offset, ctx, thisRef,
 							factory, rootThisRef, ingressType)));
+		} finally {
+			readLock.unlock();
 		}
 	}
 
@@ -81,10 +95,13 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 			final VariableResolverFactory factory, final boolean rootThisRef, final Object value,
 			final Class valueType) {
 
-		synchronized (oLock) {
+		readLock.lock();
+		try {
 			return classLoader.registerDynamicAccessor(new DynamicSetAccessor(pCtx, property, start,
 					offset, firstStage.optimizeSetAccessor(pCtx, property, start, offset, ctx, thisRef,
 							factory, rootThisRef, value, valueType)));
+		} finally {
+			readLock.unlock();
 		}
 	}
 
@@ -94,10 +111,13 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	public Accessor optimizeCollection(final ParserContext pCtx, final Object rootObject,
 			final Class type, final char[] property, final int start, final int offset,
 			final Object ctx, final Object thisRef, final VariableResolverFactory factory) {
-		synchronized (oLock) {
+		readLock.lock();
+		try {
 			return classLoader.registerDynamicAccessor(new DynamicCollectionAccessor(rootObject, type,
 					property, start, offset, 2, firstStage.optimizeCollection(pCtx, rootObject, type,
 							property, start, offset, ctx, thisRef, factory)));
+		} finally {
+			readLock.unlock();
 		}
 	}
 
@@ -107,10 +127,13 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	public Accessor optimizeObjectCreation(final ParserContext pCtx, final char[] property,
 			final int start, final int offset, final Object ctx, final Object thisRef,
 			final VariableResolverFactory factory) {
-		synchronized (oLock) {
+		readLock.lock();
+		try {
 			return classLoader.registerDynamicAccessor(new DynamicGetAccessor(pCtx, property, start,
 					offset, 3, firstStage.optimizeObjectCreation(pCtx, property, start, offset, ctx,
 							thisRef, factory)));
+		} finally {
+			readLock.unlock();
 		}
 	}
 

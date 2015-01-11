@@ -21,13 +21,13 @@ package net.simpleframework.lib.org.mvel2.integration;
 /**
  * This interface allows an external property handler to resolve a property
  * against the provided context.
- * 
+ *
  * @see net.simpleframework.lib.org.mvel2.optimizers.impl.asm.ProducesBytecode
  */
 public interface PropertyHandler {
 	/**
 	 * Retrieves the value of the property.
-	 * 
+	 *
 	 * @param name
 	 *        - the name of the property to be resolved.
 	 * @param contextObj
@@ -40,7 +40,7 @@ public interface PropertyHandler {
 
 	/**
 	 * Sets the value of the property.
-	 * 
+	 *
 	 * @param name
 	 *        - the name of the property to be resolved.
 	 * @param contextObj

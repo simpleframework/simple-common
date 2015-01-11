@@ -39,10 +39,11 @@ import net.simpleframework.lib.org.mvel2.compiler.ExecutableStatement;
 
 /**
  * This is the inline collection sub-parser. It produces a skeleton model of the
- * collection which is in turn translated into a sequenced AST to produce the
- * collection efficiently at runtime, and passed off to one of the JIT's if
+ * collection which is in turn translated
+ * into a sequenced AST to produce the collection efficiently at runtime, and
+ * passed off to one of the JIT's if
  * configured.
- * 
+ *
  * @author Christopher Brock
  */
 public class CollectionParser {

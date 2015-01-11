@@ -18,19 +18,20 @@
 
 package net.simpleframework.lib.org.mvel2.util;
 
+import static java.lang.Character.toLowerCase;
+import static java.lang.Character.toUpperCase;
 import static java.lang.System.arraycopy;
 
 /**
  * Utilities for working with reflection.
  */
 public class ReflectionUtil {
-	private static final int CASE_OFFSET = ('z' - 'Z');
 
 	/**
-	 * This new method 'slightly' outperforms the old method, it was essentially
-	 * a perfect example of me wasting my time and a premature optimization. But
-	 * what the hell...
-	 * 
+	 * This new method 'slightly' outperforms the old method, it was
+	 * essentially a perfect example of me wasting my time and a
+	 * premature optimization. But what the hell...
+	 *
 	 * @param s
 	 *        -
 	 * @return String
@@ -42,11 +43,7 @@ public class ReflectionUtil {
 		chars[1] = 'e';
 		chars[2] = 't';
 
-		if (s.charAt(0) > 'Z') {
-			chars[3] = (char) (s.charAt(0) - CASE_OFFSET);
-		} else {
-			chars[3] = s.charAt(0);
-		}
+		chars[3] = toUpperCase(s.charAt(0));
 
 		for (int i = s.length() - 1; i != 0; i--) {
 			chars[i + 3] = s.charAt(i);
@@ -63,11 +60,7 @@ public class ReflectionUtil {
 		chars[1] = 'e';
 		chars[2] = 't';
 
-		if (c[0] > 'Z') {
-			chars[3] = (char) (c[0] - CASE_OFFSET);
-		} else {
-			chars[3] = (c[0]);
-		}
+		chars[3] = toUpperCase(c[0]);
 
 		arraycopy(c, 1, chars, 4, c.length - 1);
 
@@ -81,11 +74,7 @@ public class ReflectionUtil {
 		chars[0] = 'i';
 		chars[1] = 's';
 
-		if (c[0] > 'Z') {
-			chars[2] = (char) (c[0] - CASE_OFFSET);
-		} else {
-			chars[2] = c[0];
-		}
+		chars[2] = toUpperCase(c[0]);
 
 		arraycopy(c, 1, chars, 3, c.length - 1);
 
@@ -100,11 +89,7 @@ public class ReflectionUtil {
 			chars = new char[c.length - 3];
 
 			if (c[0] == 'g' || c[0] == 's') {
-				if (c[3] < 'a') {
-					chars[0] = (char) (c[3] + CASE_OFFSET);
-				} else {
-					chars[0] = c[3];
-				}
+				chars[0] = toLowerCase(c[3]);
 
 				for (int i = 1; i < chars.length; i++) {
 					chars[i] = c[i + 3];
@@ -117,11 +102,7 @@ public class ReflectionUtil {
 		} else if (c.length > 2 && c[0] == 'i' && c[1] == 's') {
 			chars = new char[c.length - 2];
 
-			if (c[2] < 'a') {
-				chars[0] = (char) (c[2] + CASE_OFFSET);
-			} else {
-				chars[0] = c[2];
-			}
+			chars[0] = toLowerCase(c[2]);
 
 			for (int i = 1; i < chars.length; i++) {
 				chars[i] = c[i + 2];

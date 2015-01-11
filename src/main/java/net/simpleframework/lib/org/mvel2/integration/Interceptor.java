@@ -21,9 +21,9 @@ import net.simpleframework.lib.org.mvel2.ast.ASTNode;
 
 /**
  * An interceptor can be used to decorate functionality into an expression or to
- * hook into external functionality, such as to log an event or fire some other
- * event.
- * 
+ * hook into external functionality, such
+ * as to log an event or fire some other event.
+ *
  * @author Christopher Brock
  */
 public interface Interceptor {
@@ -33,7 +33,7 @@ public interface Interceptor {
 
 	/**
 	 * This method is executed before the wrapped statement.
-	 * 
+	 *
 	 * @param node
 	 *        The ASTNode wrapped by the interceptor
 	 * @param factory
@@ -44,8 +44,9 @@ public interface Interceptor {
 
 	/**
 	 * This method is called after the wrapped statement has completed. A copy of
-	 * the top-value of the execution stack is also availablehere.
-	 * 
+	 * the top-value of the execution
+	 * stack is also availablehere.
+	 *
 	 * @param exitStackValue
 	 *        The value on the top of the stack after executing the statement.
 	 * @param node

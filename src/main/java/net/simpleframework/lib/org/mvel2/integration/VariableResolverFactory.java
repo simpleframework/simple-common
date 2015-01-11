@@ -23,16 +23,18 @@ import java.util.Set;
 
 /**
  * A VariableResolverFactory is the primary integration point for tying in
- * external variables. The factory is responsible for returing
+ * external variables. The factory is
+ * responsible for returing
  * {@link net.simpleframework.lib.org.mvel2.integration.VariableResolver}'s to
- * the MVEL runtime. Factories are also structured in a chain to maintain
- * locality-of-reference.
+ * the MVEL runtime. Factories are
+ * also structured in a chain to maintain locality-of-reference.
  */
 public interface VariableResolverFactory extends Serializable {
 	/**
 	 * Creates a new variable. This probably doesn't need to be implemented in
-	 * most scenarios. This is used for variable assignment.
-	 * 
+	 * most scenarios. This is
+	 * used for variable assignment.
+	 *
 	 * @param name
 	 *        - name of the variable being created
 	 * @param value
@@ -45,8 +47,9 @@ public interface VariableResolverFactory extends Serializable {
 
 	/**
 	 * Creates a new variable, and assigns a static type. It is expected the
-	 * underlying factory and resolver will enforce this.
-	 * 
+	 * underlying factory and resolver
+	 * will enforce this.
+	 *
 	 * @param name
 	 *        - name of the variable being created
 	 * @param value
@@ -64,10 +67,11 @@ public interface VariableResolverFactory extends Serializable {
 
 	/**
 	 * Returns the next factory in the factory chain. MVEL uses a hierarchical
-	 * variable resolution strategy, much in the same way as Classloaders in
-	 * Java. For performance reasons, it is the responsibility of the individual
-	 * VariableResolverFactory to pass off to the next one.
-	 * 
+	 * variable resolution strategy,
+	 * much in the same way as Classloaders in Java. For performance reasons, it
+	 * is the responsibility of
+	 * the individual VariableResolverFactory to pass off to the next one.
+	 *
 	 * @return instance of the next factory - null if none.
 	 */
 	public VariableResolverFactory getNextFactory();
@@ -77,7 +81,7 @@ public interface VariableResolverFactory extends Serializable {
 	 * <p/>
 	 * return this.nextFactory = resolverFactory;
 	 * </code>
-	 * 
+	 *
 	 * @param resolverFactory
 	 *        - instance of next resolver factory
 	 * @return - instance of next resolver factory
@@ -86,8 +90,9 @@ public interface VariableResolverFactory extends Serializable {
 
 	/**
 	 * Return a variable resolver for the specified variable name. This method is
-	 * expected to traverse the heirarchy of ResolverFactories.
-	 * 
+	 * expected to traverse the
+	 * heirarchy of ResolverFactories.
+	 *
 	 * @param name
 	 *        - variable name
 	 * @return - instance of the VariableResolver for the specified variable
@@ -98,8 +103,9 @@ public interface VariableResolverFactory extends Serializable {
 
 	/**
 	 * Deterimines whether or not the current VariableResolverFactory is the
-	 * physical target for the actual variable.
-	 * 
+	 * physical target for the actual
+	 * variable.
+	 *
 	 * @param name
 	 *        - variable name
 	 * @return - boolean indicating whether or not factory is the physical target
@@ -109,7 +115,7 @@ public interface VariableResolverFactory extends Serializable {
 	/**
 	 * Determines whether or not the variable is resolver in the chain of
 	 * factories.
-	 * 
+	 *
 	 * @param name
 	 *        - variable name
 	 * @return - boolean
@@ -118,9 +124,9 @@ public interface VariableResolverFactory extends Serializable {
 
 	/**
 	 * Return a list of known variables inside the factory. This method should
-	 * not recurse into other factories. But rather return only the variables
-	 * living inside this factory.
-	 * 
+	 * not recurse into other factories.
+	 * But rather return only the variables living inside this factory.
+	 *
 	 * @return
 	 */
 	public Set<String> getKnownVariables();
