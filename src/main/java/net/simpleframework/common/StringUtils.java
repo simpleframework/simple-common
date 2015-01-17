@@ -92,7 +92,7 @@ public abstract class StringUtils {
 		return join(it, defaultDelimiter);
 	}
 
-	public static boolean isBlank(final CharSequence cs) {
+	public static boolean isBlank(final String cs) {
 		int strLen;
 		if (cs == null || (strLen = cs.length()) == 0) {
 			return true;
@@ -105,7 +105,7 @@ public abstract class StringUtils {
 		return true;
 	}
 
-	public static boolean hasText(final CharSequence cs) {
+	public static boolean hasText(final String cs) {
 		return !isBlank(cs);
 	}
 
