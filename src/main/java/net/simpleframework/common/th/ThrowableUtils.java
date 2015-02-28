@@ -2,6 +2,7 @@ package net.simpleframework.common.th;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Map;
 
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
@@ -23,11 +24,17 @@ public abstract class ThrowableUtils {
 		return cause;
 	}
 
-	public static String getThrowableMessage(final Throwable th, final boolean sline) {
+	public static String getThrowableMessage(final Throwable th,
+			final Map<Class<? extends Throwable>, String> msgs, final boolean trimline) {
 		String message = null;
 		Throwable th0 = th;
 		while (th0 != null) {
-			message = th0.getMessage();
+			if (msgs != null) {
+				message = msgs.get(th0.getClass());
+			}
+			if (!StringUtils.hasText(message)) {
+				message = th0.getMessage();
+			}
 			if (StringUtils.hasText(message)) {
 				break;
 			}
@@ -35,16 +42,16 @@ public abstract class ThrowableUtils {
 		}
 		if (!StringUtils.hasText(message)) {
 			message = Convert.toString(th);
-			if (sline) {
-				int pos = message.indexOf("\r");
-				if (pos < 0) {
-					pos = message.indexOf("\n");
-				}
-				if (pos > 0) {
-					message = message.substring(0, pos);
-				}
-				message = message.trim();
+		}
+		if (trimline) {
+			int pos = message.indexOf("\r");
+			if (pos < 0) {
+				pos = message.indexOf("\n");
 			}
+			if (pos > 0) {
+				message = message.substring(0, pos);
+			}
+			message = message.trim();
 		}
 		return message;
 	}
