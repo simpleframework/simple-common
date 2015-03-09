@@ -65,6 +65,10 @@ public abstract class ObjectEx {
 		return new Vector<String>(_getAttributes().keySet()).elements();
 	}
 
+	public int attrSize() {
+		return _getAttributes().size();
+	}
+
 	public static <T> T isolate(final IIsolation<T> callback) {
 		try {
 			if (callback != null) {
