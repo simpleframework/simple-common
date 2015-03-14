@@ -123,6 +123,10 @@ public abstract class ObjectEx {
 		private static final long serialVersionUID = 6418478949274739685L;
 	}
 
+	protected Class<?> getOriginalClass() {
+		return ObjectFactory.original(getClass());
+	}
+
 	private transient Log log;
 
 	protected Log getLog() {
