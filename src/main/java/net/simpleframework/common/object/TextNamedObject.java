@@ -4,7 +4,6 @@ import java.util.Date;
 
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.I18n;
-import net.simpleframework.common.StringUtils;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -18,7 +17,7 @@ public abstract class TextNamedObject<T extends TextNamedObject<T>> extends Name
 	private String text;
 
 	public String getText() {
-		return StringUtils.hasText(text) ? text : getName();
+		return text;
 	}
 
 	public T setText(final String text) {
