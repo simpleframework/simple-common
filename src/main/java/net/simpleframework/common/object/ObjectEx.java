@@ -69,6 +69,21 @@ public abstract class ObjectEx {
 		return _getAttributes().size();
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T> T getAttrCache(final String key, final IVal<T> i) {
+		T val = (T) getAttr(key);
+		if (val == null) {
+			if ((val = i.get()) != null) {
+				setAttr(key, val);
+			}
+		}
+		return val;
+	}
+
+	public static interface IVal<T> {
+		T get();
+	}
+
 	public static <T> T isolate(final IIsolation<T> callback) {
 		try {
 			if (callback != null) {

@@ -40,21 +40,25 @@ public class PropertiesEx extends Properties {
 			String line = in.readLine();
 			// intract property/comment string
 			String intactLine = line;
-			if (line == null)
+			if (line == null) {
 				return;
+			}
 
 			if (line.length() > 0) {
 
 				// Find start of key
 				int len = line.length();
 				int keyStart;
-				for (keyStart = 0; keyStart < len; keyStart++)
-					if (whiteSpaceChars.indexOf(line.charAt(keyStart)) == -1)
+				for (keyStart = 0; keyStart < len; keyStart++) {
+					if (whiteSpaceChars.indexOf(line.charAt(keyStart)) == -1) {
 						break;
+					}
+				}
 
 				// Blank lines are ignored
-				if (keyStart == len)
+				if (keyStart == len) {
 					continue;
+				}
 
 				// Continue lines that end in slashes if they are not comments
 				final char firstChar = line.charAt(keyStart);
@@ -63,14 +67,17 @@ public class PropertiesEx extends Properties {
 					while (continueLine(line)) {
 						String nextLine = in.readLine();
 						intactLine = intactLine + "\n" + nextLine;
-						if (nextLine == null)
+						if (nextLine == null) {
 							nextLine = "";
+						}
 						final String loppedLine = line.substring(0, len - 1);
 						// Advance beyond whitespace on new line
 						int startIndex;
-						for (startIndex = 0; startIndex < nextLine.length(); startIndex++)
-							if (whiteSpaceChars.indexOf(nextLine.charAt(startIndex)) == -1)
+						for (startIndex = 0; startIndex < nextLine.length(); startIndex++) {
+							if (whiteSpaceChars.indexOf(nextLine.charAt(startIndex)) == -1) {
 								break;
+							}
+						}
 						nextLine = nextLine.substring(startIndex, nextLine.length());
 						line = new String(loppedLine + nextLine);
 						len = line.length();
@@ -80,27 +87,33 @@ public class PropertiesEx extends Properties {
 					int separatorIndex;
 					for (separatorIndex = keyStart; separatorIndex < len; separatorIndex++) {
 						final char currentChar = line.charAt(separatorIndex);
-						if (currentChar == '\\')
+						if (currentChar == '\\') {
 							separatorIndex++;
-						else if (keyValueSeparators.indexOf(currentChar) != -1)
+						} else if (keyValueSeparators.indexOf(currentChar) != -1) {
 							break;
+						}
 					}
 
 					// Skip over whitespace after key if any
 					int valueIndex;
-					for (valueIndex = separatorIndex; valueIndex < len; valueIndex++)
-						if (whiteSpaceChars.indexOf(line.charAt(valueIndex)) == -1)
+					for (valueIndex = separatorIndex; valueIndex < len; valueIndex++) {
+						if (whiteSpaceChars.indexOf(line.charAt(valueIndex)) == -1) {
 							break;
+						}
+					}
 
 					// Skip over one non whitespace key value separators if any
-					if (valueIndex < len)
-						if (strictKeyValueSeparators.indexOf(line.charAt(valueIndex)) != -1)
+					if (valueIndex < len) {
+						if (strictKeyValueSeparators.indexOf(line.charAt(valueIndex)) != -1) {
 							valueIndex++;
+						}
+					}
 
 					// Skip over white space after other separators if any
 					while (valueIndex < len) {
-						if (whiteSpaceChars.indexOf(line.charAt(valueIndex)) == -1)
+						if (whiteSpaceChars.indexOf(line.charAt(valueIndex)) == -1) {
 							break;
+						}
 						valueIndex++;
 					}
 					String key = line.substring(keyStart, separatorIndex);
@@ -175,12 +188,11 @@ public class PropertiesEx extends Properties {
 					}
 					outBuffer.append((char) value);
 				} else {
-					if (aChar == 't')
+					if (aChar == 't') {
 						outBuffer.append('\t'); /* ibm@7211 */
-
-					else if (aChar == 'r')
+					} else if (aChar == 'r') {
 						outBuffer.append('\r'); /* ibm@7211 */
-					else if (aChar == 'n') {
+					} else if (aChar == 'n') {
 						/*
 						 * ibm@8897 do not convert a \n to a line.separator
 						 * because on some platforms line.separator is a String
@@ -190,14 +202,16 @@ public class PropertiesEx extends Properties {
 						 * Properties.equals() works).
 						 */
 						outBuffer.append('\n'); /* ibm@8897 ibm@7211 */
-					} else if (aChar == 'f')
+					} else if (aChar == 'f') {
 						outBuffer.append('\f'); /* ibm@7211 */
-					else
+					} else {
 						/* ibm@7211 */
 						outBuffer.append(aChar); /* ibm@7211 */
+					}
 				}
-			} else
+			} else {
 				outBuffer.append(aChar);
+			}
 		}
 		return outBuffer.toString();
 	}
@@ -206,8 +220,9 @@ public class PropertiesEx extends Properties {
 	public synchronized void store(final OutputStream out, final String header) throws IOException {
 		BufferedWriter awriter;
 		awriter = new BufferedWriter(new OutputStreamWriter(out, "8859_1"));
-		if (header != null)
+		if (header != null) {
 			writeln(awriter, "#" + header);
+		}
 		final List entrys = context.getCommentOrEntrys();
 		for (final Iterator iter = entrys.iterator(); iter.hasNext();) {
 			final Object obj = iter.next();
@@ -226,8 +241,9 @@ public class PropertiesEx extends Properties {
 	private boolean continueLine(final String line) {
 		int slashCount = 0;
 		int index = line.length() - 1;
-		while ((index >= 0) && (line.charAt(index--) == '\\'))
+		while ((index >= 0) && (line.charAt(index--) == '\\')) {
 			slashCount++;
+		}
 		return (slashCount % 2 == 1);
 	}
 
@@ -243,8 +259,9 @@ public class PropertiesEx extends Properties {
 			final char aChar = theString.charAt(x);
 			switch (aChar) {
 			case ' ':
-				if (x == 0 || escapeSpace)
+				if (x == 0 || escapeSpace) {
 					outBuffer.append('\\');
+				}
 
 				outBuffer.append(' ');
 				break;
@@ -277,8 +294,9 @@ public class PropertiesEx extends Properties {
 					outBuffer.append(toHex((aChar >> 4) & 0xF));
 					outBuffer.append(toHex(aChar & 0xF));
 				} else {
-					if (specialSaveChars.indexOf(aChar) != -1)
+					if (specialSaveChars.indexOf(aChar) != -1) {
 						outBuffer.append('\\');
+					}
 					outBuffer.append(aChar);
 				}
 			}
