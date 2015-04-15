@@ -7,9 +7,9 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
 
 /**
- * Parses HTML into a {@link org.jsoup.nodes.Document}. Generally best to use
- * one of the more convenient parse methods
- * in {@link org.jsoup.Jsoup}.
+ * Parses HTML into a {@link net.simpleframework.lib.org.jsoup.nodes.Document}.
+ * Generally best to use one of the more convenient parse methods
+ * in {@link net.simpleframework.lib.org.jsoup.Jsoup}.
  */
 public class Parser {
 	private static final int DEFAULT_MAX_ERRORS = 0; // by default, error
@@ -160,10 +160,14 @@ public class Parser {
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
 		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
 																								// node
-		// list gets
-		// modified
-		// when
-		// re-parented
+																								// list
+																								// gets
+																								// modified
+																								// when
+																								// re-parented
+		for (int i = nodes.length - 1; i > 0; i--) {
+			nodes[i].remove();
+		}
 		for (final Node node : nodes) {
 			body.appendChild(node);
 		}

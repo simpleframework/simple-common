@@ -8,16 +8,18 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
 
 /**
  * CSS-like element selector, that finds elements matching a query.
- * <p/>
+ * 
  * <h2>Selector syntax</h2>
+ * <p>
  * A selector is a chain of simple selectors, separated by combinators.
  * Selectors are case insensitive (including against elements, attributes, and
  * attribute values).
- * <p/>
+ * </p>
+ * <p>
  * The universal selector (*) is implicit when no element selector is supplied
  * (i.e. {@code *.header} and {@code .header} is equivalent).
- * <p/>
- * <table>
+ * </p>
+ * <table summary="">
  * <tr>
  * <th align="left">Pattern</th>
  * <th align="left">Matches</th>
@@ -36,7 +38,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <tr>
  * <td><code>ns|E</code></td>
  * <td>elements of type E in the namespace <i>ns</i></td>
- * <td><code>fb|name</code> finds <code>&lt;fb:name></code> elements</td>
+ * <td><code>fb|name</code> finds <code>&lt;fb:name&gt;</code> elements</td>
  * </tr>
  * <tr>
  * <td><code>#id</code></td>
@@ -74,7 +76,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>[attr^=valPrefix]</code></td>
  * <td>elements with an attribute named "attr", and value starting with
  * "valPrefix"</td>
- * <td><code>a[href^=http:]</code></code></td>
+ * <td><code>a[href^=http:]</code></td>
  * </tr>
  * <tr>
  * <td><code>[attr$=valSuffix]</code></td>
@@ -110,9 +112,9 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>div a</code>, <code>.logo h1</code></td>
  * </tr>
  * <tr>
- * <td><code>E > F</code></td>
+ * <td><code>E {@literal >} F</code></td>
  * <td>an F direct child of E</td>
- * <td><code>ol > li</code></td>
+ * <td><code>ol {@literal >} li</code></td>
  * </tr>
  * <tr>
  * <td><code>E + F</code></td>
@@ -160,8 +162,11 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td>elements that do not match the <em>selector</em>. See also
  * {@link Elements#not(String)}</td>
  * <td><code>div:not(.logo)</code> finds all divs that do not have the "logo"
- * class.<br />
- * <code>div:not(:has(div))</code> finds divs that do not contain divs.</code></td>
+ * class.
+ * <p>
+ * <code>div:not(:has(div))</code> finds divs that do not contain divs.
+ * </p>
+ * </td>
  * </tr>
  * <tr>
  * <td><code>:contains(<em>text</em>)</code></td>
@@ -259,12 +264,12 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <tr>
  * <td><code>:first-child</code></td>
  * <td>elements that are the first child of some other element.</td>
- * <td><code>div > p:first-child</code></td>
+ * <td><code>div {@literal >} p:first-child</code></td>
  * </tr>
  * <tr>
  * <td><code>:last-child</code></td>
  * <td>elements that are the last child of some other element.</td>
- * <td><code>ol > li:last-child</code></td>
+ * <td><code>ol {@literal >} li:last-child</code></td>
  * </tr>
  * <tr>
  * <td><code>:first-of-type</code></td>
@@ -276,7 +281,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>:last-of-type</code></td>
  * <td>elements that are the last sibling of its type in the list of children of
  * its parent element</td>
- * <td><code>tr > td:last-of-type</code></td>
+ * <td><code>tr {@literal >} td:last-of-type</code></td>
  * </tr>
  * <tr>
  * <td><code>:only-child</code></td>
@@ -296,7 +301,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td></td>
  * </tr>
  * </table>
- *
+ * 
  * @author Jonathan Hedley, jonathan@hedley.net
  * @see Element#select(String)
  */
@@ -315,6 +320,14 @@ public class Selector {
 		this.root = root;
 	}
 
+	private Selector(final Evaluator evaluator, final Element root) {
+		Validate.notNull(evaluator);
+		Validate.notNull(root);
+
+		this.evaluator = evaluator;
+		this.root = root;
+	}
+
 	/**
 	 * Find elements matching selector.
 	 *
@@ -322,10 +335,25 @@ public class Selector {
 	 *        CSS selector
 	 * @param root
 	 *        root element to descend into
-	 * @return matching elements, empty if not
+	 * @return matching elements, empty if none
+	 * @throws Selector.SelectorParseException
+	 *         (unchecked) on an invalid CSS query.
 	 */
 	public static Elements select(final String query, final Element root) {
 		return new Selector(query, root).select();
+	}
+
+	/**
+	 * Find elements matching selector.
+	 *
+	 * @param evaluator
+	 *        CSS selector
+	 * @param root
+	 *        root element to descend into
+	 * @return matching elements, empty if none
+	 */
+	public static Elements select(final Evaluator evaluator, final Element root) {
+		return new Selector(evaluator, root).select();
 	}
 
 	/**
@@ -335,15 +363,16 @@ public class Selector {
 	 *        CSS selector
 	 * @param roots
 	 *        root elements to descend into
-	 * @return matching elements, empty if not
+	 * @return matching elements, empty if none
 	 */
 	public static Elements select(final String query, final Iterable<Element> roots) {
 		Validate.notEmpty(query);
 		Validate.notNull(roots);
+		final Evaluator evaluator = QueryParser.parse(query);
 		final LinkedHashSet<Element> elements = new LinkedHashSet<Element>();
 
 		for (final Element root : roots) {
-			elements.addAll(select(query, root));
+			elements.addAll(select(evaluator, root));
 		}
 		return new Elements(elements);
 	}

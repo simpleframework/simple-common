@@ -1,13 +1,21 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import java.util.Arrays;
+
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Entities;
 
 /**
  * Readers the input stream into tokens.
  */
-class Tokeniser {
+final class Tokeniser {
 	static final char replacementChar = '\uFFFD'; // replaces null character
+	private static final char[] notCharRefCharsSorted = new char[] { '\t', '\n', '\r', '\f', ' ',
+			'<', '&' };
+
+	static {
+		Arrays.sort(notCharRefCharsSorted);
+	}
 
 	private final CharacterReader reader; // html input
 	private final ParseErrorList errors; // errors found while tokenising
@@ -16,17 +24,33 @@ class Tokeniser {
 																			// state
 	private Token emitPending; // the token we are about to emit on next read
 	private boolean isEmitPending = false;
-	private final StringBuilder charBuffer = new StringBuilder(); // buffers
-																						// characters
-	// to output as one
-	// token
-	StringBuilder dataBuffer; // buffers data looking for </script>
+	private String charsString = null; // characters pending an emit. Will fall
+													// to charsBuilder if more than one
+	private final StringBuilder charsBuilder = new StringBuilder(1024); // buffers
+																								// characters
+																								// to
+																								// output
+																								// as
+																								// one
+																								// token,
+																								// if
+																								// more
+																								// than
+																								// one
+																								// emit
+																								// per
+																								// read
+	StringBuilder dataBuffer = new StringBuilder(1024); // buffers data looking
+																			// for </script>
 
 	Token.Tag tagPending; // tag we are building up
-	Token.Doctype doctypePending; // doctype building up
-	Token.Comment commentPending; // comment building up
-	private Token.StartTag lastStartTag; // the last start tag emitted, to test
-														// appropriate end tag
+	Token.StartTag startPending = new Token.StartTag();
+	Token.EndTag endPending = new Token.EndTag();
+	Token.Character charPending = new Token.Character();
+	Token.Doctype doctypePending = new Token.Doctype(); // doctype building up
+	Token.Comment commentPending = new Token.Comment(); // comment building up
+	private String lastStartTag; // the last start tag emitted, to test
+											// appropriate end tag
 	private boolean selfClosingFlagAcknowledged = true;
 
 	Tokeniser(final CharacterReader reader, final ParseErrorList errors) {
@@ -46,10 +70,15 @@ class Tokeniser {
 
 		// if emit is pending, a non-character token was found: return any chars
 		// in buffer, and leave token for next read:
-		if (charBuffer.length() > 0) {
-			final String str = charBuffer.toString();
-			charBuffer.delete(0, charBuffer.length());
-			return new Token.Character(str);
+		if (charsBuilder.length() > 0) {
+			final String str = charsBuilder.toString();
+			charsBuilder.delete(0, charsBuilder.length());
+			charsString = null;
+			return charPending.data(str);
+		} else if (charsString != null) {
+			final Token token = charPending.data(charsString);
+			charsString = null;
+			return token;
 		} else {
 			isEmitPending = false;
 			return emitPending;
@@ -64,7 +93,7 @@ class Tokeniser {
 
 		if (token.type == Token.TokenType.StartTag) {
 			final Token.StartTag startTag = (Token.StartTag) token;
-			lastStartTag = startTag;
+			lastStartTag = startTag.tagName;
 			if (startTag.selfClosing) {
 				selfClosingFlagAcknowledged = false;
 			}
@@ -80,15 +109,23 @@ class Tokeniser {
 		// buffer strings up until last string token found, to emit only one token
 		// for a run of character refs etc.
 		// does not set isEmitPending; read checks that
-		charBuffer.append(str);
+		if (charsString == null) {
+			charsString = str;
+		} else {
+			if (charsBuilder.length() == 0) { // switching to string builder as
+															// more than one emit before read
+				charsBuilder.append(charsString);
+			}
+			charsBuilder.append(str);
+		}
 	}
 
 	void emit(final char[] chars) {
-		charBuffer.append(chars);
+		emit(String.valueOf(chars));
 	}
 
 	void emit(final char c) {
-		charBuffer.append(c);
+		emit(String.valueOf(c));
 	}
 
 	TokeniserState getState() {
@@ -108,6 +145,9 @@ class Tokeniser {
 		selfClosingFlagAcknowledged = true;
 	}
 
+	final private char[] charRefHolder = new char[1]; // holder to not have to
+																		// keep creating arrays
+
 	char[] consumeCharacterReference(final Character additionalAllowedCharacter,
 			final boolean inAttribute) {
 		if (reader.isEmpty()) {
@@ -116,10 +156,11 @@ class Tokeniser {
 		if (additionalAllowedCharacter != null && additionalAllowedCharacter == reader.current()) {
 			return null;
 		}
-		if (reader.matchesAny('\t', '\n', '\r', '\f', ' ', '<', '&')) {
+		if (reader.matchesAnySorted(notCharRefCharsSorted)) {
 			return null;
 		}
 
+		final char[] charRef = charRefHolder;
 		reader.mark();
 		if (reader.matchConsume("#")) { // numbered
 			final boolean isHexMode = reader.matchConsumeIgnoreCase("X");
@@ -141,11 +182,17 @@ class Tokeniser {
 			} // skip
 			if (charval == -1 || (charval >= 0xD800 && charval <= 0xDFFF) || charval > 0x10FFFF) {
 				characterReferenceError("character outside of valid range");
-				return new char[] { replacementChar };
+				charRef[0] = replacementChar;
+				return charRef;
 			} else {
 				// todo: implement number replacement table
 				// todo: check for extra illegal unicode points as parse errors
-				return Character.toChars(charval);
+				if (charval < Character.MIN_SUPPLEMENTARY_CODE_POINT) {
+					charRef[0] = (char) charval;
+					return charRef;
+				} else {
+					return Character.toChars(charval);
+				}
 			}
 		} else { // named
 			// get as many letters as possible, and look for matching entities.
@@ -173,12 +220,13 @@ class Tokeniser {
 			if (!reader.matchConsume(";")) {
 				characterReferenceError("missing semicolon"); // missing semi
 			}
-			return new char[] { Entities.getCharacterByName(nameRef) };
+			charRef[0] = Entities.getCharacterByName(nameRef);
+			return charRef;
 		}
 	}
 
 	Token.Tag createTagPending(final boolean start) {
-		tagPending = start ? new Token.StartTag() : new Token.EndTag();
+		tagPending = start ? startPending.reset() : endPending.reset();
 		return tagPending;
 	}
 
@@ -188,7 +236,7 @@ class Tokeniser {
 	}
 
 	void createCommentPending() {
-		commentPending = new Token.Comment();
+		commentPending.reset();
 	}
 
 	void emitCommentPending() {
@@ -196,7 +244,7 @@ class Tokeniser {
 	}
 
 	void createDoctypePending() {
-		doctypePending = new Token.Doctype();
+		doctypePending.reset();
 	}
 
 	void emitDoctypePending() {
@@ -204,21 +252,18 @@ class Tokeniser {
 	}
 
 	void createTempBuffer() {
-		dataBuffer = new StringBuilder();
+		Token.reset(dataBuffer);
 	}
 
 	boolean isAppropriateEndTagToken() {
-		if (lastStartTag == null) {
-			return false;
-		}
-		return tagPending.tagName.equals(lastStartTag.tagName);
+		return lastStartTag != null && tagPending.tagName.equals(lastStartTag);
 	}
 
 	String appropriateEndTagName() {
 		if (lastStartTag == null) {
 			return null;
 		}
-		return lastStartTag.tagName;
+		return lastStartTag;
 	}
 
 	void error(final TokeniserState state) {

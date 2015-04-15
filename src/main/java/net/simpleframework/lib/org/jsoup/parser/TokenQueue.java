@@ -229,13 +229,13 @@ public class TokenQueue {
 		final int start = pos;
 		final String first = seq.substring(0, 1);
 		final boolean canScan = first.toLowerCase().equals(first.toUpperCase()); // if
-		// first
-		// is
-		// not
-		// cased,
-		// use
-		// index
-		// of
+																											// first
+																											// is
+																											// not
+																											// cased,
+																											// use
+																											// index
+																											// of
 		while (!isEmpty()) {
 			if (matches(seq)) {
 				break;
@@ -244,7 +244,6 @@ public class TokenQueue {
 			if (canScan) {
 				final int skip = queue.indexOf(first, pos) - pos;
 				if (skip == 0) {
-					// force advance of pos
 					pos++;
 				} else if (skip < 0) {
 					pos = queue.length();
@@ -375,6 +374,8 @@ public class TokenQueue {
 
 	/**
 	 * Pulls the next run of whitespace characters of the queue.
+	 * 
+	 * @return Whether consuming whitespace or not
 	 */
 	public boolean consumeWhitespace() {
 		boolean seen = false;

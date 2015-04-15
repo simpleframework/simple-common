@@ -19,8 +19,9 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
 /**
  * Whitelists define what HTML (elements and attributes) to allow through the
  * cleaner. Everything else is removed.
- * <p/>
+ * <p>
  * Start with one of the defaults:
+ * </p>
  * <ul>
  * <li>{@link #none}
  * <li>{@link #simpleText}
@@ -28,48 +29,62 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <li>{@link #basicWithImages}
  * <li>{@link #relaxed}
  * </ul>
- * <p/>
+ * <p>
  * If you need to allow more through (please be careful!), tweak a base
  * whitelist with:
+ * </p>
  * <ul>
  * <li>{@link #addTags}
  * <li>{@link #addAttributes}
  * <li>{@link #addEnforcedAttribute}
  * <li>{@link #addProtocols}
  * </ul>
- * <p/>
+ * <p>
+ * You can remove any setting from an existing whitelist with:
+ * </p>
+ * <ul>
+ * <li>{@link #removeTags}
+ * <li>{@link #removeAttributes}
+ * <li>{@link #removeEnforcedAttribute}
+ * <li>{@link #removeProtocols}
+ * </ul>
+ * 
+ * <p>
  * The cleaner and these whitelists assume that you want to clean a
  * <code>body</code> fragment of HTML (to add user supplied HTML into a
  * templated page), and not to clean a full HTML document. If the latter is the
  * case, either wrap the document HTML around the cleaned body HTML, or create a
  * whitelist that allows <code>html</code> and <code>head</code> elements as
  * appropriate.
- * <p/>
+ * </p>
+ * <p>
  * If you are going to extend a whitelist, please be very careful. Make sure you
  * understand what attributes may lead to XSS attack vectors. URL attributes are
  * particularly vulnerable and require careful validation. See
  * http://ha.ckers.org/xss.html for some XSS attack examples.
+ * </p>
  * 
  * @author Jonathan Hedley
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-														// br,
-	// span]
+														// br, span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
 																					// attribute[].
-	// allowed attributes
-	// [href] for a tag.
+																					// allowed
+																					// attributes
+																					// [href] for a
+																					// tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
-	// set
-	// these
-	// attribute
-	// values
+																													// set
+																													// these
+																													// attribute
+																													// values
 	private final Map<TagName, Map<AttributeKey, Set<Protocol>>> protocols; // allowed
-	// URL
-	// protocols
-	// for
-	// attributes
+																									// URL
+																									// protocols
+																									// for
+																									// attributes
 	private boolean preserveRelativeLinks; // option to preserve relative links
 
 	/**
@@ -93,16 +108,20 @@ public class Whitelist {
 	}
 
 	/**
+	 * <p>
 	 * This whitelist allows a fuller range of text nodes:
 	 * <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
      ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
 	 * appropriate attributes.
-	 * <p/>
+	 * </p>
+	 * <p>
 	 * Links (<code>a</code> elements) can point to
 	 * <code>http, https, ftp, mailto</code>, and have an enforced
 	 * <code>rel=nofollow</code> attribute.
-	 * <p/>
+	 * </p>
+	 * <p>
 	 * Does not allow images.
+	 * </p>
 	 * 
 	 * @return whitelist
 	 */
@@ -142,9 +161,10 @@ public class Whitelist {
 	 * <code>a, b, blockquote, br, caption, cite,
      code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
      sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
-	 * <p/>
+	 * <p>
 	 * Links do not have an enforced <code>rel=nofollow</code> attribute, but you
 	 * can add that if desired.
+	 * </p>
 	 * 
 	 * @return whitelist
 	 */
@@ -206,15 +226,42 @@ public class Whitelist {
 	}
 
 	/**
+	 * Remove a list of allowed elements from a whitelist. (If a tag is not
+	 * allowed, it will be removed from the HTML.)
+	 * 
+	 * @param tags
+	 *        tag names to disallow
+	 * @return this (for chaining)
+	 */
+	public Whitelist removeTags(final String... tags) {
+		Validate.notNull(tags);
+
+		for (final String tag : tags) {
+			Validate.notEmpty(tag);
+			final TagName tagName = TagName.valueOf(tag);
+
+			if (tagNames.remove(tagName)) { // Only look in sub-maps if tag was
+														// allowed
+				attributes.remove(tagName);
+				enforcedAttributes.remove(tagName);
+				protocols.remove(tagName);
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Add a list of allowed attributes to a tag. (If an attribute is not allowed
 	 * on an element, it will be removed.)
-	 * <p/>
+	 * <p>
 	 * E.g.: <code>addAttributes("a", "href", "class")</code> allows
 	 * <code>href</code> and <code>class</code> attributes on <code>a</code>
 	 * tags.
-	 * <p/>
+	 * </p>
+	 * <p>
 	 * To make an attribute valid for <b>all tags</b>, use the pseudo tag
 	 * <code>:all</code>, e.g. <code>addAttributes(":all", "class")</code>.
+	 * </p>
 	 * 
 	 * @param tag
 	 *        The tag the attributes are for. The tag will be added to the
@@ -247,13 +294,72 @@ public class Whitelist {
 	}
 
 	/**
+	 * Remove a list of allowed attributes from a tag. (If an attribute is not
+	 * allowed on an element, it will be removed.)
+	 * <p>
+	 * E.g.: <code>removeAttributes("a", "href", "class")</code> disallows
+	 * <code>href</code> and <code>class</code> attributes on <code>a</code>
+	 * tags.
+	 * </p>
+	 * <p>
+	 * To make an attribute invalid for <b>all tags</b>, use the pseudo tag
+	 * <code>:all</code>, e.g. <code>removeAttributes(":all", "class")</code>.
+	 * </p>
+	 * 
+	 * @param tag
+	 *        The tag the attributes are for.
+	 * @param keys
+	 *        List of invalid attributes for the tag
+	 * @return this (for chaining)
+	 */
+	public Whitelist removeAttributes(final String tag, final String... keys) {
+		Validate.notEmpty(tag);
+		Validate.notNull(keys);
+		Validate.isTrue(keys.length > 0, "No attributes supplied.");
+
+		final TagName tagName = TagName.valueOf(tag);
+		final Set<AttributeKey> attributeSet = new HashSet<AttributeKey>();
+		for (final String key : keys) {
+			Validate.notEmpty(key);
+			attributeSet.add(AttributeKey.valueOf(key));
+		}
+		if (tagNames.contains(tagName) && attributes.containsKey(tagName)) { // Only
+																									// look
+																									// in
+																									// sub-maps
+																									// if
+																									// tag
+																									// was
+																									// allowed
+			final Set<AttributeKey> currentSet = attributes.get(tagName);
+			currentSet.removeAll(attributeSet);
+
+			if (currentSet.isEmpty()) {
+				attributes.remove(tagName);
+			}
+		}
+		if (tag.equals(":all")) {
+			for (final TagName name : attributes.keySet()) {
+				final Set<AttributeKey> currentSet = attributes.get(name);
+				currentSet.removeAll(attributeSet);
+
+				if (currentSet.isEmpty()) {
+					attributes.remove(name);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Add an enforced attribute to a tag. An enforced attribute will always be
 	 * added to the element. If the element
 	 * already has the attribute set, it will be overridden.
-	 * <p/>
+	 * <p>
 	 * E.g.: <code>addEnforcedAttribute("a", "rel", "nofollow")</code> will make
 	 * all <code>a</code> tags output as
-	 * <code>&lt;a href="..." rel="nofollow"></code>
+	 * <code>&lt;a href="..." rel="nofollow"&gt;</code>
+	 * </p>
 	 * 
 	 * @param tag
 	 *        The tag the enforced attribute is for. The tag will be added to the
@@ -287,18 +393,45 @@ public class Whitelist {
 	}
 
 	/**
+	 * Remove a previously configured enforced attribute from a tag.
+	 * 
+	 * @param tag
+	 *        The tag the enforced attribute is for.
+	 * @param key
+	 *        The attribute key
+	 * @return this (for chaining)
+	 */
+	public Whitelist removeEnforcedAttribute(final String tag, final String key) {
+		Validate.notEmpty(tag);
+		Validate.notEmpty(key);
+
+		final TagName tagName = TagName.valueOf(tag);
+		if (tagNames.contains(tagName) && enforcedAttributes.containsKey(tagName)) {
+			final AttributeKey attrKey = AttributeKey.valueOf(key);
+			final Map<AttributeKey, AttributeValue> attrMap = enforcedAttributes.get(tagName);
+			attrMap.remove(attrKey);
+
+			if (attrMap.isEmpty()) {
+				enforcedAttributes.remove(tagName);
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Configure this Whitelist to preserve relative links in an element's URL
 	 * attribute, or convert them to absolute
 	 * links. By default, this is <b>false</b>: URLs will be made absolute (e.g.
 	 * start with an allowed protocol, like
 	 * e.g. {@code http://}.
-	 * <p />
+	 * <p>
 	 * Note that when handling relative links, the input document must have an
 	 * appropriate {@code base URI} set when parsing, so that the link's protocol
 	 * can be confirmed. Regardless of the setting of the
 	 * {@code preserve relative
 	 * links} option, the link must be resolvable against the base URI to an
 	 * allowed protocol; otherwise the attribute will be removed.
+	 * </p>
 	 *
 	 * @param preserve
 	 *        {@code true} to allow relative links, {@code false} (default) to
@@ -315,8 +448,14 @@ public class Whitelist {
 	 * Add allowed URL protocols for an element's URL attribute. This restricts
 	 * the possible values of the attribute to
 	 * URLs with the defined protocol.
-	 * <p/>
+	 * <p>
 	 * E.g.: <code>addProtocols("a", "href", "ftp", "http", "https")</code>
+	 * </p>
+	 * <p>
+	 * To allow a link to an in-page URL anchor (i.e.
+	 * <code>&lt;a href="#anchor"&gt;</code>, add a <code>#</code>:<br>
+	 * E.g.: <code>addProtocols("a", "href", "#")</code>
+	 * </p>
 	 * 
 	 * @param tag
 	 *        Tag the URL protocol is for
@@ -352,6 +491,49 @@ public class Whitelist {
 			Validate.notEmpty(protocol);
 			final Protocol prot = Protocol.valueOf(protocol);
 			protSet.add(prot);
+		}
+		return this;
+	}
+
+	/**
+	 * Remove allowed URL protocols for an element's URL attribute.
+	 * <p>
+	 * E.g.: <code>removeProtocols("a", "href", "ftp")</code>
+	 * </p>
+	 * 
+	 * @param tag
+	 *        Tag the URL protocol is for
+	 * @param key
+	 *        Attribute key
+	 * @param protocols
+	 *        List of invalid protocols
+	 * @return this, for chaining
+	 */
+	public Whitelist removeProtocols(final String tag, final String key, final String... protocols) {
+		Validate.notEmpty(tag);
+		Validate.notEmpty(key);
+		Validate.notNull(protocols);
+
+		final TagName tagName = TagName.valueOf(tag);
+		final AttributeKey attrKey = AttributeKey.valueOf(key);
+
+		if (this.protocols.containsKey(tagName)) {
+			final Map<AttributeKey, Set<Protocol>> attrMap = this.protocols.get(tagName);
+			if (attrMap.containsKey(attrKey)) {
+				final Set<Protocol> protSet = attrMap.get(attrKey);
+				for (final String protocol : protocols) {
+					Validate.notEmpty(protocol);
+					final Protocol prot = Protocol.valueOf(protocol);
+					protSet.remove(prot);
+				}
+
+				if (protSet.isEmpty()) { // Remove protocol set if empty
+					attrMap.remove(attrKey);
+					if (attrMap.isEmpty()) {
+						this.protocols.remove(tagName);
+					}
+				}
+			}
 		}
 		return this;
 	}
@@ -406,19 +588,34 @@ public class Whitelist {
 		String value = el.absUrl(attr.getKey());
 		if (value.length() == 0) {
 			value = attr.getValue(); // if it could not be made abs, run as-is to
+												// allow custom unknown protocols
 		}
-		// allow custom unknown protocols
 		if (!preserveRelativeLinks) {
 			attr.setValue(value);
 		}
 
 		for (final Protocol protocol : protocols) {
-			final String prot = protocol.toString() + ":";
+			String prot = protocol.toString();
+
+			if (prot.equals("#")) { // allows anchor links
+				if (isValidAnchor(value)) {
+					return true;
+				} else {
+					continue;
+				}
+			}
+
+			prot += ":";
+
 			if (value.toLowerCase().startsWith(prot)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private boolean isValidAnchor(final String value) {
+		return value.startsWith("#") && !value.matches(".*\\s.*");
 	}
 
 	Attributes getEnforcedAttributes(final String tagName) {

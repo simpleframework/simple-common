@@ -138,6 +138,8 @@ public class TextNode extends Node {
 	 * 
 	 * @param encodedText
 	 *        Text containing encoded HTML (e.g. &amp;lt;)
+	 * @param baseUri
+	 *        Base uri
 	 * @return TextNode containing unencoded data (e.g. &lt;)
 	 */
 	public static TextNode createFromEncoded(final String encodedText, final String baseUri) {
@@ -200,5 +202,29 @@ public class TextNode extends Node {
 	public String absUrl(final String attributeKey) {
 		ensureAttributes();
 		return super.absUrl(attributeKey);
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		if (!super.equals(o)) {
+			return false;
+		}
+
+		final TextNode textNode = (TextNode) o;
+
+		return !(text != null ? !text.equals(textNode.text) : textNode.text != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + (text != null ? text.hashCode() : 0);
+		return result;
 	}
 }

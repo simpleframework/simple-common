@@ -1,6 +1,7 @@
 package net.simpleframework.lib.org.jsoup;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
@@ -12,15 +13,17 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
  * A Connection provides a convenient interface to fetch content from the web,
  * and parse them into Documents.
  * <p>
- * To get a new Connection, use {@link org.jsoup.Jsoup#connect(String)}.
- * Connections contain {@link Connection.Request} and
- * {@link Connection.Response} objects. The request objects are reusable as
- * prototype requests.
+ * To get a new Connection, use
+ * {@link net.simpleframework.lib.org.jsoup.Jsoup#connect(String)}. Connections
+ * contain {@link Connection.Request} and {@link Connection.Response} objects.
+ * The request objects are reusable as prototype requests.
+ * </p>
  * <p>
  * Request configuration can be made using either the shortcut methods in
  * Connection (e.g. {@link #userAgent(String)}), or by methods in the
  * Connection.Request object directly. All request configuration must be made
  * before the request is executed.
+ * </p>
  */
 public interface Connection {
 
@@ -28,7 +31,22 @@ public interface Connection {
 	 * GET and POST http methods.
 	 */
 	public enum Method {
-		GET, POST
+		GET(false), POST(true), PUT(true), DELETE(false), PATCH(true);
+
+		private final boolean hasBody;
+
+		private Method(final boolean hasBody) {
+			this.hasBody = hasBody;
+		}
+
+		/**
+		 * Check if this HTTP method has/needs a request body
+		 * 
+		 * @return if body needed
+		 */
+		public final boolean hasBody() {
+			return hasBody;
+		}
 	}
 
 	/**
@@ -143,9 +161,32 @@ public interface Connection {
 	public Connection ignoreContentType(boolean ignoreContentType);
 
 	/**
+	 * Disable/enable TSL certificates validation for HTTPS requests.
+	 * <p>
+	 * By default this is <b>true</b>; all connections over HTTPS perform normal
+	 * validation of certificates, and will abort requests if the provided
+	 * certificate does not validate.
+	 * </p>
+	 * <p>
+	 * Some servers use expired, self-generated certificates; or your JDK may not
+	 * support SNI hosts. In which case, you may want to enable this setting.
+	 * </p>
+	 * <p>
+	 * <b>Be careful</b> and understand why you need to disable these
+	 * validations.
+	 * </p>
+	 * 
+	 * @param value
+	 *        if should validate TSL (SSL) certificates. <b>true</b> by default.
+	 * @return this Connection, for chaining
+	 */
+	Connection validateTLSCertificates(boolean value);
+
+	/**
 	 * Add a request data parameter. Request parameters are sent in the request
-	 * query string for GETs, and in the request
-	 * body for POSTs. A request may have multiple values of the same name.
+	 * query string for GETs, and in the
+	 * request body for POSTs. A request may have multiple values of the same
+	 * name.
 	 * 
 	 * @param key
 	 *        data key
@@ -154,6 +195,25 @@ public interface Connection {
 	 * @return this Connection, for chaining
 	 */
 	public Connection data(String key, String value);
+
+	/**
+	 * Add an input stream as a request data paramater. For GETs, has no effect,
+	 * but for POSTS this will upload the
+	 * input stream.
+	 * 
+	 * @param key
+	 *        data key (form item name)
+	 * @param filename
+	 *        the name of the file to present to the remove server. Typically
+	 *        just the name, not path,
+	 *        component.
+	 * @param inputStream
+	 *        the input stream to upload, that you probably obtained from a
+	 *        {@link java.io.FileInputStream}.
+	 *        You must close the InputStream in a {@code finally} block.
+	 * @return this Connections, for chaining
+	 */
+	public Connection data(String key, String filename, InputStream inputStream);
 
 	/**
 	 * Adds all of the supplied data to the request data parameters
@@ -175,10 +235,10 @@ public interface Connection {
 
 	/**
 	 * Add a number of request data parameters. Multiple parameters may be set at
-	 * once, e.g.:
-	 * <code>.data("name", "jsoup", "language", "Java", "language", "English");</code>
-	 * creates a query string like:
-	 * <code>?name=jsoup&language=Java&language=English</code>
+	 * once, e.g.: <code>.data("name",
+	 * "jsoup", "language", "Java", "language", "English");</code> creates a
+	 * query string like:
+	 * <code>{@literal ?name=jsoup&language=Java&language=English}</code>
 	 * 
 	 * @param keyvals
 	 *        a set of key value pairs.
@@ -194,7 +254,7 @@ public interface Connection {
 	 * @param value
 	 *        header value
 	 * @return this Connection, for chaining
-	 * @see org.jsoup.Connection.Request#headers()
+	 * @see net.simpleframework.lib.org.jsoup.Connection.Request#headers()
 	 */
 	public Connection header(String name, String value);
 
@@ -213,7 +273,7 @@ public interface Connection {
 	 * Adds each of the supplied cookies to the request.
 	 * 
 	 * @param cookies
-	 *        map of cookie name -> value pairs
+	 *        map of cookie name {@literal ->} value pairs
 	 * @return this Connection, for chaining
 	 */
 	public Connection cookies(Map<String, String> cookies);
@@ -227,6 +287,16 @@ public interface Connection {
 	 * @return this Connection, for chaining
 	 */
 	public Connection parser(Parser parser);
+
+	/**
+	 * Sets the default post data character set for x-www-form-urlencoded post
+	 * data
+	 * 
+	 * @param charset
+	 *        character set to encode post data
+	 * @return this Connection, for chaining
+	 */
+	public Connection postDataCharset(String charset);
 
 	/**
 	 * Execute the request as a GET, and parse the result.
@@ -362,6 +432,7 @@ public interface Connection {
 		 * header may only have one value.
 		 * <p>
 		 * Header names are case insensitive.
+		 * </p>
 		 * 
 		 * @param name
 		 *        name of header (case insensitive)
@@ -393,6 +464,17 @@ public interface Connection {
 		public boolean hasHeader(String name);
 
 		/**
+		 * Check if a header is present, with the given value
+		 * 
+		 * @param name
+		 *        header name (case insensitive)
+		 * @param value
+		 *        value (case insensitive)
+		 * @return if the header and value pair are set in this req/res
+		 */
+		public boolean hasHeaderWithValue(String name, String value);
+
+		/**
 		 * Remove a header by name
 		 * 
 		 * @param name
@@ -414,6 +496,7 @@ public interface Connection {
 		 * Response objects have a simplified cookie model. Each cookie set in the
 		 * response is added to the response object's cookie key=value map. The
 		 * cookie's path, domain, and expiry date are ignored.
+		 * </p>
 		 * 
 		 * @param name
 		 *        name of cookie to retrieve.
@@ -456,13 +539,13 @@ public interface Connection {
 		 * @return cookies
 		 */
 		public Map<String, String> cookies();
-
 	}
 
 	/**
 	 * Represents a HTTP request.
 	 */
 	public interface Request extends Base<Request> {
+
 		/**
 		 * Get the request timeout, in milliseconds.
 		 * 
@@ -505,7 +588,7 @@ public interface Connection {
 		/**
 		 * Configures the request to (not) follow server redirects. By default
 		 * this is <b>true</b>.
-		 *
+		 * 
 		 * @param followRedirects
 		 *        true if server redirects should be followed.
 		 * @return this Request, for chaining
@@ -516,7 +599,8 @@ public interface Connection {
 		 * Get the current ignoreHttpErrors configuration.
 		 * 
 		 * @return true if errors will be ignored; false (default) if HTTP errors
-		 *         will cause an IOException to be thrown.
+		 *         will cause an IOException to be
+		 *         thrown.
 		 */
 		public boolean ignoreHttpErrors();
 
@@ -533,7 +617,8 @@ public interface Connection {
 		 * Get the current ignoreContentType configuration.
 		 * 
 		 * @return true if invalid content-types will be ignored; false (default)
-		 *         if they will cause an IOException to be thrown.
+		 *         if they will cause an IOException to
+		 *         be thrown.
 		 */
 		public boolean ignoreContentType();
 
@@ -545,6 +630,21 @@ public interface Connection {
 		 * @return this Request, for chaining
 		 */
 		public Request ignoreContentType(boolean ignoreContentType);
+
+		/**
+		 * Get the current state of TLS (SSL) certificate validation.
+		 * 
+		 * @return true if TLS cert validation enabled
+		 */
+		boolean validateTLSCertificates();
+
+		/**
+		 * Set TLS certificate validation.
+		 * 
+		 * @param value
+		 *        set false to ignore TLS (SSL) certificates
+		 */
+		void validateTLSCertificates(boolean value);
 
 		/**
 		 * Add a data parameter to the request
@@ -577,6 +677,23 @@ public interface Connection {
 		 * @return current Parser
 		 */
 		public Parser parser();
+
+		/**
+		 * Sets the post data character set for x-www-form-urlencoded post data
+		 * 
+		 * @param charset
+		 *        character set to encode post data
+		 * @return this Request, for chaining
+		 */
+		public Request postDataCharset(String charset);
+
+		/**
+		 * Gets the post data character set for x-www-form-urlencoded post data
+		 * 
+		 * @return character set to encode post data
+		 */
+		public String postDataCharset();
+
 	}
 
 	/**
@@ -672,5 +789,28 @@ public interface Connection {
 		 * @return the value
 		 */
 		public String value();
+
+		/**
+		 * Add or update an input stream to this keyVal
+		 * 
+		 * @param inputStream
+		 *        new input stream
+		 * @return this KeyVal, for chaining
+		 */
+		public KeyVal inputStream(InputStream inputStream);
+
+		/**
+		 * Get the input stream associated with this keyval, if any
+		 * 
+		 * @return input stream if set, or null
+		 */
+		public InputStream inputStream();
+
+		/**
+		 * Does this keyval have an input stream?
+		 * 
+		 * @return true if this keyval does indeed have an input stream
+		 */
+		public boolean hasInputStream();
 	}
 }

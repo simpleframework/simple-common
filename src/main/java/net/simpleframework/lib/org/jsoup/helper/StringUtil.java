@@ -154,7 +154,6 @@ public final class StringUtil {
 	 *        string to normalize whitespace within
 	 * @param stripLeading
 	 *        set to true if you wish to remove any leading whitespace
-	 * @return
 	 */
 	public static void appendNormalisedWhitespace(final StringBuilder accum, final String string,
 			final boolean stripLeading) {

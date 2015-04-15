@@ -320,7 +320,7 @@ public class Jsoup {
 	 * @param whitelist
 	 *        whitelist to test against
 	 * @return true if no tags or attributes were removed; false otherwise
-	 * @see #clean(String, org.jsoup.safety.Whitelist)
+	 * @see #clean(String, net.simpleframework.lib.org.jsoup.safety.Whitelist)
 	 */
 	public static boolean isValid(final String bodyHtml, final Whitelist whitelist) {
 		final Document dirty = parseBodyFragment(bodyHtml, "");

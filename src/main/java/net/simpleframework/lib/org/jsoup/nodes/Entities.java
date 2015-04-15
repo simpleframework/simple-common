@@ -73,11 +73,14 @@ public class Entities {
 		return base.containsKey(name);
 	}
 
-/**
-     * Get the Character value of the named entity
-     * @param name named entity (e.g. "lt" or "amp")
-     * @return the Character value of the named entity (e.g. '<' or '&')
-     */
+	/**
+	 * Get the Character value of the named entity
+	 * 
+	 * @param name
+	 *        named entity (e.g. "lt" or "amp")
+	 * @return the Character value of the named entity (e.g. '{@literal <}' or '
+	 *         {@literal &}')
+	 */
 	public static Character getCharacterByName(final String name) {
 		return full.get(name);
 	}
@@ -98,6 +101,7 @@ public class Entities {
 		boolean reachedNonWhite = false;
 		final EscapeMode escapeMode = out.escapeMode();
 		final CharsetEncoder encoder = out.encoder();
+		final CoreCharset coreCharset = CoreCharset.byName(encoder.charset().name());
 		final Map<Character, String> map = escapeMode.getMap();
 		final int length = string.length();
 
@@ -156,7 +160,7 @@ public class Entities {
 					}
 					break;
 				default:
-					if (encoder.canEncode(c)) {
+					if (canEncode(coreCharset, c, encoder)) {
 						accum.append(c);
 					} else if (map.containsKey(c)) {
 						accum.append('&').append(map.get(c)).append(';');
@@ -183,13 +187,61 @@ public class Entities {
 	 * Unescape the input string.
 	 * 
 	 * @param string
+	 *        to un-HTML-escape
 	 * @param strict
 	 *        if "strict" (that is, requires trailing ';' char, otherwise that's
 	 *        optional)
-	 * @return
+	 * @return unescaped string
 	 */
 	static String unescape(final String string, final boolean strict) {
 		return Parser.unescapeEntities(string, strict);
+	}
+
+	/*
+	 * Provides a fast-path for Encoder.canEncode, which drastically improves
+	 * performance on Android post JellyBean.
+	 * After KitKat, the implementation of canEncode degrades to the point of
+	 * being useless. For non ASCII or UTF,
+	 * performance may be bad. We can add more encoders for common character sets
+	 * that are impacted by performance
+	 * issues on Android if required.
+	 * 
+	 * Benchmarks: *
+	 * OLD toHtml() impl v New (fastpath) in millis
+	 * Wiki: 1895, 16
+	 * CNN: 6378, 55
+	 * Alterslash: 3013, 28
+	 * Jsoup: 167, 2
+	 */
+
+	private static boolean canEncode(final CoreCharset charset, final char c,
+			final CharsetEncoder fallback) {
+		// todo add more charset tests if impacted by Android's bad perf in
+		// canEncode
+		switch (charset) {
+		case ascii:
+			return c < 0x80;
+		case utf:
+			return true; // real is:!(Character.isLowSurrogate(c) ||
+								// Character.isHighSurrogate(c)); - but already check
+								// above
+		default:
+			return fallback.canEncode(c);
+		}
+	}
+
+	private enum CoreCharset {
+		ascii, utf, fallback;
+
+		private static CoreCharset byName(final String name) {
+			if (name.equals("US-ASCII")) {
+				return ascii;
+			}
+			if (name.startsWith("UTF-")) {
+				return utf;
+			}
+			return fallback;
+		}
 	}
 
 	// xhtml has restricted entities

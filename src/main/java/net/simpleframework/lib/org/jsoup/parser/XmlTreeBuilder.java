@@ -1,6 +1,5 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
@@ -73,7 +72,6 @@ public class XmlTreeBuilder extends TreeBuilder {
 		if (startTag.isSelfClosing()) {
 			tokeniser.acknowledgeSelfClosingFlag();
 			if (!tag.isKnownTag()) {
-				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {
@@ -119,9 +117,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 		final String elName = endTag.name();
 		Element firstFound = null;
 
-		Iterator<Element> it = stack.descendingIterator();
-		while (it.hasNext()) {
-			final Element next = it.next();
+		for (int pos = stack.size() - 1; pos >= 0; pos--) {
+			final Element next = stack.get(pos);
 			if (next.nodeName().equals(elName)) {
 				firstFound = next;
 				break;
@@ -131,14 +128,11 @@ public class XmlTreeBuilder extends TreeBuilder {
 			return; // not found, skip
 		}
 
-		it = stack.descendingIterator();
-		while (it.hasNext()) {
-			final Element next = it.next();
+		for (int pos = stack.size() - 1; pos >= 0; pos--) {
+			final Element next = stack.get(pos);
+			stack.remove(pos);
 			if (next == firstFound) {
-				it.remove();
 				break;
-			} else {
-				it.remove();
 			}
 		}
 	}

@@ -34,7 +34,8 @@ import net.simpleframework.lib.org.jsoup.select.Selector;
  */
 public class Element extends Node {
 	private Tag tag;
-	private Set<String> classNames;
+
+	private static final Pattern classSplit = Pattern.compile("\\s+");
 
 	/**
 	 * Create a new, standalone Element. (Standalone in that is has no parent.)
@@ -123,8 +124,7 @@ public class Element extends Node {
 	 * @return The id attribute, if present, or an empty string if not.
 	 */
 	public String id() {
-		final String id = attr("id");
-		return id == null ? "" : id;
+		return attributes.get("id");
 	}
 
 	/**
@@ -187,10 +187,11 @@ public class Element extends Node {
 
 	/**
 	 * Get a child element of this element, by its 0-based index number.
-	 * <p/>
+	 * <p>
 	 * Note that an element can have both mixed Nodes and Elements as children.
 	 * This method inspects a filtered list of children that are elements, and
 	 * the index is based on that filtered list.
+	 * </p>
 	 * 
 	 * @param index
 	 *        the index number of the element to retrieve
@@ -204,9 +205,10 @@ public class Element extends Node {
 
 	/**
 	 * Get this element's child elements.
-	 * <p/>
+	 * <p>
 	 * This is effectively a filter on {@link #childNodes()} to get Element
 	 * nodes.
+	 * </p>
 	 * 
 	 * @return child elements. If this element has no children, returns an
 	 *         empty list.
@@ -227,15 +229,16 @@ public class Element extends Node {
 	/**
 	 * Get this element's child text nodes. The list is unmodifiable but the text
 	 * nodes may be manipulated.
-	 * <p/>
+	 * <p>
 	 * This is effectively a filter on {@link #childNodes()} to get Text nodes.
 	 * 
 	 * @return child text nodes. If this element has no text nodes, returns an
 	 *         empty list.
-	 *         <p/>
+	 *         </p>
 	 *         For example, with the input HTML:
 	 *         {@code <p>One <span>Two</span> Three <br> Four</p>} with the
-	 *         {@code p} element selected:        <ul>
+	 *         {@code p} element selected:
+	 *         <ul>
 	 *         <li>{@code p.text()} = {@code "One Two Three Four"}</li>
 	 *         <li>{@code p.ownText()} = {@code "One Three Four"}</li>
 	 *         <li>{@code p.children()} = {@code Elements[<span>, <br>
@@ -260,8 +263,9 @@ public class Element extends Node {
 	/**
 	 * Get this element's child data nodes. The list is unmodifiable but the data
 	 * nodes may be manipulated.
-	 * <p/>
+	 * <p>
 	 * This is effectively a filter on {@link #childNodes()} to get Data nodes.
+	 * </p>
 	 * 
 	 * @return child data nodes. If this element has no data nodes, returns an
 	 *         empty list.
@@ -281,23 +285,28 @@ public class Element extends Node {
 	 * Find elements that match the {@link Selector} CSS query, with this element
 	 * as the starting context. Matched elements
 	 * may include this element, or any of its children.
-	 * <p/>
+	 * <p>
 	 * This method is generally more powerful to use than the DOM-type
 	 * {@code getElementBy*} methods, because multiple filters can be combined,
 	 * e.g.:
+	 * </p>
 	 * <ul>
 	 * <li>{@code el.select("a[href]")} - finds links ({@code a} tags with
 	 * {@code href} attributes)
 	 * <li>{@code el.select("a[href*=example.com]")} - finds links pointing to
 	 * example.com (loosely)
 	 * </ul>
-	 * <p/>
-	 * See the query syntax documentation in {@link org.jsoup.select.Selector}.
-	 *
+	 * <p>
+	 * See the query syntax documentation in
+	 * {@link net.simpleframework.lib.org.jsoup.select.Selector}.
+	 * </p>
+	 * 
 	 * @param cssQuery
 	 *        a {@link Selector} CSS-like query
 	 * @return elements that match the query (empty if none match)
-	 * @see org.jsoup.select.Selector
+	 * @see net.simpleframework.lib.org.jsoup.select.Selector
+	 * @throws Selector.SelectorParseException
+	 *         (unchecked) on an invalid CSS query.
 	 */
 	public Elements select(final String cssQuery) {
 		return Selector.select(cssQuery, this);
@@ -313,7 +322,11 @@ public class Element extends Node {
 	public Element appendChild(final Node child) {
 		Validate.notNull(child);
 
-		addChildren(child);
+		// was - Node#addChildren(child). short-circuits an array create and a
+		// loop.
+		reparentChild(child);
+		childNodes.add(child);
+		child.setSiblingIndex(childNodes.size() - 1);
 		return this;
 	}
 
@@ -528,10 +541,11 @@ public class Element extends Node {
 
 	/**
 	 * Get a CSS selector that will uniquely select this element.
-	 * <p/>
+	 * <p>
 	 * If the element has an ID, returns #id; otherwise returns the parent (if
-	 * any) CSS selector, followed by '>', followed by a unique selector for the
-	 * element (tag.class.class:nth-child(n)).
+	 * any) CSS selector, followed by {@literal '>'}, followed by a unique
+	 * selector for the element (tag.class.class:nth-child(n)).
+	 * </p>
 	 *
 	 * @return the CSS Path that can be used to retrieve the element in a
 	 *         selector.
@@ -548,10 +562,6 @@ public class Element extends Node {
 		}
 
 		if (parent() == null || parent() instanceof Document) {
-			// Document to
-			// selector, as will
-			// always have a
-			// html node
 			return selector.toString();
 		}
 
@@ -590,9 +600,10 @@ public class Element extends Node {
 	 * contains two {@code p}s,
 	 * the {@code nextElementSibling} of the first {@code p} is the second
 	 * {@code p}.
-	 * <p/>
+	 * <p>
 	 * This is similar to {@link #nextSibling()}, but specifically finds only
 	 * Elements
+	 * </p>
 	 * 
 	 * @return the next element, or null if there is no next element
 	 * @see #previousElementSibling()
@@ -1181,19 +1192,19 @@ public class Element extends Node {
 	/**
 	 * Gets the literal value of this element's "class" attribute, which may
 	 * include multiple class names, space
-	 * separated. (E.g. on <code>&lt;div class="header gray"></code> returns, "
-	 * <code>header gray</code>")
+	 * separated. (E.g. on <code>&lt;div class="header gray"&gt;</code> returns,
+	 * "<code>header gray</code>")
 	 * 
 	 * @return The literal class attribute, or <b>empty string</b> if no class
 	 *         attribute set.
 	 */
 	public String className() {
-		return attr("class");
+		return attr("class").trim();
 	}
 
 	/**
 	 * Get all of the element's class names. E.g. on element
-	 * {@code <div class="header gray"}>},
+	 * {@code <div class="header gray">},
 	 * returns a set of two elements {@code "header", "gray"}. Note that
 	 * modifications to this set are not pushed to
 	 * the backing {@code class} attribute; use the
@@ -1202,10 +1213,11 @@ public class Element extends Node {
 	 * @return set of classnames, empty if no class attribute
 	 */
 	public Set<String> classNames() {
-		if (classNames == null) {
-			final String[] names = className().split("\\s+");
-			classNames = new LinkedHashSet<String>(Arrays.asList(names));
-		}
+		final String[] names = classSplit.split(className());
+		final Set<String> classNames = new LinkedHashSet<String>(Arrays.asList(names));
+		classNames.remove(""); // if classNames() was empty, would include an
+										// empty class
+
 		return classNames;
 	}
 
@@ -1229,13 +1241,28 @@ public class Element extends Node {
 	 *        name of class to check for
 	 * @return true if it does, false if not
 	 */
+	/*
+	 * Used by common .class selector, so perf tweaked to reduce object creation
+	 * vs hitting classnames().
+	 * 
+	 * Wiki: 71, 13 (5.4x)
+	 * CNN: 227, 91 (2.5x)
+	 * Alterslash: 59, 4 (14.8x)
+	 * Jsoup: 14, 1 (14x)
+	 */
 	public boolean hasClass(final String className) {
-		final Set<String> classNames = classNames();
-		for (final String name : classNames) {
+		final String classAttr = attributes.get("class");
+		if (classAttr.equals("") || classAttr.length() < className.length()) {
+			return false;
+		}
+
+		final String[] classes = classSplit.split(classAttr);
+		for (final String name : classes) {
 			if (className.equalsIgnoreCase(name)) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -1403,12 +1430,23 @@ public class Element extends Node {
 
 	@Override
 	public boolean equals(final Object o) {
-		return this == o;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		if (!super.equals(o)) {
+			return false;
+		}
+
+		final Element element = (Element) o;
+
+		return tag.equals(element.tag);
 	}
 
 	@Override
 	public int hashCode() {
-		// todo: fixup, not very useful
 		int result = super.hashCode();
 		result = 31 * result + (tag != null ? tag.hashCode() : 0);
 		return result;
@@ -1416,9 +1454,6 @@ public class Element extends Node {
 
 	@Override
 	public Element clone() {
-		final Element clone = (Element) super.clone();
-		clone.classNames = null; // derived on first hit, otherwise gets a pointer
-											// to source classnames
-		return clone;
+		return (Element) super.clone();
 	}
 }

@@ -48,10 +48,11 @@ public class Tag {
 	/**
 	 * Get a Tag by name. If not previously defined (unknown), returns a new
 	 * generic tag, that can do anything.
-	 * <p/>
+	 * <p>
 	 * Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not
 	 * registered and will only .equals().
-	 *
+	 * </p>
+	 * 
 	 * @param tagName
 	 *        Name of tag, e.g. "p". Case insensitive.
 	 * @return The tag, either defined or new generic.
@@ -204,6 +205,9 @@ public class Tag {
 
 		final Tag tag = (Tag) o;
 
+		if (!tagName.equals(tag.tagName)) {
+			return false;
+		}
 		if (canContainBlock != tag.canContainBlock) {
 			return false;
 		}
@@ -229,9 +233,6 @@ public class Tag {
 			return false;
 		}
 		if (formSubmit != tag.formSubmit) {
-			return false;
-		}
-		if (!tagName.equals(tag.tagName)) {
 			return false;
 		}
 
@@ -267,14 +268,14 @@ public class Tag {
 			"ol", "pre", "div", "blockquote", "hr", "address", "figure", "figcaption", "form",
 			"fieldset", "ins", "del", "s", "dl", "dt", "dd", "li", "table", "caption", "thead",
 			"tfoot", "tbody", "colgroup", "col", "tr", "th", "td", "video", "audio", "canvas",
-			"details", "menu", "plaintext" };
+			"details", "menu", "plaintext", "template", "article", "main", "svg", "math" };
 	private static final String[] inlineTags = { "object", "base", "font", "tt", "i", "b", "u",
 			"big", "small", "em", "strong", "dfn", "code", "samp", "kbd", "var", "cite", "abbr",
 			"time", "acronym", "mark", "ruby", "rt", "rp", "a", "img", "br", "wbr", "map", "q", "sub",
 			"sup", "bdo", "iframe", "embed", "span", "input", "select", "textarea", "label", "button",
 			"optgroup", "option", "legend", "datalist", "keygen", "output", "progress", "meter",
 			"area", "param", "source", "track", "summary", "command", "device", "area", "basefont",
-			"bgsound", "menuitem", "param", "source", "track" };
+			"bgsound", "menuitem", "param", "source", "track", "data", "bdi" };
 	private static final String[] emptyTags = { "meta", "link", "base", "frame", "img", "br", "wbr",
 			"embed", "hr", "input", "keygen", "col", "command", "device", "area", "basefont",
 			"bgsound", "menuitem", "param", "source", "track" };

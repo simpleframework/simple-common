@@ -93,15 +93,33 @@ public class FormElement extends Element {
 			if (!el.tag().isFormSubmittable()) {
 				continue; // contents are form listable, superset of submitable
 			}
+			if (el.hasAttr("disabled")) {
+				continue; // skip disabled form inputs
+			}
 			final String name = el.attr("name");
 			if (name.length() == 0) {
 				continue;
 			}
+			final String type = el.attr("type");
 
 			if ("select".equals(el.tagName())) {
 				final Elements options = el.select("option[selected]");
+				boolean set = false;
 				for (final Element option : options) {
 					data.add(HttpConnection.KeyVal.create(name, option.val()));
+					set = true;
+				}
+				if (!set) {
+					final Element option = el.select("option").first();
+					if (option != null) {
+						data.add(HttpConnection.KeyVal.create(name, option.val()));
+					}
+				}
+			} else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
+				// only add checkbox or radio if they have the checked attribute
+				if (el.hasAttr("checked")) {
+					final String val = el.val().length() > 0 ? el.val() : "on";
+					data.add(HttpConnection.KeyVal.create(name, val));
 				}
 			} else {
 				data.add(HttpConnection.KeyVal.create(name, el.val()));

@@ -1,11 +1,16 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
+import net.simpleframework.lib.org.jsoup.nodes.Document.OutputSettings.Syntax;
 
 /**
  * A {@code <!DOCTYPE>} node.
  */
 public class DocumentType extends Node {
+	private static final String NAME = "name";
+	private static final String PUBLIC_ID = "publicId";
+	private static final String SYSTEM_ID = "systemId";
+
 	// todo: quirk mode from publicId and systemId
 
 	/**
@@ -24,9 +29,9 @@ public class DocumentType extends Node {
 			final String baseUri) {
 		super(baseUri);
 
-		attr("name", name);
-		attr("publicId", publicId);
-		attr("systemId", systemId);
+		attr(NAME, name);
+		attr(PUBLIC_ID, publicId);
+		attr(SYSTEM_ID, systemId);
 	}
 
 	@Override
@@ -36,20 +41,29 @@ public class DocumentType extends Node {
 
 	@Override
 	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
-		accum.append("<!DOCTYPE");
-		if (!StringUtil.isBlank(attr("name"))) {
-			accum.append(" ").append(attr("name"));
+		if (out.syntax() == Syntax.html && !has(PUBLIC_ID) && !has(SYSTEM_ID)) {
+			// looks like a html5 doctype, go lowercase for aesthetics
+			accum.append("<!doctype");
+		} else {
+			accum.append("<!DOCTYPE");
 		}
-		if (!StringUtil.isBlank(attr("publicId"))) {
-			accum.append(" PUBLIC \"").append(attr("publicId")).append('"');
+		if (has(NAME)) {
+			accum.append(" ").append(attr(NAME));
 		}
-		if (!StringUtil.isBlank(attr("systemId"))) {
-			accum.append(" \"").append(attr("systemId")).append('"');
+		if (has(PUBLIC_ID)) {
+			accum.append(" PUBLIC \"").append(attr(PUBLIC_ID)).append('"');
+		}
+		if (has(SYSTEM_ID)) {
+			accum.append(" \"").append(attr(SYSTEM_ID)).append('"');
 		}
 		accum.append('>');
 	}
 
 	@Override
 	void outerHtmlTail(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	}
+
+	private boolean has(final String attribute) {
+		return !StringUtil.isBlank(attr(attribute));
 	}
 }
