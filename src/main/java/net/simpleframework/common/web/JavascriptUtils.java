@@ -102,8 +102,14 @@ public abstract class JavascriptUtils implements HtmlConst {
 	}
 
 	public static String wrapScriptTag(final String javascript) {
+		return wrapScriptTag(javascript, false);
+	}
+
+	public static String wrapScriptTag(final String javascript, final boolean wrapWhenReady) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(TAG_SCRIPT_START).append(StringUtils.blank(javascript)).append(TAG_SCRIPT_END);
+		sb.append(TAG_SCRIPT_START);
+		sb.append(wrapWhenReady ? wrapWhenReady(javascript) : StringUtils.blank(javascript));
+		sb.append(TAG_SCRIPT_END);
 		return sb.toString();
 	}
 
