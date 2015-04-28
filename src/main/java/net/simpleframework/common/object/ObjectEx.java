@@ -70,18 +70,20 @@ public abstract class ObjectEx {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getAttrCache(final String key, final IVal<T> i) {
+	public <T> T getAttrCache(final String key, final CacheV<T> i) {
 		T val = (T) getAttr(key);
-		if (val == null) {
-			if ((val = i.get()) != null) {
-				setAttr(key, val);
-			}
+		if (val == null && i.hasVal(val = i.get())) {
+			setAttr(key, val);
 		}
 		return val;
 	}
 
-	public static interface IVal<T> {
-		T get();
+	public static abstract class CacheV<T> {
+		public boolean hasVal(final T val) {
+			return val != null;
+		}
+
+		public abstract T get();
 	}
 
 	public static <T> T isolate(final IIsolation<T> callback) {
