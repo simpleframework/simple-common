@@ -1,6 +1,7 @@
 package net.simpleframework.common;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,6 +30,16 @@ public abstract class NumberUtils {
 			decimalFormats.put(pattern, formatter = new DecimalFormat(pattern));
 		}
 		return formatter.format(number);
+	}
+
+	public static String formatPercent(final double number, final int fraction) {
+		final NumberFormat nt = NumberFormat.getPercentInstance();
+		nt.setMinimumFractionDigits(fraction);
+		return nt.format(number);
+	}
+
+	public static String formatPercent(final double number) {
+		return formatPercent(number, 1);
 	}
 
 	public static long randomLong(final long min, final long max) {
