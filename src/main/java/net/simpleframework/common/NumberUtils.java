@@ -1,5 +1,7 @@
 package net.simpleframework.common;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Map;
@@ -13,6 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class NumberUtils {
 	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<String, DecimalFormat>();
+
+	public static float toFloat(final Number number) {
+		return toFloat(number, 1);
+	}
+
+	public static float toFloat(final Number number, final int scale) {
+		return new BigDecimal(number.doubleValue()).setScale(scale, RoundingMode.HALF_DOWN)
+				.floatValue();
+	}
 
 	public static String format(final Number number) {
 		return format(number, ".##");
