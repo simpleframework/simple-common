@@ -18,12 +18,32 @@ public abstract class DateUtils {
 
 	public static final long DAY_PERIOD = HOUR_PERIOD * 24;
 
+	public static Calendar getZeroPoint() {
+		final Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+
+	public static Calendar[] getTodayInterval() {
+		final Calendar cal1 = getZeroPoint();
+		final Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(cal1.getTime());
+		cal2.add(Calendar.DAY_OF_MONTH, 1);
+		return new Calendar[] { cal1, cal2 };
+	}
+
+	public static Calendar[] getYesterdayInterval() {
+		final Calendar[] cal = getTodayInterval();
+		cal[0].add(Calendar.DAY_OF_MONTH, -1);
+		cal[1].add(Calendar.DAY_OF_MONTH, -1);
+		return cal;
+	}
+
 	public static long to24Hour() {
-		final Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.MILLISECOND, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		final Calendar calendar = getZeroPoint();
 		calendar.add(Calendar.DATE, 1);
 		return (calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000;
 	}
