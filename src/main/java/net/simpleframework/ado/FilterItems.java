@@ -27,6 +27,15 @@ public class FilterItems extends AbstractArrayListEx<FilterItems, FilterItem> {
 		}
 	}
 
+	public FilterItems addLike(final String key, final Object val) {
+		if (val != null) {
+			add(new FilterItem(key, EFilterRelation.like, val));
+			return this;
+		} else {
+			return addIsNull(key);
+		}
+	}
+
 	public FilterItems addIsNull(final String key) {
 		add(new FilterItem(key).setRelation(EFilterRelation.isNull));
 		return this;
