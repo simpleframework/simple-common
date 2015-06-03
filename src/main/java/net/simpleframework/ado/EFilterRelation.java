@@ -8,7 +8,6 @@ package net.simpleframework.ado;
  */
 public enum EFilterRelation {
 	equal {
-
 		@Override
 		public String toString() {
 			return "=";
@@ -16,7 +15,6 @@ public enum EFilterRelation {
 	},
 
 	not_equal {
-
 		@Override
 		public String toString() {
 			return "<>";
@@ -24,7 +22,6 @@ public enum EFilterRelation {
 	},
 
 	gt {
-
 		@Override
 		public String toString() {
 			return ">";
@@ -32,7 +29,6 @@ public enum EFilterRelation {
 	},
 
 	gt_equal {
-
 		@Override
 		public String toString() {
 			return ">=";
@@ -40,7 +36,6 @@ public enum EFilterRelation {
 	},
 
 	lt {
-
 		@Override
 		public String toString() {
 			return "<";
@@ -48,7 +43,6 @@ public enum EFilterRelation {
 	},
 
 	lt_equal {
-
 		@Override
 		public String toString() {
 			return "<=";
@@ -58,7 +52,6 @@ public enum EFilterRelation {
 	like,
 
 	isNull {
-
 		@Override
 		public String toString() {
 			return "is null";
@@ -66,7 +59,6 @@ public enum EFilterRelation {
 	},
 
 	isNotNull {
-
 		@Override
 		public String toString() {
 			return "is not null";
