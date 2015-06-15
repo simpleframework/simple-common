@@ -13,37 +13,19 @@ import redis.clients.jedis.JedisPool;
  */
 public abstract class JedisUtils {
 
-	public static void returnResource(final JedisPool pool, final Jedis jedis) {
-		if (jedis == null) {
-			return;
-		}
-		try {
-			pool.returnResource(jedis);
-		} catch (final Exception e) {
-			doJedisException(pool, jedis, e);
-		}
-	}
-
-	public static void doJedisException(final JedisPool pool, final Jedis jedis, final Exception e) {
-		if (jedis != null) {
-			log.warn(e);
-			try {
-				pool.returnBrokenResource(jedis);
-			} catch (final Exception ex) {
-			}
-		}
-	}
-
 	public static Object getCache(final JedisPool pool, final String key) {
-		final Jedis jedis = pool.getResource();
+		Jedis jedis = null;
 		try {
+			jedis = pool.getResource();
 			return IoUtils.deserialize(jedis.get(key.getBytes()));
 		} catch (final Exception e) {
 			// 释放redis对象
-			doJedisException(pool, jedis, e);
+			log.warn(e);
 		} finally {
 			// 返还到连接池
-			returnResource(pool, jedis);
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 		return null;
 	}
@@ -54,8 +36,9 @@ public abstract class JedisUtils {
 
 	public static void putCache(final JedisPool pool, final String key, final Object val,
 			final int expire) {
-		final Jedis jedis = pool.getResource();
+		Jedis jedis = null;
 		try {
+			jedis = pool.getResource();
 			if (val instanceof String) {
 				if (expire > 0) {
 					jedis.setex(key, expire, (String) val);
@@ -70,18 +53,23 @@ public abstract class JedisUtils {
 				}
 			}
 		} catch (final Exception e) {
-			doJedisException(pool, jedis, e);
+			log.warn(e);
 		} finally {
-			returnResource(pool, jedis);
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 
 	public static void removeCache(final JedisPool pool, final String key) {
-		final Jedis jedis = pool.getResource();
+		Jedis jedis = null;
 		try {
+			jedis = pool.getResource();
 			jedis.del(key.getBytes());
 		} finally {
-			returnResource(pool, jedis);
+			if (jedis != null) {
+				jedis.close();
+			}
 		}
 	}
 

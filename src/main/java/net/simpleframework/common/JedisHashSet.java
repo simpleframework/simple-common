@@ -21,7 +21,7 @@ public class JedisHashSet extends HashSet<String> {
 		key = getClass().getSimpleName() + ":" + _key;
 		pool = _pool;
 		try {
-			JedisUtils.returnResource(pool, pool.getResource());
+			pool.getResource().close();
 		} catch (final Throwable e) {
 			pool = null;
 		}
@@ -33,7 +33,7 @@ public class JedisHashSet extends HashSet<String> {
 			try {
 				return jedis.smembers(key);
 			} finally {
-				JedisUtils.returnResource(pool, jedis);
+				jedis.close();
 			}
 		} else {
 			final Set<String> _set = new HashSet<String>();
@@ -52,7 +52,7 @@ public class JedisHashSet extends HashSet<String> {
 				jedis.sadd(key, e);
 				return true;
 			} finally {
-				JedisUtils.returnResource(pool, jedis);
+				jedis.close();
 			}
 		} else {
 			return super.add(e);
@@ -67,7 +67,7 @@ public class JedisHashSet extends HashSet<String> {
 				jedis.srem(key, o.toString());
 				return true;
 			} finally {
-				JedisUtils.returnResource(pool, jedis);
+				jedis.close();
 			}
 		} else {
 			return super.remove(o);
