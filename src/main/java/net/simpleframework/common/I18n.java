@@ -73,12 +73,25 @@ public abstract class I18n {
 		};
 	}
 
-	public static Locale getLocale() {
+	private static Locale getLocale() {
 		// final HttpSession httpSession = GetSession.getSession();
-		return Locale.getDefault();
+		return _handler.getLocale();
 	}
 
-	public static void setLocale(final Locale locale) {
+	private static ILocaleHandler _handler = new ILocaleHandler() {
+		@Override
+		public Locale getLocale() {
+			return Locale.getDefault();
+		}
+	};
+
+	public static void setLocaleHandler(final ILocaleHandler handler) {
+		_handler = handler;
+	}
+
+	public static interface ILocaleHandler {
+
+		Locale getLocale();
 	}
 
 	/* i18n */
