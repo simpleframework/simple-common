@@ -63,7 +63,7 @@ public abstract class ProxyUtils {
 			}
 		});
 		final Object o = enhancer.create();
-		System.out.println($m("ProxyUtils.0", o.getClass().getName()));
+		ObjectEx.oprintln($m("ProxyUtils.0", o.getClass().getName()));
 		return o;
 	}
 
