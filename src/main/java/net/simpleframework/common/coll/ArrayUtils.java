@@ -94,6 +94,18 @@ public abstract class ArrayUtils {
 		return indexOf(array, value, ignoreCase) != -1;
 	}
 
+	public static boolean contains(final String[] array, final String[] vals,
+			final boolean ignoreCase) {
+		if (vals != null) {
+			for (final String val : vals) {
+				if (contains(array, val, ignoreCase)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public static int indexOf(final int[] array, final int value) {
 		if (array != null) {
 			for (int i = 0; i < array.length; i++) {
