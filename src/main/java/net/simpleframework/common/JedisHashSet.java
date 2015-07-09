@@ -61,16 +61,17 @@ public class JedisHashSet extends HashSet<String> {
 
 	@Override
 	public boolean remove(final Object o) {
+		final String e = o.toString();
 		if (pool != null) {
 			final Jedis jedis = pool.getResource();
 			try {
-				jedis.srem(key, o.toString());
+				jedis.srem(key, e);
 				return true;
 			} finally {
 				jedis.close();
 			}
 		} else {
-			return super.remove(o);
+			return super.remove(e);
 		}
 	}
 
