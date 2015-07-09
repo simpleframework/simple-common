@@ -60,6 +60,21 @@ public class JedisHashSet extends HashSet<String> {
 	}
 
 	@Override
+	public boolean contains(final Object o) {
+		final String e = o.toString();
+		if (pool != null) {
+			final Jedis jedis = pool.getResource();
+			try {
+				return jedis.sismember(key, e);
+			} finally {
+				jedis.close();
+			}
+		} else {
+			return super.contains(e);
+		}
+	}
+
+	@Override
 	public boolean remove(final Object o) {
 		final String e = o.toString();
 		if (pool != null) {
