@@ -21,7 +21,9 @@ public class JedisHashSet extends HashSet<String> {
 		key = getClass().getSimpleName() + ":" + _key;
 		pool = _pool;
 		try {
-			pool.getResource().close();
+			if (pool != null) {
+				pool.getResource().close();
+			}
 		} catch (final Throwable e) {
 			pool = null;
 		}
