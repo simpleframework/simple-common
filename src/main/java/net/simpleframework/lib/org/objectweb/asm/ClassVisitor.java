@@ -48,30 +48,28 @@ public abstract class ClassVisitor {
 	protected final int api;
 
 	/**
-	 * The class visitor to which this visitor must delegate method calls. May be
-	 * null.
+	 * The class visitor to which this visitor must delegate method calls. May
+	 * be null.
 	 */
 	protected ClassVisitor cv;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor}.
+	 * Constructs a new {@link ClassVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	public ClassVisitor(final int api) {
 		this(api, null);
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor}.
+	 * Constructs a new {@link ClassVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 * @param cv
 	 *        the class visitor to which this visitor must delegate method
 	 *        calls. May be null.
@@ -101,9 +99,9 @@ public abstract class ClassVisitor {
 	 *        classes or interfaces.
 	 * @param superName
 	 *        the internal of name of the super class (see
-	 *        {@link Type#getInternalName() getInternalName}). For interfaces,
-	 *        the super class is {@link Object}. May be <tt>null</tt>, but
-	 *        only for the {@link Object} class.
+	 *        {@link Type#getInternalName() getInternalName}). For
+	 *        interfaces, the super class is {@link Object}. May be <tt>null</tt>
+	 *        , but only for the {@link Object} class.
 	 * @param interfaces
 	 *        the internal names of the class's interfaces (see
 	 *        {@link Type#getInternalName() getInternalName}). May be
@@ -141,7 +139,8 @@ public abstract class ClassVisitor {
 	 *        internal name of the enclosing class of the class.
 	 * @param name
 	 *        the name of the method that contains the class, or <tt>null</tt> if
-	 *        the class is not enclosed in a method of its enclosing class.
+	 *        the class is not enclosed in a method of its
+	 *        enclosing class.
 	 * @param desc
 	 *        the descriptor of the method that contains the class, or
 	 *        <tt>null</tt> if the class is not enclosed in a method of its
@@ -160,8 +159,8 @@ public abstract class ClassVisitor {
 	 *        the class descriptor of the annotation class.
 	 * @param visible
 	 *        <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if this
-	 *         visitor is not interested in visiting this annotation.
+	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		if (cv != null) {
@@ -188,8 +187,8 @@ public abstract class ClassVisitor {
 	 *        the class descriptor of the annotation class.
 	 * @param visible
 	 *        <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if this
-	 *         visitor is not interested in visiting this annotation.
+	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -222,12 +221,12 @@ public abstract class ClassVisitor {
 	 *        the internal name of an inner class (see
 	 *        {@link Type#getInternalName() getInternalName}).
 	 * @param outerName
-	 *        the internal name of the class to which the inner class belongs
-	 *        (see {@link Type#getInternalName() getInternalName}). May be
-	 *        <tt>null</tt> for not member classes.
+	 *        the internal name of the class to which the inner class
+	 *        belongs (see {@link Type#getInternalName() getInternalName}).
+	 *        May be <tt>null</tt> for not member classes.
 	 * @param innerName
-	 *        the (simple) name of the inner class inside its enclosing class.
-	 *        May be <tt>null</tt> for anonymous inner classes.
+	 *        the (simple) name of the inner class inside its enclosing
+	 *        class. May be <tt>null</tt> for anonymous inner classes.
 	 * @param access
 	 *        the access flags of the inner class as originally declared in
 	 *        the enclosing class.
@@ -250,12 +249,12 @@ public abstract class ClassVisitor {
 	 * @param desc
 	 *        the field's descriptor (see {@link Type Type}).
 	 * @param signature
-	 *        the field's signature. May be <tt>null</tt> if the field's type
-	 *        does not use generic types.
+	 *        the field's signature. May be <tt>null</tt> if the field's
+	 *        type does not use generic types.
 	 * @param value
 	 *        the field's initial value. This parameter, which may be
-	 *        <tt>null</tt> if the field does not have an initial value, must
-	 *        be an {@link Integer}, a {@link Float}, a {@link Long}, a
+	 *        <tt>null</tt> if the field does not have an initial value,
+	 *        must be an {@link Integer}, a {@link Float}, a {@link Long}, a
 	 *        {@link Double} or a {@link String} (for <tt>int</tt>,
 	 *        <tt>float</tt>, <tt>long</tt> or <tt>String</tt> fields
 	 *        respectively). <i>This parameter is only used for static
@@ -280,15 +279,17 @@ public abstract class ClassVisitor {
 	 * i.e., it should not return a previously returned visitor.
 	 * 
 	 * @param access
-	 *        the method's access flags (see {@link Opcodes}). This parameter
-	 *        also indicates if the method is synthetic and/or deprecated.
+	 *        the method's access flags (see {@link Opcodes}). This
+	 *        parameter also indicates if the method is synthetic and/or
+	 *        deprecated.
 	 * @param name
 	 *        the method's name.
 	 * @param desc
 	 *        the method's descriptor (see {@link Type Type}).
 	 * @param signature
 	 *        the method's signature. May be <tt>null</tt> if the method
-	 *        parameters, return type and exceptions do not use generic types.
+	 *        parameters, return type and exceptions do not use generic
+	 *        types.
 	 * @param exceptions
 	 *        the internal names of the method's exception classes (see
 	 *        {@link Type#getInternalName() getInternalName}). May be

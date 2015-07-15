@@ -45,30 +45,28 @@ public abstract class FieldVisitor {
 	protected final int api;
 
 	/**
-	 * The field visitor to which this visitor must delegate method calls. May be
-	 * null.
+	 * The field visitor to which this visitor must delegate method calls. May
+	 * be null.
 	 */
 	protected FieldVisitor fv;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor}.
+	 * Constructs a new {@link FieldVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	public FieldVisitor(final int api) {
 		this(api, null);
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor}.
+	 * Constructs a new {@link FieldVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 * @param fv
 	 *        the field visitor to which this visitor must delegate method
 	 *        calls. May be null.
@@ -88,8 +86,8 @@ public abstract class FieldVisitor {
 	 *        the class descriptor of the annotation class.
 	 * @param visible
 	 *        <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if this
-	 *         visitor is not interested in visiting this annotation.
+	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		if (fv != null) {
@@ -113,8 +111,8 @@ public abstract class FieldVisitor {
 	 *        the class descriptor of the annotation class.
 	 * @param visible
 	 *        <tt>true</tt> if the annotation is visible at runtime.
-	 * @return a visitor to visit the annotation values, or <tt>null</tt> if this
-	 *         visitor is not interested in visiting this annotation.
+	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
+	 *         this visitor is not interested in visiting this annotation.
 	 */
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {

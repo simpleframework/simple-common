@@ -47,7 +47,8 @@ final class FieldWriter extends FieldVisitor {
 	private final int access;
 
 	/**
-	 * The index of the constant pool item that contains the name of this method.
+	 * The index of the constant pool item that contains the name of this
+	 * method.
 	 */
 	private final int name;
 
@@ -100,8 +101,7 @@ final class FieldWriter extends FieldVisitor {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldWriter}.
+	 * Constructs a new {@link FieldWriter}.
 	 * 
 	 * @param cw
 	 *        the class writer to which this field must be added.

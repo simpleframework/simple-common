@@ -293,7 +293,7 @@ public class Type {
 	 * Returns the Java method type corresponding to the given constructor.
 	 * 
 	 * @param c
-	 *        a {@link java.lang.reflect.Constructor Constructor} object.
+	 *        a {@link Constructor Constructor} object.
 	 * @return the Java method type corresponding to the given constructor.
 	 */
 	public static Type getType(final Constructor<?> c) {
@@ -304,7 +304,7 @@ public class Type {
 	 * Returns the Java method type corresponding to the given method.
 	 * 
 	 * @param m
-	 *        a {@link java.lang.reflect.Method Method} object.
+	 *        a {@link Method Method} object.
 	 * @return the Java method type corresponding to the given method.
 	 */
 	public static Type getType(final Method m) {
@@ -366,13 +366,13 @@ public class Type {
 	}
 
 	/**
-	 * Returns the Java type corresponding to the return type of the given method
-	 * descriptor.
+	 * Returns the Java type corresponding to the return type of the given
+	 * method descriptor.
 	 * 
 	 * @param methodDescriptor
 	 *        a method descriptor.
-	 * @return the Java type corresponding to the return type of the given method
-	 *         descriptor.
+	 * @return the Java type corresponding to the return type of the given
+	 *         method descriptor.
 	 */
 	public static Type getReturnType(final String methodDescriptor) {
 		final char[] buf = methodDescriptor.toCharArray();
@@ -397,9 +397,9 @@ public class Type {
 	 * 
 	 * @param desc
 	 *        the descriptor of a method.
-	 * @return the size of the arguments of the method (plus one for the implicit
-	 *         this argument), argSize, and the size of its return value,
-	 *         retSize, packed into a single int i =
+	 * @return the size of the arguments of the method (plus one for the
+	 *         implicit this argument), argSize, and the size of its return
+	 *         value, retSize, packed into a single int i =
 	 *         <tt>(argSize &lt;&lt; 2) | retSize</tt> (argSize is therefore
 	 *         equal to <tt>i &gt;&gt; 2</tt>, and retSize to
 	 *         <tt>i &amp; 0x03</tt>).
@@ -555,11 +555,11 @@ public class Type {
 		case DOUBLE:
 			return "double";
 		case ARRAY:
-			final StringBuffer b = new StringBuffer(getElementType().getClassName());
+			final StringBuilder sb = new StringBuilder(getElementType().getClassName());
 			for (int i = getDimensions(); i > 0; --i) {
-				b.append("[]");
+				sb.append("[]");
 			}
-			return b.toString();
+			return sb.toString();
 		case OBJECT:
 			return new String(buf, off, len).replace('/', '.');
 		default:
@@ -605,10 +605,10 @@ public class Type {
 	 * 
 	 * @return the size of the arguments (plus one for the implicit this
 	 *         argument), argSize, and the size of the return value, retSize,
-	 *         packed into a single int i =
-	 *         <tt>(argSize &lt;&lt; 2) | retSize</tt> (argSize is therefore
-	 *         equal to <tt>i &gt;&gt; 2</tt>, and retSize to
-	 *         <tt>i &amp; 0x03</tt>).
+	 *         packed into a single
+	 *         int i = <tt>(argSize &lt;&lt; 2) | retSize</tt> (argSize is
+	 *         therefore equal to <tt>i &gt;&gt; 2</tt>,
+	 *         and retSize to <tt>i &amp; 0x03</tt>).
 	 */
 	public int getArgumentsAndReturnSizes() {
 		return getArgumentsAndReturnSizes(getDescriptor());
@@ -652,8 +652,8 @@ public class Type {
 	}
 
 	/**
-	 * Appends the descriptor corresponding to this Java type to the given string
-	 * buffer.
+	 * Appends the descriptor corresponding to this Java type to the given
+	 * string buffer.
 	 * 
 	 * @param buf
 	 *        the string buffer to which the descriptor must be appended.
@@ -678,9 +678,9 @@ public class Type {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Returns the internal name of the given class. The internal name of a class
-	 * is its fully qualified name, as returned by Class.getName(), where '.' are
-	 * replaced by '/'.
+	 * Returns the internal name of the given class. The internal name of a
+	 * class is its fully qualified name, as returned by Class.getName(), where
+	 * '.' are replaced by '/'.
 	 * 
 	 * @param c
 	 *        an object or array class.
@@ -707,7 +707,7 @@ public class Type {
 	 * Returns the descriptor corresponding to the given constructor.
 	 * 
 	 * @param c
-	 *        a {@link java.lang.reflect.Constructor Constructor} object.
+	 *        a {@link Constructor Constructor} object.
 	 * @return the descriptor of the given constructor.
 	 */
 	public static String getConstructorDescriptor(final Constructor<?> c) {
@@ -724,7 +724,7 @@ public class Type {
 	 * Returns the descriptor corresponding to the given method.
 	 * 
 	 * @param m
-	 *        a {@link java.lang.reflect.Method Method} object.
+	 *        a {@link Method Method} object.
 	 * @return the descriptor of the given method.
 	 */
 	public static String getMethodDescriptor(final Method m) {
@@ -814,8 +814,8 @@ public class Type {
 	 *        a JVM instruction opcode. This opcode must be one of ILOAD,
 	 *        ISTORE, IALOAD, IASTORE, IADD, ISUB, IMUL, IDIV, IREM, INEG,
 	 *        ISHL, ISHR, IUSHR, IAND, IOR, IXOR and IRETURN.
-	 * @return an opcode that is similar to the given opcode, but adapted to this
-	 *         Java type. For example, if this type is <tt>float</tt> and
+	 * @return an opcode that is similar to the given opcode, but adapted to
+	 *         this Java type. For example, if this type is <tt>float</tt> and
 	 *         <tt>opcode</tt> is IRETURN, this method returns FRETURN.
 	 */
 	public int getOpcode(final int opcode) {

@@ -58,8 +58,8 @@ class Handler {
 	String desc;
 
 	/**
-	 * Constant pool index of the internal name of the type of exceptions handled
-	 * by this handler, or 0 to catch any exceptions.
+	 * Constant pool index of the internal name of the type of exceptions
+	 * handled by this handler, or 0 to catch any exceptions.
 	 */
 	int type;
 
@@ -69,7 +69,8 @@ class Handler {
 	Handler next;
 
 	/**
-	 * Removes the range between start and end from the given exception handlers.
+	 * Removes the range between start and end from the given exception
+	 * handlers.
 	 * 
 	 * @param h
 	 *        an exception handler list.

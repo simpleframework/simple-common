@@ -53,14 +53,14 @@ public abstract class Printer {
 
 	/**
 	 * The names of the for <code>operand</code> parameter values of the
-	 * {@link org.objectweb.asm.MethodVisitor#visitIntInsn} method when
-	 * <code>opcode</code> is <code>NEWARRAY</code>.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitIntInsn}
+	 * method when <code>opcode</code> is <code>NEWARRAY</code>.
 	 */
 	public static final String[] TYPES;
 
 	/**
 	 * The names of the <code>tag</code> field values for
-	 * {@link org.objectweb.asm.Handle}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.Handle}.
 	 */
 	public static final String[] HANDLE_TAG;
 
@@ -129,20 +129,19 @@ public abstract class Printer {
 	/**
 	 * The text to be printed. Since the code of methods is not necessarily
 	 * visited in sequential order, one method after the other, but can be
-	 * interlaced (some instructions from method one, then some instructions from
-	 * method two, then some instructions from method one again...), it is not
-	 * possible to print the visited instructions directly to a sequential
-	 * stream. A class is therefore printed in a two steps process: a string tree
-	 * is constructed during the visit, and printed to a sequential stream at the
-	 * end of the visit. This string tree is stored in this field, as a string
-	 * list that can contain other string lists, which can themselves contain
-	 * other string lists, and so on.
+	 * interlaced (some instructions from method one, then some instructions
+	 * from method two, then some instructions from method one again...), it is
+	 * not possible to print the visited instructions directly to a sequential
+	 * stream. A class is therefore printed in a two steps process: a string
+	 * tree is constructed during the visit, and printed to a sequential stream
+	 * at the end of the visit. This string tree is stored in this field, as a
+	 * string list that can contain other string lists, which can themselves
+	 * contain other string lists, and so on.
 	 */
 	public final List<Object> text;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.Printer}.
+	 * Constructs a new {@link Printer}.
 	 */
 	protected Printer(final int api) {
 		this.api = api;
@@ -151,31 +150,37 @@ public abstract class Printer {
 	}
 
 	/**
-	 * Class header. See {@link org.objectweb.asm.ClassVisitor#visit}.
+	 * Class header. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visit}.
 	 */
 	public abstract void visit(final int version, final int access, final String name,
 			final String signature, final String superName, final String[] interfaces);
 
 	/**
-	 * Class source. See {@link org.objectweb.asm.ClassVisitor#visitSource}.
+	 * Class source. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitSource}
+	 * .
 	 */
 	public abstract void visitSource(final String file, final String debug);
 
 	/**
 	 * Class outer class. See
-	 * {@link org.objectweb.asm.ClassVisitor#visitOuterClass}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitOuterClass}
+	 * .
 	 */
 	public abstract void visitOuterClass(final String owner, final String name, final String desc);
 
 	/**
 	 * Class annotation. See
-	 * {@link org.objectweb.asm.ClassVisitor#visitAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitAnnotation}
+	 * .
 	 */
 	public abstract Printer visitClassAnnotation(final String desc, final boolean visible);
 
 	/**
 	 * Class type annotation. See
-	 * {@link org.objectweb.asm.ClassVisitor#visitTypeAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitTypeAnnotation}
+	 * .
 	 */
 	public Printer visitClassTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -183,32 +188,38 @@ public abstract class Printer {
 	}
 
 	/**
-	 * Class attribute. See {@link org.objectweb.asm.ClassVisitor#visitAttribute}
+	 * Class attribute. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitAttribute}
 	 * .
 	 */
 	public abstract void visitClassAttribute(final Attribute attr);
 
 	/**
 	 * Class inner name. See
-	 * {@link org.objectweb.asm.ClassVisitor#visitInnerClass}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitInnerClass}
+	 * .
 	 */
 	public abstract void visitInnerClass(final String name, final String outerName,
 			final String innerName, final int access);
 
 	/**
-	 * Class field. See {@link org.objectweb.asm.ClassVisitor#visitField}.
+	 * Class field. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitField}.
 	 */
 	public abstract Printer visitField(final int access, final String name, final String desc,
 			final String signature, final Object value);
 
 	/**
-	 * Class method. See {@link org.objectweb.asm.ClassVisitor#visitMethod}.
+	 * Class method. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitMethod}
+	 * .
 	 */
 	public abstract Printer visitMethod(final int access, final String name, final String desc,
 			final String signature, final String[] exceptions);
 
 	/**
-	 * Class end. See {@link org.objectweb.asm.ClassVisitor#visitEnd}.
+	 * Class end. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitEnd}.
 	 */
 	public abstract void visitClassEnd();
 
@@ -217,30 +228,36 @@ public abstract class Printer {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Annotation value. See {@link org.objectweb.asm.AnnotationVisitor#visit}.
+	 * Annotation value. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor#visit}.
 	 */
 	public abstract void visit(final String name, final Object value);
 
 	/**
 	 * Annotation enum value. See
-	 * {@link org.objectweb.asm.AnnotationVisitor#visitEnum}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor#visitEnum}
+	 * .
 	 */
 	public abstract void visitEnum(final String name, final String desc, final String value);
 
 	/**
 	 * Nested annotation value. See
-	 * {@link org.objectweb.asm.AnnotationVisitor#visitAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor#visitAnnotation}
+	 * .
 	 */
 	public abstract Printer visitAnnotation(final String name, final String desc);
 
 	/**
 	 * Annotation array value. See
-	 * {@link org.objectweb.asm.AnnotationVisitor#visitArray}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor#visitArray}
+	 * .
 	 */
 	public abstract Printer visitArray(final String name);
 
 	/**
-	 * Annotation end. See {@link org.objectweb.asm.AnnotationVisitor#visitEnd}.
+	 * Annotation end. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor#visitEnd}
+	 * .
 	 */
 	public abstract void visitAnnotationEnd();
 
@@ -250,13 +267,15 @@ public abstract class Printer {
 
 	/**
 	 * Field annotation. See
-	 * {@link org.objectweb.asm.FieldVisitor#visitAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor#visitAnnotation}
+	 * .
 	 */
 	public abstract Printer visitFieldAnnotation(final String desc, final boolean visible);
 
 	/**
 	 * Field type annotation. See
-	 * {@link org.objectweb.asm.FieldVisitor#visitTypeAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor#visitTypeAnnotation}
+	 * .
 	 */
 	public Printer visitFieldTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -264,13 +283,15 @@ public abstract class Printer {
 	}
 
 	/**
-	 * Field attribute. See {@link org.objectweb.asm.FieldVisitor#visitAttribute}
+	 * Field attribute. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor#visitAttribute}
 	 * .
 	 */
 	public abstract void visitFieldAttribute(final Attribute attr);
 
 	/**
-	 * Field end. See {@link org.objectweb.asm.FieldVisitor#visitEnd}.
+	 * Field end. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.FieldVisitor#visitEnd}.
 	 */
 	public abstract void visitFieldEnd();
 
@@ -280,7 +301,8 @@ public abstract class Printer {
 
 	/**
 	 * Method parameter. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitParameter(String, int)}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitParameter(String, int)}
+	 * .
 	 */
 	public void visitParameter(final String name, final int access) {
 		throw new RuntimeException("Must be overriden");
@@ -288,19 +310,22 @@ public abstract class Printer {
 
 	/**
 	 * Method default annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitAnnotationDefault}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitAnnotationDefault}
+	 * .
 	 */
 	public abstract Printer visitAnnotationDefault();
 
 	/**
 	 * Method annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitAnnotation}
+	 * .
 	 */
 	public abstract Printer visitMethodAnnotation(final String desc, final boolean visible);
 
 	/**
 	 * Method type annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTypeAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTypeAnnotation}
+	 * .
 	 */
 	public Printer visitMethodTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -309,63 +334,73 @@ public abstract class Printer {
 
 	/**
 	 * Method parameter annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitParameterAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitParameterAnnotation}
+	 * .
 	 */
 	public abstract Printer visitParameterAnnotation(final int parameter, final String desc,
 			final boolean visible);
 
 	/**
 	 * Method attribute. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitAttribute}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitAttribute}
+	 * .
 	 */
 	public abstract void visitMethodAttribute(final Attribute attr);
 
 	/**
-	 * Method start. See {@link org.objectweb.asm.MethodVisitor#visitCode}.
+	 * Method start. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitCode}.
 	 */
 	public abstract void visitCode();
 
 	/**
-	 * Method stack frame. See {@link org.objectweb.asm.MethodVisitor#visitFrame}
+	 * Method stack frame. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitFrame}
 	 * .
 	 */
 	public abstract void visitFrame(final int type, final int nLocal, final Object[] local,
 			final int nStack, final Object[] stack);
 
 	/**
-	 * Method instruction. See {@link org.objectweb.asm.MethodVisitor#visitInsn}
+	 * Method instruction. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitInsn}
 	 * .
 	 */
 	public abstract void visitInsn(final int opcode);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitIntInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitIntInsn}
+	 * .
 	 */
 	public abstract void visitIntInsn(final int opcode, final int operand);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitVarInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitVarInsn}
+	 * .
 	 */
 	public abstract void visitVarInsn(final int opcode, final int var);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTypeInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTypeInsn}
+	 * .
 	 */
 	public abstract void visitTypeInsn(final int opcode, final String type);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitFieldInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitFieldInsn}
+	 * .
 	 */
 	public abstract void visitFieldInsn(final int opcode, final String owner, final String name,
 			final String desc);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitMethodInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitMethodInsn}
+	 * .
 	 */
 	@Deprecated
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
@@ -380,7 +415,8 @@ public abstract class Printer {
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitMethodInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitMethodInsn}
+	 * .
 	 */
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
 			final String desc, final boolean itf) {
@@ -396,57 +432,67 @@ public abstract class Printer {
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitInvokeDynamicInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitInvokeDynamicInsn}
+	 * .
 	 */
 	public abstract void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
 			Object... bsmArgs);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitJumpInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitJumpInsn}
+	 * .
 	 */
 	public abstract void visitJumpInsn(final int opcode, final Label label);
 
 	/**
-	 * Method label. See {@link org.objectweb.asm.MethodVisitor#visitLabel}.
+	 * Method label. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLabel}
+	 * .
 	 */
 	public abstract void visitLabel(final Label label);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitLdcInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLdcInsn}
+	 * .
 	 */
 	public abstract void visitLdcInsn(final Object cst);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitIincInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitIincInsn}
+	 * .
 	 */
 	public abstract void visitIincInsn(final int var, final int increment);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTableSwitchInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTableSwitchInsn}
+	 * .
 	 */
 	public abstract void visitTableSwitchInsn(final int min, final int max, final Label dflt,
 			final Label... labels);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitLookupSwitchInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLookupSwitchInsn}
+	 * .
 	 */
 	public abstract void visitLookupSwitchInsn(final Label dflt, final int[] keys,
 			final Label[] labels);
 
 	/**
 	 * Method instruction. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitMultiANewArrayInsn}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitMultiANewArrayInsn}
+	 * .
 	 */
 	public abstract void visitMultiANewArrayInsn(final String desc, final int dims);
 
 	/**
 	 * Instruction type annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitInsnAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitInsnAnnotation}
+	 * .
 	 */
 	public Printer visitInsnAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -455,14 +501,16 @@ public abstract class Printer {
 
 	/**
 	 * Method exception handler. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTryCatchBlock}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTryCatchBlock}
+	 * .
 	 */
 	public abstract void visitTryCatchBlock(final Label start, final Label end, final Label handler,
 			final String type);
 
 	/**
 	 * Try catch block type annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTryCatchAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTryCatchAnnotation}
+	 * .
 	 */
 	public Printer visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
@@ -471,14 +519,16 @@ public abstract class Printer {
 
 	/**
 	 * Method debug info. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitLocalVariable}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLocalVariable}
+	 * .
 	 */
 	public abstract void visitLocalVariable(final String name, final String desc,
 			final String signature, final Label start, final Label end, final int index);
 
 	/**
 	 * Local variable type annotation. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitTryCatchAnnotation}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitTryCatchAnnotation}
+	 * .
 	 */
 	public Printer visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
 			final Label[] start, final Label[] end, final int[] index, final String desc,
@@ -488,18 +538,20 @@ public abstract class Printer {
 
 	/**
 	 * Method debug info. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitLineNumber}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLineNumber}
+	 * .
 	 */
 	public abstract void visitLineNumber(final int line, final Label start);
 
 	/**
 	 * Method max stack and max locals. See
-	 * {@link org.objectweb.asm.MethodVisitor#visitMaxs}.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitMaxs}.
 	 */
 	public abstract void visitMaxs(final int maxStack, final int maxLocals);
 
 	/**
-	 * Method end. See {@link org.objectweb.asm.MethodVisitor#visitEnd}.
+	 * Method end. See
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitEnd}.
 	 */
 	public abstract void visitMethodEnd();
 
@@ -565,8 +617,8 @@ public abstract class Printer {
 	 * @param pw
 	 *        the writer to be used to print the tree.
 	 * @param l
-	 *        a string tree, i.e., a string list that can contain other string
-	 *        lists, and so on recursively.
+	 *        a string tree, i.e., a string list that can contain other
+	 *        string lists, and so on recursively.
 	 */
 	static void printList(final PrintWriter pw, final List<?> l) {
 		for (int i = 0; i < l.size(); ++i) {

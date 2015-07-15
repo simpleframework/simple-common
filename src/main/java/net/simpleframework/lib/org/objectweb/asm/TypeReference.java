@@ -84,8 +84,8 @@ public class TypeReference {
 	public final static int METHOD_RETURN = 0x14;
 
 	/**
-	 * The sort of type references that target the receiver type of a method. See
-	 * {@link #getSort getSort}.
+	 * The sort of type references that target the receiver type of a method.
+	 * See {@link #getSort getSort}.
 	 */
 	public final static int METHOD_RECEIVER = 0x15;
 
@@ -108,8 +108,8 @@ public class TypeReference {
 	public final static int LOCAL_VARIABLE = 0x40;
 
 	/**
-	 * The sort of type references that target the type of a resource variable in
-	 * a method. See {@link #getSort getSort}.
+	 * The sort of type references that target the type of a resource variable
+	 * in a method. See {@link #getSort getSort}.
 	 */
 	public final static int RESOURCE_VARIABLE = 0x41;
 
@@ -132,8 +132,8 @@ public class TypeReference {
 	public final static int NEW = 0x44;
 
 	/**
-	 * The sort of type references that target the receiver type of a constructor
-	 * reference. See {@link #getSort getSort}.
+	 * The sort of type references that target the receiver type of a
+	 * constructor reference. See {@link #getSort getSort}.
 	 */
 	public final static int CONSTRUCTOR_REFERENCE = 0x45;
 
@@ -244,8 +244,8 @@ public class TypeReference {
 	 * 'implements' clause of a class.
 	 * 
 	 * @param itfIndex
-	 *        the index of an interface in the 'implements' clause of a class,
-	 *        or -1 to reference the super class of the class.
+	 *        the index of an interface in the 'implements' clause of a
+	 *        class, or -1 to reference the super class of the class.
 	 * @return a reference to the given super type of a class.
 	 */
 	public static TypeReference newSuperTypeReference(int itfIndex) {
@@ -266,8 +266,8 @@ public class TypeReference {
 	}
 
 	/**
-	 * Returns a reference to the type of an exception, in a 'throws' clause of a
-	 * method.
+	 * Returns a reference to the type of an exception, in a 'throws' clause of
+	 * a method.
 	 * 
 	 * @param exceptionIndex
 	 *        the index of an exception in a 'throws' clause of a method.
@@ -345,9 +345,9 @@ public class TypeReference {
 	}
 
 	/**
-	 * Returns the index of the type parameter referenced by this type reference.
-	 * This method must only be used for type references whose sort is
-	 * {@link #CLASS_TYPE_PARAMETER CLASS_TYPE_PARAMETER},
+	 * Returns the index of the type parameter referenced by this type
+	 * reference. This method must only be used for type references whose sort
+	 * is {@link #CLASS_TYPE_PARAMETER CLASS_TYPE_PARAMETER},
 	 * {@link #METHOD_TYPE_PARAMETER METHOD_TYPE_PARAMETER},
 	 * {@link #CLASS_TYPE_PARAMETER_BOUND CLASS_TYPE_PARAMETER_BOUND} or
 	 * {@link #METHOD_TYPE_PARAMETER_BOUND METHOD_TYPE_PARAMETER_BOUND}.
@@ -385,9 +385,9 @@ public class TypeReference {
 	}
 
 	/**
-	 * Returns the index of the formal parameter whose type is referenced by this
-	 * type reference. This method must only be used for type references whose
-	 * sort is {@link #METHOD_FORMAL_PARAMETER METHOD_FORMAL_PARAMETER}.
+	 * Returns the index of the formal parameter whose type is referenced by
+	 * this type reference. This method must only be used for type references
+	 * whose sort is {@link #METHOD_FORMAL_PARAMETER METHOD_FORMAL_PARAMETER}.
 	 * 
 	 * @return a formal parameter index.
 	 */

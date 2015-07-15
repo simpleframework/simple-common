@@ -49,8 +49,8 @@ public final class Handle {
 	final int tag;
 
 	/**
-	 * The internal name of the class that owns the field or method designated by
-	 * this handle.
+	 * The internal name of the class that owns the field or method designated
+	 * by this handle.
 	 */
 	final String owner;
 
@@ -80,7 +80,8 @@ public final class Handle {
 	 * @param name
 	 *        the name of the field or method designated by this handle.
 	 * @param desc
-	 *        the descriptor of the field or method designated by this handle.
+	 *        the descriptor of the field or method designated by this
+	 *        handle.
 	 */
 	public Handle(final int tag, final String owner, final String name, final String desc) {
 		this.tag = tag;

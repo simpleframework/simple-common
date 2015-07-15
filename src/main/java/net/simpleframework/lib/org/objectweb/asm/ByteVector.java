@@ -48,18 +48,16 @@ public class ByteVector {
 	int length;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ByteVector ByteVector}
-	 * with a default initial size.
+	 * Constructs a new {@link ByteVector ByteVector} with a default initial
+	 * size.
 	 */
 	public ByteVector() {
 		data = new byte[64];
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ByteVector ByteVector}
-	 * with the given initial size.
+	 * Constructs a new {@link ByteVector ByteVector} with the given initial
+	 * size.
 	 * 
 	 * @param initialSize
 	 *        the initial size of the byte vector to be constructed.
@@ -250,8 +248,8 @@ public class ByteVector {
 	 *        the String to encode.
 	 * @param i
 	 *        the index of the first character to encode. The previous
-	 *        characters are supposed to have already been encoded, using only
-	 *        one byte per character.
+	 *        characters are supposed to have already been encoded, using
+	 *        only one byte per character.
 	 * @param maxByteLength
 	 *        the maximum byte length of the encoded string, including the
 	 *        already encoded characters.
@@ -328,8 +326,8 @@ public class ByteVector {
 	 * Enlarge this byte vector so that it can receive n more bytes.
 	 * 
 	 * @param size
-	 *        number of additional bytes that this byte vector should be able
-	 *        to receive.
+	 *        number of additional bytes that this byte vector should be
+	 *        able to receive.
 	 */
 	private void enlarge(final int size) {
 		final int length1 = 2 * data.length;

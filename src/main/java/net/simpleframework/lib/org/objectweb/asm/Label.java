@@ -41,10 +41,10 @@ package net.simpleframework.lib.org.objectweb.asm;
 public class Label {
 
 	/**
-	 * Indicates if this label is only used for debug attributes. Such a label is
-	 * not the start of a basic block, the target of a jump instruction, or an
-	 * exception handler. It can be safely ignored in control flow graph analysis
-	 * algorithms (for optimization purposes).
+	 * Indicates if this label is only used for debug attributes. Such a label
+	 * is not the start of a basic block, the target of a jump instruction, or
+	 * an exception handler. It can be safely ignored in control flow graph
+	 * analysis algorithms (for optimization purposes).
 	 */
 	static final int DEBUG = 1;
 
@@ -111,7 +111,8 @@ public class Label {
 	 * Field used to associate user information to a label. Warning: this field
 	 * is used by the ASM tree package. In order to use it with the ASM tree
 	 * package you must override the
-	 * {@link org.objectweb.asm.tree.MethodNode#getLabelNode} method.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.tree.MethodNode#getLabelNode}
+	 * method.
 	 */
 	public Object info;
 
@@ -131,7 +132,11 @@ public class Label {
 	int status;
 
 	/**
-	 * The line number corresponding to this label, if known.
+	 * The line number corresponding to this label, if known. If there are
+	 * several lines, each line is stored in a separate label, all linked via
+	 * their next field (these links are created in ClassReader and removed just
+	 * before visitLabel is called, so that this does not impact the rest of the
+	 * code).
 	 */
 	int line;
 
@@ -146,17 +151,17 @@ public class Label {
 	private int referenceCount;
 
 	/**
-	 * Informations about forward references. Each forward reference is described
-	 * by two consecutive integers in this array: the first one is the position
-	 * of the first byte of the bytecode instruction that contains the forward
-	 * reference, while the second is the position of the first byte of the
-	 * forward reference itself. In fact the sign of the first integer indicates
-	 * if this reference uses 2 or 4 bytes, and its absolute value gives the
-	 * position of the bytecode instruction. This array is also used as a bitset
-	 * to store the subroutines to which a basic block belongs. This information
-	 * is needed in {@linked MethodWriter#visitMaxs}, after all forward
-	 * references have been resolved. Hence the same array can be used for both
-	 * purposes without problems.
+	 * Informations about forward references. Each forward reference is
+	 * described by two consecutive integers in this array: the first one is the
+	 * position of the first byte of the bytecode instruction that contains the
+	 * forward reference, while the second is the position of the first byte of
+	 * the forward reference itself. In fact the sign of the first integer
+	 * indicates if this reference uses 2 or 4 bytes, and its absolute value
+	 * gives the position of the bytecode instruction. This array is also used
+	 * as a bitset to store the subroutines to which a basic block belongs. This
+	 * information is needed in {@linked MethodWriter#visitMaxs}, after all
+	 * forward references have been resolved. Hence the same array can be used
+	 * for both purposes without problems.
 	 */
 	private int[] srcAndRefPositions;
 
@@ -164,9 +169,9 @@ public class Label {
 
 	/*
 	 * Fields for the control flow and data flow graph analysis algorithms (used
-	 * to compute the maximum stack size or the stack map frames). A control flow
-	 * graph contains one node per "basic block", and one edge per "jump" from
-	 * one basic block to another. Each node (i.e., each basic block) is
+	 * to compute the maximum stack size or the stack map frames). A control
+	 * flow graph contains one node per "basic block", and one edge per "jump"
+	 * from one basic block to another. Each node (i.e., each basic block) is
 	 * represented by the Label object that corresponds to the first instruction
 	 * of this basic block. Each node also stores the list of its successors in
 	 * the graph, as a linked list of Edge objects.
@@ -184,9 +189,9 @@ public class Label {
 	 * the using the previously computed relative output frames.
 	 * 
 	 * The algorithm used to compute the maximum stack size only computes the
-	 * relative output and absolute input stack heights, while the algorithm used
-	 * to compute stack map frames computes relative output frames and absolute
-	 * input frames.
+	 * relative output and absolute input stack heights, while the algorithm
+	 * used to compute stack map frames computes relative output frames and
+	 * absolute input frames.
 	 */
 
 	/**
@@ -239,7 +244,8 @@ public class Label {
 	 * The next basic block in the basic block stack. This stack is used in the
 	 * main loop of the fix point algorithm used in the second step of the
 	 * control flow analysis algorithms. It is also used in
-	 * {@link #visitSubroutine} to avoid using a recursive method.
+	 * {@link #visitSubroutine} to avoid using a recursive method, and in
+	 * ClassReader to temporarily store multiple source lines for a label.
 	 * 
 	 * @see MethodWriter#visitMaxs
 	 */
@@ -316,16 +322,16 @@ public class Label {
 
 	/**
 	 * Adds a forward reference to this label. This method must be called only
-	 * for a true forward reference, i.e. only if this label is not resolved yet.
-	 * For backward references, the offset of the reference can be, and must be,
-	 * computed and stored directly.
+	 * for a true forward reference, i.e. only if this label is not resolved
+	 * yet. For backward references, the offset of the reference can be, and
+	 * must be, computed and stored directly.
 	 * 
 	 * @param sourcePosition
-	 *        the position of the referencing instruction. This position will
-	 *        be used to compute the offset of this forward reference.
+	 *        the position of the referencing instruction. This position
+	 *        will be used to compute the offset of this forward reference.
 	 * @param referencePosition
-	 *        the position where the offset for this forward reference must be
-	 *        stored.
+	 *        the position where the offset for this forward reference must
+	 *        be stored.
 	 */
 	private void addReference(final int sourcePosition, final int referencePosition) {
 		if (srcAndRefPositions == null) {
@@ -343,8 +349,8 @@ public class Label {
 	/**
 	 * Resolves all forward references to this label. This method must be called
 	 * when this label is added to the bytecode of the method, i.e. when its
-	 * position becomes known. This method fills in the blanks that where left in
-	 * the bytecode by each forward reference previously added to this label.
+	 * position becomes known. This method fills in the blanks that where left
+	 * in the bytecode by each forward reference previously added to this label.
 	 * 
 	 * @param owner
 	 *        the code writer that calls this method.
@@ -352,16 +358,16 @@ public class Label {
 	 *        the position of this label in the bytecode.
 	 * @param data
 	 *        the bytecode of the method.
-	 * @return <tt>true</tt> if a blank that was left for this label was to small
-	 *         to store the offset. In such a case the corresponding jump
+	 * @return <tt>true</tt> if a blank that was left for this label was to
+	 *         small to store the offset. In such a case the corresponding jump
 	 *         instruction is replaced with a pseudo instruction (using unused
 	 *         opcodes) using an unsigned two bytes offset. These pseudo
 	 *         instructions will need to be replaced with true instructions with
 	 *         wider offsets (4 bytes instead of 2). This is done in
 	 *         {@link MethodWriter#resizeInstructions}.
 	 * @throws IllegalArgumentException
-	 *         if this label has already been resolved, or if it has not been
-	 *         created by the given code writer.
+	 *         if this label has already been resolved, or if it has not
+	 *         been created by the given code writer.
 	 */
 	boolean resolve(final MethodWriter owner, final int position, final byte[] data) {
 		boolean needUpdate = false;
@@ -376,13 +382,13 @@ public class Label {
 				offset = position - source;
 				if (offset < Short.MIN_VALUE || offset > Short.MAX_VALUE) {
 					/*
-					 * changes the opcode of the jump instruction, in order to be
-					 * able to find it later (see resizeInstructions in
-					 * MethodWriter). These temporary opcodes are similar to jump
-					 * instruction opcodes, except that the 2 bytes offset is
-					 * unsigned (and can therefore represent values from 0 to 65535,
-					 * which is sufficient since the size of a method is limited to
-					 * 65535 bytes).
+					 * changes the opcode of the jump instruction, in order to
+					 * be able to find it later (see resizeInstructions in
+					 * MethodWriter). These temporary opcodes are similar to
+					 * jump instruction opcodes, except that the 2 bytes offset
+					 * is unsigned (and can therefore represent values from 0 to
+					 * 65535, which is sufficient since the size of a method is
+					 * limited to 65535 bytes).
 					 */
 					final int opcode = data[reference - 1] & 0xFF;
 					if (opcode <= Opcodes.JSR) {
@@ -469,7 +475,7 @@ public class Label {
 	void addToSubroutine(final long id, final int nbSubroutines) {
 		if ((status & VISITED) == 0) {
 			status |= VISITED;
-			srcAndRefPositions = new int[(nbSubroutines - 1) / 32 + 1];
+			srcAndRefPositions = new int[nbSubroutines / 32 + 1];
 		}
 		srcAndRefPositions[(int) (id >>> 32)] |= (int) id;
 	}
@@ -482,8 +488,8 @@ public class Label {
 	 * 
 	 * @param JSR
 	 *        a JSR block that jumps to this subroutine. If this JSR is not
-	 *        null it is added to the successor of the RET blocks found in the
-	 *        subroutine.
+	 *        null it is added to the successor of the RET blocks found in
+	 *        the subroutine.
 	 * @param id
 	 *        the id of this subroutine.
 	 * @param nbSubroutines

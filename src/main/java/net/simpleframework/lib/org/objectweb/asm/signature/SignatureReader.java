@@ -44,9 +44,7 @@ public class SignatureReader {
 	private final String signature;
 
 	/**
-	 * Constructs a
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader}
-	 * for the given signature.
+	 * Constructs a {@link SignatureReader} for the given signature.
 	 * 
 	 * @param signature
 	 *        A <i>ClassSignature</i>, <i>MethodTypeSignature</i>, or
@@ -58,16 +56,15 @@ public class SignatureReader {
 
 	/**
 	 * Makes the given visitor visit the signature of this
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader}
-	 * . This signature is the one specified in the constructor (see
-	 * {@link #SignatureReader(String) SignatureReader}). This method is intended
-	 * to be called on a
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader}
-	 * that was created using a <i>ClassSignature</i> (such as the
+	 * {@link SignatureReader}. This signature is the one specified in the
+	 * constructor (see {@link #SignatureReader(String) SignatureReader}). This
+	 * method is intended to be called on a {@link SignatureReader} that was
+	 * created using a <i>ClassSignature</i> (such as the <code>signature</code>
+	 * parameter of the
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visit
+	 * ClassVisitor.visit} method) or a <i>MethodTypeSignature</i> (such as the
 	 * <code>signature</code> parameter of the
-	 * {@link org.objectweb.asm.ClassVisitor#visit ClassVisitor.visit} method) or
-	 * a <i>MethodTypeSignature</i> (such as the <code>signature</code> parameter
-	 * of the {@link org.objectweb.asm.ClassVisitor#visitMethod
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitMethod
 	 * ClassVisitor.visitMethod} method).
 	 * 
 	 * @param v
@@ -118,15 +115,14 @@ public class SignatureReader {
 
 	/**
 	 * Makes the given visitor visit the signature of this
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader}
-	 * . This signature is the one specified in the constructor (see
-	 * {@link #SignatureReader(String) SignatureReader}). This method is intended
-	 * to be called on a
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader}
-	 * that was created using a <i>FieldTypeSignature</i>, such as the
+	 * {@link SignatureReader}. This signature is the one specified in the
+	 * constructor (see {@link #SignatureReader(String) SignatureReader}). This
+	 * method is intended to be called on a {@link SignatureReader} that was
+	 * created using a <i>FieldTypeSignature</i>, such as the
 	 * <code>signature</code> parameter of the
-	 * {@link org.objectweb.asm.ClassVisitor#visitField ClassVisitor.visitField}
-	 * or {@link org.objectweb.asm.MethodVisitor#visitLocalVariable
+	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor#visitField
+	 * ClassVisitor.visitField} or
+	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor#visitLocalVariable
 	 * MethodVisitor.visitLocalVariable} methods.
 	 * 
 	 * @param v

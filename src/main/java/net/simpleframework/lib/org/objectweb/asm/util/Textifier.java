@@ -46,7 +46,7 @@ import net.simpleframework.lib.org.objectweb.asm.signature.SignatureReader;
 
 /**
  * A {@link Printer} that prints a disassembled view of the classes it visits.
- * 
+ *
  * @author Eric Bruneton
  */
 public class Textifier extends Printer {
@@ -145,11 +145,10 @@ public class Textifier extends Printer {
 	private int valueNumber = 0;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.Textifier}.
-	 * <i>Subclasses must not use this constructor</i>. Instead, they must use
-	 * the {@link #Textifier(int)} version.
-	 * 
+	 * Constructs a new {@link Textifier}. <i>Subclasses must not use this
+	 * constructor</i>. Instead, they must use the {@link #Textifier(int)}
+	 * version.
+	 *
 	 * @throws IllegalStateException
 	 *         If a subclass calls this constructor.
 	 */
@@ -161,12 +160,11 @@ public class Textifier extends Printer {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.Textifier}.
-	 * 
+	 * Constructs a new {@link Textifier}.
+	 *
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	protected Textifier(final int api) {
 		super(api);
@@ -176,10 +174,10 @@ public class Textifier extends Printer {
 	 * Prints a disassembled view of the given class to the standard output.
 	 * <p>
 	 * Usage: Textifier [-debug] &lt;binary class name or class file name &gt;
-	 * 
+	 *
 	 * @param args
 	 *        the command line arguments.
-	 * 
+	 *
 	 * @throws Exception
 	 *         if the class cannot be found, or if an IO exception occurs.
 	 */
@@ -405,7 +403,7 @@ public class Textifier extends Printer {
 		}
 
 		buf.append(tab);
-		appendAccess(access);
+		appendAccess(access & ~Opcodes.ACC_VOLATILE);
 		if ((access & Opcodes.ACC_NATIVE) != 0) {
 			buf.append("native ");
 		}
@@ -689,7 +687,7 @@ public class Textifier extends Printer {
 		final Textifier t = createTextifier();
 		text.add(t.getText());
 		text.add(visible ? ") // parameter " : ") // invisible, parameter ");
-		text.add(new Integer(parameter));
+		text.add(parameter);
 		text.add("\n");
 		return t;
 	}
@@ -1069,7 +1067,7 @@ public class Textifier extends Printer {
 
 	/**
 	 * Prints a disassembled view of the given annotation.
-	 * 
+	 *
 	 * @param desc
 	 *        the class descriptor of the annotation class.
 	 * @param visible
@@ -1090,7 +1088,7 @@ public class Textifier extends Printer {
 
 	/**
 	 * Prints a disassembled view of the given type annotation.
-	 * 
+	 *
 	 * @param typeRef
 	 *        a reference to the annotated type. See {@link TypeReference}.
 	 * @param typePath
@@ -1123,7 +1121,7 @@ public class Textifier extends Printer {
 
 	/**
 	 * Prints a disassembled view of the given attribute.
-	 * 
+	 *
 	 * @param attr
 	 *        an attribute.
 	 */
@@ -1147,7 +1145,7 @@ public class Textifier extends Printer {
 
 	/**
 	 * Creates a new TraceVisitor instance.
-	 * 
+	 *
 	 * @return a new TraceVisitor.
 	 */
 	protected Textifier createTextifier() {
@@ -1157,7 +1155,7 @@ public class Textifier extends Printer {
 	/**
 	 * Appends an internal name, a type descriptor or a type signature to
 	 * {@link #buf buf}.
-	 * 
+	 *
 	 * @param type
 	 *        indicates if desc is an internal name, a field descriptor, a
 	 *        method descriptor, a class signature, ...
@@ -1178,7 +1176,7 @@ public class Textifier extends Printer {
 	/**
 	 * Appends the name of the given label to {@link #buf buf}. Creates a new
 	 * label name if the given label does not yet have one.
-	 * 
+	 *
 	 * @param l
 	 *        a label.
 	 */
@@ -1196,7 +1194,7 @@ public class Textifier extends Printer {
 
 	/**
 	 * Appends the information about the given handle to {@link #buf buf}.
-	 * 
+	 *
 	 * @param h
 	 *        a handle, non null.
 	 */
@@ -1255,7 +1253,7 @@ public class Textifier extends Printer {
 	/**
 	 * Appends a string representation of the given access modifiers to
 	 * {@link #buf buf}.
-	 * 
+	 *
 	 * @param access
 	 *        some access modifiers.
 	 */

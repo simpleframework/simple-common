@@ -127,7 +127,8 @@ class MethodWriter extends MethodVisitor {
 	private int access;
 
 	/**
-	 * The index of the constant pool item that contains the name of this method.
+	 * The index of the constant pool item that contains the name of this
+	 * method.
 	 */
 	private final int name;
 
@@ -368,8 +369,8 @@ class MethodWriter extends MethodVisitor {
 	/*
 	 * Fields for the control flow graph analysis algorithm (used to compute the
 	 * maximum stack size). A control flow graph contains one node per "basic
-	 * block", and one edge per "jump" from one basic block to another. Each node
-	 * (i.e., each basic block) is represented by the Label object that
+	 * block", and one edge per "jump" from one basic block to another. Each
+	 * node (i.e., each basic block) is represented by the Label object that
 	 * corresponds to the first instruction of this basic block. Each node also
 	 * stores the list of its successors in the graph, as a linked list of Edge
 	 * objects.
@@ -388,7 +389,8 @@ class MethodWriter extends MethodVisitor {
 	 * A list of labels. This list is the list of basic blocks in the method,
 	 * i.e. a list of Label objects linked to each other by their
 	 * {@link Label#successor} field, in the order they are visited by
-	 * {@link MethodVisitor#visitLabel}, and starting with the first basic block.
+	 * {@link MethodVisitor#visitLabel}, and starting with the first basic
+	 * block.
 	 */
 	private Label labels;
 
@@ -403,20 +405,20 @@ class MethodWriter extends MethodVisitor {
 	private Label currentBlock;
 
 	/**
-	 * The (relative) stack size after the last visited instruction. This size is
-	 * relative to the beginning of the current basic block, i.e., the true stack
-	 * size after the last visited instruction is equal to the
-	 * {@link Label#inputStackTop beginStackSize} of the current basic block plus
-	 * <tt>stackSize</tt>.
+	 * The (relative) stack size after the last visited instruction. This size
+	 * is relative to the beginning of the current basic block, i.e., the true
+	 * stack size after the last visited instruction is equal to the
+	 * {@link Label#inputStackTop beginStackSize} of the current basic block
+	 * plus <tt>stackSize</tt>.
 	 */
 	private int stackSize;
 
 	/**
-	 * The (relative) maximum stack size after the last visited instruction. This
-	 * size is relative to the beginning of the current basic block, i.e., the
-	 * true maximum stack size after the last visited instruction is equal to the
-	 * {@link Label#inputStackTop beginStackSize} of the current basic block plus
-	 * <tt>stackSize</tt>.
+	 * The (relative) maximum stack size after the last visited instruction.
+	 * This size is relative to the beginning of the current basic block, i.e.,
+	 * the true maximum stack size after the last visited instruction is equal
+	 * to the {@link Label#inputStackTop beginStackSize} of the current basic
+	 * block plus <tt>stackSize</tt>.
 	 */
 	private int maxStackSize;
 
@@ -425,8 +427,7 @@ class MethodWriter extends MethodVisitor {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.MethodWriter}.
+	 * Constructs a new {@link MethodWriter}.
 	 * 
 	 * @param cw
 	 *        the class writer in which the method must be added.
@@ -883,10 +884,11 @@ class MethodWriter extends MethodVisitor {
 			} else {
 				/*
 				 * computes the stack size variation. In order not to recompute
-				 * several times this variation for the same Item, we use the intVal
-				 * field of this item to store this variation, once it has been
-				 * computed. More precisely this intVal field stores the sizes of
-				 * the arguments and of the return value corresponding to desc.
+				 * several times this variation for the same Item, we use the
+				 * intVal field of this item to store this variation, once it
+				 * has been computed. More precisely this intVal field stores
+				 * the sizes of the arguments and of the return value
+				 * corresponding to desc.
 				 */
 				if (argSize == 0) {
 					// the above sizes have not been computed yet,
@@ -934,10 +936,11 @@ class MethodWriter extends MethodVisitor {
 			} else {
 				/*
 				 * computes the stack size variation. In order not to recompute
-				 * several times this variation for the same Item, we use the intVal
-				 * field of this item to store this variation, once it has been
-				 * computed. More precisely this intVal field stores the sizes of
-				 * the arguments and of the return value corresponding to desc.
+				 * several times this variation for the same Item, we use the
+				 * intVal field of this item to store this variation, once it
+				 * has been computed. More precisely this intVal field stores
+				 * the sizes of the arguments and of the return value
+				 * corresponding to desc.
 				 */
 				if (argSize == 0) {
 					// the above sizes have not been computed yet,
@@ -988,10 +991,10 @@ class MethodWriter extends MethodVisitor {
 					// creates a Label for the next basic block
 					nextInsn = new Label();
 					/*
-					 * note that, by construction in this method, a JSR block has at
-					 * least two successors in the control flow graph: the first one
-					 * leads the next instruction after the JSR, while the second one
-					 * leads to the JSR target.
+					 * note that, by construction in this method, a JSR block
+					 * has at least two successors in the control flow graph:
+					 * the first one leads the next instruction after the JSR,
+					 * while the second one leads to the JSR target.
 					 */
 				} else {
 					// updates current stack size (max stack size unchanged
@@ -1006,10 +1009,10 @@ class MethodWriter extends MethodVisitor {
 		if ((label.status & Label.RESOLVED) != 0 && label.position - code.length < Short.MIN_VALUE) {
 			/*
 			 * case of a backward jump with an offset < -32768. In this case we
-			 * automatically replace GOTO with GOTO_W, JSR with JSR_W and IFxxx <l>
-			 * with IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx is the "opposite"
-			 * opcode of IFxxx (i.e., IFNE for IFEQ) and where <l'> designates the
-			 * instruction just after the GOTO_W.
+			 * automatically replace GOTO with GOTO_W, JSR with JSR_W and IFxxx
+			 * <l> with IFNOTxxx <l'> GOTO_W <l>, where IFNOTxxx is the
+			 * "opposite" opcode of IFxxx (i.e., IFNE for IFEQ) and where <l'>
+			 * designates the instruction just after the GOTO_W.
 			 */
 			if (opcode == Opcodes.GOTO) {
 				code.putByte(200); // GOTO_W
@@ -1029,9 +1032,9 @@ class MethodWriter extends MethodVisitor {
 		} else {
 			/*
 			 * case of a backward jump with an offset >= -32768, or of a forward
-			 * jump with, of course, an unknown offset. In these cases we store the
-			 * offset in 2 bytes (which will be increased in resizeInstructions, if
-			 * needed).
+			 * jump with, of course, an unknown offset. In these cases we store
+			 * the offset in 2 bytes (which will be increased in
+			 * resizeInstructions, if needed).
 			 */
 			code.putByte(opcode);
 			label.put(this, code, code.length - 1, false);
@@ -1375,6 +1378,14 @@ class MethodWriter extends MethodVisitor {
 
 	@Override
 	public void visitMaxs(final int maxStack, final int maxLocals) {
+		if (resize) {
+			// replaces the temporary jump opcodes introduced by Label.resolve.
+			if (ClassReader.RESIZE) {
+				resizeInstructions();
+			} else {
+				throw new RuntimeException("Method code too large!");
+			}
+		}
 		if (ClassReader.FRAMES && compute == FRAMES) {
 			// completes the control flow graph with exception handler blocks
 			Handler handler = firstHandler;
@@ -1409,10 +1420,10 @@ class MethodWriter extends MethodVisitor {
 			visitFrame(f);
 
 			/*
-			 * fix point algorithm: mark the first basic block as 'changed' (i.e.
-			 * put it in the 'changed' list) and, while there are changed basic
-			 * blocks, choose one, mark it as unchanged, and update its successors
-			 * (which can be changed in the process).
+			 * fix point algorithm: mark the first basic block as 'changed'
+			 * (i.e. put it in the 'changed' list) and, while there are changed
+			 * basic blocks, choose one, mark it as unchanged, and update its
+			 * successors (which can be changed in the process).
 			 */
 			int max = 0;
 			Label changed = labels;
@@ -1521,8 +1532,8 @@ class MethodWriter extends MethodVisitor {
 			if (subroutines > 0) {
 				// completes the control flow graph with the RET successors
 				/*
-				 * first step: finds the subroutines. This step determines, for each
-				 * basic block, to which subroutine(s) it belongs.
+				 * first step: finds the subroutines. This step determines, for
+				 * each basic block, to which subroutine(s) it belongs.
 				 */
 				// finds the basic blocks that belong to the "main" subroutine
 				int id = 0;
@@ -1561,13 +1572,14 @@ class MethodWriter extends MethodVisitor {
 			}
 
 			/*
-			 * control flow analysis algorithm: while the block stack is not empty,
-			 * pop a block from this stack, update the max stack size, compute the
-			 * true (non relative) begin stack size of the successors of this
-			 * block, and push these successors onto the stack (unless they have
-			 * already been pushed onto the stack). Note: by hypothesis, the {@link
-			 * Label#inputStackTop} of the blocks in the block stack are the true
-			 * (non relative) beginning stack sizes of these blocks.
+			 * control flow analysis algorithm: while the block stack is not
+			 * empty, pop a block from this stack, update the max stack size,
+			 * compute the true (non relative) begin stack size of the
+			 * successors of this block, and push these successors onto the
+			 * stack (unless they have already been pushed onto the stack).
+			 * Note: by hypothesis, the {@link Label#inputStackTop} of the
+			 * blocks in the block stack are the true (non relative) beginning
+			 * stack sizes of these blocks.
 			 */
 			int max = 0;
 			Label stack = labels;
@@ -1898,8 +1910,8 @@ class MethodWriter extends MethodVisitor {
 
 	/**
 	 * Writes some types of the current frame {@link #frame} into the
-	 * StackMapTableAttribute. This method converts types from the format used in
-	 * {@link Label} to the format used in StackMapTable attributes. In
+	 * StackMapTableAttribute. This method converts types from the format used
+	 * in {@link Label} to the format used in StackMapTable attributes. In
 	 * particular, it converts type table indexes to constant pool indexes.
 	 * 
 	 * @param start
@@ -1924,43 +1936,43 @@ class MethodWriter extends MethodVisitor {
 					stackMap.putByte(v);
 				}
 			} else {
-				final StringBuffer buf = new StringBuffer();
+				final StringBuilder sb = new StringBuilder();
 				d >>= 28;
 				while (d-- > 0) {
-					buf.append('[');
+					sb.append('[');
 				}
 				if ((t & Frame.BASE_KIND) == Frame.OBJECT) {
-					buf.append('L');
-					buf.append(cw.typeTable[t & Frame.BASE_VALUE].strVal1);
-					buf.append(';');
+					sb.append('L');
+					sb.append(cw.typeTable[t & Frame.BASE_VALUE].strVal1);
+					sb.append(';');
 				} else {
 					switch (t & 0xF) {
 					case 1:
-						buf.append('I');
+						sb.append('I');
 						break;
 					case 2:
-						buf.append('F');
+						sb.append('F');
 						break;
 					case 3:
-						buf.append('D');
+						sb.append('D');
 						break;
 					case 9:
-						buf.append('Z');
+						sb.append('Z');
 						break;
 					case 10:
-						buf.append('B');
+						sb.append('B');
 						break;
 					case 11:
-						buf.append('C');
+						sb.append('C');
 						break;
 					case 12:
-						buf.append('S');
+						sb.append('S');
 						break;
 					default:
-						buf.append('J');
+						sb.append('J');
 					}
 				}
-				stackMap.putByte(7).putShort(cw.newClass(buf.toString()));
+				stackMap.putByte(7).putShort(cw.newClass(sb.toString()));
 			}
 		}
 	}
@@ -1987,14 +1999,6 @@ class MethodWriter extends MethodVisitor {
 	final int getSize() {
 		if (classReaderOffset != 0) {
 			return 6 + classReaderLength;
-		}
-		if (resize) {
-			// replaces the temporary jump opcodes introduced by Label.resolve.
-			if (ClassReader.RESIZE) {
-				resizeInstructions();
-			} else {
-				throw new RuntimeException("Method code too large!");
-			}
 		}
 		int size = 8;
 		if (code.length > 0) {
@@ -2317,12 +2321,13 @@ class MethodWriter extends MethodVisitor {
 	 * Resizes and replaces the temporary instructions inserted by
 	 * {@link Label#resolve} for wide forward jumps, while keeping jump offsets
 	 * and instruction addresses consistent. This may require to resize other
-	 * existing instructions, or even to introduce new instructions: for example,
-	 * increasing the size of an instruction by 2 at the middle of a method can
-	 * increases the offset of an IFEQ instruction from 32766 to 32768, in which
-	 * case IFEQ 32766 must be replaced with IFNEQ 8 GOTO_W 32765. This, in turn,
-	 * may require to increase the size of another jump instruction, and so on...
-	 * All these operations are handled automatically by this method.
+	 * existing instructions, or even to introduce new instructions: for
+	 * example, increasing the size of an instruction by 2 at the middle of a
+	 * method can increases the offset of an IFEQ instruction from 32766 to
+	 * 32768, in which case IFEQ 32766 must be replaced with IFNEQ 8 GOTO_W
+	 * 32765. This, in turn, may require to increase the size of another jump
+	 * instruction, and so on... All these operations are handled automatically
+	 * by this method.
 	 * <p>
 	 * <i>This method must be called after all the method that is being built has
 	 * been visited</i>. In particular, the {@link Label Label} objects used to
@@ -2335,28 +2340,28 @@ class MethodWriter extends MethodVisitor {
 		int i, j; // loop indexes
 		/*
 		 * 1st step: As explained above, resizing an instruction may require to
-		 * resize another one, which may require to resize yet another one, and so
-		 * on. The first step of the algorithm consists in finding all the
-		 * instructions that need to be resized, without modifying the code. This
-		 * is done by the following "fix point" algorithm:
+		 * resize another one, which may require to resize yet another one, and
+		 * so on. The first step of the algorithm consists in finding all the
+		 * instructions that need to be resized, without modifying the code.
+		 * This is done by the following "fix point" algorithm:
 		 * 
 		 * Parse the code to find the jump instructions whose offset will need
-		 * more than 2 bytes to be stored (the future offset is computed from the
-		 * current offset and from the number of bytes that will be inserted or
-		 * removed between the source and target instructions). For each such
-		 * instruction, adds an entry in (a copy of) the indexes and sizes arrays
-		 * (if this has not already been done in a previous iteration!).
+		 * more than 2 bytes to be stored (the future offset is computed from
+		 * the current offset and from the number of bytes that will be inserted
+		 * or removed between the source and target instructions). For each such
+		 * instruction, adds an entry in (a copy of) the indexes and sizes
+		 * arrays (if this has not already been done in a previous iteration!).
 		 * 
-		 * If at least one entry has been added during the previous step, go back
-		 * to the beginning, otherwise stop.
+		 * If at least one entry has been added during the previous step, go
+		 * back to the beginning, otherwise stop.
 		 * 
-		 * In fact the real algorithm is complicated by the fact that the size of
-		 * TABLESWITCH and LOOKUPSWITCH instructions depends on their position in
-		 * the bytecode (because of padding). In order to ensure the convergence
-		 * of the algorithm, the number of bytes to be added or removed from these
-		 * instructions is over estimated during the previous loop, and computed
-		 * exactly only after the loop is finished (this requires another pass to
-		 * parse the bytecode of the method).
+		 * In fact the real algorithm is complicated by the fact that the size
+		 * of TABLESWITCH and LOOKUPSWITCH instructions depends on their
+		 * position in the bytecode (because of padding). In order to ensure the
+		 * convergence of the algorithm, the number of bytes to be added or
+		 * removed from these instructions is over estimated during the previous
+		 * loop, and computed exactly only after the loop is finished (this
+		 * requires another pass to parse the bytecode of the method).
 		 */
 		int[] allIndexes = new int[0]; // copy of indexes
 		int[] allSizes = new int[0]; // copy of sizes
@@ -2643,48 +2648,51 @@ class MethodWriter extends MethodVisitor {
 			}
 		}
 
-		// recomputes the stack map frames
-		if (frameCount > 0) {
-			if (compute == FRAMES) {
-				frameCount = 0;
-				stackMap = null;
-				previousFrame = null;
-				frame = null;
-				final Frame f = new Frame();
-				f.owner = labels;
-				final Type[] args = Type.getArgumentTypes(descriptor);
-				f.initInputFrame(cw, access, args, maxLocals);
-				visitFrame(f);
-				Label l = labels;
-				while (l != null) {
-					/*
-					 * here we need the original label position. getNewOffset must
-					 * therefore never have been called for this label.
-					 */
-					u = l.position - 3;
-					if ((l.status & Label.STORE) != 0 || (u >= 0 && resize[u])) {
-						getNewOffset(allIndexes, allSizes, l);
-						// TODO update offsets in UNINITIALIZED values
-						visitFrame(l.frame);
-					}
-					l = l.successor;
-				}
-			} else {
+		// updates the stack map frame labels
+		if (compute == FRAMES) {
+			Label l = labels;
+			while (l != null) {
 				/*
-				 * Resizing an existing stack map frame table is really hard. Not
-				 * only the table must be parsed to update the offets, but new
-				 * frames may be needed for jump instructions that were inserted by
-				 * this method. And updating the offsets or inserting frames can
-				 * change the format of the following frames, in case of packed
-				 * frames. In practice the whole table must be recomputed. For this
-				 * the frames are marked as potentially invalid. This will cause the
-				 * whole class to be reread and rewritten with the COMPUTE_FRAMES
-				 * option (see the ClassWriter.toByteArray method). This is not very
-				 * efficient but is much easier and requires much less code than any
-				 * other method I can think of.
+				 * Detects the labels that are just after an IF instruction that
+				 * has been resized with the IFNOT GOTO_W pattern. These labels
+				 * are now the target of a jump instruction (the IFNOT
+				 * instruction). Note that we need the original label position
+				 * here. getNewOffset must therefore never have been called for
+				 * this label.
 				 */
-				cw.invalidFrames = true;
+				u = l.position - 3;
+				if (u >= 0 && resize[u]) {
+					l.status |= Label.TARGET;
+				}
+				getNewOffset(allIndexes, allSizes, l);
+				l = l.successor;
 			}
+			// Update the offsets in the uninitialized types
+			if (cw.typeTable != null) {
+				for (i = 0; i < cw.typeTable.length; ++i) {
+					final Item item = cw.typeTable[i];
+					if (item != null && item.type == ClassWriter.TYPE_UNINIT) {
+						item.intVal = getNewOffset(allIndexes, allSizes, 0, item.intVal);
+					}
+				}
+			}
+			// The stack map frames are not serialized yet, so we don't need
+			// to update them. They will be serialized in visitMaxs.
+		} else if (frameCount > 0) {
+			/*
+			 * Resizing an existing stack map frame table is really hard. Not
+			 * only the table must be parsed to update the offets, but new
+			 * frames may be needed for jump instructions that were inserted by
+			 * this method. And updating the offsets or inserting frames can
+			 * change the format of the following frames, in case of packed
+			 * frames. In practice the whole table must be recomputed. For this
+			 * the frames are marked as potentially invalid. This will cause the
+			 * whole class to be reread and rewritten with the COMPUTE_FRAMES
+			 * option (see the ClassWriter.toByteArray method). This is not very
+			 * efficient but is much easier and requires much less code than any
+			 * other method I can think of.
+			 */
+			cw.invalidFrames = true;
 		}
 		// updates the exception handler block labels
 		Handler h = firstHandler;
@@ -2809,8 +2817,9 @@ class MethodWriter extends MethodVisitor {
 	 *        <tt>sizes</tt>[i] bytes will be added at the end of the
 	 *        instruction designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>
 	 *        [i] is negative, the <i>last</i> | <tt>sizes[i]</tt>| bytes of the
-	 *        instruction will be removed (the
-	 *        instruction size <i>must not</i> become negative or null).
+	 *        instruction will be removed
+	 *        (the instruction size <i>must not</i> become negative or
+	 *        null).
 	 * @param begin
 	 *        index of the first byte of the source instruction.
 	 * @param end
@@ -2845,8 +2854,9 @@ class MethodWriter extends MethodVisitor {
 	 *        <tt>sizes</tt>[i] bytes will be added at the end of the
 	 *        instruction designated by <tt>indexes</tt>[i] or, if <tt>sizes</tt>
 	 *        [i] is negative, the <i>last</i> | <tt>sizes[i]</tt>| bytes of the
-	 *        instruction will be removed (the
-	 *        instruction size <i>must not</i> become negative or null).
+	 *        instruction will be removed
+	 *        (the instruction size <i>must not</i> become negative or
+	 *        null).
 	 * @param label
 	 *        the label whose offset must be updated.
 	 */

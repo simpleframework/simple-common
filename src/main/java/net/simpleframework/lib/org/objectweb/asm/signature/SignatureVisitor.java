@@ -34,13 +34,12 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 /**
  * A visitor to visit a generic signature. The methods of this interface must be
  * called in one of the three following orders (the last one is the only valid
- * order for a
- * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureVisitor}
- * that is returned by a method of this interface):
+ * order for a {@link SignatureVisitor} that is returned by a method of this
+ * interface):
  * <ul>
  * <li><i>ClassSignature</i> = ( <tt>visitFormalTypeParameter</tt>
  * <tt>visitClassBound</tt>? <tt>visitInterfaceBound</tt>* )* (
- * <tt>visitSuperClass</tt> <tt>visitInterface</tt>* )</li>
+ * <tt>visitSuperclass</tt> <tt>visitInterface</tt>* )</li>
  * <li><i>MethodSignature</i> = ( <tt>visitFormalTypeParameter</tt>
  * <tt>visitClassBound</tt>? <tt>visitInterfaceBound</tt>* )* (
  * <tt>visitParameterType</tt>* <tt>visitReturnType</tt>
@@ -79,13 +78,11 @@ public abstract class SignatureVisitor {
 	protected final int api;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.signature.SignatureVisitor}
-	 * .
+	 * Constructs a new {@link SignatureVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	public SignatureVisitor(final int api) {
 		if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
@@ -124,7 +121,8 @@ public abstract class SignatureVisitor {
 	/**
 	 * Visits the type of the super class.
 	 * 
-	 * @return a non null visitor to visit the signature of the super class type.
+	 * @return a non null visitor to visit the signature of the super class
+	 *         type.
 	 */
 	public SignatureVisitor visitSuperclass() {
 		return this;
@@ -214,8 +212,8 @@ public abstract class SignatureVisitor {
 	}
 
 	/**
-	 * Visits an unbounded type argument of the last visited class or inner class
-	 * type.
+	 * Visits an unbounded type argument of the last visited class or inner
+	 * class type.
 	 */
 	public void visitTypeArgument() {
 	}

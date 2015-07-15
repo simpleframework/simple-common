@@ -55,9 +55,9 @@ final class AnnotationWriter extends AnnotationVisitor {
 	private final boolean named;
 
 	/**
-	 * The annotation values in bytecode form. This byte vector only contains the
-	 * values themselves, i.e. the number of values must be stored as a unsigned
-	 * short just before these bytes.
+	 * The annotation values in bytecode form. This byte vector only contains
+	 * the values themselves, i.e. the number of values must be stored as a
+	 * unsigned short just before these bytes.
 	 */
 	private final ByteVector bv;
 
@@ -88,8 +88,7 @@ final class AnnotationWriter extends AnnotationVisitor {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationWriter}.
+	 * Constructs a new {@link AnnotationWriter}.
 	 * 
 	 * @param cw
 	 *        the class writer to which this annotation must be added.
@@ -100,8 +99,8 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * @param parent
 	 *        where the number of annotation values must be stored.
 	 * @param offset
-	 *        where in <tt>parent</tt> the number of annotation values must be
-	 *        stored.
+	 *        where in <tt>parent</tt> the number of annotation values must
+	 *        be stored.
 	 */
 	AnnotationWriter(final ClassWriter cw, final boolean named, final ByteVector bv,
 			final ByteVector parent, final int offset) {

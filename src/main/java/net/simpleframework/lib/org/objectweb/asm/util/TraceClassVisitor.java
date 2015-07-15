@@ -94,8 +94,7 @@ public final class TraceClassVisitor extends ClassVisitor {
 	public final Printer p;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor}.
+	 * Constructs a new {@link TraceClassVisitor}.
 	 * 
 	 * @param pw
 	 *        the print writer to be used to print the class.
@@ -105,12 +104,11 @@ public final class TraceClassVisitor extends ClassVisitor {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor}.
+	 * Constructs a new {@link TraceClassVisitor}.
 	 * 
 	 * @param cv
-	 *        the {@link ClassVisitor} to which this visitor delegates calls.
-	 *        May be <tt>null</tt>.
+	 *        the {@link ClassVisitor} to which this visitor delegates
+	 *        calls. May be <tt>null</tt>.
 	 * @param pw
 	 *        the print writer to be used to print the class.
 	 */
@@ -119,12 +117,11 @@ public final class TraceClassVisitor extends ClassVisitor {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor}.
+	 * Constructs a new {@link TraceClassVisitor}.
 	 * 
 	 * @param cv
-	 *        the {@link ClassVisitor} to which this visitor delegates calls.
-	 *        May be <tt>null</tt>.
+	 *        the {@link ClassVisitor} to which this visitor delegates
+	 *        calls. May be <tt>null</tt>.
 	 * @param p
 	 *        the object that actually converts visit events into text.
 	 * @param pw

@@ -59,8 +59,9 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
 
 	/**
 	 * Stack used to keep track of class types that have arguments. Each element
-	 * of this stack is a boolean encoded in one bit. The top of the stack is the
-	 * lowest order bit. Pushing false = *2, pushing true = *2+1, popping = /2.
+	 * of this stack is a boolean encoded in one bit. The top of the stack is
+	 * the lowest order bit. Pushing false = *2, pushing true = *2+1, popping =
+	 * /2.
 	 */
 	private int argumentStack;
 

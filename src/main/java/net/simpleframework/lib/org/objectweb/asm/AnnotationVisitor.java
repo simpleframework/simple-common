@@ -52,24 +52,22 @@ public abstract class AnnotationVisitor {
 	protected AnnotationVisitor av;
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor}.
+	 * Constructs a new {@link AnnotationVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 */
 	public AnnotationVisitor(final int api) {
 		this(api, null);
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor}.
+	 * Constructs a new {@link AnnotationVisitor}.
 	 * 
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one of
-	 *        {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one
+	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
 	 * @param av
 	 *        the annotation visitor to which this visitor must delegate
 	 *        method calls. May be null.
@@ -141,8 +139,8 @@ public abstract class AnnotationVisitor {
 
 	/**
 	 * Visits an array value of the annotation. Note that arrays of primitive
-	 * types (such as byte, boolean, short, char, int, long, float or double) can
-	 * be passed as value to {@link #visit visit}. This is what
+	 * types (such as byte, boolean, short, char, int, long, float or double)
+	 * can be passed as value to {@link #visit visit}. This is what
 	 * {@link ClassReader} does.
 	 * 
 	 * @param name

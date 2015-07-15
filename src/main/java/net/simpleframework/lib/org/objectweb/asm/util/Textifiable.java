@@ -34,7 +34,8 @@ import java.util.Map;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 
 /**
- * An {@link org.objectweb.asm.Attribute Attribute} that can print a readable
+ * An {@link net.simpleframework.lib.org.objectweb.asm.Attribute Attribute} that
+ * can print a readable
  * representation of itself.
  * 
  * Implementations should construct readable output from an attribute data

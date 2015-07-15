@@ -74,8 +74,8 @@ class Context {
 
 	/**
 	 * The label objects, indexed by bytecode offset, of the method currently
-	 * being parsed (only bytecode offsets for which a label is needed have a non
-	 * null associated Label object).
+	 * being parsed (only bytecode offsets for which a label is needed have a
+	 * non null associated Label object).
 	 */
 	Label[] labels;
 

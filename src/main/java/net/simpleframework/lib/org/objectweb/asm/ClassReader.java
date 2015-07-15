@@ -70,8 +70,8 @@ public class ClassReader {
 
 	/**
 	 * Flag to skip method code. If this class is set <code>CODE</code> attribute
-	 * won't be visited. This can be used, for example, to retrieve annotations
-	 * for methods and method parameters.
+	 * won't be visited. This can be used, for example, to retrieve
+	 * annotations for methods and method parameters.
 	 */
 	public static final int SKIP_CODE = 1;
 
@@ -105,9 +105,9 @@ public class ClassReader {
 	public static final int EXPAND_FRAMES = 8;
 
 	/**
-	 * The class to be parsed. <i>The content of this array must not be modified.
-	 * This field is intended for {@link Attribute} sub classes, and is normally
-	 * not needed by class generators or adapters.</i>
+	 * The class to be parsed. <i>The content of this array must not be
+	 * modified. This field is intended for {@link Attribute} sub classes, and
+	 * is normally not needed by class generators or adapters.</i>
 	 */
 	public final byte[] b;
 
@@ -119,16 +119,17 @@ public class ClassReader {
 
 	/**
 	 * The String objects corresponding to the CONSTANT_Utf8 items. This cache
-	 * avoids multiple parsing of a given CONSTANT_Utf8 constant pool item, which
-	 * GREATLY improves performances (by a factor 2 to 3). This caching strategy
-	 * could be extended to all constant pool items, but its benefit would not be
-	 * so great for these items (because they are much less expensive to parse
-	 * than CONSTANT_Utf8 items).
+	 * avoids multiple parsing of a given CONSTANT_Utf8 constant pool item,
+	 * which GREATLY improves performances (by a factor 2 to 3). This caching
+	 * strategy could be extended to all constant pool items, but its benefit
+	 * would not be so great for these items (because they are much less
+	 * expensive to parse than CONSTANT_Utf8 items).
 	 */
 	private final String[] strings;
 
 	/**
-	 * Maximum length of the strings contained in the constant pool of the class.
+	 * Maximum length of the strings contained in the constant pool of the
+	 * class.
 	 */
 	private final int maxStringLength;
 
@@ -143,8 +144,7 @@ public class ClassReader {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader} object.
+	 * Constructs a new {@link ClassReader} object.
 	 * 
 	 * @param b
 	 *        the bytecode of the class to be read.
@@ -154,8 +154,7 @@ public class ClassReader {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader} object.
+	 * Constructs a new {@link ClassReader} object.
 	 * 
 	 * @param b
 	 *        the bytecode of the class to be read.
@@ -218,9 +217,9 @@ public class ClassReader {
 	}
 
 	/**
-	 * Returns the class's access flags (see {@link Opcodes}). This value may not
-	 * reflect Deprecated and Synthetic flags when bytecode is before 1.5 and
-	 * those flags are represented by attributes.
+	 * Returns the class's access flags (see {@link Opcodes}). This value may
+	 * not reflect Deprecated and Synthetic flags when bytecode is before 1.5
+	 * and those flags are represented by attributes.
 	 * 
 	 * @return the class access flags
 	 * 
@@ -244,8 +243,8 @@ public class ClassReader {
 
 	/**
 	 * Returns the internal of name of the super class (see
-	 * {@link Type#getInternalName() getInternalName}). For interfaces, the super
-	 * class is {@link Object}.
+	 * {@link Type#getInternalName() getInternalName}). For interfaces, the
+	 * super class is {@link Object}.
 	 * 
 	 * @return the internal name of super class, or <tt>null</tt> for
 	 *         {@link Object} class.
@@ -410,12 +409,11 @@ public class ClassReader {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader} object.
+	 * Constructs a new {@link ClassReader} object.
 	 * 
 	 * @param is
 	 *        an input stream from which to read the class.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *         if a problem occurs during reading.
 	 */
 	public ClassReader(final InputStream is) throws IOException {
@@ -423,12 +421,11 @@ public class ClassReader {
 	}
 
 	/**
-	 * Constructs a new
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader} object.
+	 * Constructs a new {@link ClassReader} object.
 	 * 
 	 * @param name
 	 *        the binary qualified name of the class to be read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *         if an exception occurs during reading.
 	 */
 	public ClassReader(final String name) throws IOException {
@@ -445,7 +442,7 @@ public class ClassReader {
 	 * @param close
 	 *        true to close the input stream after reading.
 	 * @return the bytecode read from the given input stream.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *         if a problem occurs during reading.
 	 */
 	private static byte[] readClass(final InputStream is, final boolean close) throws IOException {
@@ -489,16 +486,15 @@ public class ClassReader {
 	// ------------------------------------------------------------------------
 
 	/**
-	 * Makes the given visitor visit the Java class of this
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader} . This class
-	 * is the one specified in the constructor (see {@link #ClassReader(byte[])
-	 * ClassReader}).
+	 * Makes the given visitor visit the Java class of this {@link ClassReader} .
+	 * This class is the one specified in the constructor (see
+	 * {@link #ClassReader(byte[]) ClassReader}).
 	 * 
 	 * @param classVisitor
 	 *        the visitor that must visit this class.
 	 * @param flags
-	 *        option flags that can be used to modify the default behavior of
-	 *        this class. See {@link #SKIP_DEBUG}, {@link #EXPAND_FRAMES} ,
+	 *        option flags that can be used to modify the default behavior
+	 *        of this class. See {@link #SKIP_DEBUG}, {@link #EXPAND_FRAMES} ,
 	 *        {@link #SKIP_FRAMES}, {@link #SKIP_CODE}.
 	 */
 	public void accept(final ClassVisitor classVisitor, final int flags) {
@@ -506,25 +502,24 @@ public class ClassReader {
 	}
 
 	/**
-	 * Makes the given visitor visit the Java class of this
-	 * {@link net.simpleframework.lib.org.objectweb.asm.ClassReader}. This class
-	 * is the one specified in the constructor (see {@link #ClassReader(byte[])
-	 * ClassReader}).
+	 * Makes the given visitor visit the Java class of this {@link ClassReader}.
+	 * This class is the one specified in the constructor (see
+	 * {@link #ClassReader(byte[]) ClassReader}).
 	 * 
 	 * @param classVisitor
 	 *        the visitor that must visit this class.
 	 * @param attrs
 	 *        prototypes of the attributes that must be parsed during the
-	 *        visit of the class. Any attribute whose type is not equal to the
-	 *        type of one the prototypes will not be parsed: its byte array
-	 *        value will be passed unchanged to the ClassWriter. <i>This may
-	 *        corrupt it if this value contains references to the constant
-	 *        pool, or has syntactic or semantic links with a class element
-	 *        that has been transformed by a class adapter between the reader
-	 *        and the writer</i>.
+	 *        visit of the class. Any attribute whose type is not equal to
+	 *        the type of one the prototypes will not be parsed: its byte
+	 *        array value will be passed unchanged to the ClassWriter.
+	 *        <i>This may corrupt it if this value contains references to
+	 *        the constant pool, or has syntactic or semantic links with a
+	 *        class element that has been transformed by a class adapter
+	 *        between the reader and the writer</i>.
 	 * @param flags
-	 *        option flags that can be used to modify the default behavior of
-	 *        this class. See {@link #SKIP_DEBUG}, {@link #EXPAND_FRAMES} ,
+	 *        option flags that can be used to modify the default behavior
+	 *        of this class. See {@link #SKIP_DEBUG}, {@link #EXPAND_FRAMES} ,
 	 *        {@link #SKIP_FRAMES}, {@link #SKIP_CODE}.
 	 */
 	public void accept(final ClassVisitor classVisitor, final Attribute[] attrs, final int flags) {
@@ -884,14 +879,14 @@ public class ClassReader {
 		}
 
 		/*
-		 * if the returned MethodVisitor is in fact a MethodWriter, it means there
-		 * is no method adapter between the reader and the writer. If, in
+		 * if the returned MethodVisitor is in fact a MethodWriter, it means
+		 * there is no method adapter between the reader and the writer. If, in
 		 * addition, the writer's constant pool was copied from this reader
-		 * (mw.cw.cr == this), and the signature and exceptions of the method have
-		 * not been changed, then it is possible to skip all visit events and just
-		 * copy the original code of the method to the writer (the access, name
-		 * and descriptor can have been changed, this is not important since they
-		 * are not copied as is from the reader).
+		 * (mw.cw.cr == this), and the signature and exceptions of the method
+		 * have not been changed, then it is possible to skip all visit events
+		 * and just copy the original code of the method to the writer (the
+		 * access, name and descriptor can have been changed, this is not
+		 * important since they are not copied as is from the reader).
 		 */
 		if (WRITER && mv instanceof MethodWriter) {
 			final MethodWriter mw = (MethodWriter) mv;
@@ -911,9 +906,9 @@ public class ClassReader {
 				}
 				if (sameExceptions) {
 					/*
-					 * we do not copy directly the code into MethodWriter to save a
-					 * byte array copy operation. The real copy will be done in
-					 * ClassWriter.toByteArray().
+					 * we do not copy directly the code into MethodWriter to
+					 * save a byte array copy operation. The real copy will be
+					 * done in ClassWriter.toByteArray().
 					 */
 					mw.classReaderOffset = firstAttribute;
 					mw.classReaderLength = u - firstAttribute;
@@ -1135,7 +1130,14 @@ public class ClassReader {
 						if (labels[label] == null) {
 							readLabel(label, labels).status |= Label.DEBUG;
 						}
-						labels[label].line = readUnsignedShort(v + 12);
+						Label l = labels[label];
+						while (l.line > 0) {
+							if (l.next == null) {
+								l.next = new Label();
+							}
+							l = l.next;
+						}
+						l.line = readUnsignedShort(v + 12);
 						v += 4;
 					}
 				}
@@ -1154,20 +1156,22 @@ public class ClassReader {
 					frameCount = readUnsignedShort(u + 8);
 				}
 				/*
-				 * here we do not extract the labels corresponding to the attribute
-				 * content. This would require a full parsing of the attribute,
-				 * which would need to be repeated in the second phase (see below).
-				 * Instead the content of the attribute is read one frame at a time
-				 * (i.e. after a frame has been visited, the next frame is read),
-				 * and the labels it contains are also extracted one frame at a
-				 * time. Thanks to the ordering of frames, having only a
-				 * "one frame lookahead" is not a problem, i.e. it is not possible
-				 * to see an offset smaller than the offset of the current insn and
-				 * for which no Label exist.
+				 * here we do not extract the labels corresponding to the
+				 * attribute content. This would require a full parsing of the
+				 * attribute, which would need to be repeated in the second
+				 * phase (see below). Instead the content of the attribute is
+				 * read one frame at a time (i.e. after a frame has been
+				 * visited, the next frame is read), and the labels it contains
+				 * are also extracted one frame at a time. Thanks to the
+				 * ordering of frames, having only a "one frame lookahead" is
+				 * not a problem, i.e. it is not possible to see an offset
+				 * smaller than the offset of the current insn and for which no
+				 * Label exist.
 				 */
 				/*
-				 * This is not true for UNINITIALIZED type offsets. We solve this by
-				 * parsing the stack map table without a full decoding (see below).
+				 * This is not true for UNINITIALIZED type offsets. We solve
+				 * this by parsing the stack map table without a full decoding
+				 * (see below).
 				 */
 			} else if (FRAMES && "StackMap".equals(attrName)) {
 				if ((context.flags & SKIP_FRAMES) == 0) {
@@ -1177,9 +1181,9 @@ public class ClassReader {
 					frameCount = readUnsignedShort(u + 8);
 				}
 				/*
-				 * IMPORTANT! here we assume that the frames are ordered, as in the
-				 * StackMapTable attribute, although this is not guaranteed by the
-				 * attribute format.
+				 * IMPORTANT! here we assume that the frames are ordered, as in
+				 * the StackMapTable attribute, although this is not guaranteed
+				 * by the attribute format.
 				 */
 			} else {
 				for (int j = 0; j < context.attrs.length; ++j) {
@@ -1200,9 +1204,9 @@ public class ClassReader {
 		// generates the first (implicit) stack map frame
 		if (FRAMES && stackMap != 0) {
 			/*
-			 * for the first explicit frame the offset is not offset_delta + 1 but
-			 * only offset_delta; setting the implicit frame offset to -1 allow the
-			 * use of the "offset_delta + 1" rule in all cases
+			 * for the first explicit frame the offset is not offset_delta + 1
+			 * but only offset_delta; setting the implicit frame offset to -1
+			 * allow the use of the "offset_delta + 1" rule in all cases
 			 */
 			frame = context;
 			frame.offset = -1;
@@ -1216,14 +1220,15 @@ public class ClassReader {
 				getImplicitFrame(context);
 			}
 			/*
-			 * Finds labels for UNINITIALIZED frame types. Instead of decoding each
-			 * element of the stack map table, we look for 3 consecutive bytes that
-			 * "look like" an UNINITIALIZED type (tag 8, offset within code bounds,
-			 * NEW instruction at this offset). We may find false positives (i.e.
-			 * not real UNINITIALIZED types), but this should be rare, and the only
-			 * consequence will be the creation of an unneeded label. This is
-			 * better than creating a label for each NEW instruction, and faster
-			 * than fully decoding the whole stack map table.
+			 * Finds labels for UNINITIALIZED frame types. Instead of decoding
+			 * each element of the stack map table, we look for 3 consecutive
+			 * bytes that "look like" an UNINITIALIZED type (tag 8, offset
+			 * within code bounds, NEW instruction at this offset). We may find
+			 * false positives (i.e. not real UNINITIALIZED types), but this
+			 * should be rare, and the only consequence will be the creation of
+			 * an unneeded label. This is better than creating a label for each
+			 * NEW instruction, and faster than fully decoding the whole stack
+			 * map table.
 			 */
 			for (int i = stackMap; i < stackMap + stackMapSize - 2; ++i) {
 				if (b[i] == 8) { // UNINITIALIZED FRAME TYPE
@@ -1245,9 +1250,15 @@ public class ClassReader {
 			// visits the label and line number for this offset, if any
 			final Label l = labels[offset];
 			if (l != null) {
+				Label next = l.next;
+				l.next = null;
 				mv.visitLabel(l);
 				if ((context.flags & SKIP_DEBUG) == 0 && l.line > 0) {
 					mv.visitLineNumber(l.line, l);
+					while (next != null) {
+						mv.visitLineNumber(next.line, l);
+						next = next.next;
+					}
 				}
 			}
 
@@ -1586,9 +1597,9 @@ public class ClassReader {
 	/**
 	 * Parses the header of a type annotation to extract its target_type and
 	 * target_path (the result is stored in the given context), and returns the
-	 * start offset of the rest of the type_annotation structure (i.e. the offset
-	 * to the type_index field, which is followed by num_element_value_pairs and
-	 * then the name,value pairs).
+	 * start offset of the rest of the type_annotation structure (i.e. the
+	 * offset to the type_index field, which is followed by
+	 * num_element_value_pairs and then the name,value pairs).
 	 * 
 	 * @param context
 	 *        information about the class being parsed. This is where the
@@ -1706,7 +1717,8 @@ public class ClassReader {
 	 * 
 	 * @param v
 	 *        the start offset in {@link #b b} of the values to be read
-	 *        (including the unsigned short that gives the number of values).
+	 *        (including the unsigned short that gives the number of
+	 *        values).
 	 * @param buf
 	 *        buffer to be used to call {@link #readUTF8 readUTF8},
 	 *        {@link #readClass(int,char[]) readClass} or {@link #readConst
@@ -1740,8 +1752,8 @@ public class ClassReader {
 	 * Reads a value of an annotation and makes the given visitor visit it.
 	 * 
 	 * @param v
-	 *        the start offset in {@link #b b} of the value to be read (<i>not
-	 *        including the value name constant pool index</i>).
+	 *        the start offset in {@link #b b} of the value to be read
+	 *        (<i>not including the value name constant pool index</i>).
 	 * @param buf
 	 *        buffer to be used to call {@link #readUTF8 readUTF8},
 	 *        {@link #readClass(int,char[]) readClass} or {@link #readConst
@@ -1776,7 +1788,7 @@ public class ClassReader {
 			v += 2;
 			break;
 		case 'B': // pointer to CONSTANT_Byte
-			av.visit(name, new Byte((byte) readInt(items[readUnsignedShort(v)])));
+			av.visit(name, (byte) readInt(items[readUnsignedShort(v)]));
 			v += 2;
 			break;
 		case 'Z': // pointer to CONSTANT_Boolean
@@ -1784,11 +1796,11 @@ public class ClassReader {
 			v += 2;
 			break;
 		case 'S': // pointer to CONSTANT_Short
-			av.visit(name, new Short((short) readInt(items[readUnsignedShort(v)])));
+			av.visit(name, (short) readInt(items[readUnsignedShort(v)]));
 			v += 2;
 			break;
 		case 'C': // pointer to CONSTANT_Char
-			av.visit(name, new Character((char) readInt(items[readUnsignedShort(v)])));
+			av.visit(name, (char) readInt(items[readUnsignedShort(v)]));
 			v += 2;
 			break;
 		case 's': // pointer to CONSTANT_Utf8
@@ -2037,8 +2049,8 @@ public class ClassReader {
 	}
 
 	/**
-	 * Reads a stack map frame type and stores it at the given index in the given
-	 * array.
+	 * Reads a stack map frame type and stores it at the given index in the
+	 * given array.
 	 * 
 	 * @param frame
 	 *        the array where the parsed type must be stored.
@@ -2050,9 +2062,9 @@ public class ClassReader {
 	 *        a buffer to read strings.
 	 * @param labels
 	 *        the labels of the method currently being parsed, indexed by
-	 *        their offset. If the parsed type is an Uninitialized type, a new
-	 *        label for the corresponding NEW instruction is stored in this
-	 *        array if it does not already exist.
+	 *        their offset. If the parsed type is an Uninitialized type, a
+	 *        new label for the corresponding NEW instruction is stored in
+	 *        this array if it does not already exist.
 	 * @return the offset of the first byte after the parsed type.
 	 */
 	private int readFrameType(final Object[] frame, final int index, int v, final char[] buf,
@@ -2099,9 +2111,9 @@ public class ClassReader {
 	 * @param offset
 	 *        a bytecode offset in a method.
 	 * @param labels
-	 *        the already created labels, indexed by their offset. If a label
-	 *        already exists for offset this method must not create a new one.
-	 *        Otherwise it must store the new label in this array.
+	 *        the already created labels, indexed by their offset. If a
+	 *        label already exists for offset this method must not create a
+	 *        new one. Otherwise it must store the new label in this array.
 	 * @return a non null Label, which must be equal to labels[offset].
 	 */
 	protected Label readLabel(final int offset, final Label[] labels) {
@@ -2142,16 +2154,16 @@ public class ClassReader {
 	 * 
 	 * @param attrs
 	 *        prototypes of the attributes that must be parsed during the
-	 *        visit of the class. Any attribute whose type is not equal to the
-	 *        type of one the prototypes is ignored (i.e. an empty
+	 *        visit of the class. Any attribute whose type is not equal to
+	 *        the type of one the prototypes is ignored (i.e. an empty
 	 *        {@link Attribute} instance is returned).
 	 * @param type
 	 *        the type of the attribute.
 	 * @param off
-	 *        index of the first byte of the attribute's content in {@link #b
-	 *        b}. The 6 attribute header bytes, containing the type and the
-	 *        length of the attribute, are not taken into account here (they
-	 *        have already been read).
+	 *        index of the first byte of the attribute's content in {@link #b b}.
+	 *        The 6 attribute header bytes, containing the
+	 *        type and the length of the attribute, are not taken into
+	 *        account here (they have already been read).
 	 * @param len
 	 *        the length of the attribute's content.
 	 * @param buf
@@ -2161,8 +2173,9 @@ public class ClassReader {
 	 * @param codeOff
 	 *        index of the first byte of code's attribute content in {@link #b b}
 	 *        , or -1 if the attribute to be read is not a code
-	 *        attribute. The 6 attribute header bytes, containing the type and
-	 *        the length of the attribute, are not taken into account here.
+	 *        attribute. The 6 attribute header bytes, containing the type
+	 *        and the length of the attribute, are not taken into account
+	 *        here.
 	 * @param labels
 	 *        the labels of the method's code, or <tt>null</tt> if the
 	 *        attribute to be read is not a code attribute.
@@ -2245,8 +2258,8 @@ public class ClassReader {
 	}
 
 	/**
-	 * Reads a signed short value in {@link #b b}. <i>This method is intended for
-	 * {@link Attribute} sub classes, and is normally not needed by class
+	 * Reads a signed short value in {@link #b b}. <i>This method is intended
+	 * for {@link Attribute} sub classes, and is normally not needed by class
 	 * generators or adapters.</i>
 	 * 
 	 * @param index
@@ -2289,9 +2302,9 @@ public class ClassReader {
 	}
 
 	/**
-	 * Reads an UTF8 string constant pool item in {@link #b b}. <i>This method is
-	 * intended for {@link Attribute} sub classes, and is normally not needed by
-	 * class generators or adapters.</i>
+	 * Reads an UTF8 string constant pool item in {@link #b b}. <i>This method
+	 * is intended for {@link Attribute} sub classes, and is normally not needed
+	 * by class generators or adapters.</i>
 	 * 
 	 * @param index
 	 *        the start index of an unsigned short value in {@link #b b},
@@ -2401,13 +2414,13 @@ public class ClassReader {
 		final int index = items[item];
 		switch (b[index - 1]) {
 		case ClassWriter.INT:
-			return new Integer(readInt(index));
+			return readInt(index);
 		case ClassWriter.FLOAT:
-			return new Float(Float.intBitsToFloat(readInt(index)));
+			return Float.intBitsToFloat(readInt(index));
 		case ClassWriter.LONG:
-			return new Long(readLong(index));
+			return readLong(index);
 		case ClassWriter.DOUBLE:
-			return new Double(Double.longBitsToDouble(readLong(index)));
+			return Double.longBitsToDouble(readLong(index));
 		case ClassWriter.CLASS:
 			return Type.getObjectType(readUTF8(index, buf));
 		case ClassWriter.STR:

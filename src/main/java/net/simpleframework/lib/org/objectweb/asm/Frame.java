@@ -55,8 +55,8 @@ final class Frame {
 	 * comparisons.
 	 * 
 	 * Output stack map frames are computed relatively to the input frame of the
-	 * basic block, which is not yet known when output frames are computed. It is
-	 * therefore necessary to be able to represent abstract types such as
+	 * basic block, which is not yet known when output frames are computed. It
+	 * is therefore necessary to be able to represent abstract types such as
 	 * "the type at position x in the input frame locals" or "the type at
 	 * position x from the top of the input frame stack" or even "the type at
 	 * position x in the input frame, with y more (or less) array dimensions".
@@ -67,11 +67,11 @@ final class Frame {
 	 * LOCAL or STACK. BASE is used for types that are not relative to the input
 	 * frame. LOCAL is used for types that are relative to the input local
 	 * variable types. STACK is used for types that are relative to the input
-	 * stack types. VALUE depends on KIND. For LOCAL types, it is an index in the
-	 * input local variable types. For STACK types, it is a position relatively
-	 * to the top of input frame stack. For BASE types, it is either one of the
-	 * constants defined below, or for OBJECT and UNINITIALIZED types, a tag and
-	 * an index in the type table.
+	 * stack types. VALUE depends on KIND. For LOCAL types, it is an index in
+	 * the input local variable types. For STACK types, it is a position
+	 * relatively to the top of input frame stack. For BASE types, it is either
+	 * one of the constants defined below, or for OBJECT and UNINITIALIZED
+	 * types, a tag and an index in the type table.
 	 * 
 	 * Output frames can contain types of any kind and with a positive or
 	 * negative dimension (and even unassigned types, represented by 0 - which
@@ -81,11 +81,12 @@ final class Frame {
 	 * forbidden - dimensions must be represented through the DIM field).
 	 * 
 	 * The LONG and DOUBLE types are always represented by using two slots (LONG
-	 * + TOP or DOUBLE + TOP), for local variable types as well as in the operand
-	 * stack. This is necessary to be able to simulate DUPx_y instructions, whose
-	 * effect would be dependent on the actual type values if types were always
-	 * represented by a single slot in the stack (and this is not possible, since
-	 * actual type values are not always known - cf LOCAL and STACK type kinds).
+	 * + TOP or DOUBLE + TOP), for local variable types as well as in the
+	 * operand stack. This is necessary to be able to simulate DUPx_y
+	 * instructions, whose effect would be dependent on the actual type values
+	 * if types were always represented by a single slot in the stack (and this
+	 * is not possible, since actual type values are not always known - cf LOCAL
+	 * and STACK type kinds).
 	 */
 
 	/**
@@ -149,8 +150,8 @@ final class Frame {
 	static final int OBJECT = BASE | 0x700000;
 
 	/**
-	 * Base kind of the uninitialized base types. The BASE_VALUE of such types in
-	 * an index into the type table (the Item at that index contains both an
+	 * Base kind of the uninitialized base types. The BASE_VALUE of such types
+	 * in an index into the type table (the Item at that index contains both an
 	 * instruction offset and an internal class name).
 	 */
 	static final int UNINITIALIZED = BASE | 0x800000;
@@ -162,9 +163,9 @@ final class Frame {
 	private static final int LOCAL = 0x2000000;
 
 	/**
-	 * Kind of the the types that are relative to the stack of an input stack map
-	 * frame. The value of such types is a position relatively to the top of this
-	 * stack.
+	 * Kind of the the types that are relative to the stack of an input stack
+	 * map frame. The value of such types is a position relatively to the top of
+	 * this stack.
 	 */
 	private static final int STACK = 0x3000000;
 
@@ -224,9 +225,9 @@ final class Frame {
 	static final int UNINITIALIZED_THIS = BASE | 6;
 
 	/**
-	 * The stack size variation corresponding to each JVM instruction. This stack
-	 * variation is equal to the size of the values produced by an instruction,
-	 * minus the size of the values consumed by this instruction.
+	 * The stack size variation corresponding to each JVM instruction. This
+	 * stack variation is equal to the size of the values produced by an
+	 * instruction, minus the size of the values consumed by this instruction.
 	 */
 	static final int[] SIZE;
 
@@ -508,14 +509,14 @@ final class Frame {
 	 * The types that are initialized in the basic block. A constructor
 	 * invocation on an UNINITIALIZED or UNINITIALIZED_THIS type must replace
 	 * <i>every occurence</i> of this type in the local variables and in the
-	 * operand stack. This cannot be done during the first phase of the algorithm
-	 * since, during this phase, the local variables and the operand stack are
-	 * not completely computed. It is therefore necessary to store the types on
-	 * which constructors are invoked in the basic block, in order to do this
-	 * replacement during the second phase of the algorithm, where the frames are
-	 * fully computed. Note that this array can contain types that are relative
-	 * to input locals or to the input stack (see below for the description of
-	 * the algorithm).
+	 * operand stack. This cannot be done during the first phase of the
+	 * algorithm since, during this phase, the local variables and the operand
+	 * stack are not completely computed. It is therefore necessary to store the
+	 * types on which constructors are invoked in the basic block, in order to
+	 * do this replacement during the second phase of the algorithm, where the
+	 * frames are fully computed. Note that this array can contain types that
+	 * are relative to input locals or to the input stack (see below for the
+	 * description of the algorithm).
 	 */
 	private int[] initializations;
 
@@ -598,8 +599,8 @@ final class Frame {
 	 *        the ClassWriter to which this label belongs.
 	 * @param desc
 	 *        the descriptor of the type to be pushed. Can also be a method
-	 *        descriptor (in this case this method pushes its return type onto
-	 *        the output frame stack).
+	 *        descriptor (in this case this method pushes its return type
+	 *        onto the output frame stack).
 	 */
 	private void push(final ClassWriter cw, final String desc) {
 		final int type = type(cw, desc);
@@ -1274,8 +1275,8 @@ final class Frame {
 	 * @param frame
 	 *        the basic block whose input frame must be updated.
 	 * @param edge
-	 *        the kind of the {@link Edge} between this label and 'label'. See
-	 *        {@link Edge#info}.
+	 *        the kind of the {@link Edge} between this label and 'label'.
+	 *        See {@link Edge#info}.
 	 * @return <tt>true</tt> if the input frame of the given label has been
 	 *         changed by this operation.
 	 */
@@ -1418,16 +1419,20 @@ final class Frame {
 					v = (t & DIM) | OBJECT | cw.getMergedType(t & BASE_VALUE, u & BASE_VALUE);
 				} else {
 					// if u and t are array types, but not with the same element
-					// type, merge(u,t)=java/lang/Object
-					v = OBJECT | cw.addType("java/lang/Object");
+					// type, merge(u,t) = dim(u) - 1 | java/lang/Object
+					final int vdim = ELEMENT_OF + (u & DIM);
+					v = vdim | OBJECT | cw.addType("java/lang/Object");
 				}
 			} else if ((t & BASE_KIND) == OBJECT || (t & DIM) != 0) {
 				// if t is any other reference or array type, the merged type
-				// is Object, or min(dim(u), dim(t)) | java/lang/Object is u
-				// and t have different array dimensions
-				final int tdim = t & DIM;
-				final int udim = u & DIM;
-				v = (udim != tdim ? Math.min(tdim, udim) : 0) | OBJECT | cw.addType("java/lang/Object");
+				// is min(udim, tdim) | java/lang/Object, where udim is the
+				// array dimension of u, minus 1 if u is an array type with a
+				// primitive element type (and similarly for tdim).
+				final int tdim = (((t & DIM) == 0 || (t & BASE_KIND) == OBJECT) ? 0 : ELEMENT_OF)
+						+ (t & DIM);
+				final int udim = (((u & DIM) == 0 || (u & BASE_KIND) == OBJECT) ? 0 : ELEMENT_OF)
+						+ (u & DIM);
+				v = Math.min(tdim, udim) | OBJECT | cw.addType("java/lang/Object");
 			} else {
 				// if t is any other type, merge(u,t)=TOP
 				v = TOP;

@@ -129,20 +129,20 @@ public interface Opcodes {
 
 	/**
 	 * Represents a compressed frame where locals are the same as the locals in
-	 * the previous frame, except that the last 1-3 locals are absent and with an
-	 * empty stack.
+	 * the previous frame, except that the last 1-3 locals are absent and with
+	 * an empty stack.
 	 */
 	int F_CHOP = 2;
 
 	/**
-	 * Represents a compressed frame with exactly the same locals as the previous
-	 * frame and with an empty stack.
+	 * Represents a compressed frame with exactly the same locals as the
+	 * previous frame and with an empty stack.
 	 */
 	int F_SAME = 3;
 
 	/**
-	 * Represents a compressed frame with exactly the same locals as the previous
-	 * frame and with a single value on the stack.
+	 * Represents a compressed frame with exactly the same locals as the
+	 * previous frame and with a single value on the stack.
 	 */
 	int F_SAME1 = 4;
 
