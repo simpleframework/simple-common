@@ -215,7 +215,7 @@ public class MVELRuntime {
 	 *
 	 * @return boolean
 	 */
-	private static boolean hasDebuggerContext() {
+	public static boolean hasDebuggerContext() {
 		return debuggerContext != null && debuggerContext.get() != null;
 	}
 

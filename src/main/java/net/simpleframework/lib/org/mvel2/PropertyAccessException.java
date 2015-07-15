@@ -19,28 +19,21 @@ package net.simpleframework.lib.org.mvel2;
 
 public class PropertyAccessException extends CompileException {
 
-	// public PropertyAccessException() {
-	// super();
-	// }
-	//
-	// public PropertyAccessException(String message) {
-	// super( message);
-	// }
-	//
-	// public PropertyAccessException(String message, Throwable cause) {
-	// super( message, cause);
-	// }
-	//
-	// public PropertyAccessException(Throwable cause) {
-	// super(cause);
-	// }
-
 	public PropertyAccessException(final String message, final char[] expr, final int cursor,
-			final Throwable e) {
+			final Throwable e, final ParserContext pCtx) {
 		super(message, expr, cursor, e);
+		setParserContext(pCtx);
 	}
 
-	public PropertyAccessException(final String message, final char[] expr, final int cursor) {
+	public PropertyAccessException(final String message, final char[] expr, final int cursor,
+			final ParserContext pCtx) {
 		super(message, expr, cursor);
+		setParserContext(pCtx);
+	}
+
+	private void setParserContext(final ParserContext pCtx) {
+		if (pCtx != null) {
+			setEvaluationContext(pCtx.getEvaluationContext());
+		}
 	}
 }

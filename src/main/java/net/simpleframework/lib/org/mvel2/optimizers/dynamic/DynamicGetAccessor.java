@@ -20,7 +20,6 @@ package net.simpleframework.lib.org.mvel2.optimizers.dynamic;
 
 import static java.lang.System.currentTimeMillis;
 import net.simpleframework.lib.org.mvel2.ParserContext;
-import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.AccessorOptimizer;
@@ -39,12 +38,12 @@ public class DynamicGetAccessor implements DynamicAccessor {
 
 	private boolean opt = false;
 
-	private final ParserContext context;
+	private final ParserContext pCtx;
 
 	private final Accessor _safeAccessor;
 	private Accessor _accessor;
 
-	public DynamicGetAccessor(final ParserContext context, final char[] expr, final int start,
+	public DynamicGetAccessor(final ParserContext pCtx, final char[] expr, final int start,
 			final int offset, final int type, final Accessor _accessor) {
 		this._safeAccessor = this._accessor = _accessor;
 		this.type = type;
@@ -53,7 +52,7 @@ public class DynamicGetAccessor implements DynamicAccessor {
 		this.start = start;
 		this.offset = offset;
 
-		this.context = context;
+		this.pCtx = pCtx;
 		stamp = currentTimeMillis();
 	}
 
@@ -97,16 +96,16 @@ public class DynamicGetAccessor implements DynamicAccessor {
 		final AccessorOptimizer ao = OptimizerFactory.getAccessorCompiler("ASM");
 		switch (type) {
 		case DynamicOptimizer.REGULAR_ACCESSOR:
-			_accessor = ao.optimizeAccessor(context, expr, start, offset, ctx, elCtx,
+			_accessor = ao.optimizeAccessor(pCtx, expr, start, offset, ctx, elCtx,
 					variableResolverFactory, false, null);
 			return ao.getResultOptPass();
 		case DynamicOptimizer.OBJ_CREATION:
-			_accessor = ao.optimizeObjectCreation(context, expr, start, offset, ctx, elCtx,
+			_accessor = ao.optimizeObjectCreation(pCtx, expr, start, offset, ctx, elCtx,
 					variableResolverFactory);
 			return _accessor.getValue(ctx, elCtx, variableResolverFactory);
 		case DynamicOptimizer.COLLECTION:
-			_accessor = ao.optimizeCollection(AbstractParser.getCurrentThreadParserContext(), ctx,
-					null, expr, start, offset, ctx, elCtx, variableResolverFactory);
+			_accessor = ao.optimizeCollection(pCtx, ctx, null, expr, start, offset, ctx, elCtx,
+					variableResolverFactory);
 			return _accessor.getValue(ctx, elCtx, variableResolverFactory);
 		}
 		return null;

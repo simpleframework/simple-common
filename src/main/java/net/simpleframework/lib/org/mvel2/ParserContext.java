@@ -70,7 +70,9 @@ public class ParserContext implements Serializable {
 	private int lineOffset;
 
 	private ParserContext parent;
-	private ParserConfiguration parserConfiguration = new ParserConfiguration();
+	private final ParserConfiguration parserConfiguration;
+
+	private Object evaluationContext;
 
 	private ArrayList<String> indexedInputs;
 	private ArrayList<String> indexedLocals;
@@ -109,13 +111,16 @@ public class ParserContext implements Serializable {
 	protected boolean variablesEscape = false;
 
 	public ParserContext() {
+		parserConfiguration = new ParserConfiguration();
 	}
 
 	public ParserContext(final boolean debugSymbols) {
+		this();
 		this.debugSymbols = debugSymbols;
 	}
 
 	public ParserContext(final Parser rootParser) {
+		this();
 		this.rootParser = rootParser;
 	}
 
@@ -123,9 +128,15 @@ public class ParserContext implements Serializable {
 		this.parserConfiguration = parserConfiguration;
 	}
 
+	public ParserContext(final ParserConfiguration parserConfiguration,
+			final Object evaluationContext) {
+		this(parserConfiguration);
+		this.evaluationContext = evaluationContext;
+	}
+
 	public ParserContext(final ParserConfiguration parserConfiguration, final ParserContext parent,
 			final boolean functionContext) {
-		this.parserConfiguration = parserConfiguration;
+		this(parserConfiguration);
 		this.parent = parent;
 		this.functionContext = functionContext;
 	}
@@ -1082,6 +1093,10 @@ public class ParserContext implements Serializable {
 		}
 
 		return -1;
+	}
+
+	public Object getEvaluationContext() {
+		return evaluationContext;
 	}
 
 	public boolean hasIndexedInputs() {

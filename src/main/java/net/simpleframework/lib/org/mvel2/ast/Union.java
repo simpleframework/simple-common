@@ -18,7 +18,6 @@
 
 package net.simpleframework.lib.org.mvel2.ast;
 
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.PropertyAccessor;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
@@ -45,7 +44,7 @@ public class Union extends ASTNode {
 		} else {
 			try {
 				final AccessorOptimizer o = OptimizerFactory.getThreadAccessorOptimizer();
-				accessor = o.optimizeAccessor(getCurrentThreadParserContext(), expr, start, offset,
+				accessor = o.optimizeAccessor(pCtx, expr, start, offset,
 						main.getReducedValueAccelerated(ctx, thisValue, factory), thisValue, factory,
 						false, main.getEgressType());
 				return o.getResultOptPass();

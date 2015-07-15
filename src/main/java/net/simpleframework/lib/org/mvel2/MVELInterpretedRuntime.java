@@ -64,10 +64,6 @@ public class MVELInterpretedRuntime extends AbstractParser {
 			}
 		} catch (final CompileException e) {
 			throw ErrorUtil.rewriteIfNeeded(e, expr, cursor);
-		} finally {
-			if (parserContext != null) {
-				contextControl(REMOVE, null, null);
-			}
 		}
 	}
 

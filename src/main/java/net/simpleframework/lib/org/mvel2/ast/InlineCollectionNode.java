@@ -32,7 +32,6 @@ import java.util.Map;
 import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.MVEL;
 import net.simpleframework.lib.org.mvel2.ParserContext;
-import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.AccessorOptimizer;
 import net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory;
@@ -94,9 +93,8 @@ public class InlineCollectionNode extends ASTNode {
 					parseGraph(true, null, null);
 				}
 
-				accessor = ao.optimizeCollection(AbstractParser.getCurrentThreadParserContext(),
-						collectionGraph, egressType, expr, trailingStart, trailingOffset, ctx, thisValue,
-						factory);
+				accessor = ao.optimizeCollection(pCtx, collectionGraph, egressType, expr,
+						trailingStart, trailingOffset, ctx, thisValue, factory);
 				egressType = ao.getEgressType();
 
 				return accessor.getValue(ctx, thisValue, factory);
@@ -110,7 +108,7 @@ public class InlineCollectionNode extends ASTNode {
 	@Override
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		parseGraph(false, egressType, AbstractParser.getCurrentThreadParserContext());
+		parseGraph(false, egressType, pCtx);
 
 		return execGraph(collectionGraph, egressType, ctx, factory);
 	}
@@ -171,8 +169,7 @@ public class InlineCollectionNode extends ASTNode {
 
 			try {
 				final Class cls = dim > 1 ? findClass(null, repeatChar('[', dim - 1) + "L"
-						+ getBaseComponentType(type).getName() + ";",
-						AbstractParser.getCurrentThreadParserContext()) : type;
+						+ getBaseComponentType(type).getName() + ";", pCtx) : type;
 
 				int c = 0;
 				for (final Object item : (Object[]) o) {

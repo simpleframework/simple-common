@@ -19,19 +19,13 @@
  */
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
-import static net.simpleframework.lib.org.mvel2.DataConversion.convert;
-
 import java.lang.reflect.Constructor;
 
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableStatement;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
-public class ConstructorAccessor extends BaseAccessor {
+public class ConstructorAccessor extends InvokableAccessor {
 	private final Constructor constructor;
-	private Class[] parmTypes;
-	private final ExecutableStatement[] parms;
-	private final int length;
-	private boolean coercionNeeded = false;
 
 	@Override
 	public Object getValue(final Object ctx, final Object elCtx,
@@ -53,11 +47,11 @@ public class ConstructorAccessor extends BaseAccessor {
 
 			} else {
 				if (nextNode != null) {
-					return nextNode.getValue(
-							constructor.newInstance(executeAndCoerce(parmTypes, elCtx, variableFactory)),
-							elCtx, variableFactory);
+					return nextNode.getValue(constructor.newInstance(executeAndCoerce(parameterTypes,
+							elCtx, variableFactory, constructor.isVarArgs())), elCtx, variableFactory);
 				} else {
-					return constructor.newInstance(executeAndCoerce(parmTypes, elCtx, variableFactory));
+					return constructor.newInstance(executeAndCoerce(parameterTypes, elCtx,
+							variableFactory, constructor.isVarArgs()));
 				}
 			}
 		} catch (final Exception e) {
@@ -83,19 +77,9 @@ public class ConstructorAccessor extends BaseAccessor {
 		return vals;
 	}
 
-	private Object[] executeAndCoerce(final Class[] target, final Object elCtx,
-			final VariableResolverFactory vars) {
-		final Object[] values = new Object[length];
-		for (int i = 0; i < length; i++) {
-			// noinspection unchecked
-			values[i] = convert(parms[i].getValue(elCtx, vars), target[i]);
-		}
-		return values;
-	}
-
 	public ConstructorAccessor(final Constructor constructor, final ExecutableStatement[] parms) {
 		this.constructor = constructor;
-		this.length = (this.parmTypes = constructor.getParameterTypes()).length;
+		this.length = (this.parameterTypes = constructor.getParameterTypes()).length;
 		this.parms = parms;
 	}
 
@@ -110,9 +94,5 @@ public class ConstructorAccessor extends BaseAccessor {
 
 	public ExecutableStatement[] getParameters() {
 		return parms;
-	}
-
-	public Class[] getParameterTypes() {
-		return parmTypes;
 	}
 }

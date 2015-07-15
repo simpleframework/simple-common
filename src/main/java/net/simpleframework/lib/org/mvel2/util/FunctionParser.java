@@ -5,7 +5,6 @@ import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.ast.EndOfStatement;
 import net.simpleframework.lib.org.mvel2.ast.Function;
-import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 
 public class FunctionParser {
 	private final String name;
@@ -15,7 +14,7 @@ public class FunctionParser {
 
 	private final int fields;
 	private final char[] expr;
-	private ParserContext pCtx;
+	private final ParserContext pCtx;
 
 	private final ExecutionStack splitAccumulator;
 
@@ -113,8 +112,7 @@ public class FunctionParser {
 		 * Produce the funciton node.
 		 */
 		return new Function(name, expr, startCond, endCond - startCond, blockStart, blockEnd
-				- blockStart, fields,
-				pCtx == null ? pCtx = AbstractParser.getCurrentThreadParserContext() : pCtx);
+				- blockStart, fields, pCtx);
 	}
 
 	public String getName() {

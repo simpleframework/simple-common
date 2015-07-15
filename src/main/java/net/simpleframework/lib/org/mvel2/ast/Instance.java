@@ -12,7 +12,7 @@ public class Instance extends ASTNode {
 		super(pCtx);
 		this.stmt = stmt;
 		this.clsStmt = clsStmt;
-		CompilerTools.expectType(clsStmt, Class.class, true);
+		CompilerTools.expectType(pCtx, clsStmt, Class.class, true);
 	}
 
 	@Override

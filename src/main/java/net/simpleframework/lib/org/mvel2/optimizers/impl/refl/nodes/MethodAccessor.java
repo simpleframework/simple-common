@@ -19,25 +19,17 @@
  */
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
-import static net.simpleframework.lib.org.mvel2.DataConversion.convert;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.getBestCandidate;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.getWidenedTarget;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-import net.simpleframework.lib.org.mvel2.compiler.AccessorNode;
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableStatement;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
-public class MethodAccessor implements AccessorNode {
-	private AccessorNode nextNode;
+public class MethodAccessor extends InvokableAccessor {
 
 	private Method method;
-	private Class[] parameterTypes;
-	private ExecutableStatement[] parms;
-	private int length;
-	private boolean coercionNeeded = false;
 
 	@Override
 	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
@@ -165,31 +157,6 @@ public class MethodAccessor implements AccessorNode {
 		return vals;
 	}
 
-	private Object[] executeAndCoerce(final Class[] target, final Object elCtx,
-			final VariableResolverFactory vars, final boolean isVarargs) {
-		final Object[] values = new Object[length];
-		for (int i = 0; i < length && !(isVarargs && i >= length - 1); i++) {
-			// noinspection unchecked
-			values[i] = convert(parms[i].getValue(elCtx, vars), target[i]);
-		}
-		if (isVarargs) {
-			final Class<?> componentType = target[length - 1].getComponentType();
-			Object vararg;
-			if (parms == null) {
-				vararg = Array.newInstance(componentType, 0);
-			} else {
-
-				vararg = Array.newInstance(componentType, parms.length - length + 1);
-				for (int i = length - 1; i < parms.length; i++) {
-					Array.set(vararg, i - length + 1,
-							convert(parms[i].getValue(elCtx, vars), componentType));
-				}
-			}
-			values[length - 1] = vararg;
-		}
-		return values;
-	}
-
 	public Method getMethod() {
 		return method;
 	}
@@ -213,16 +180,6 @@ public class MethodAccessor implements AccessorNode {
 	public MethodAccessor(final Method method, final ExecutableStatement[] parms) {
 		setMethod(method);
 		this.parms = parms;
-	}
-
-	@Override
-	public AccessorNode getNextNode() {
-		return nextNode;
-	}
-
-	@Override
-	public AccessorNode setNextNode(final AccessorNode nextNode) {
-		return this.nextNode = nextNode;
 	}
 
 	@Override
@@ -251,9 +208,5 @@ public class MethodAccessor implements AccessorNode {
 	@Override
 	public Class getKnownEgressType() {
 		return method.getReturnType();
-	}
-
-	public Class[] getParameterTypes() {
-		return parameterTypes;
 	}
 }

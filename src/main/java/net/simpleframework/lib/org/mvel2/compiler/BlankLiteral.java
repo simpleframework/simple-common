@@ -33,14 +33,20 @@ public class BlankLiteral implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null || "".equals(valueOf(obj))) {
+		if (obj == null || valueOf(obj).trim().length() == 0) {
 			return true;
-		} else if (isNumeric(obj)) {
+		}
+		if (isNumeric(obj)) {
 			return "0".equals(valueOf(obj));
-		} else if (obj instanceof Collection) {
+		}
+		if (obj instanceof Collection) {
 			return ((Collection) obj).size() == 0;
-		} else if (obj.getClass().isArray()) {
+		}
+		if (obj.getClass().isArray()) {
 			return getLength(obj) == 0;
+		}
+		if (obj instanceof Boolean) {
+			return !(Boolean) obj;
 		}
 		return false;
 	}

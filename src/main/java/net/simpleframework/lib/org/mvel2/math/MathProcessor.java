@@ -57,6 +57,7 @@ import java.util.List;
 
 import net.simpleframework.lib.org.mvel2.DataTypes;
 import net.simpleframework.lib.org.mvel2.Unit;
+import net.simpleframework.lib.org.mvel2.compiler.BlankLiteral;
 import net.simpleframework.lib.org.mvel2.debug.DebugTools;
 import net.simpleframework.lib.org.mvel2.util.InternalNumber;
 
@@ -742,7 +743,7 @@ public strictfp class MathProcessor {
 	}
 
 	private static Double getNumber(final Object in, final int type) {
-		if (in == null) {
+		if (in == null || in == BlankLiteral.INSTANCE) {
 			return 0d;
 		}
 		switch (type) {
@@ -784,7 +785,7 @@ public strictfp class MathProcessor {
 	}
 
 	private static InternalNumber getInternalNumberFromType(final Object in, final int type) {
-		if (in == null) {
+		if (in == null || in == BlankLiteral.INSTANCE) {
 			return new InternalNumber(0, MATH_CONTEXT);
 		}
 		switch (type) {

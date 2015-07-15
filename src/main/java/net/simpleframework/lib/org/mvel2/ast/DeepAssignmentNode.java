@@ -21,7 +21,6 @@ package net.simpleframework.lib.org.mvel2.ast;
 import static net.simpleframework.lib.org.mvel2.MVEL.compileSetExpression;
 import static net.simpleframework.lib.org.mvel2.MVEL.eval;
 import static net.simpleframework.lib.org.mvel2.PropertyAccessor.set;
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.createShortFormOperativeAssignment;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.createStringTrimmed;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.find;
@@ -95,7 +94,7 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 		if (statement == null) {
 			statement = (ExecutableStatement) subCompileExpression(expr, this.start, this.offset);
 			acc = (CompiledAccExpression) compileSetExpression(property.toCharArray(),
-					statement.getKnownEgressType(), getCurrentThreadParserContext());
+					statement.getKnownEgressType(), pCtx);
 		}
 		acc.setValue(ctx, thisValue, factory, ctx = statement.getValue(ctx, thisValue, factory));
 		return ctx;

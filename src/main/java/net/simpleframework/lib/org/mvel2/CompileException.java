@@ -44,6 +44,8 @@ public class CompileException extends RuntimeException {
 
 	private List<ErrorDetail> errors;
 
+	private Object evaluationContext;
+
 	public CompileException(final String message, final List<ErrorDetail> errors, final char[] expr,
 			final int cursor, final ParserContext ctx) {
 		super(message);
@@ -58,6 +60,10 @@ public class CompileException extends RuntimeException {
 		}
 
 		this.errors = errors;
+	}
+
+	public void setEvaluationContext(final Object evaluationContext) {
+		this.evaluationContext = evaluationContext;
 	}
 
 	@Override
@@ -233,8 +239,10 @@ public class CompileException extends RuntimeException {
 
 		calcRowAndColumn();
 
-		if (lineNumber != -1) {
-			appender.append('\n').append("[Line: " + lineNumber + ", Column: " + (column) + "]");
+		if (evaluationContext != null) {
+			appender.append("\n").append("In ").append(evaluationContext);
+		} else if (lineNumber != -1) {
+			appender.append("\n").append("[Line: " + lineNumber + ", Column: " + (column) + "]");
 		}
 		return appender.toString();
 	}

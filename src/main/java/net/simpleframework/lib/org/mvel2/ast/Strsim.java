@@ -14,7 +14,7 @@ public class Strsim extends ASTNode {
 		super(pCtx);
 		this.stmt = stmt;
 		this.soundslike = clsStmt;
-		CompilerTools.expectType(clsStmt, String.class, true);
+		CompilerTools.expectType(pCtx, clsStmt, String.class, true);
 	}
 
 	@Override

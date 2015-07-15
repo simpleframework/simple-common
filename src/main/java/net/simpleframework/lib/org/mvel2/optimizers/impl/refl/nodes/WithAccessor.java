@@ -1,7 +1,6 @@
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
 import static net.simpleframework.lib.org.mvel2.MVEL.executeSetExpression;
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import static net.simpleframework.lib.org.mvel2.util.PropertyTools.getReturnType;
 
 import java.io.Serializable;
@@ -20,9 +19,8 @@ public class WithAccessor implements AccessorNode {
 	protected ExecutableStatement nestedStatement;
 	protected WithNode.ParmValuePair[] withExpressions;
 
-	public WithAccessor(final String property, final char[] expr, final int start, final int offset,
-			final Class ingressType, final boolean strict) {
-		final ParserContext pCtx = getCurrentThreadParserContext();
+	public WithAccessor(final ParserContext pCtx, final String property, final char[] expr,
+			final int start, final int offset, final Class ingressType) {
 		pCtx.setBlockSymbols(true);
 
 		withExpressions = WithNode.compileWithExpressions(expr, start, offset, property, ingressType,
@@ -85,7 +83,7 @@ public class WithAccessor implements AccessorNode {
 			if (parameter != null && parameter.length() != 0) {
 				this.setExpression = MVEL.compileSetExpression(parameter,
 						ingressType != null ? getReturnType(ingressType, parameter, pCtx) : Object.class,
-						getCurrentThreadParserContext());
+						pCtx);
 
 			}
 			this.statement = statement;

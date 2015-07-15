@@ -82,7 +82,7 @@ public class ParseTools {
 
 	static {
 		try {
-			final double version = parseDouble(System.getProperty("java.version").substring(0, 3));
+			final double version = parseDouble(PropertyTools.getJavaVersion().substring(0, 3));
 			if (version < 1.5) {
 				throw new RuntimeException("unsupported java version: " + version);
 			}

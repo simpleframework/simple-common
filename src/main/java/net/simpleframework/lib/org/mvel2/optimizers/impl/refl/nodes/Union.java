@@ -19,7 +19,7 @@
  */
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
+import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.AccessorOptimizer;
@@ -34,13 +34,15 @@ public class Union implements Accessor {
 	private final int start;
 	private final int offset;
 	private Accessor nextAccessor;
+	private final ParserContext pCtx;
 
-	public Union(final Accessor accessor, final char[] nextAccessor, final int start,
-			final int offset) {
+	public Union(final ParserContext pCtx, final Accessor accessor, final char[] nextAccessor,
+			final int start, final int offset) {
 		this.accessor = accessor;
 		this.start = start;
 		this.offset = offset;
 		this.nextExpr = nextAccessor;
+		this.pCtx = pCtx;
 	}
 
 	@Override
@@ -66,8 +68,8 @@ public class Union implements Accessor {
 			final AccessorOptimizer ao = OptimizerFactory.getDefaultAccessorCompiler();
 			final Class ingress = accessor.getKnownEgressType();
 
-			nextAccessor = ao.optimizeAccessor(getCurrentThreadParserContext(), nextExpr, start,
-					offset, o, elCtx, variableFactory, false, ingress);
+			nextAccessor = ao.optimizeAccessor(pCtx, nextExpr, start, offset, o, elCtx,
+					variableFactory, false, ingress);
 			return ao.getResultOptPass();
 		} else {
 			return accessor.getValue(ctx, elCtx, variableFactory);

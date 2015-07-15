@@ -182,7 +182,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 	private static final int OPCODES_VERSION;
 
 	static {
-		final String javaVersion = getProperty("java.version");
+		final String javaVersion = PropertyTools.getJavaVersion();
 		if (javaVersion.startsWith("1.4")) {
 			OPCODES_VERSION = Opcodes.V1_4;
 		} else if (javaVersion.startsWith("1.5")) {
@@ -423,11 +423,11 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				whiteSpaceSkip();
 
 				if (st == end) {
-					throw new PropertyAccessException("unterminated '['", expr, start);
+					throw new PropertyAccessException("unterminated '['", expr, start, pCtx);
 				}
 
 				if (scanTo(']')) {
-					throw new PropertyAccessException("unterminated '['", expr, start);
+					throw new PropertyAccessException("unterminated '['", expr, start, pCtx);
 				}
 
 				final String ex = new String(expr, st, cursor - st).trim();
@@ -531,7 +531,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				} else {
 					throw new PropertyAccessException("cannot bind to collection property: "
 							+ new String(expr) + ": not a recognized collection type: " + ctx.getClass(),
-							expr, start);
+							expr, start, pCtx);
 				}
 
 				deferFinish = false;
@@ -730,12 +730,12 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				((Map) ctx).put(tk, value);
 			} else {
 				throw new PropertyAccessException("could not access property (" + tk + ") in: "
-						+ ingressType.getName(), expr, start);
+						+ ingressType.getName(), expr, start, pCtx);
 			}
 		} catch (final InvocationTargetException e) {
-			throw new PropertyAccessException("could not access property", expr, start, e);
+			throw new PropertyAccessException("could not access property", expr, start, e, pCtx);
 		} catch (final IllegalAccessException e) {
-			throw new PropertyAccessException("could not access property", expr, start, e);
+			throw new PropertyAccessException("could not access property", expr, start, e, pCtx);
 		}
 
 		try {
@@ -976,17 +976,17 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 			return _initializeAccessor();
 		} catch (final InvocationTargetException e) {
-			throw new PropertyAccessException(new String(expr), expr, st, e);
+			throw new PropertyAccessException(new String(expr), expr, st, e, pCtx);
 		} catch (final IllegalAccessException e) {
-			throw new PropertyAccessException(new String(expr), expr, st, e);
+			throw new PropertyAccessException(new String(expr), expr, st, e, pCtx);
 		} catch (final IndexOutOfBoundsException e) {
-			throw new PropertyAccessException(new String(expr), expr, st, e);
+			throw new PropertyAccessException(new String(expr), expr, st, e, pCtx);
 		} catch (final PropertyAccessException e) {
 			throw new CompileException(e.getMessage(), expr, st, e);
 		} catch (final CompileException e) {
 			throw e;
 		} catch (final NullPointerException e) {
-			throw new PropertyAccessException(new String(expr), expr, st, e);
+			throw new PropertyAccessException(new String(expr), expr, st, e, pCtx);
 		} catch (final OptimizationNotSupported e) {
 			throw e;
 		} catch (final Exception e) {
@@ -1192,7 +1192,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				final Method iFaceMeth = determineActualTargetMethod((Method) member);
 				if (iFaceMeth == null) {
 					throw new PropertyAccessException("could not access field: " + cls.getName() + "."
-							+ property, expr, st, e);
+							+ property, expr, st, e, pCtx);
 				}
 
 				assert debug("CHECKCAST " + getInternalName(iFaceMeth.getDeclaringClass()));
@@ -1320,10 +1320,10 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 			if (ctx == null) {
 				throw new PropertyAccessException("unresolvable property or identifier: " + property,
-						expr, st);
+						expr, st, pCtx);
 			} else {
 				throw new PropertyAccessException("could not access: " + property + "; in class: "
-						+ ctx.getClass().getName(), expr, st);
+						+ ctx.getClass().getName(), expr, st, pCtx);
 			}
 		}
 	}
@@ -3036,7 +3036,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			final Accessor compiledAccessor = _initializeAccessor();
 
 			if (property != null && length > start) {
-				return new Union(compiledAccessor, property, start, length);
+				return new Union(pCtx, compiledAccessor, property, start, length);
 			} else {
 				return compiledAccessor;
 			}
@@ -3200,7 +3200,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				final Accessor acc = _initializeAccessor();
 
 				if (cnsRes.length > 1 && cnsRes[1] != null && !cnsRes[1].trim().equals("")) {
-					return new Union(acc, cnsRes[1].toCharArray(), 0, cnsRes[1].length());
+					return new Union(pCtx, acc, cnsRes[1].toCharArray(), 0, cnsRes[1].length());
 				}
 
 				return acc;
@@ -3223,7 +3223,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 				final Accessor acc = _initializeAccessor();
 
 				if (cnsRes.length > 1 && cnsRes[1] != null && !cnsRes[1].trim().equals("")) {
-					return new Union(acc, cnsRes[1].toCharArray(), 0, cnsRes[1].length());
+					return new Union(pCtx, acc, cnsRes[1].toCharArray(), 0, cnsRes[1].length());
 				}
 
 				return acc;

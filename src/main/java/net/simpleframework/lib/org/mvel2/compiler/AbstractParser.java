@@ -20,8 +20,6 @@ package net.simpleframework.lib.org.mvel2.compiler;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.Double.parseDouble;
-import static java.lang.Runtime.getRuntime;
-import static java.lang.System.getProperty;
 import static java.lang.Thread.currentThread;
 import static net.simpleframework.lib.org.mvel2.Operator.ADD;
 import static net.simpleframework.lib.org.mvel2.Operator.AND;
@@ -172,6 +170,7 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.util.ErrorUtil;
 import net.simpleframework.lib.org.mvel2.util.ExecutionStack;
 import net.simpleframework.lib.org.mvel2.util.FunctionParser;
+import net.simpleframework.lib.org.mvel2.util.PropertyTools;
 import net.simpleframework.lib.org.mvel2.util.ProtoParser;
 
 /**
@@ -218,7 +217,6 @@ public class AbstractParser implements Parser, Serializable {
 	protected ExecutionStack stk;
 	protected ExecutionStack splitAccumulator = new ExecutionStack();
 
-	protected static ThreadLocal<ParserContext> parserContext;
 	protected ParserContext pCtx;
 	protected ExecutionStack dStack;
 	protected Object ctx;
@@ -228,6 +226,10 @@ public class AbstractParser implements Parser, Serializable {
 
 	static {
 		setupParser();
+	}
+
+	protected AbstractParser() {
+		pCtx = new ParserContext();
 	}
 
 	/**
@@ -293,7 +295,7 @@ public class AbstractParser implements Parser, Serializable {
 
 			CLASS_LITERALS.put("Array", java.lang.reflect.Array.class);
 
-			if (parseDouble(getProperty("java.version").substring(0, 3)) >= 1.5) {
+			if (parseDouble(PropertyTools.getJavaVersion().substring(0, 3)) >= 1.5) {
 				try {
 					CLASS_LITERALS.put("StringBuilder", currentThread().getContextClassLoader()
 							.loadClass("java.lang.StringBuilder"));
@@ -361,8 +363,8 @@ public class AbstractParser implements Parser, Serializable {
 
 			boolean capture = false, union = false;
 
-			if ((fields & ASTNode.COMPILE_IMMEDIATE) != 0 && pCtx == null) {
-				debugSymbols = (pCtx = getParserContext()).isDebugSymbols();
+			if ((fields & ASTNode.COMPILE_IMMEDIATE) != 0) {
+				debugSymbols = pCtx.isDebugSymbols();
 			}
 
 			if (debugSymbols) {
@@ -455,10 +457,6 @@ public class AbstractParser implements Parser, Serializable {
 
 							final TypeDescriptor descr = new TypeDescriptor(expr, st, trimLeft(cursor)
 									- st, fields);
-
-							if (pCtx == null) {
-								pCtx = getParserContext();
-							}
 
 							if (pCtx.getFunctions().containsKey(descr.getClassName())) {
 								return lastNode = new NewObjectPrototype(pCtx, pCtx.getFunction(descr
@@ -559,10 +557,6 @@ public class AbstractParser implements Parser, Serializable {
 							captureToEOS();
 							final ImportNode importNode = new ImportNode(expr, st, cursor - st, pCtx);
 
-							if (pCtx == null) {
-								pCtx = getParserContext();
-							}
-
 							if (importNode.isPackageImport()) {
 								pCtx.addPackageImport(importNode.getPackageImport());
 							} else {
@@ -576,9 +570,6 @@ public class AbstractParser implements Parser, Serializable {
 							captureToEOS();
 							final StaticImportNode staticImportNode = new StaticImportNode(expr, st,
 									trimLeft(cursor) - st, pCtx);
-							if (pCtx == null) {
-								pCtx = getParserContext();
-							}
 							pCtx.addImport(staticImportNode.getMethod().getName(),
 									staticImportNode.getMethod());
 							return lastNode = staticImportNode;
@@ -1376,7 +1367,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	public ASTNode handleSubstatement(final Substatement stmt) {
 		if (stmt.getStatement() != null && stmt.getStatement().isLiteralOnly()) {
-			return new LiteralNode(stmt.getStatement().getValue(null, null, null), getParserContext());
+			return new LiteralNode(stmt.getStatement().getValue(null, null, null), pCtx);
 		} else {
 			return stmt;
 		}
@@ -1405,8 +1396,7 @@ public class AbstractParser implements Parser, Serializable {
 
 			if (union != -1) {
 				captureToEOT();
-				return lastNode = new Union(expr, union, cursor - union, fields, node,
-						getParserContext());
+				return lastNode = new Union(expr, union, cursor - union, fields, node, pCtx);
 			}
 
 		}
@@ -1427,7 +1417,7 @@ public class AbstractParser implements Parser, Serializable {
 	private ASTNode createOperator(final char[] expr, final int start, final int end) {
 		lastWasIdentifier = false;
 		return lastNode = new OperatorNode(OPERATORS.get(new String(expr, start, end - start)), expr,
-				start, getParserContext());
+				start, pCtx);
 	}
 
 	/**
@@ -1744,10 +1734,6 @@ public class AbstractParser implements Parser, Serializable {
 						cursor);
 			}
 
-			if (pCtx == null) {
-				pCtx = getParserContext();
-			}
-
 			final FunctionParser parser = new FunctionParser(name, cursor, end - cursor, expr, fields,
 					pCtx, splitAccumulator);
 			final Function function = parser.parse();
@@ -1757,9 +1743,6 @@ public class AbstractParser implements Parser, Serializable {
 		}
 		case PROTO: {
 			if (ProtoParser.isUnresolvedWaiting()) {
-				if (pCtx == null) {
-					pCtx = getParserContext();
-				}
 				ProtoParser.checkForPossibleUnresolvedViolations(expr, cursor, pCtx);
 			}
 
@@ -1778,17 +1761,9 @@ public class AbstractParser implements Parser, Serializable {
 
 			cursor = balancedCaptureWithLineAccounting(expr, st = cursor + 1, end, '{', pCtx);
 
-			if (pCtx == null) {
-				pCtx = getParserContext();
-			}
-
 			final ProtoParser parser = new ProtoParser(expr, st, cursor, name, pCtx, fields,
 					splitAccumulator);
 			final Proto proto = parser.parse();
-
-			if (pCtx == null) {
-				pCtx = getParserContext();
-			}
 
 			pCtx.addImport(proto);
 
@@ -1805,9 +1780,6 @@ public class AbstractParser implements Parser, Serializable {
 			}
 			int st;
 			cursor = balancedCaptureWithLineAccounting(expr, st = cursor + 1, end, '{', pCtx);
-			if (pCtx == null) {
-				pCtx = getParserContext();
-			}
 
 			final Stacklang stacklang = new Stacklang(expr, st, cursor - st, fields, pCtx);
 			cursor++;
@@ -2470,75 +2442,6 @@ public class AbstractParser implements Parser, Serializable {
 		return !(c != end && expr[c] == ';');
 	}
 
-	protected ParserContext getParserContext() {
-		if (parserContext == null || parserContext.get() == null) {
-			newContext();
-		}
-		return parserContext.get();
-	}
-
-	public static ParserContext getCurrentThreadParserContext() {
-		return contextControl(GET_OR_CREATE, null, null);
-	}
-
-	public static void setCurrentThreadParserContext(final ParserContext pCtx) {
-		contextControl(SET, pCtx, null);
-	}
-
-	/**
-	 * Create a new ParserContext in the current thread.
-	 */
-	public void newContext() {
-		contextControl(SET, new ParserContext(), this);
-	}
-
-	/**
-	 * Create a new ParserContext in the current thread, using the one specified.
-	 *
-	 * @param pCtx
-	 *        -
-	 */
-	public void newContext(final ParserContext pCtx) {
-		contextControl(SET, this.pCtx = pCtx, this);
-	}
-
-	/**
-	 * Remove the current ParserContext from the thread.
-	 */
-	public void removeContext() {
-		contextControl(REMOVE, null, this);
-	}
-
-	public static ParserContext contextControl(final int operation, final ParserContext pCtx,
-			final AbstractParser parser) {
-		synchronized (getRuntime()) {
-			if (parserContext == null) {
-				parserContext = new ThreadLocal<ParserContext>();
-			}
-
-			switch (operation) {
-			case SET:
-				pCtx.setRootParser(parser);
-				parserContext.set(pCtx);
-				return pCtx;
-
-			case REMOVE:
-				parserContext.set(null);
-				return null;
-
-			case GET_OR_CREATE:
-				if (parserContext.get() == null) {
-					parserContext.set(new ParserContext(parser));
-				}
-
-			case GET:
-				return parserContext.get();
-			}
-		}
-
-		return null;
-	}
-
 	protected static final int SET = 0;
 	protected static final int REMOVE = 1;
 	protected static final int GET = 2;
@@ -2651,13 +2554,6 @@ public class AbstractParser implements Parser, Serializable {
 			operatorsTable.put(":", TERNARY_ELSE);
 		}
 		return operatorsTable;
-	}
-
-	/**
-	 * Remove the current parser context from the thread.
-	 */
-	public static void resetParserContext() {
-		contextControl(REMOVE, null, null);
 	}
 
 	protected static boolean isArithmeticOperator(final int operator) {

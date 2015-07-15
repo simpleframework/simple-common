@@ -18,7 +18,6 @@
 package net.simpleframework.lib.org.mvel2.ast;
 
 import static net.simpleframework.lib.org.mvel2.PropertyAccessor.get;
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import static net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory.getThreadAccessorOptimizer;
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
@@ -51,8 +50,8 @@ public class LiteralDeepPropertyNode extends ASTNode {
 		} else {
 			try {
 				final AccessorOptimizer aO = getThreadAccessorOptimizer();
-				accessor = aO.optimizeAccessor(getCurrentThreadParserContext(), expr, start, offset,
-						literal, thisValue, factory, false, null);
+				accessor = aO.optimizeAccessor(pCtx, expr, start, offset, literal, thisValue, factory,
+						false, null);
 				return aO.getResultOptPass();
 			} finally {
 				OptimizerFactory.clearThreadAccessorOptimizer();

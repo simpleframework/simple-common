@@ -20,12 +20,12 @@ package net.simpleframework.lib.org.mvel2.optimizers.dynamic;
 
 import static java.lang.System.currentTimeMillis;
 import net.simpleframework.lib.org.mvel2.ParserContext;
-import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory;
 
 public class DynamicCollectionAccessor implements DynamicAccessor {
+	private final ParserContext pCtx;
 	private final Object rootObject;
 	private final Class colType;
 
@@ -43,9 +43,10 @@ public class DynamicCollectionAccessor implements DynamicAccessor {
 	private final Accessor _safeAccessor;
 	private Accessor _accessor;
 
-	public DynamicCollectionAccessor(final Object rootObject, final Class colType,
-			final char[] property, final int start, final int offset, final int type,
-			final Accessor _accessor) {
+	public DynamicCollectionAccessor(final ParserContext pCtx, final Object rootObject,
+			final Class colType, final char[] property, final int start, final int offset,
+			final int type, final Accessor _accessor) {
+		this.pCtx = pCtx;
 		this.rootObject = rootObject;
 		this.colType = colType;
 		this._safeAccessor = this._accessor = _accessor;
@@ -66,8 +67,7 @@ public class DynamicCollectionAccessor implements DynamicAccessor {
 				if ((currentTimeMillis() - stamp) < DynamicOptimizer.timeSpan) {
 					opt = true;
 
-					return optimize(AbstractParser.getCurrentThreadParserContext(), ctx, elCtx,
-							variableFactory);
+					return optimize(pCtx, ctx, elCtx, variableFactory);
 				} else {
 					runcount = 0;
 					stamp = currentTimeMillis();

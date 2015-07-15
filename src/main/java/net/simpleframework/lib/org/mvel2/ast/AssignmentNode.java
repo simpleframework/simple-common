@@ -27,7 +27,7 @@ import static net.simpleframework.lib.org.mvel2.util.ParseTools.skipWhitespace;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.subCompileExpression;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.subset;
 import net.simpleframework.lib.org.mvel2.CompileException;
-import net.simpleframework.lib.org.mvel2.MVEL;
+import net.simpleframework.lib.org.mvel2.MVELInterpretedRuntime;
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.PropertyAccessor;
 import net.simpleframework.lib.org.mvel2.compiler.CompiledAccExpression;
@@ -135,12 +135,15 @@ public class AssignmentNode extends ASTNode implements Assignment {
 			final VariableResolverFactory factory) {
 		checkNameSafety(varName);
 
+		final MVELInterpretedRuntime runtime = new MVELInterpretedRuntime(expr, start, offset, ctx,
+				factory);
+		runtime.setPCtx(pCtx);
+
 		if (col) {
 			PropertyAccessor.set(factory.getVariableResolver(varName).getValue(), factory, index,
-					ctx = MVEL.eval(expr, start, offset, ctx, factory), pCtx);
+					ctx = runtime.parse(), pCtx);
 		} else {
-			return factory.createVariable(varName, MVEL.eval(expr, start, offset, ctx, factory))
-					.getValue();
+			return factory.createVariable(varName, runtime.parse()).getValue();
 		}
 
 		return ctx;

@@ -26,8 +26,8 @@ public class And extends BooleanNode {
 	public And(final ASTNode left, final ASTNode right, final boolean strongTyping,
 			final ParserContext pCtx) {
 		super(pCtx);
-		expectType(this.left = left, Boolean.class, strongTyping);
-		expectType(this.right = right, Boolean.class, strongTyping);
+		expectType(pCtx, this.left = left, Boolean.class, strongTyping);
+		expectType(pCtx, this.right = right, Boolean.class, strongTyping);
 	}
 
 	@Override

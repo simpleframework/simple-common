@@ -25,7 +25,6 @@ import static net.simpleframework.lib.org.mvel2.DataConversion.convert;
 import static net.simpleframework.lib.org.mvel2.MVEL.eval;
 import static net.simpleframework.lib.org.mvel2.ast.TypeDescriptor.getClassReference;
 import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.LITERALS;
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import static net.simpleframework.lib.org.mvel2.integration.GlobalListenerFactory.notifySetListeners;
 import static net.simpleframework.lib.org.mvel2.integration.PropertyHandlerFactory.getNullMethodHandler;
 import static net.simpleframework.lib.org.mvel2.integration.PropertyHandlerFactory.getNullPropertyHandler;
@@ -190,24 +189,24 @@ public class PropertyAccessor {
 				return getAllowOverride();
 			}
 		} catch (final InvocationTargetException e) {
-			throw new PropertyAccessException("could not access property", property, cursor, e);
+			throw new PropertyAccessException("could not access property", property, cursor, e, pCtx);
 		} catch (final IllegalAccessException e) {
-			throw new PropertyAccessException("could not access property", property, cursor, e);
+			throw new PropertyAccessException("could not access property", property, cursor, e, pCtx);
 		} catch (final IndexOutOfBoundsException e) {
 			if (cursor >= length) {
 				cursor = length - 1;
 			}
 
 			throw new PropertyAccessException("array or collections index out of bounds in property: "
-					+ new String(property, cursor, length), property, cursor, e);
+					+ new String(property, cursor, length), property, cursor, e, pCtx);
 		} catch (final CompileException e) {
 			throw ErrorUtil.rewriteIfNeeded(e, property, st);
 		} catch (final NullPointerException e) {
 			throw new PropertyAccessException("null pointer exception in property: "
-					+ new String(property), property, cursor, e);
+					+ new String(property), property, cursor, e, pCtx);
 		} catch (final Exception e) {
 			throw new PropertyAccessException("unknown exception in expression: "
-					+ new String(property), property, cursor, e);
+					+ new String(property), property, cursor, e, pCtx);
 		}
 	}
 
@@ -289,7 +288,7 @@ public class PropertyAccessor {
 
 			if ((curr = get()) == null) {
 				throw new PropertyAccessException("cannot bind to null context: "
-						+ new String(property, cursor, length), property, cursor);
+						+ new String(property, cursor, length), property, cursor, pCtx);
 			}
 
 			end = oLength;
@@ -300,7 +299,7 @@ public class PropertyAccessor {
 				whiteSpaceSkip();
 
 				if (cursor == length || scanTo(']')) {
-					throw new PropertyAccessException("unterminated '['", property, cursor);
+					throw new PropertyAccessException("unterminated '['", property, cursor, pCtx);
 				}
 
 				final String ex = new String(property, _start, cursor - _start);
@@ -320,7 +319,7 @@ public class PropertyAccessor {
 					} else {
 						throw new PropertyAccessException("cannot bind to collection property: "
 								+ new String(property) + ": not a recognized collection type: "
-								+ ctx.getClass(), property, cursor);
+								+ ctx.getClass(), property, cursor, pCtx);
 					}
 
 					return;
@@ -354,7 +353,7 @@ public class PropertyAccessor {
 					} else {
 						throw new PropertyAccessException("cannot bind to collection property: "
 								+ new String(property) + ": not a recognized collection type: "
-								+ ctx.getClass(), property, cursor);
+								+ ctx.getClass(), property, cursor, pCtx);
 					}
 
 					return;
@@ -412,12 +411,12 @@ public class PropertyAccessor {
 						.setValue(value);
 			} else {
 				throw new PropertyAccessException("could not access/write property (" + tk + ") in: "
-						+ (curr == null ? "Unknown" : curr.getClass().getName()), property, cursor);
+						+ (curr == null ? "Unknown" : curr.getClass().getName()), property, cursor, pCtx);
 			}
 		} catch (final InvocationTargetException e) {
-			throw new PropertyAccessException("could not access property", property, st, e);
+			throw new PropertyAccessException("could not access property", property, st, e, pCtx);
 		} catch (final IllegalAccessException e) {
-			throw new PropertyAccessException("could not access property", property, st, e);
+			throw new PropertyAccessException("could not access property", property, st, e, pCtx);
 		}
 	}
 
@@ -726,10 +725,10 @@ public class PropertyAccessor {
 
 		if (ctx == null) {
 			throw new PropertyAccessException("unresolvable property or identifier: " + property,
-					this.property, st);
+					this.property, st, pCtx);
 		} else {
 			throw new PropertyAccessException("could not access: " + property + "; in class: "
-					+ ctx.getClass().getName(), this.property, st);
+					+ ctx.getClass().getName(), this.property, st, pCtx);
 		}
 	}
 
@@ -770,12 +769,9 @@ public class PropertyAccessor {
 		final String nestParm = start == cursor ? null : new String(property, start, cursor - start
 				- 1).trim();
 
-		parseWithExpressions(
-				nestParm,
-				property,
-				st = cursor + 1,
-				(cursor = balancedCaptureWithLineAccounting(property, cursor, end, '{',
-						getCurrentThreadParserContext())) - st, ctx, variableFactory);
+		parseWithExpressions(nestParm, property, st = cursor + 1,
+				(cursor = balancedCaptureWithLineAccounting(property, cursor, end, '{', pCtx)) - st,
+				ctx, variableFactory);
 		cursor++;
 		return ctx;
 	}
@@ -806,7 +802,7 @@ public class PropertyAccessor {
 		whiteSpaceSkip();
 
 		if (cursor == end || scanTo(']')) {
-			throw new PropertyAccessException("unterminated '['", property, cursor);
+			throw new PropertyAccessException("unterminated '['", property, cursor, pCtx);
 		}
 
 		prop = new String(property, _start, cursor++ - _start);
@@ -819,7 +815,7 @@ public class PropertyAccessor {
 			final int count = (Integer) eval(prop, ctx, variableFactory);
 			if (count > ((Collection) ctx).size()) {
 				throw new PropertyAccessException("index [" + count + "] out of bounds on collections",
-						property, cursor);
+						property, cursor, pCtx);
 			}
 
 			final Iterator iter = ((Collection) ctx).iterator();
@@ -833,11 +829,11 @@ public class PropertyAccessor {
 			return ((CharSequence) ctx).charAt((Integer) eval(prop, ctx, variableFactory));
 		} else {
 			try {
-				return getClassReference(getCurrentThreadParserContext(), (Class) ctx,
-						new TypeDescriptor(property, start, length, 0));
+				return getClassReference(pCtx, (Class) ctx, new TypeDescriptor(property, start, length,
+						0));
 			} catch (final Exception e) {
 				throw new PropertyAccessException("illegal use of []: unknown type: "
-						+ (ctx.getClass().getName()), property, st, e);
+						+ (ctx.getClass().getName()), property, st, e, pCtx);
 			}
 		}
 	}
@@ -857,7 +853,7 @@ public class PropertyAccessor {
 		whiteSpaceSkip();
 
 		if (cursor == end || scanTo(']')) {
-			throw new PropertyAccessException("unterminated '['", property, cursor);
+			throw new PropertyAccessException("unterminated '['", property, cursor, pCtx);
 		}
 
 		prop = new String(property, _start, cursor++ - _start);
@@ -881,7 +877,7 @@ public class PropertyAccessor {
 				final int count = (Integer) eval(prop, ctx, variableFactory);
 				if (count > ((Collection) ctx).size()) {
 					throw new PropertyAccessException("index [" + count
-							+ "] out of bounds on collections", property, cursor);
+							+ "] out of bounds on collections", property, cursor, pCtx);
 				}
 
 				final Iterator iter = ((Collection) ctx).iterator();
@@ -904,11 +900,11 @@ public class PropertyAccessor {
 			}
 		} else {
 			try {
-				return getClassReference(getCurrentThreadParserContext(), (Class) ctx,
-						new TypeDescriptor(property, start, end - start, 0));
+				return getClassReference(pCtx, (Class) ctx, new TypeDescriptor(property, start, end
+						- start, 0));
 			} catch (final Exception e) {
 				throw new PropertyAccessException("illegal use of []: unknown type: "
-						+ (ctx.getClass().getName()), property, st);
+						+ (ctx.getClass().getName()), property, st, pCtx);
 			}
 		}
 	}
@@ -1060,7 +1056,7 @@ public class PropertyAccessor {
 
 			throw new PropertyAccessException("unable to resolve method: " + cls.getName() + "."
 					+ name + "(" + errorBuild.toString() + ") [arglength=" + args.length + "]",
-					property, st);
+					property, st, pCtx);
 		} else {
 			for (int i = 0; i < args.length; i++) {
 				args[i] = convert(args[i], paramTypeVarArgsSafe(parameterTypes, i, m.isVarArgs()));
@@ -1079,13 +1075,13 @@ public class PropertyAccessor {
 					return m.invoke(ctx, args);
 				} catch (final Exception e2) {
 					throw new PropertyAccessException("unable to invoke method: " + name, property,
-							cursor, e2);
+							cursor, e2, pCtx);
 				}
 			} catch (final RuntimeException e) {
 				throw e;
 			} catch (final Exception e) {
 				throw new PropertyAccessException("unable to invoke method: " + name, property, cursor,
-						e);
+						e, pCtx);
 			}
 		}
 	}

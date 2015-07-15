@@ -113,9 +113,9 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 			final Object ctx, final Object thisRef, final VariableResolverFactory factory) {
 		readLock.lock();
 		try {
-			return classLoader.registerDynamicAccessor(new DynamicCollectionAccessor(rootObject, type,
-					property, start, offset, 2, firstStage.optimizeCollection(pCtx, rootObject, type,
-							property, start, offset, ctx, thisRef, factory)));
+			return classLoader.registerDynamicAccessor(new DynamicCollectionAccessor(pCtx, rootObject,
+					type, property, start, offset, 2, firstStage.optimizeCollection(pCtx, rootObject,
+							type, property, start, offset, ctx, thisRef, factory)));
 		} finally {
 			readLock.unlock();
 		}

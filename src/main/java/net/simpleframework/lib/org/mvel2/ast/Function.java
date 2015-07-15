@@ -25,7 +25,6 @@ import java.util.Map;
 
 import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.ParserContext;
-import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableStatement;
 import net.simpleframework.lib.org.mvel2.compiler.ExpressionCompiler;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolver;
@@ -103,8 +102,6 @@ public class Function extends ASTNode implements Safe {
 
 		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart,
 				blockOffset, ctx);
-
-		AbstractParser.setCurrentThreadParserContext(pCtx);
 
 		this.parameters = new String[ctx.getIndexedInputs().size()];
 

@@ -19,7 +19,6 @@
 package net.simpleframework.lib.org.mvel2.util;
 
 import static net.simpleframework.lib.org.mvel2.Operator.PTABLE;
-import static net.simpleframework.lib.org.mvel2.compiler.AbstractParser.getCurrentThreadParserContext;
 import static net.simpleframework.lib.org.mvel2.util.ASTBinaryTree.buildTree;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.__resolveType;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.boxPrimitive;
@@ -385,13 +384,12 @@ public class CompilerTools {
 		return allFunctions;
 	}
 
-	public static void expectType(final Accessor expression, final Class type,
-			final boolean compileMode) {
+	public static void expectType(final ParserContext pCtx, final Accessor expression,
+			final Class type, final boolean compileMode) {
 		final Class retType = expression.getKnownEgressType();
 		if (compileMode) {
 			if ((retType == null || !boxPrimitive(type).isAssignableFrom(boxPrimitive(retType)))
-					&& (!Object.class.equals(retType) || getCurrentThreadParserContext()
-							.isStrictTypeEnforcement())) {
+					&& (!Object.class.equals(retType) || pCtx.isStrictTypeEnforcement())) {
 				throw new CompileException("was expecting type: " + type.getName()
 						+ "; but found type: " + (retType != null ? retType.getName() : "<Unknown>"),
 						new char[0], 0);
@@ -403,13 +401,12 @@ public class CompilerTools {
 		}
 	}
 
-	public static void expectType(final ASTNode node, final Class type, final boolean compileMode) {
+	public static void expectType(final ParserContext pCtx, final ASTNode node, final Class type,
+			final boolean compileMode) {
 		final Class retType = boxPrimitive(node.getEgressType());
 		if (compileMode) {
 			if ((retType == null || !boxPrimitive(type).isAssignableFrom(retType))
-					&& (!Object.class.equals(retType) && (getCurrentThreadParserContext()
-							.isStrictTypeEnforcement() || getCurrentThreadParserContext()
-							.isStrictTypeEnforcement()))) {
+					&& (!Object.class.equals(retType) && pCtx.isStrictTypeEnforcement())) {
 				throw new CompileException("was expecting type: " + type.getName()
 						+ "; but found type: " + (retType != null ? retType.getName() : "<Unknown>"),
 						new char[0], 0);
