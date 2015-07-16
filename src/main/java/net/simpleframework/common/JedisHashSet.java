@@ -29,11 +29,11 @@ public class JedisHashSet extends HashSet<String> {
 		}
 	}
 
-	public Set<String> toSet() {
+	public Set<String> nSet() {
 		if (pool != null) {
 			final Jedis jedis = pool.getResource();
 			try {
-				return jedis.smembers(key);
+				return new HashSet<String>(jedis.smembers(key));
 			} finally {
 				jedis.close();
 			}
