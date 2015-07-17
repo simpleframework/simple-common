@@ -47,6 +47,21 @@ public class JedisHashSet extends HashSet<String> {
 	}
 
 	@Override
+	public int size() {
+		if (pool != null) {
+			final Jedis jedis = pool.getResource();
+			try {
+				final Set<String> set = jedis.smembers(key);
+				return set != null ? set.size() : 0;
+			} finally {
+				jedis.close();
+			}
+		} else {
+			return super.size();
+		}
+	}
+
+	@Override
 	public boolean add(final String e) {
 		if (pool != null) {
 			final Jedis jedis = pool.getResource();
