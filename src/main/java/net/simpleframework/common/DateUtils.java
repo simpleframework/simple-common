@@ -18,13 +18,20 @@ public abstract class DateUtils {
 
 	public static final long DAY_PERIOD = HOUR_PERIOD * 24;
 
-	public static Calendar getZeroPoint() {
+	public static Calendar getZeroPoint(final Date date) {
 		final Calendar cal = Calendar.getInstance();
+		if (date != null) {
+			cal.setTime(date);
+		}
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal;
+	}
+
+	public static Calendar getZeroPoint() {
+		return getZeroPoint(null);
 	}
 
 	public static Calendar[] getTodayInterval() {
