@@ -31,11 +31,14 @@ public class JedisVSet extends HashSet<String> {
 
 	public Set<String> nSet() {
 		if (pool != null) {
-			final Jedis jedis = pool.getResource();
+			Jedis jedis = null;
 			try {
+				jedis = pool.getResource();
 				return new HashSet<String>(jedis.smembers(key));
 			} finally {
-				jedis.close();
+				if (jedis != null) {
+					jedis.close();
+				}
 			}
 		} else {
 			final Set<String> _set = new HashSet<String>();
@@ -49,12 +52,15 @@ public class JedisVSet extends HashSet<String> {
 	@Override
 	public int size() {
 		if (pool != null) {
-			final Jedis jedis = pool.getResource();
+			Jedis jedis = null;
 			try {
+				jedis = pool.getResource();
 				final Set<String> set = jedis.smembers(key);
 				return set != null ? set.size() : 0;
 			} finally {
-				jedis.close();
+				if (jedis != null) {
+					jedis.close();
+				}
 			}
 		} else {
 			return super.size();
@@ -64,12 +70,15 @@ public class JedisVSet extends HashSet<String> {
 	@Override
 	public boolean add(final String e) {
 		if (pool != null) {
-			final Jedis jedis = pool.getResource();
+			Jedis jedis = null;
 			try {
+				jedis = pool.getResource();
 				jedis.sadd(key, e);
 				return true;
 			} finally {
-				jedis.close();
+				if (jedis != null) {
+					jedis.close();
+				}
 			}
 		} else {
 			return super.add(e);
@@ -80,11 +89,14 @@ public class JedisVSet extends HashSet<String> {
 	public boolean contains(final Object o) {
 		final String e = o.toString();
 		if (pool != null) {
-			final Jedis jedis = pool.getResource();
+			Jedis jedis = null;
 			try {
+				jedis = pool.getResource();
 				return jedis.sismember(key, e);
 			} finally {
-				jedis.close();
+				if (jedis != null) {
+					jedis.close();
+				}
 			}
 		} else {
 			return super.contains(e);
@@ -95,12 +107,15 @@ public class JedisVSet extends HashSet<String> {
 	public boolean remove(final Object o) {
 		final String e = o.toString();
 		if (pool != null) {
-			final Jedis jedis = pool.getResource();
+			Jedis jedis = null;
 			try {
+				jedis = pool.getResource();
 				jedis.srem(key, e);
 				return true;
 			} finally {
-				jedis.close();
+				if (jedis != null) {
+					jedis.close();
+				}
 			}
 		} else {
 			return super.remove(e);
