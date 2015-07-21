@@ -1,5 +1,6 @@
-package net.simpleframework.common;
+package net.simpleframework.common.jedis;
 
+import net.simpleframework.common.IoUtils;
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
 import redis.clients.jedis.Jedis;
