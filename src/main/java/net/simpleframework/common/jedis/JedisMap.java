@@ -83,6 +83,24 @@ public class JedisMap extends HashMap<String, Object> {
 	}
 
 	@Override
+	public Object remove(final Object key) {
+		if (pool != null) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				final String sk = Convert.toString(key);
+				return jedis.del(sk);
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		} else {
+			return super.remove(key);
+		}
+	}
+
+	@Override
 	public boolean containsKey(final Object key) {
 		if (pool != null) {
 			Jedis jedis = null;
