@@ -3,6 +3,7 @@ package net.simpleframework.common.coll;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,19 +21,22 @@ public abstract class ArrayUtils {
 		if (array == null) {
 			return null;
 		}
-		final LinkedHashSet<Object> ht = new LinkedHashSet<Object>();
+		final LinkedHashSet<Object> oSet = new LinkedHashSet<Object>();
+		final HashSet<Class<?>> clsSet = new HashSet<Class<?>>();
 		for (final Object element : array) {
 			if (element == null) {
 				continue;
 			}
-			ht.add(element);
+			oSet.add(element);
+			clsSet.add(element.getClass());
 		}
 
-		final Object[] ret = (Object[]) Array.newInstance(array.getClass().getComponentType(),
-				ht.size());
+		final Class<?> cls = clsSet.size() == 1 ? clsSet.iterator().next() : array.getClass()
+				.getComponentType();
+		final Object[] ret = (Object[]) Array.newInstance(cls, oSet.size());
 		int j = 0;
 
-		final Iterator<?> it = ht.iterator();
+		final Iterator<?> it = oSet.iterator();
 		while (it.hasNext()) {
 			ret[j++] = it.next();
 		}
