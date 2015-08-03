@@ -185,6 +185,18 @@ public abstract class StringUtils {
 		}
 	}
 
+	public static int charCount(final String s, final char c) {
+		int count = 0;
+		if (s != null) {
+			for (int i = 0; i < s.length(); i++) {
+				if (s.charAt(i) == c) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
 	public static String trimOneLine(String str) {
 		for (final String c : new String[] { "\n", "\r", "\t" }) {
 			str = replace(str, c, "");
