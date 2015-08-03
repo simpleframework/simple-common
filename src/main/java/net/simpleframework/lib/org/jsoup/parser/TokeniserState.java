@@ -802,6 +802,7 @@ enum TokeniserState {
 				break;
 			case eof:
 				t.eofError(this);
+				t.emitTagPending();
 				t.transition(Data);
 				break;
 			case '>':
@@ -828,6 +829,8 @@ enum TokeniserState {
 			final String value = r.consumeToAnySorted(attributeDoubleValueCharsSorted);
 			if (value.length() > 0) {
 				t.tagPending.appendAttributeValue(value);
+			} else {
+				t.tagPending.setEmptyAttributeValue();
 			}
 
 			final char c = r.consume();
@@ -861,6 +864,8 @@ enum TokeniserState {
 			final String value = r.consumeToAnySorted(attributeSingleValueCharsSorted);
 			if (value.length() > 0) {
 				t.tagPending.appendAttributeValue(value);
+			} else {
+				t.tagPending.setEmptyAttributeValue();
 			}
 
 			final char c = r.consume();

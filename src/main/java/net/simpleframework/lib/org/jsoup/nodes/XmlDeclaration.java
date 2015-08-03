@@ -41,7 +41,7 @@ public class XmlDeclaration extends Node {
 	public String getWholeDeclaration() {
 		final String decl = attributes.get(DECL_KEY);
 
-		if (decl.equals("xml") == true && attributes.size() > 1) {
+		if (decl.equals("xml") && attributes.size() > 1) {
 			final StringBuilder sb = new StringBuilder(decl);
 			final String version = attributes.get("version");
 

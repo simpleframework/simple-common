@@ -232,11 +232,7 @@ public class Tag {
 		if (formList != tag.formList) {
 			return false;
 		}
-		if (formSubmit != tag.formSubmit) {
-			return false;
-		}
-
-		return true;
+		return formSubmit == tag.formSubmit;
 	}
 
 	@Override

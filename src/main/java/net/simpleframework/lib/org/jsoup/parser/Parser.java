@@ -31,8 +31,7 @@ public class Parser {
 
 	public Document parseInput(final String html, final String baseUri) {
 		errors = isTrackErrors() ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
-		final Document doc = treeBuilder.parse(html, baseUri, errors);
-		return doc;
+		return treeBuilder.parse(html, baseUri, errors);
 	}
 
 	// gets & sets

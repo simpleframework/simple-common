@@ -143,8 +143,11 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 */
 	protected final boolean shouldCollapseAttribute(final Document.OutputSettings out) {
 		return ("".equals(value) || value.equalsIgnoreCase(key))
-				&& out.syntax() == Document.OutputSettings.Syntax.html
-				&& Arrays.binarySearch(booleanAttributes, key) >= 0;
+				&& out.syntax() == Document.OutputSettings.Syntax.html && isBooleanAttribute();
+	}
+
+	protected boolean isBooleanAttribute() {
+		return Arrays.binarySearch(booleanAttributes, key) >= 0;
 	}
 
 	@Override
@@ -161,11 +164,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 		if (key != null ? !key.equals(attribute.key) : attribute.key != null) {
 			return false;
 		}
-		if (value != null ? !value.equals(attribute.value) : attribute.value != null) {
-			return false;
-		}
-
-		return true;
+		return !(value != null ? !value.equals(attribute.value) : attribute.value != null);
 	}
 
 	@Override

@@ -141,6 +141,25 @@ public class Element extends Node {
 	}
 
 	/**
+	 * Set a boolean attribute value on this element. Setting to
+	 * <code>true</code> sets the attribute value to "" and
+	 * marks the attribute as boolean so no value is written out. Setting to
+	 * <code>false</code> removes the attribute
+	 * with the same key if it exists.
+	 * 
+	 * @param attributeKey
+	 *        the attribute key
+	 * @param attributeValue
+	 *        the attribute value
+	 * 
+	 * @return this element
+	 */
+	public Element attr(final String attributeKey, final boolean attributeValue) {
+		attributes.put(attributeKey, attributeValue);
+		return this;
+	}
+
+	/**
 	 * Get this element's HTML5 custom data attributes. Each attribute in the
 	 * element that has a key
 	 * starting with "data-" is included the dataset.
@@ -325,6 +344,7 @@ public class Element extends Node {
 		// was - Node#addChildren(child). short-circuits an array create and a
 		// loop.
 		reparentChild(child);
+		ensureChildNodes();
 		childNodes.add(child);
 		child.setSiblingIndex(childNodes.size() - 1);
 		return this;
@@ -686,7 +706,7 @@ public class Element extends Node {
 
 		for (int i = 0; i < elements.size(); i++) {
 			final E element = elements.get(i);
-			if (element.equals(search)) {
+			if (element == search) {
 				return i;
 			}
 		}

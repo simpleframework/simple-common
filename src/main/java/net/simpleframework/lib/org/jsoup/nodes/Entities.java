@@ -135,11 +135,13 @@ public class Entities {
 					if (escapeMode != EscapeMode.xhtml) {
 						accum.append("&nbsp;");
 					} else {
-						accum.append(c);
+						accum.append("&#xa0;");
 					}
 					break;
 				case '<':
-					if (!inAttribute) {
+					// escape when in character data or when in a xml attribue val;
+					// not needed in html attr val
+					if (!inAttribute || escapeMode == EscapeMode.xhtml) {
 						accum.append("&lt;");
 					} else {
 						accum.append(c);

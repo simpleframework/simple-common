@@ -17,7 +17,7 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 /**
  * HTML Tree Builder; creates a DOM from Tokens.
  */
-class HtmlTreeBuilder extends TreeBuilder {
+public class HtmlTreeBuilder extends TreeBuilder {
 	// tag searches
 	private static final String[] TagsScriptStyle = new String[] { "script", "style" };
 	public static final String[] TagsSearchInScope = new String[] { "applet", "caption", "html",
@@ -446,7 +446,7 @@ class HtmlTreeBuilder extends TreeBuilder {
 			if ("select".equals(name)) {
 				transition(HtmlTreeBuilderState.InSelect);
 				break; // frag
-			} else if (("td".equals(name) || "td".equals(name) && !last)) {
+			} else if (("td".equals(name) || "th".equals(name) && !last)) {
 				transition(HtmlTreeBuilderState.InCell);
 				break;
 			} else if ("tr".equals(name)) {

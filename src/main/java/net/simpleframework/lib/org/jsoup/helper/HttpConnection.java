@@ -429,6 +429,8 @@ public class HttpConnection implements Connection {
 		private boolean ignoreHttpErrors = false;
 		private boolean ignoreContentType = false;
 		private Parser parser;
+		private boolean parserDefined = false; // called parser(...) vs
+															// initialized in ctor
 		private boolean validateTSLCertificates = true;
 		private String postDataCharset = DataUtil.defaultCharset;
 
@@ -524,6 +526,7 @@ public class HttpConnection implements Connection {
 		@Override
 		public Request parser(final Parser parser) {
 			this.parser = parser;
+			parserDefined = true;
 			return this;
 		}
 
@@ -563,12 +566,11 @@ public class HttpConnection implements Connection {
 		private Connection.Request req;
 
 		/*
-		 * For example {@code application/atom+xml;charset=utf-8}.
-		 * Stepping through it: start with {@code "application/"}, follow with
-		 * word
-		 * characters up to a {@code "+xml"}, and then maybe more ({@code .*}).
+		 * Matches XML content types (like text/xml,
+		 * application/xhtml+xml;charset=UTF8, etc)
 		 */
-		private static final Pattern xmlContentTypeRxp = Pattern.compile("application/\\w+\\+xml.*");
+		private static final Pattern xmlContentTypeRxp = Pattern
+				.compile("(application|text)/\\w*\\+?xml.*");
 
 		Response() {
 			super();
@@ -627,7 +629,7 @@ public class HttpConnection implements Connection {
 					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
 						location = location.substring(6);
 					}
-					req.url(new URL(req.url(), encodeUrl(location)));
+					req.url(StringUtil.resolve(req.url(), encodeUrl(location)));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
 																													// response
@@ -651,11 +653,20 @@ public class HttpConnection implements Connection {
 				// before fetching it
 				final String contentType = res.contentType();
 				if (contentType != null && !req.ignoreContentType() && !contentType.startsWith("text/")
-						&& !contentType.startsWith("application/xml")
 						&& !xmlContentTypeRxp.matcher(contentType).matches()) {
 					throw new UnsupportedMimeTypeException(
 							"Unhandled content type. Must be text/*, application/xml, or application/xhtml+xml",
 							contentType, req.url().toString());
+				}
+
+				// switch to the XML parser if content type is xml and not parser
+				// not explicitly set
+				if (contentType != null && xmlContentTypeRxp.matcher(contentType).matches()) {
+					// only flip it if a HttpConnection.Request (i.e. don't presume
+					// other impls want it):
+					if (req instanceof HttpConnection.Request && !((Request) req).parserDefined) {
+						req.parser(Parser.xmlParser());
+					}
 				}
 
 				res.charset = DataUtil.getCharsetFromContentType(res.contentType); // may

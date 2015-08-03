@@ -1,7 +1,5 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -20,6 +18,7 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public abstract class Node implements Cloneable {
+	private static final List<Node> EMPTY_NODES = Collections.emptyList();
 	Node parentNode;
 	List<Node> childNodes;
 	Attributes attributes;
@@ -38,7 +37,7 @@ public abstract class Node implements Cloneable {
 		Validate.notNull(baseUri);
 		Validate.notNull(attributes);
 
-		childNodes = new ArrayList<Node>(4);
+		childNodes = EMPTY_NODES;
 		this.baseUri = baseUri.trim();
 		this.attributes = attributes;
 	}
@@ -52,7 +51,7 @@ public abstract class Node implements Cloneable {
 	 * with caution.
 	 */
 	protected Node() {
-		childNodes = Collections.emptyList();
+		childNodes = EMPTY_NODES;
 		attributes = null;
 	}
 
@@ -210,30 +209,10 @@ public abstract class Node implements Cloneable {
 	public String absUrl(final String attributeKey) {
 		Validate.notEmpty(attributeKey);
 
-		String relUrl = attr(attributeKey);
 		if (!hasAttr(attributeKey)) {
 			return ""; // nothing to make absolute with
 		} else {
-			URL base;
-			try {
-				try {
-					base = new URL(baseUri);
-				} catch (final MalformedURLException e) {
-					// the base is unsuitable, but the attribute may be abs on its
-					// own, so try that
-					final URL abs = new URL(relUrl);
-					return abs.toExternalForm();
-				}
-				// workaround: java resolves '//path/file + ?foo' to '//path/?foo',
-				// not '//path/file?foo' as desired
-				if (relUrl.startsWith("?")) {
-					relUrl = base.getPath() + relUrl;
-				}
-				final URL abs = new URL(base, relUrl);
-				return abs.toExternalForm();
-			} catch (final MalformedURLException e) {
-				return "";
-			}
+			return StringUtil.resolve(baseUri, attr(attributeKey));
 		}
 	}
 
@@ -525,6 +504,7 @@ public abstract class Node implements Cloneable {
 		// and array copy
 		for (final Node child : children) {
 			reparentChild(child);
+			ensureChildNodes();
 			childNodes.add(child);
 			child.setSiblingIndex(childNodes.size() - 1);
 		}
@@ -535,9 +515,16 @@ public abstract class Node implements Cloneable {
 		for (int i = children.length - 1; i >= 0; i--) {
 			final Node in = children[i];
 			reparentChild(in);
+			ensureChildNodes();
 			childNodes.add(index, in);
 		}
 		reindexChildren(index);
+	}
+
+	protected void ensureChildNodes() {
+		if (childNodes == EMPTY_NODES) {
+			childNodes = new ArrayList<Node>(4);
+		}
 	}
 
 	protected void reparentChild(final Node child) {

@@ -255,8 +255,7 @@ public class TokenQueue {
 			}
 		}
 
-		final String data = queue.substring(start, pos);
-		return data;
+		return queue.substring(start, pos);
 	}
 
 	/**
@@ -276,8 +275,7 @@ public class TokenQueue {
 			pos++;
 		}
 
-		final String data = queue.substring(start, pos);
-		return data;
+		return queue.substring(start, pos);
 	}
 
 	/**

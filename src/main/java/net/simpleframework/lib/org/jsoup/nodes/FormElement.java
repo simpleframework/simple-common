@@ -73,9 +73,7 @@ public class FormElement extends Element {
 		final Connection.Method method = attr("method").toUpperCase().equals("POST") ? Connection.Method.POST
 				: Connection.Method.GET;
 
-		final Connection con = Jsoup.connect(action).data(formData()).method(method);
-
-		return con;
+		return Jsoup.connect(action).data(formData()).method(method);
 	}
 
 	/**
@@ -126,10 +124,5 @@ public class FormElement extends Element {
 			}
 		}
 		return data;
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		return super.equals(o);
 	}
 }

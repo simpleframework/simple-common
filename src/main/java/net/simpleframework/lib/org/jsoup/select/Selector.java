@@ -139,7 +139,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <tr>
  * <td><code>:lt(<em>n</em>)</code></td>
  * <td>elements whose sibling index is less than <em>n</em></td>
- * <td><code>td:lt(3)</code> finds the first 2 cells of each row</td>
+ * <td><code>td:lt(3)</code> finds the first 3 cells of each row</td>
  * </tr>
  * <tr>
  * <td><code>:gt(<em>n</em>)</code></td>

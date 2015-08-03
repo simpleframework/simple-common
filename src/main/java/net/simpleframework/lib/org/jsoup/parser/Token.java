@@ -3,6 +3,7 @@ package net.simpleframework.lib.org.jsoup.parser;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
+import net.simpleframework.lib.org.jsoup.nodes.BooleanAttribute;
 
 /**
  * Parse tokens for the Tokeniser.
@@ -80,6 +81,9 @@ abstract class Token {
 																											// &
 																											// in
 																											// hrefs
+		private boolean hasEmptyAttributeValue = false; // distinguish boolean
+																		// attribute from empty
+																		// string value
 		private boolean hasPendingAttributeValue = false;
 		boolean selfClosing = false;
 		Attributes attributes; // start tags get attributes on construction. End
@@ -91,6 +95,7 @@ abstract class Token {
 			tagName = null;
 			pendingAttributeName = null;
 			reset(pendingAttributeValue);
+			hasEmptyAttributeValue = false;
 			hasPendingAttributeValue = false;
 			selfClosing = false;
 			attributes = null;
@@ -104,14 +109,18 @@ abstract class Token {
 
 			if (pendingAttributeName != null) {
 				Attribute attribute;
-				if (!hasPendingAttributeValue) {
+				if (hasPendingAttributeValue) {
+					attribute = new Attribute(pendingAttributeName, pendingAttributeValue.toString());
+				} else if (hasEmptyAttributeValue) {
 					attribute = new Attribute(pendingAttributeName, "");
 				} else {
-					attribute = new Attribute(pendingAttributeName, pendingAttributeValue.toString());
+					attribute = new BooleanAttribute(pendingAttributeName);
 				}
 				attributes.put(attribute);
 			}
 			pendingAttributeName = null;
+			hasEmptyAttributeValue = false;
+			hasPendingAttributeValue = false;
 			reset(pendingAttributeValue);
 		}
 
@@ -174,6 +183,10 @@ abstract class Token {
 		final void appendAttributeValue(final char[] append) {
 			ensureAttributeValue();
 			pendingAttributeValue.append(append);
+		}
+
+		final void setEmptyAttributeValue() {
+			hasEmptyAttributeValue = true;
 		}
 
 		private void ensureAttributeValue() {
@@ -334,7 +347,7 @@ abstract class Token {
 		return type == TokenType.EOF;
 	}
 
-	static enum TokenType {
+	enum TokenType {
 		Doctype, StartTag, EndTag, Comment, Character, EOF
 	}
 }
