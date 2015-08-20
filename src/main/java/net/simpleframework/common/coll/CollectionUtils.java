@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -13,9 +15,16 @@ import java.util.List;
  */
 public abstract class CollectionUtils {
 
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> EMPTY_LIST() {
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
+	}
+
+	public static final <T> Set<T> EMPTY_SET() {
+		return Collections.emptySet();
+	}
+
+	public static final <K, V> Map<K, V> EMPTY_MAP() {
+		return Collections.emptyMap();
 	}
 
 	public static <T> List<T> toList(final Iterator<T> it) {
