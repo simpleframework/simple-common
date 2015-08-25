@@ -50,6 +50,7 @@ public abstract class RuntimeExceptionEx extends RuntimeException {
 		return _of(exClazz, msg, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T extends RuntimeExceptionEx> T _of(final Class<T> exClazz, final String msg,
 			final Throwable throwable) {
 		if (throwable == null) {
@@ -59,6 +60,9 @@ public abstract class RuntimeExceptionEx extends RuntimeException {
 			}
 		}
 		try {
+			if (throwable.getClass().equals(exClazz)) {
+				return (T) throwable;
+			}
 			return exClazz.getConstructor(String.class, Throwable.class).newInstance(msg,
 					ThrowableUtils.convertThrowable(throwable));
 		} catch (final Throwable e) {
