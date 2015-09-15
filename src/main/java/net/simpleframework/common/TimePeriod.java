@@ -50,6 +50,10 @@ public class TimePeriod implements Serializable {
 		}
 	}
 
+	public TimePeriod(final Date from, final Date to) {
+		setTimePeriod(ETimePeriod.custom).setFrom(from).setTo(to);
+	}
+
 	public TimePeriod(final ETimePeriod timePeriod) {
 		this.timePeriod = timePeriod;
 	}
