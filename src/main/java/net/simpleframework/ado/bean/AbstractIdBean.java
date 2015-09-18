@@ -17,7 +17,12 @@ public abstract class AbstractIdBean extends ObjectEx implements IIdBeanAware {
 
 	@Override
 	public ID getId() {
-		return id;
+		return getId(false);
+	}
+
+	@Override
+	public ID getId(final boolean gen) {
+		return (gen && id == null) ? (id = ID.uuid()) : id;
 	}
 
 	@Override

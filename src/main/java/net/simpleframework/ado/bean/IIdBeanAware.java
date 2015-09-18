@@ -12,12 +12,16 @@ import net.simpleframework.common.ID;
  */
 public interface IIdBeanAware extends Serializable {
 
+	ID getId();
+
 	/**
 	 * 获取id
 	 * 
+	 * @param gen
+	 *        为空时，是否自动生成
 	 * @return
 	 */
-	ID getId();
+	ID getId(boolean gen);
 
 	/**
 	 * 设置id
