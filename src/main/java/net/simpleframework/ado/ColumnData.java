@@ -14,7 +14,8 @@ import net.simpleframework.common.object.ObjectEx;
  *         http://www.simpleframework.net
  */
 public class ColumnData extends ObjectEx implements Serializable {
-	public static ColumnData[] EMPTY = new ColumnData[0];
+
+	public static ColumnData EMPTY = new ColumnData(null, EOrder.normal);
 
 	public static ColumnData ASC(final String name) {
 		return new ColumnData(name, EOrder.asc);
