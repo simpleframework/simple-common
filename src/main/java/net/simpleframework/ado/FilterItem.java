@@ -21,7 +21,7 @@ public class FilterItem implements Serializable {
 
 	private EFilterOpe ope;
 
-	private FilterItem orItem;
+	private boolean lbracket, rbracket;
 
 	public FilterItem(final String column, final Object value) {
 		this(column, null, value);
@@ -82,12 +82,21 @@ public class FilterItem implements Serializable {
 		return this;
 	}
 
-	public FilterItem getOrItem() {
-		return orItem;
+	public boolean isLbracket() {
+		return lbracket;
 	}
 
-	public FilterItem setOrItem(final FilterItem orItem) {
-		this.orItem = orItem;
+	public FilterItem setLbracket(final boolean lbracket) {
+		this.lbracket = lbracket;
+		return this;
+	}
+
+	public boolean isRbracket() {
+		return rbracket;
+	}
+
+	public FilterItem setRbracket(final boolean rbracket) {
+		this.rbracket = rbracket;
 		return this;
 	}
 
