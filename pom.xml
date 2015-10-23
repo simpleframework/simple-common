@@ -11,6 +11,12 @@
   <version>${simple.common}</version>
   
   <dependencies>
+    <dependency>
+      <groupId>net.simpleframework</groupId>
+      <artifactId>simple-projects-pom</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    
     <!-- 邮件 -->
     <dependency>
       <groupId>javax.mail</groupId>
