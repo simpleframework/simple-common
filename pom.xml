@@ -8,7 +8,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>simple-common</artifactId>
-  <version>${simple-common}</version>
+  <version>${simple.common}</version>
   
   <dependencies>
     <!-- 邮件 -->
