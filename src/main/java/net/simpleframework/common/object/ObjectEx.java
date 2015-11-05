@@ -153,6 +153,10 @@ public abstract class ObjectEx {
 		return log;
 	}
 
+	public static void oprintln() {
+		System.out.println();
+	}
+
 	public static void oprintln(final Object o) {
 		System.out.print("[System.out] ==> ");
 		System.out.println(o);
