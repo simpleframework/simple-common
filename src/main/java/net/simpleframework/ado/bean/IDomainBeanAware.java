@@ -1,5 +1,7 @@
 package net.simpleframework.ado.bean;
 
+import net.simpleframework.common.ID;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -8,7 +10,12 @@ package net.simpleframework.ado.bean;
  */
 public interface IDomainBeanAware {
 
-	int getDomain();
+	/**
+	 * 获取域id
+	 * 
+	 * @return
+	 */
+	ID getDomainId();
 
-	void setDomain(int domain);
+	void setDomainId(ID domainId);
 }
