@@ -46,7 +46,7 @@ public class FilterItems extends AbstractArrayListEx<FilterItems, FilterItem> {
 	}
 
 	public FilterItems addIsNull(final String key) {
-		add(new FilterItem(key).setRelation(EFilterRelation.isNull));
+		add(FilterItem.isNull(key));
 		return this;
 	}
 

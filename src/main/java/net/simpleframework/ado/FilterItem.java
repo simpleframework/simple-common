@@ -141,5 +141,13 @@ public class FilterItem implements Serializable {
 	public static FilterItem TRUE = new FilterItem("1", 1);
 	public static FilterItem FALSE = new FilterItem("1", 2);
 
+	public static FilterItem isNull(final String column) {
+		return new FilterItem(column).setRelation(EFilterRelation.isNull);
+	}
+
+	public static FilterItem or(final String column, final Object value) {
+		return new FilterItem(column, value).setOpe(EFilterOpe.or);
+	}
+
 	private static final long serialVersionUID = 598446923126901786L;
 }
