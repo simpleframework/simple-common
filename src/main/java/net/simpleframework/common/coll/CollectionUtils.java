@@ -2,6 +2,7 @@ package net.simpleframework.common.coll;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,11 @@ public abstract class CollectionUtils {
 
 	public static <T> List<T> EMPTY_LIST() {
 		return Collections.emptyList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Enumeration<T> EMPTY_ENUMERATION() {
+		return Collections.enumeration(Collections.EMPTY_LIST);
 	}
 
 	public static final <T> Set<T> EMPTY_SET() {
