@@ -44,10 +44,9 @@ public abstract class DataQueryUtils {
 		return al;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> Iterator<T> toIterator(final IDataQuery<T> dataQuery) {
 		if (dataQuery == null) {
-			return CollectionUtils.EMPTY_ITERATOR;
+			return CollectionUtils.EMPTY_ITERATOR();
 		}
 		return new DataQueryIterator<T>(dataQuery.setFetchSize(0));
 	}

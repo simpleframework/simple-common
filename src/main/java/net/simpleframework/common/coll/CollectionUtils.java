@@ -44,6 +44,20 @@ public abstract class CollectionUtils {
 		return l;
 	}
 
+	public static <T> Iterator<T> EMPTY_ITERATOR() {
+		return new AbstractIterator<T>() {
+			@Override
+			public boolean hasNext() {
+				return false;
+			}
+
+			@Override
+			public T next() {
+				return null;
+			}
+		};
+	}
+
 	public static abstract class AbstractIterator<E> implements Iterator<E> {
 		protected int i = -1;
 
@@ -71,17 +85,4 @@ public abstract class CollectionUtils {
 			return change(nest.next());
 		}
 	}
-
-	@SuppressWarnings("rawtypes")
-	public static Iterator EMPTY_ITERATOR = new AbstractIterator() {
-		@Override
-		public boolean hasNext() {
-			return false;
-		}
-
-		@Override
-		public Object next() {
-			return null;
-		}
-	};
 }
