@@ -41,11 +41,11 @@ public final class Version implements Serializable, Comparable<Version> {
 		return new Version(major, minor, micro);
 	}
 
-	private final int major;
+	private int major;
 
-	private final int minor;
+	private int minor;
 
-	private final int micro;
+	private int micro;
 
 	public Version(final int major, final int minor, final int micro) {
 		this.major = major;
@@ -104,12 +104,24 @@ public final class Version implements Serializable, Comparable<Version> {
 		return major;
 	}
 
-	public int getMicro() {
-		return micro;
+	public int incMajor() {
+		return ++major;
 	}
 
 	public int getMinor() {
 		return minor;
+	}
+
+	public int incMinor() {
+		return ++minor;
+	}
+
+	public int getMicro() {
+		return micro;
+	}
+
+	public int incMicro() {
+		return ++micro;
 	}
 
 	@Override
