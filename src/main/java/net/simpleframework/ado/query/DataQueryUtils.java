@@ -12,7 +12,6 @@ import java.util.Set;
 import net.simpleframework.ado.bean.ITreeBeanAware;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.CollectionUtils;
-import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -49,32 +48,6 @@ public abstract class DataQueryUtils {
 			return CollectionUtils.EMPTY_ITERATOR();
 		}
 		return new DataQueryIterator<T>(dataQuery);
-	}
-
-	public static class DataQueryIterator<T> extends AbstractIterator<T> implements
-			IDataQueryAware<T> {
-		private T t;
-
-		private final IDataQuery<T> dataQuery;
-
-		public DataQueryIterator(final IDataQuery<T> dataQuery) {
-			this.dataQuery = dataQuery.setFetchSize(0);
-		}
-
-		@Override
-		public boolean hasNext() {
-			return dataQuery != null && (t = dataQuery.next()) != null;
-		}
-
-		@Override
-		public T next() {
-			return t;
-		}
-
-		@Override
-		public IDataQuery<T> getDataQuery() {
-			return dataQuery;
-		}
 	}
 
 	public static <T> Map<ID, Collection<T>> toTreeMap(final IDataQuery<T> dq) {

@@ -11,7 +11,7 @@ import net.simpleframework.common.coll.CollectionUtils.AbstractIterator;
  *         http://www.simpleframework.net
  */
 public abstract class NestIterator<T, N> extends AbstractIterator<T> {
-	protected Iterator<N> nest;
+	private final Iterator<N> nest;
 
 	public NestIterator(final Iterator<N> nest) {
 		this.nest = nest;
@@ -27,5 +27,9 @@ public abstract class NestIterator<T, N> extends AbstractIterator<T> {
 	@Override
 	public T next() {
 		return change(nest.next());
+	}
+
+	public Iterator<N> getNest() {
+		return nest;
 	}
 }

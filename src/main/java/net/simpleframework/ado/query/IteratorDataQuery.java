@@ -2,6 +2,8 @@ package net.simpleframework.ado.query;
 
 import java.util.Iterator;
 
+import net.simpleframework.common.coll.NestIterator;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -27,7 +29,14 @@ public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 
 	@SuppressWarnings("unchecked")
 	public IDataQuery<T> getRawDataQuery() {
-		return it instanceof IDataQueryAware ? ((IDataQueryAware<T>) it).getDataQuery() : this;
+		Iterator<T> it2 = it;
+		while (it2 instanceof NestIterator) {
+			it2 = ((NestIterator<?, T>) it2).getNest();
+		}
+		if (it2 instanceof DataQueryIterator) {
+			return ((DataQueryIterator<T>) it2).getDataQuery();
+		}
+		return this;
 	}
 
 	@Override
