@@ -48,7 +48,7 @@ public abstract class DataQueryUtils {
 		if (dataQuery == null) {
 			return CollectionUtils.EMPTY_ITERATOR();
 		}
-		return new DataQueryIterator<T>(dataQuery.setFetchSize(0));
+		return new DataQueryIterator<T>(dataQuery);
 	}
 
 	public static class DataQueryIterator<T> extends AbstractIterator<T> implements
@@ -58,7 +58,7 @@ public abstract class DataQueryUtils {
 		private final IDataQuery<T> dataQuery;
 
 		public DataQueryIterator(final IDataQuery<T> dataQuery) {
-			this.dataQuery = dataQuery;
+			this.dataQuery = dataQuery.setFetchSize(0);
 		}
 
 		@Override

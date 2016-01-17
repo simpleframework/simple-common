@@ -65,24 +65,4 @@ public abstract class CollectionUtils {
 		public void remove() {
 		}
 	}
-
-	public static abstract class NestIterator<T, N> extends AbstractIterator<T> {
-		protected Iterator<N> nest;
-
-		public NestIterator(final Iterator<N> nest) {
-			this.nest = nest;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return nest.hasNext();
-		}
-
-		protected abstract T change(N n);
-
-		@Override
-		public T next() {
-			return change(nest.next());
-		}
-	}
 }
