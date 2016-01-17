@@ -6,7 +6,8 @@ package net.simpleframework.ado.query;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public abstract class NestDataQuery<T, N> extends AbstractDataQuery<T> {
+public abstract class NestDataQuery<T, N> extends AbstractDataQuery<T> implements
+		IDataQueryAware<N> {
 	private final IDataQuery<N> nest;
 
 	public NestDataQuery(final IDataQuery<N> dq) {
@@ -34,5 +35,10 @@ public abstract class NestDataQuery<T, N> extends AbstractDataQuery<T> {
 	public IDataQuery<T> setFetchSize(final int fetchSize) {
 		nest.setFetchSize(fetchSize);
 		return this;
+	}
+
+	@Override
+	public IDataQuery<N> getDataQuery() {
+		return nest;
 	}
 }
