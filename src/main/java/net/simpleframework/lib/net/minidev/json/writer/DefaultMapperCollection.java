@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -19,23 +19,24 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultMapperCollection<T> extends AMapper<T> {
+public class DefaultMapperCollection<T> extends JsonReaderI<T> {
 	Class<T> clz;
 
 	// ? extends Collection
-	public DefaultMapperCollection(final Class<T> clz) {
+	public DefaultMapperCollection(final JsonReader base, final Class<T> clz) {
+		super(base);
 		this.clz = clz;
 	}
 
 	// public static AMapper<JSONAwareEx> DEFAULT = new
 	// DefaultMapperCollection<JSONAwareEx>();
 	@Override
-	public AMapper<T> startObject(final String key) {
+	public JsonReaderI<T> startObject(final String key) {
 		return this;
 	}
 
 	@Override
-	public AMapper<T> startArray(final String key) {
+	public JsonReaderI<T> startArray(final String key) {
 		return this;
 	}
 
@@ -59,14 +60,16 @@ public class DefaultMapperCollection<T> extends AMapper<T> {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public void setValue(final Object current, final String key, final Object value) {
-		((Map) current).put(key, value);
+		((Map<String, Object>) current).put(key, value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addValue(final Object current, final Object value) {
-		((List) current).add(value);
+		((List<Object>) current).add(value);
 	}
 
 }

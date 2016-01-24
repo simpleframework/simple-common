@@ -86,8 +86,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Long.valueOf(((Number) obj).longValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Long");
+		throw new ConvertException("Primitive: Can not convert value '" + obj + "' As "
+				+ obj.getClass().getName() + " to Long");
 	}
 
 	public static byte convertTobyte(final Object obj) {

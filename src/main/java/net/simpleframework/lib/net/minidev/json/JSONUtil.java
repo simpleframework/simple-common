@@ -257,4 +257,54 @@ public class JSONUtil {
 			return true;
 		}
 	}
+
+	public static String getSetterName(final String key) {
+		final int len = key.length();
+		final char[] b = new char[len + 3];
+		b[0] = 's';
+		b[1] = 'e';
+		b[2] = 't';
+		char c = key.charAt(0);
+		if (c >= 'a' && c <= 'z') {
+			c += 'A' - 'a';
+		}
+		b[3] = c;
+		for (int i = 1; i < len; i++) {
+			b[i + 3] = key.charAt(i);
+		}
+		return new String(b);
+	}
+
+	public static String getGetterName(final String key) {
+		final int len = key.length();
+		final char[] b = new char[len + 3];
+		b[0] = 'g';
+		b[1] = 'e';
+		b[2] = 't';
+		char c = key.charAt(0);
+		if (c >= 'a' && c <= 'z') {
+			c += 'A' - 'a';
+		}
+		b[3] = c;
+		for (int i = 1; i < len; i++) {
+			b[i + 3] = key.charAt(i);
+		}
+		return new String(b);
+	}
+
+	public static String getIsName(final String key) {
+		final int len = key.length();
+		final char[] b = new char[len + 2];
+		b[0] = 'i';
+		b[1] = 's';
+		char c = key.charAt(0);
+		if (c >= 'a' && c <= 'z') {
+			c += 'A' - 'a';
+		}
+		b[2] = c;
+		for (int i = 1; i < len; i++) {
+			b[i + 2] = key.charAt(i);
+		}
+		return new String(b);
+	}
 }

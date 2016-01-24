@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -16,19 +16,20 @@ package net.simpleframework.lib.net.minidev.json.mapper;
  * limitations under the License.
  */
 
-public class FakeMapper extends AMapper<Object> {
+public class FakeMapper extends JsonReaderI<Object> {
 	private FakeMapper() {
+		super(null);
 	}
 
-	public static AMapper<Object> DEFAULT = new FakeMapper();
+	public static JsonReaderI<Object> DEFAULT = new FakeMapper();
 
 	@Override
-	public AMapper<?> startObject(final String key) {
+	public JsonReaderI<?> startObject(final String key) {
 		return this;
 	}
 
 	@Override
-	public AMapper<?> startArray(final String key) {
+	public JsonReaderI<?> startArray(final String key) {
 		return this;
 	}
 

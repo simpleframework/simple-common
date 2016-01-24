@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Jackson Annotation like
  * 
  * @author uriel
- * 
+ *
  */
 
 @Target({ ElementType.ANNOTATION_TYPE })

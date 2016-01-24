@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -26,17 +26,22 @@ import net.simpleframework.lib.net.minidev.asm.ConvertDate;
 import net.simpleframework.lib.net.minidev.json.JSONUtil;
 
 @SuppressWarnings("unchecked")
-public abstract class BeansMapper<T> extends AMapper<T> {
+public abstract class BeansMapper<T> extends JsonReaderI<T> {
+
+	public BeansMapper(final JsonReader base) {
+		super(base);
+	}
 
 	@Override
 	public abstract Object getValue(Object current, String key);
 
-	public static class Bean<T> extends AMapper<T> {
+	public static class Bean<T> extends JsonReaderI<T> {
 		final Class<T> clz;
 		final BeansAccess<T> ba;
 		final HashMap<String, Accessor> index;
 
-		public Bean(final Class<T> clz) {
+		public Bean(final JsonReader base, final Class<T> clz) {
+			super(base);
 			this.clz = clz;
 			this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
 			this.index = ba.getMap();
@@ -70,21 +75,21 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
+		public JsonReaderI<?> startArray(final String key) {
 			final Accessor nfo = index.get(key);
 			if (nfo == null) {
-				throw new RuntimeException("Can not find '" + key + "' field in " + clz);
+				throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
 			}
-			return Mapper.getMapper(nfo.getGenericType());
+			return base.getMapper(nfo.getGenericType());
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			final Accessor f = index.get(key);
 			if (f == null) {
-				throw new RuntimeException("Can not find '" + key + "' field in " + clz);
+				throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
 			}
-			return Mapper.getMapper(f.getGenericType());
+			return base.getMapper(f.getGenericType());
 		}
 
 		@Override
@@ -93,12 +98,13 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		}
 	}
 
-	public static class BeanNoConv<T> extends AMapper<T> {
+	public static class BeanNoConv<T> extends JsonReaderI<T> {
 		final Class<T> clz;
 		final BeansAccess<T> ba;
 		final HashMap<String, Accessor> index;
 
-		public BeanNoConv(final Class<T> clz) {
+		public BeanNoConv(final JsonReader base, final Class<T> clz) {
+			super(base);
 			this.clz = clz;
 			this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
 			this.index = ba.getMap();
@@ -121,21 +127,21 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
+		public JsonReaderI<?> startArray(final String key) {
 			final Accessor nfo = index.get(key);
 			if (nfo == null) {
 				throw new RuntimeException("Can not set " + key + " field in " + clz);
 			}
-			return Mapper.getMapper(nfo.getGenericType());
+			return base.getMapper(nfo.getGenericType());
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			final Accessor f = index.get(key);
 			if (f == null) {
 				throw new RuntimeException("Can not set " + key + " field in " + clz);
 			}
-			return Mapper.getMapper(f.getGenericType());
+			return base.getMapper(f.getGenericType());
 		}
 
 		@Override
@@ -144,7 +150,7 @@ public abstract class BeansMapper<T> extends AMapper<T> {
 		}
 	}
 
-	public static AMapper<Date> MAPPER_DATE = new ArraysMapper<Date>() {
+	public static JsonReaderI<Date> MAPPER_DATE = new ArraysMapper<Date>(null) {
 		@Override
 		public Date convert(final Object current) {
 			return ConvertDate.convertToDate(current);

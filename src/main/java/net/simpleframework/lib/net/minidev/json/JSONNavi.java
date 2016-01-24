@@ -20,9 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import net.simpleframework.lib.net.minidev.json.mapper.AMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.DefaultMapperOrdered;
-import net.simpleframework.lib.net.minidev.json.mapper.Mapper;
+import net.simpleframework.lib.net.minidev.json.writer.JsonReaderI;
 
 /**
  * A JQuery like Json editor, accessor.
@@ -32,7 +30,7 @@ import net.simpleframework.lib.net.minidev.json.mapper.Mapper;
  * @author Uriel Chemouni <uchemouni@gmail.com>
  */
 public class JSONNavi<T> {
-	private AMapper<? super T> mapper;
+	private JsonReaderI<? super T> mapper;
 	private T root;
 
 	private final Stack<Object> stack = new Stack<Object>();
@@ -46,32 +44,35 @@ public class JSONNavi<T> {
 	private Object missingKey = null;
 
 	public static JSONNavi<JSONAwareEx> newInstance() {
-		return new JSONNavi<JSONAwareEx>(DefaultMapperOrdered.DEFAULT);
+		return new JSONNavi<JSONAwareEx>(JSONValue.defaultReader.DEFAULT_ORDERED);
 	}
 
 	public static JSONNavi<JSONObject> newInstanceObject() {
-		final JSONNavi<JSONObject> o = new JSONNavi<JSONObject>(Mapper.getMapper(JSONObject.class));
+		final JSONNavi<JSONObject> o = new JSONNavi<JSONObject>(
+				JSONValue.defaultReader.getMapper(JSONObject.class));
 		o.object();
 		return o;
 	}
 
 	public static JSONNavi<JSONArray> newInstanceArray() {
-		final JSONNavi<JSONArray> o = new JSONNavi<JSONArray>(Mapper.getMapper(JSONArray.class));
+		final JSONNavi<JSONArray> o = new JSONNavi<JSONArray>(
+				JSONValue.defaultReader.getMapper(JSONArray.class));
 		o.array();
 		return o;
 	}
 
-	public JSONNavi(final AMapper<? super T> mapper) {
+	public JSONNavi(final JsonReaderI<? super T> mapper) {
 		this.mapper = mapper;
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONNavi(final String json) {
 		this.root = (T) JSONValue.parse(json);
 		this.current = this.root;
 		readonly = true;
 	}
 
-	public JSONNavi(final String json, final AMapper<T> mapper) {
+	public JSONNavi(final String json, final JsonReaderI<T> mapper) {
 		this.root = JSONValue.parse(json, mapper);
 		this.mapper = mapper;
 		this.current = this.root;
@@ -80,7 +81,7 @@ public class JSONNavi<T> {
 
 	public JSONNavi(final String json, final Class<T> mapTo) {
 		this.root = JSONValue.parse(json, mapTo);
-		this.mapper = Mapper.getMapper(mapTo);
+		this.mapper = JSONValue.defaultReader.getMapper(mapTo);
 		this.current = this.root;
 		readonly = true;
 	}
@@ -106,6 +107,7 @@ public class JSONNavi<T> {
 		return current;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Collection<String> getKeys() {
 		if (current instanceof Map) {
 			return ((Map) current).keySet();
@@ -373,8 +375,8 @@ public class JSONNavi<T> {
 	}
 
 	/**
-	 * get the current object value as Float if the current Float can not be cast
-	 * as Integer return null.
+	 * get the current object value as Float if the current Float can not be
+	 * cast as Integer return null.
 	 */
 	public Float asFloatObj() {
 		if (current == null) {
@@ -433,8 +435,8 @@ public class JSONNavi<T> {
 	}
 
 	/**
-	 * get the current object value as Long if the current Object can not be cast
-	 * as Long return null.
+	 * get the current object value as Long if the current Object can not be
+	 * cast as Long return null.
 	 */
 	public Long asLongObj() {
 		if (current == null) {
@@ -453,8 +455,8 @@ public class JSONNavi<T> {
 	}
 
 	/**
-	 * get the current value as boolean if the current Object is null or is not a
-	 * boolean return false
+	 * get the current value as boolean if the current Object is null or is not
+	 * a boolean return false
 	 */
 	public boolean asBoolean() {
 		if (current instanceof Boolean) {
@@ -481,6 +483,7 @@ public class JSONNavi<T> {
 	 * Set current value as Json Object You can also skip this call, Objects can
 	 * be create automatically.
 	 */
+	@SuppressWarnings("unchecked")
 	public JSONNavi<T> object() {
 		if (failure) {
 			return this;
@@ -511,6 +514,7 @@ public class JSONNavi<T> {
 	 * Set current value as Json Array You can also skip this call Arrays can be
 	 * create automatically.
 	 */
+	@SuppressWarnings("unchecked")
 	public JSONNavi<T> array() {
 		if (failure) {
 			return this;

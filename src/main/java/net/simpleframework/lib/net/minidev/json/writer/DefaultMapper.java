@@ -1,7 +1,7 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
- * Copyright 2011 JSON-SMART authors
+ * Copyright 2011-2014 JSON-SMART authors
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,45 @@ package net.simpleframework.lib.net.minidev.json.mapper;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import net.simpleframework.lib.net.minidev.json.JSONArray;
 import net.simpleframework.lib.net.minidev.json.JSONAwareEx;
+import net.simpleframework.lib.net.minidev.json.JSONObject;
 
-public class DefaultMapperOrdered extends AMapper<JSONAwareEx> {
-	private DefaultMapperOrdered() {
-	};
-
-	public static AMapper<JSONAwareEx> DEFAULT = new DefaultMapperOrdered();
-
-	@Override
-	public AMapper<JSONAwareEx> startObject(final String key) {
-		return DEFAULT;
+/**
+ * Simple Reader Class for generic Map
+ * 
+ * @author uriel
+ *
+ * @param <T>
+ */
+public class DefaultMapper<T> extends JsonReaderI<T> {
+	protected DefaultMapper(final JsonReader base) {
+		super(base);
 	}
 
 	@Override
-	public AMapper<JSONAwareEx> startArray(final String key) {
-		return DEFAULT;
+	public JsonReaderI<JSONAwareEx> startObject(final String key) {
+		return base.DEFAULT;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void setValue(final Object current, final String key, final Object value) {
-		((Map<String, Object>) current).put(key, value);
+	public JsonReaderI<JSONAwareEx> startArray(final String key) {
+		return base.DEFAULT;
 	}
 
 	@Override
 	public Object createObject() {
-		return new LinkedHashMap<String, Object>();
+		return new JSONObject();
+	}
+
+	@Override
+	public Object createArray() {
+		return new JSONArray();
+	}
+
+	@Override
+	public void setValue(final Object current, final String key, final Object value) {
+		((JSONObject) current).put(key, value);
 	}
 
 	@Override
@@ -53,8 +61,4 @@ public class DefaultMapperOrdered extends AMapper<JSONAwareEx> {
 		((JSONArray) current).add(value);
 	}
 
-	@Override
-	public Object createArray() {
-		return new JSONArray();
-	}
 }

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.simpleframework.lib.net.minidev.json.reader.JsonWriter;
+
 /**
  * A JSON object. Key value pairs are unordered. JSONObject supports
  * java.util.Map interface.
@@ -94,16 +96,41 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware, JS
 		}
 		out.append(':');
 		if (value instanceof String) {
-			if (!compression.mustProtectValue((String) value)) {
-				out.append((String) value);
-			} else {
-				out.append('"');
-				JSONValue.escape((String) value, out, compression);
-				out.append('"');
-			}
+			compression.writeString(out, (String) value);
 		} else {
 			JSONValue.writeJSONString(value, out, compression);
 		}
+	}
+
+	/**
+	 * A Simple Helper object to String
+	 * 
+	 * @return a value.toString() or null
+	 */
+	public String getAsString(final String key) {
+		final Object obj = this.get(key);
+		if (obj == null) {
+			return null;
+		}
+		return obj.toString();
+	}
+
+	/**
+	 * A Simple Helper cast an Object to an Number
+	 * 
+	 * @see net.simpleframework.lib.net.minidev.json.parser.JSONParserBase#parseNumber(String
+	 *      s)
+	 * @return a Number or null
+	 */
+	public Number getAsNumber(final String key) {
+		final Object obj = this.get(key);
+		if (obj == null) {
+			return null;
+		}
+		if (obj instanceof Number) {
+			return (Number) obj;
+		}
+		return Long.valueOf(obj.toString());
 	}
 
 	// /**
@@ -128,8 +155,8 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware, JS
 	// }
 
 	/**
-	 * Allows creation of a JSONObject from a Map. After that, both the generated
-	 * JSONObject and the Map can be modified independently.
+	 * Allows creation of a JSONObject from a Map. After that, both the
+	 * generated JSONObject and the Map can be modified independently.
 	 */
 	public JSONObject(final Map<String, ?> map) {
 		super(map);
@@ -153,31 +180,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware, JS
 			out.append("null");
 			return;
 		}
-		// JSONStyler styler = compression.getStyler();
-
-		boolean first = true;
-		// if (styler != null) {
-		// styler.objectIn();
-		// }
-
-		out.append('{');
-		for (final Map.Entry<String, ? extends Object> entry : map.entrySet()) {
-			if (first) {
-				first = false;
-			} else {
-				out.append(',');
-			}
-			// if (styler != null)
-			// out.append(styler.getNewLine());
-			writeJSONKV(entry.getKey(), entry.getValue(), out, compression);
-		}
-		// if (styler != null) {
-		// styler.objectOut();
-		// }
-		out.append('}');
-		// if (styler != null) {
-		// out.append(styler.getNewLine());
-		// }
+		JsonWriter.JSONMapWriter.writeJSONString(map, out, compression);
 	}
 
 	/**

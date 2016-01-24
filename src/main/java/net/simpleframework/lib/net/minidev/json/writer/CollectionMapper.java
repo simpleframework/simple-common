@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -26,7 +26,8 @@ import net.simpleframework.lib.net.minidev.json.JSONObject;
 import net.simpleframework.lib.net.minidev.json.JSONUtil;
 
 public class CollectionMapper {
-	public static class MapType<T> extends AMapper<T> {
+
+	public static class MapType<T> extends JsonReaderI<T> {
 		final ParameterizedType type;
 		final Class<?> rawClass;
 		final Class<?> instance;
@@ -38,9 +39,10 @@ public class CollectionMapper {
 		final Class<?> keyClass;
 		final Class<?> valueClass;
 
-		AMapper<?> subMapper;
+		JsonReaderI<?> subMapper;
 
-		public MapType(final ParameterizedType type) {
+		public MapType(final JsonReader base, final ParameterizedType type) {
+			super(base);
 			this.type = type;
 			this.rawClass = (Class<?>) type.getRawType();
 			if (rawClass.isInterface()) {
@@ -66,21 +68,28 @@ public class CollectionMapper {
 
 		@Override
 		public Object createObject() {
-			return ba.newInstance();
+			try {
+				return instance.newInstance();
+			} catch (final InstantiationException e) {
+				e.printStackTrace();
+			} catch (final IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
+		public JsonReaderI<?> startArray(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(valueType);
+				subMapper = base.getMapper(valueType);
 			}
 			return subMapper;
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(valueType);
+				subMapper = base.getMapper(valueType);
 			}
 			return subMapper;
 		}
@@ -104,14 +113,15 @@ public class CollectionMapper {
 		}
 	};
 
-	public static class MapClass<T> extends AMapper<T> {
+	public static class MapClass<T> extends JsonReaderI<T> {
 		final Class<?> type;
 		final Class<?> instance;
 		final BeansAccess<?> ba;
 
-		AMapper<?> subMapper;
+		JsonReaderI<?> subMapper;
 
-		public MapClass(final Class<?> type) {
+		public MapClass(final JsonReader base, final Class<?> type) {
+			super(base);
 			this.type = type;
 			if (type.isInterface()) {
 				this.instance = JSONObject.class;
@@ -127,13 +137,13 @@ public class CollectionMapper {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
-			return DefaultMapper.DEFAULT; // _ARRAY
+		public JsonReaderI<?> startArray(final String key) {
+			return base.DEFAULT; // _ARRAY
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
-			return DefaultMapper.DEFAULT; // _MAP
+		public JsonReaderI<?> startObject(final String key) {
+			return base.DEFAULT; // _MAP
 		}
 
 		@SuppressWarnings("unchecked")
@@ -154,7 +164,7 @@ public class CollectionMapper {
 		}
 	};
 
-	public static class ListType<T> extends AMapper<T> {
+	public static class ListType<T> extends JsonReaderI<T> {
 		final ParameterizedType type;
 		final Class<?> rawClass;
 		final Class<?> instance;
@@ -163,9 +173,10 @@ public class CollectionMapper {
 		final Type valueType;
 		final Class<?> valueClass;
 
-		AMapper<?> subMapper;
+		JsonReaderI<?> subMapper;
 
-		public ListType(final ParameterizedType type) {
+		public ListType(final JsonReader base, final ParameterizedType type) {
+			super(base);
 			this.type = type;
 			this.rawClass = (Class<?>) type.getRawType();
 			if (rawClass.isInterface()) {
@@ -188,17 +199,17 @@ public class CollectionMapper {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
+		public JsonReaderI<?> startArray(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(type.getActualTypeArguments()[0]);
+				subMapper = base.getMapper(type.getActualTypeArguments()[0]);
 			}
 			return subMapper;
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(type.getActualTypeArguments()[0]);
+				subMapper = base.getMapper(type.getActualTypeArguments()[0]);
 			}
 			return subMapper;
 		}
@@ -210,14 +221,15 @@ public class CollectionMapper {
 		}
 	};
 
-	public static class ListClass<T> extends AMapper<T> {
+	public static class ListClass<T> extends JsonReaderI<T> {
 		final Class<?> type;
 		final Class<?> instance;
 		final BeansAccess<?> ba;
 
-		AMapper<?> subMapper;
+		JsonReaderI<?> subMapper;
 
-		public ListClass(final Class<?> clazz) {
+		public ListClass(final JsonReader base, final Class<?> clazz) {
+			super(base);
 			this.type = clazz;
 			if (clazz.isInterface()) {
 				instance = JSONArray.class;
@@ -233,13 +245,13 @@ public class CollectionMapper {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
-			return DefaultMapper.DEFAULT;// _ARRAY;
+		public JsonReaderI<?> startArray(final String key) {
+			return base.DEFAULT;// _ARRAY;
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
-			return DefaultMapper.DEFAULT;// _MAP;
+		public JsonReaderI<?> startObject(final String key) {
+			return base.DEFAULT;// _MAP;
 		}
 
 		@SuppressWarnings("unchecked")

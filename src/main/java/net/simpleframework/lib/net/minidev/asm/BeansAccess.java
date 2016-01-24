@@ -85,7 +85,13 @@ public abstract class BeansAccess<T> {
 		final Accessor[] accs = ASMUtil.getAccessors(type, filter);
 
 		// create new class name
-		final String accessClassName = type.getName().concat("AccAccess");
+		final String className = type.getName();
+		String accessClassName;
+		if (className.startsWith("java.util.")) {
+			accessClassName = "net.simpleframework.lib.net.minidev.asm." + className + "AccAccess";
+		} else {
+			accessClassName = className.concat("AccAccess");
+		}
 
 		// extend class base loader
 		final DynamicClassLoader loader = new DynamicClassLoader(type.getClassLoader());
@@ -172,7 +178,12 @@ public abstract class BeansAccess<T> {
 	 * set field value by fieldname
 	 */
 	public void set(final T object, final String methodName, final Object value) {
-		set(object, getIndex(methodName), value);
+		final int i = getIndex(methodName);
+		if (i == -1) {
+			throw new net.simpleframework.lib.net.minidev.asm.ex.NoSuchFieldException(methodName
+					+ " in " + object.getClass() + " to put value : " + value);
+		}
+		set(object, i, value);
 	}
 
 	/**

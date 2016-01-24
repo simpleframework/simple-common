@@ -21,22 +21,18 @@ import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.MODE_RF
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import net.simpleframework.lib.net.minidev.asm.Accessor;
-import net.simpleframework.lib.net.minidev.asm.BeansAccess;
-import net.simpleframework.lib.net.minidev.json.mapper.AMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.CompessorMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.DefaultMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.DefaultMapperOrdered;
-import net.simpleframework.lib.net.minidev.json.mapper.FakeMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.Mapper;
-import net.simpleframework.lib.net.minidev.json.mapper.UpdaterMapper;
 import net.simpleframework.lib.net.minidev.json.parser.JSONParser;
 import net.simpleframework.lib.net.minidev.json.parser.ParseException;
+import net.simpleframework.lib.net.minidev.json.reader.JsonWriter;
+import net.simpleframework.lib.net.minidev.json.reader.JsonWriterI;
+import net.simpleframework.lib.net.minidev.json.writer.CompessorMapper;
+import net.simpleframework.lib.net.minidev.json.writer.FakeMapper;
+import net.simpleframework.lib.net.minidev.json.writer.JsonReader;
+import net.simpleframework.lib.net.minidev.json.writer.JsonReaderI;
+import net.simpleframework.lib.net.minidev.json.writer.UpdaterMapper;
 
 /**
  * JSONValue is the helper class In most of case you should use those static
@@ -104,7 +100,7 @@ public class JSONValue {
 	public static <T> T parse(final InputStream in, final Class<T> mapTo) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, Mapper.getMapper(mapTo));
+			return p.parse(in, defaultReader.getMapper(mapTo));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -141,7 +137,7 @@ public class JSONValue {
 	public static <T> T parse(final byte[] in, final Class<T> mapTo) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, Mapper.getMapper(mapTo));
+			return p.parse(in, defaultReader.getMapper(mapTo));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -158,7 +154,7 @@ public class JSONValue {
 	public static <T> T parse(final Reader in, final Class<T> mapTo) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, Mapper.getMapper(mapTo));
+			return p.parse(in, defaultReader.getMapper(mapTo));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -175,7 +171,7 @@ public class JSONValue {
 	public static <T> T parse(final Reader in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(toUpdate));
+			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -187,7 +183,7 @@ public class JSONValue {
 	 * 
 	 * @since 2.0
 	 */
-	protected static <T> T parse(final Reader in, final AMapper<T> mapper) {
+	protected static <T> T parse(final Reader in, final JsonReaderI<T> mapper) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
 			return p.parse(in, mapper);
@@ -207,7 +203,7 @@ public class JSONValue {
 	public static <T> T parse(final String in, final Class<T> mapTo) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, Mapper.getMapper(mapTo));
+			return p.parse(in, defaultReader.getMapper(mapTo));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -224,7 +220,7 @@ public class JSONValue {
 	public static <T> T parse(final InputStream in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(toUpdate));
+			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -241,7 +237,7 @@ public class JSONValue {
 	public static <T> T parse(final String in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(toUpdate));
+			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -253,7 +249,7 @@ public class JSONValue {
 	 * 
 	 * @since 2.0
 	 */
-	protected static <T> T parse(final byte[] in, final AMapper<T> mapper) {
+	protected static <T> T parse(final byte[] in, final JsonReaderI<T> mapper) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
 			return p.parse(in, mapper);
@@ -267,7 +263,7 @@ public class JSONValue {
 	 * 
 	 * @since 2.0
 	 */
-	protected static <T> T parse(final String in, final AMapper<T> mapper) {
+	protected static <T> T parse(final String in, final JsonReaderI<T> mapper) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
 			return p.parse(in, mapper);
@@ -304,7 +300,7 @@ public class JSONValue {
 	 */
 	public static Object parseKeepingOrder(final Reader in) {
 		try {
-			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, DefaultMapperOrdered.DEFAULT);
+			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT_ORDERED);
 		} catch (final Exception e) {
 			return null;
 		}
@@ -317,7 +313,7 @@ public class JSONValue {
 	 */
 	public static Object parseKeepingOrder(final String in) {
 		try {
-			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, DefaultMapperOrdered.DEFAULT);
+			return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT_ORDERED);
 		} catch (final Exception e) {
 			return null;
 		}
@@ -353,7 +349,8 @@ public class JSONValue {
 	public static String compress(final String input, final JSONStyle style) {
 		try {
 			final StringBuilder sb = new StringBuilder();
-			new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(input, new CompessorMapper(sb, style));
+			new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(input, new CompessorMapper(defaultReader,
+					sb, style));
 			return sb.toString();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -390,7 +387,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseWithException(final byte[] in) throws IOException, ParseException {
-		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, DefaultMapper.DEFAULT);
+		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -402,7 +399,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseWithException(final InputStream in) throws IOException, ParseException {
-		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, DefaultMapper.DEFAULT);
+		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -414,7 +411,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseWithException(final Reader in) throws IOException, ParseException {
-		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, DefaultMapper.DEFAULT);
+		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -426,7 +423,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseWithException(final String s) throws ParseException {
-		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(s, DefaultMapper.DEFAULT);
+		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(s, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -439,7 +436,7 @@ public class JSONValue {
 	public static <T> T parseWithException(final String in, final Class<T> mapTo)
 			throws ParseException {
 		final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-		return p.parse(in, Mapper.getMapper(mapTo));
+		return p.parse(in, defaultReader.getMapper(mapTo));
 	}
 
 	/**
@@ -451,7 +448,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseStrict(final Reader in) throws IOException, ParseException {
-		return new JSONParser(MODE_RFC4627).parse(in, DefaultMapper.DEFAULT);
+		return new JSONParser(MODE_RFC4627).parse(in, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -463,7 +460,7 @@ public class JSONValue {
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
 	public static Object parseStrict(final String s) throws ParseException {
-		return new JSONParser(MODE_RFC4627).parse(s, DefaultMapper.DEFAULT);
+		return new JSONParser(MODE_RFC4627).parse(s, defaultReader.DEFAULT);
 	}
 
 	/**
@@ -537,6 +534,40 @@ public class JSONValue {
 	}
 
 	/**
+	 * Serialisation class Data
+	 */
+	public final static JsonWriter defaultWriter = new JsonWriter();
+	/**
+	 * deserialisation class Data
+	 */
+	public final static JsonReader defaultReader = new JsonReader();
+
+	/**
+	 * remap field from java to json.
+	 * 
+	 * @since 2.1.1
+	 */
+	public static <T> void remapField(final Class<T> type, final String jsonFieldName,
+			final String javaFieldName) {
+		defaultReader.remapField(type, jsonFieldName, javaFieldName);
+		defaultWriter.remapField(type, javaFieldName, jsonFieldName);
+	}
+
+	/**
+	 * Register a serializer for a class.
+	 */
+	public static <T> void registerWriter(final Class<?> cls, final JsonWriterI<T> writer) {
+		defaultWriter.registerWriter(writer, cls);
+	}
+
+	/**
+	 * register a deserializer for a class.
+	 */
+	public static <T> void registerReader(final Class<T> type, final JsonReaderI<T> mapper) {
+		defaultReader.registerReader(type, mapper);
+	}
+
+	/**
 	 * Encode an object into JSON text and write it to out.
 	 * <p>
 	 * If this object is a Map or a List, and it's also a JSONStreamAware or a
@@ -553,176 +584,22 @@ public class JSONValue {
 			out.append("null");
 			return;
 		}
-
-		if (value instanceof String) {
-			if (!compression.mustProtectValue((String) value)) {
-				out.append((String) value);
+		final Class<?> clz = value.getClass();
+		@SuppressWarnings("rawtypes")
+		JsonWriterI w = defaultWriter.getWrite(clz);
+		if (w == null) {
+			if (clz.isArray()) {
+				w = JsonWriter.arrayWriter;
 			} else {
-				out.append('"');
-				escape((String) value, out, compression);
-				out.append('"');
+				w = defaultWriter.getWriterByInterface(value.getClass());
+				if (w == null) {
+					w = JsonWriter.beansWriterASM;
+					// w = JsonWriter.beansWriter;
+				}
 			}
-			return;
+			defaultWriter.registerWriter(w, clz);
 		}
-
-		if (value instanceof Number) {
-			if (value instanceof Double) {
-				if (((Double) value).isInfinite()) {
-					out.append("null");
-				} else {
-					out.append(value.toString());
-				}
-			} else if (value instanceof Float) {
-				if (((Float) value).isInfinite()) {
-					out.append("null");
-				} else {
-					out.append(value.toString());
-				}
-			} else {
-				out.append(value.toString());
-			}
-			return;
-		}
-
-		if (value instanceof Boolean) {
-			out.append(value.toString());
-		} else if ((value instanceof JSONStreamAware)) {
-			if (value instanceof JSONStreamAwareEx) {
-				((JSONStreamAwareEx) value).writeJSONString(out, compression);
-			} else {
-				((JSONStreamAware) value).writeJSONString(out);
-			}
-		} else if ((value instanceof JSONAware)) {
-			if ((value instanceof JSONAwareEx)) {
-				out.append(((JSONAwareEx) value).toJSONString(compression));
-			} else {
-				out.append(((JSONAware) value).toJSONString());
-			}
-		} else if (value instanceof Map<?, ?>) {
-			JSONObject.writeJSON((Map<String, Object>) value, out, compression);
-		} else if (value instanceof Iterable<?>) { // List
-			JSONArray.writeJSONString((Iterable<Object>) value, out, compression);
-		} else if (value instanceof Date) {
-			final String vtext = DateFormat.getDateInstance().format((Date) value);
-			JSONValue.writeJSONString(vtext, out, compression);
-		} else if (value instanceof Enum<?>) {
-			@SuppressWarnings("rawtypes")
-			final String s = ((Enum) value).name();
-			if (!compression.mustProtectValue(s)) {
-				out.append(s);
-			} else {
-				out.append('"');
-				escape(s, out, compression);
-				out.append('"');
-			}
-			return;
-		} else if (value.getClass().isArray()) {
-			final Class<?> arrayClz = value.getClass();
-			final Class<?> c = arrayClz.getComponentType();
-
-			out.append('[');
-			boolean needSep = false;
-
-			if (c.isPrimitive()) {
-				if (c == int.class) {
-					for (final int b : ((int[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Integer.toString(b));
-					}
-				} else if (c == short.class) {
-					for (final short b : ((short[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Short.toString(b));
-					}
-				} else if (c == byte.class) {
-					for (final byte b : ((byte[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Integer.toString(b));
-					}
-				} else if (c == long.class) {
-					for (final long b : ((long[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Long.toString(b));
-					}
-				} else if (c == float.class) {
-					for (final float b : ((float[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Float.toString(b));
-					}
-				} else if (c == double.class) {
-					for (final double b : ((double[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						out.append(Double.toString(b));
-					}
-				} else if (c == boolean.class) {
-					for (final boolean b : ((boolean[]) value)) {
-						if (needSep) {
-							out.append(',');
-						} else {
-							needSep = true;
-						}
-						if (b) {
-							out.append("true");
-						} else {
-							out.append("false");
-						}
-					}
-				}
-			} else {
-				for (final Object o : ((Object[]) value)) {
-					if (needSep) {
-						out.append(',');
-					} else {
-						needSep = true;
-					}
-					writeJSONString(o, out, compression);
-				}
-			}
-			out.append(']');
-		} else {
-			try {
-				final Class<?> cls = value.getClass();
-				boolean needSep = false;
-				final BeansAccess fields = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
-				out.append('{');
-				for (final Accessor field : fields.getAccessors()) {
-					final Object v = fields.get(value, field.getIndex());
-					if (needSep) {
-						out.append(',');
-					} else {
-						needSep = true;
-					}
-					JSONObject.writeJSONKV(field.getName(), v, out, compression);
-				}
-				out.append('}');
-			} catch (final IOException e) {
-				throw e;
-			}
-		}
+		w.writeJSONString(value, out, compression);
 	}
 
 	/**

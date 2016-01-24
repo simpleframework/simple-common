@@ -32,7 +32,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
-import net.simpleframework.lib.net.minidev.asm.ex.NoSuchFiledException;
 import net.simpleframework.lib.org.objectweb.asm.ClassWriter;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
@@ -50,8 +49,20 @@ public class BeansAccessBuilder {
 	final String accessClassNameInternal;
 	final String classNameInternal;
 	final HashMap<Class<?>, Method> convMtds = new HashMap<Class<?>, Method>();
-	Class<? extends Exception> exeptionClass = NoSuchFiledException.class;
+	// Class<? extends Exception> exeptionClass =
+	// net.simpleframework.lib.net.minidev.asm.ex.NoSuchFieldException.class;
+	Class<? extends Exception> exeptionClass = NoSuchFieldException.class;
 
+	/**
+	 * Build reflect bytecode from accessor list.
+	 * 
+	 * @param type
+	 *        type to be access
+	 * @param accs
+	 *        used accessor
+	 * @param loader
+	 *        Loader used to store the generated class
+	 */
 	public BeansAccessBuilder(final Class<?> type, final Accessor[] accs,
 			final DynamicClassLoader loader) {
 		this.type = type;
@@ -59,7 +70,12 @@ public class BeansAccessBuilder {
 		this.loader = loader;
 
 		this.className = type.getName();
-		this.accessClassName = className.concat("AccAccess");
+		if (className.startsWith("java.")) {
+			this.accessClassName = "net.simpleframework.lib.net.minidev.asm." + className
+					+ "AccAccess";
+		} else {
+			this.accessClassName = className.concat("AccAccess");
+		}
 
 		this.accessClassNameInternal = accessClassName.replace('.', '/');
 		this.classNameInternal = className.replace('.', '/');
@@ -97,18 +113,6 @@ public class BeansAccessBuilder {
 		}
 	}
 
-	/**
-	 * Build reflect bytecode from accessor list.
-	 * 
-	 * @param type
-	 *        type to be access
-	 * @param accs
-	 *        used accessor
-	 * @param loader
-	 *        Loader used to store the generated class
-	 * 
-	 * @return the new reflect class
-	 */
 	public Class<?> bulid() {
 		final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		MethodVisitor mv;
@@ -327,7 +331,7 @@ public class BeansAccessBuilder {
 		}
 		cw.visitEnd();
 		final byte[] data = cw.toByteArray();
-		// dumpDebug(data, "C:/debug.txt");
+		// dumpDebug(data, "/tmp/debug-" + accessClassName + ".txt");
 		return loader.defineClass(accessClassName, data);
 	}
 

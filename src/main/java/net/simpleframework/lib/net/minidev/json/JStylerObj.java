@@ -98,15 +98,17 @@ class JStylerObj {
 				return false;
 			}
 			final int len = s.length();
+			// protect empty String
 			if (len == 0) {
 				return true;
 			}
 
+			// protect trimable String
 			if (s.trim() != s) {
 				return true;
 			}
 
-			// Digit like text must be protect
+			// json special char
 			char ch = s.charAt(0);
 			if (isSpecial(ch) || isUnicode(ch)) {
 				return true;
@@ -118,14 +120,16 @@ class JStylerObj {
 					return true;
 				}
 			}
-
+			// keyWord must be protect
 			if (isKeyword(s)) {
 				return true;
 			}
-
+			// Digit like text must be protect
 			ch = s.charAt(0);
+			// only test String if First Ch is a digit
 			if (ch >= '0' && ch <= '9' || ch == '-') {
 				int p = 1;
+				// skip first digits
 				for (; p < len; p++) {
 					ch = s.charAt(p);
 					if (ch < '0' || ch > '9') {
@@ -136,40 +140,34 @@ class JStylerObj {
 				if (p == len) {
 					return true;
 				}
+				// Floating point
 				if (ch == '.') {
 					p++;
-					for (; p < len; p++) {
-						ch = s.charAt(p);
-						if (ch < '0' || ch > '9') {
-							break;
-						}
+				}
+				// Skip digits
+				for (; p < len; p++) {
+					ch = s.charAt(p);
+					if (ch < '0' || ch > '9') {
+						break;
 					}
 				}
 				if (p == len) {
-					return true; // can be read as an number
+					return true; // can be read as an floating number
 				}
-
-				if (ch != 'E' || ch != 'e') {
-					return false;
-				}
-				p++;
-				if (p == len) {
-					return false;
-				}
-				ch = s.charAt(p);
-				if (ch == '+' || ch == '-') {
-					ch++;
+				// Double
+				if (ch == 'E' || ch == 'e') {
+					p++;
 					if (p == len) {
 						return false;
 					}
 					ch = s.charAt(p);
-				}
-
-				if (ch == '+' || ch == '-') {
-					ch++;
-					if (p == len) {
-						return false;
+					if (ch == '+' || ch == '-') {
+						p++;
+						ch = s.charAt(p);
 					}
+				}
+				if (p == len) {
+					return false;
 				}
 
 				for (; p < len; p++) {
@@ -178,6 +176,7 @@ class JStylerObj {
 						break;
 					}
 				}
+				// floating point With power of data.
 				if (p == len) {
 					return true;
 				}

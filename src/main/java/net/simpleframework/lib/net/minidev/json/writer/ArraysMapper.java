@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -19,7 +19,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArraysMapper<T> extends AMapper<T> {
+public class ArraysMapper<T> extends JsonReaderI<T> {
+	public ArraysMapper(final JsonReader base) {
+		super(base);
+	}
+
 	@Override
 	public Object createArray() {
 		return new ArrayList<Object>();
@@ -39,9 +43,10 @@ public class ArraysMapper<T> extends AMapper<T> {
 
 	public static class GenericMapper<T> extends ArraysMapper<T> {
 		final Class<?> componentType;
-		AMapper<?> subMapper;
+		JsonReaderI<?> subMapper;
 
-		public GenericMapper(final Class<T> type) {
+		public GenericMapper(final JsonReader base, final Class<T> type) {
+			super(base);
 			this.componentType = type.getComponentType();
 		}
 
@@ -58,23 +63,23 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 
 		@Override
-		public AMapper<?> startArray(final String key) {
+		public JsonReaderI<?> startArray(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(componentType);
+				subMapper = base.getMapper(componentType);
 			}
 			return subMapper;
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(componentType);
+				subMapper = base.getMapper(componentType);
 			}
 			return subMapper;
 		}
 	};
 
-	public static AMapper<int[]> MAPPER_PRIM_INT = new ArraysMapper<int[]>() {
+	public static JsonReaderI<int[]> MAPPER_PRIM_INT = new ArraysMapper<int[]>(null) {
 		@Override
 		public int[] convert(final Object current) {
 			int p = 0;
@@ -86,7 +91,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Integer[]> MAPPER_INT = new ArraysMapper<Integer[]>() {
+	public static JsonReaderI<Integer[]> MAPPER_INT = new ArraysMapper<Integer[]>(null) {
 		@Override
 		public Integer[] convert(final Object current) {
 			int p = 0;
@@ -106,7 +111,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<short[]> MAPPER_PRIM_SHORT = new ArraysMapper<short[]>() {
+	public static JsonReaderI<short[]> MAPPER_PRIM_SHORT = new ArraysMapper<short[]>(null) {
 		@Override
 		public short[] convert(final Object current) {
 			int p = 0;
@@ -118,7 +123,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Short[]> MAPPER_SHORT = new ArraysMapper<Short[]>() {
+	public static JsonReaderI<Short[]> MAPPER_SHORT = new ArraysMapper<Short[]>(null) {
 		@Override
 		public Short[] convert(final Object current) {
 			int p = 0;
@@ -138,7 +143,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<byte[]> MAPPER_PRIM_BYTE = new ArraysMapper<byte[]>() {
+	public static JsonReaderI<byte[]> MAPPER_PRIM_BYTE = new ArraysMapper<byte[]>(null) {
 		@Override
 		public byte[] convert(final Object current) {
 			int p = 0;
@@ -150,7 +155,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Byte[]> MAPPER_BYTE = new ArraysMapper<Byte[]>() {
+	public static JsonReaderI<Byte[]> MAPPER_BYTE = new ArraysMapper<Byte[]>(null) {
 		@Override
 		public Byte[] convert(final Object current) {
 			int p = 0;
@@ -170,7 +175,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<char[]> MAPPER_PRIM_CHAR = new ArraysMapper<char[]>() {
+	public static JsonReaderI<char[]> MAPPER_PRIM_CHAR = new ArraysMapper<char[]>(null) {
 		@Override
 		public char[] convert(final Object current) {
 			int p = 0;
@@ -182,7 +187,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Character[]> MAPPER_CHAR = new ArraysMapper<Character[]>() {
+	public static JsonReaderI<Character[]> MAPPER_CHAR = new ArraysMapper<Character[]>(null) {
 		@Override
 		public Character[] convert(final Object current) {
 			int p = 0;
@@ -198,7 +203,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<long[]> MAPPER_PRIM_LONG = new ArraysMapper<long[]>() {
+	public static JsonReaderI<long[]> MAPPER_PRIM_LONG = new ArraysMapper<long[]>(null) {
 		@Override
 		public long[] convert(final Object current) {
 			int p = 0;
@@ -210,7 +215,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Long[]> MAPPER_LONG = new ArraysMapper<Long[]>() {
+	public static JsonReaderI<Long[]> MAPPER_LONG = new ArraysMapper<Long[]>(null) {
 		@Override
 		public Long[] convert(final Object current) {
 			int p = 0;
@@ -230,7 +235,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<float[]> MAPPER_PRIM_FLOAT = new ArraysMapper<float[]>() {
+	public static JsonReaderI<float[]> MAPPER_PRIM_FLOAT = new ArraysMapper<float[]>(null) {
 		@Override
 		public float[] convert(final Object current) {
 			int p = 0;
@@ -242,7 +247,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Float[]> MAPPER_FLOAT = new ArraysMapper<Float[]>() {
+	public static JsonReaderI<Float[]> MAPPER_FLOAT = new ArraysMapper<Float[]>(null) {
 		@Override
 		public Float[] convert(final Object current) {
 			int p = 0;
@@ -262,7 +267,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<double[]> MAPPER_PRIM_DOUBLE = new ArraysMapper<double[]>() {
+	public static JsonReaderI<double[]> MAPPER_PRIM_DOUBLE = new ArraysMapper<double[]>(null) {
 		@Override
 		public double[] convert(final Object current) {
 			int p = 0;
@@ -274,7 +279,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Double[]> MAPPER_DOUBLE = new ArraysMapper<Double[]>() {
+	public static JsonReaderI<Double[]> MAPPER_DOUBLE = new ArraysMapper<Double[]>(null) {
 		@Override
 		public Double[] convert(final Object current) {
 			int p = 0;
@@ -294,7 +299,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<boolean[]> MAPPER_PRIM_BOOL = new ArraysMapper<boolean[]>() {
+	public static JsonReaderI<boolean[]> MAPPER_PRIM_BOOL = new ArraysMapper<boolean[]>(null) {
 		@Override
 		public boolean[] convert(final Object current) {
 			int p = 0;
@@ -306,7 +311,7 @@ public class ArraysMapper<T> extends AMapper<T> {
 		}
 	};
 
-	public static AMapper<Boolean[]> MAPPER_BOOL = new ArraysMapper<Boolean[]>() {
+	public static JsonReaderI<Boolean[]> MAPPER_BOOL = new ArraysMapper<Boolean[]>(null) {
 		@Override
 		public Boolean[] convert(final Object current) {
 			int p = 0;

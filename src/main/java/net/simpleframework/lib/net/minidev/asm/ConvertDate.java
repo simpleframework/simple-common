@@ -130,7 +130,7 @@ public class ConvertDate {
 			return (Date) obj;
 		}
 		if (obj instanceof String) {
-			final StringTokenizer st = new StringTokenizer((String) obj, " -/:,.");
+			final StringTokenizer st = new StringTokenizer((String) obj, " -/:,.+");
 			String s1 = "";
 			if (!st.hasMoreTokens()) {
 				return null;
@@ -177,9 +177,15 @@ public class ConvertDate {
 
 		s1 = st.nextToken();
 		if (Character.isDigit(s1.charAt(0))) {
+			if (s1.length() == 5 && s1.charAt(2) == 'T') {
+				// TIME + TIMEZONE
+				final int day = Integer.parseInt(s1.substring(0, 2));
+				cal.set(Calendar.DAY_OF_MONTH, day);
+				return addHour(st, cal, s1.substring(3));
+			}
 			final int day = Integer.parseInt(s1);
 			cal.set(Calendar.DAY_OF_MONTH, day);
-			return addHour(st, cal);
+			return addHour(st, cal, null);
 		}
 		return cal.getTime();
 	}
@@ -227,7 +233,7 @@ public class ConvertDate {
 		// /if (st.hasMoreTokens())
 		// return null;
 		// s1 = st.nextToken();
-		return addHour(st, cal);
+		return addHour(st, cal, null);
 		// return cal.getTime();
 	}
 
@@ -246,15 +252,17 @@ public class ConvertDate {
 		}
 		s1 = st.nextToken();
 		cal.set(Calendar.YEAR, getYear(s1));
-		return addHour(st, cal);
+		return addHour(st, cal, null);
 	}
 
-	private static Date addHour(final StringTokenizer st, final Calendar cal) {
-		String s1;
-		if (!st.hasMoreTokens()) {
-			return cal.getTime();
+	private static Date addHour(final StringTokenizer st, final Calendar cal, String s1) {
+		// String s1;
+		if (s1 == null) {
+			if (!st.hasMoreTokens()) {
+				return cal.getTime();
+			}
+			s1 = st.nextToken();
 		}
-		s1 = st.nextToken();
 		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(s1));
 
 		if (!st.hasMoreTokens()) {
@@ -294,7 +302,7 @@ public class ConvertDate {
 		if (s1 == null) {
 			return cal.getTime();
 		}
-
+		// TODO ADD TIME ZONE
 		s1 = trySkip(st, s1, cal);
 		// if (s1.equalsIgnoreCase("pm"))
 		// cal.add(Calendar.HOUR_OF_DAY, 12);

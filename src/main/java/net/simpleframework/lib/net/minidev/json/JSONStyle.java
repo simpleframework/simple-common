@@ -15,6 +15,8 @@ package net.simpleframework.lib.net.minidev.json;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.io.IOException;
+
 import net.simpleframework.lib.net.minidev.json.JStylerObj.MustProtect;
 import net.simpleframework.lib.net.minidev.json.JStylerObj.StringProtector;
 
@@ -27,7 +29,7 @@ public class JSONStyle {
 	/**
 	 * for advanced usage sample see
 	 * 
-	 * @see net.simpleframework.lib.net.minidev.json.test.TestCompressorFlags
+	 * #see net.simpleframework.lib.net.minidev.json.test.TestCompressorFlags
 	 */
 	public final static int FLAG_PROTECT_KEYS = 1;
 	public final static int FLAG_PROTECT_4WEB = 2;
@@ -35,10 +37,14 @@ public class JSONStyle {
 	/**
 	 * AGRESSIVE have no effect without PROTECT_KEYS or PROTECT_VALUE
 	 * 
-	 * AGRESSIVE mode allows §Json-smart to not protect String containing special
-	 * chars
+	 * AGRESSIVE mode allows Json-smart to not protect String containing
+	 * special chars
 	 */
 	public final static int FLAG_AGRESSIVE = 8;
+	/**
+	 * @since 2.1
+	 */
+	public final static int FLAG_IGNORE_NULL = 16;
 
 	public final static JSONStyle NO_COMPRESS = new JSONStyle(0);
 	public final static JSONStyle MAX_COMPRESS = new JSONStyle(-1);
@@ -50,6 +56,7 @@ public class JSONStyle {
 	private final boolean _protectKeys;
 	private final boolean _protect4Web;
 	private final boolean _protectValues;
+	private final boolean _ignore_null;
 
 	private MustProtect mpKey;
 	private MustProtect mpValue;
@@ -60,6 +67,7 @@ public class JSONStyle {
 		_protectKeys = (FLAG & FLAG_PROTECT_KEYS) == 0;
 		_protectValues = (FLAG & FLAG_PROTECT_VALUES) == 0;
 		_protect4Web = (FLAG & FLAG_PROTECT_4WEB) == 0;
+		_ignore_null = (FLAG & FLAG_IGNORE_NULL) > 0;
 
 		MustProtect mp;
 		if ((FLAG & FLAG_AGRESSIVE) > 0) {
@@ -103,6 +111,10 @@ public class JSONStyle {
 		return _protect4Web;
 	}
 
+	public boolean ignoreNull() {
+		return _ignore_null;
+	}
+
 	public boolean indent() {
 		return false;
 	}
@@ -115,7 +127,90 @@ public class JSONStyle {
 		return mpValue.mustBeProtect(s);
 	}
 
+	public void writeString(final Appendable out, final String value) throws IOException {
+		if (!this.mustProtectValue(value)) {
+			out.append(value);
+		} else {
+			out.append('"');
+			JSONValue.escape(value, out, this);
+			out.append('"');
+		}
+	}
+
 	public void escape(final String s, final Appendable out) {
 		esc.escape(s, out);
+	}
+
+	/**
+	 * begin Object
+	 */
+	public void objectStart(final Appendable out) throws IOException {
+		out.append('{');
+	}
+
+	/**
+	 * terminate Object
+	 */
+	public void objectStop(final Appendable out) throws IOException {
+		out.append('}');
+	}
+
+	/**
+	 * Start the first Obeject element
+	 */
+	public void objectFirstStart(final Appendable out) throws IOException {
+	}
+
+	/**
+	 * Start a new Object element
+	 */
+	public void objectNext(final Appendable out) throws IOException {
+		out.append(',');
+	}
+
+	/**
+	 * End Of Object element
+	 */
+	public void objectElmStop(final Appendable out) throws IOException {
+	}
+
+	/**
+	 * end of Key in json Object
+	 */
+	public void objectEndOfKey(final Appendable out) throws IOException {
+		out.append(':');
+	}
+
+	/**
+	 * Array start
+	 */
+	public void arrayStart(final Appendable out) throws IOException {
+		out.append('[');
+	}
+
+	/**
+	 * Array Done
+	 */
+	public void arrayStop(final Appendable out) throws IOException {
+		out.append(']');
+	}
+
+	/**
+	 * Start the first Array element
+	 */
+	public void arrayfirstObject(final Appendable out) throws IOException {
+	}
+
+	/**
+	 * Start a new Array element
+	 */
+	public void arrayNextElm(final Appendable out) throws IOException {
+		out.append(',');
+	}
+
+	/**
+	 * End of an Array element
+	 */
+	public void arrayObjectEnd(final Appendable out) throws IOException {
 	}
 }

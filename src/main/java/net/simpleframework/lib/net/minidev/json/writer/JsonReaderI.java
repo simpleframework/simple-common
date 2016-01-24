@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -24,17 +24,29 @@ import net.simpleframework.lib.net.minidev.json.parser.ParseException;
  * Default datatype mapper use by Json-smart ton store data.
  * 
  * @author uriel Chemouni
- * 
+ *
  * @param <T>
  */
-public abstract class AMapper<T> {
+public abstract class JsonReaderI<T> {
+	public final JsonReader base;
+
+	/**
+	 * Reader can be link to the JsonReader Base
+	 * 
+	 * @param base
+	 */
+	public JsonReaderI(final JsonReader base) {
+		this.base = base;
+	}
+
 	private static String ERR_MSG = "Invalid or non Implemented status";
 
 	/**
 	 * called when json-smart parser meet an object key
 	 */
-	public AMapper<?> startObject(final String key) throws ParseException, IOException {
-		throw new RuntimeException(ERR_MSG);
+	public JsonReaderI<?> startObject(final String key) throws ParseException, IOException {
+		throw new RuntimeException(ERR_MSG + " startObject(String key) in " + this.getClass()
+				+ " key=" + key);
 	}
 
 	/**
@@ -43,8 +55,8 @@ public abstract class AMapper<T> {
 	 * @param key
 	 *        the destination key name, or null.
 	 */
-	public AMapper<?> startArray(final String key) throws ParseException, IOException {
-		throw new RuntimeException(ERR_MSG);
+	public JsonReaderI<?> startArray(final String key) throws ParseException, IOException {
+		throw new RuntimeException(ERR_MSG + " startArray in " + this.getClass() + " key=" + key);
 	}
 
 	/**
@@ -52,19 +64,21 @@ public abstract class AMapper<T> {
 	 */
 	public void setValue(final Object current, final String key, final Object value)
 			throws ParseException, IOException {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " setValue in " + this.getClass() + " key=" + key);
 	}
 
 	/**
 	 * -------------
 	 */
 	public Object getValue(final Object current, final String key) {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " getValue(Object current, String key) in "
+				+ this.getClass() + " key=" + key);
 	}
 
 	// Object current,
 	public Type getType(final String key) {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " getType(String key) in " + this.getClass() + " key="
+				+ key);
 	}
 
 	/**
@@ -72,21 +86,22 @@ public abstract class AMapper<T> {
 	 */
 	public void addValue(final Object current, final Object value) throws ParseException,
 			IOException {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " addValue(Object current, Object value) in "
+				+ this.getClass());
 	}
 
 	/**
 	 * use to instantiate a new object that will be used as an object
 	 */
 	public Object createObject() {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " createObject() in " + this.getClass());
 	}
 
 	/**
 	 * use to instantiate a new object that will be used as an array
 	 */
 	public Object createArray() {
-		throw new RuntimeException(ERR_MSG);
+		throw new RuntimeException(ERR_MSG + " createArray() in " + this.getClass());
 	}
 
 	/**

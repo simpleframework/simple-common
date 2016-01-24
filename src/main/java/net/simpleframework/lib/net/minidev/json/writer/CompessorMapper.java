@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -20,7 +20,7 @@ import java.io.IOException;
 import net.simpleframework.lib.net.minidev.json.JSONStyle;
 import net.simpleframework.lib.net.minidev.json.JSONValue;
 
-public class CompessorMapper extends AMapper<CompessorMapper> {
+public class CompessorMapper extends JsonReaderI<CompessorMapper> {
 	private final Appendable out;
 	private final JSONStyle compression;
 	private Boolean _isObj;
@@ -42,12 +42,14 @@ public class CompessorMapper extends AMapper<CompessorMapper> {
 		return obj instanceof CompessorMapper;
 	}
 
-	public CompessorMapper(final Appendable out, final JSONStyle compression) {
-		this(out, compression, null);
+	public CompessorMapper(final JsonReader base, final Appendable out, final JSONStyle compression) {
+		this(base, out, compression, null);
 		// isRoot = true;
 	}
 
-	public CompessorMapper(final Appendable out, final JSONStyle compression, final Boolean isObj) {
+	public CompessorMapper(final JsonReader base, final Appendable out, final JSONStyle compression,
+			final Boolean isObj) {
+		super(base);
 		this.out = out;
 		this.compression = compression;
 		this._isObj = isObj;
@@ -55,21 +57,21 @@ public class CompessorMapper extends AMapper<CompessorMapper> {
 	}
 
 	@Override
-	public AMapper<?> startObject(final String key) throws IOException {
+	public JsonReaderI<?> startObject(final String key) throws IOException {
 		open(this);
 		startKey(key);
 		// System.out.println("startObject " + key);
-		final CompessorMapper r = new CompessorMapper(out, compression, true);
+		final CompessorMapper r = new CompessorMapper(base, out, compression, true);
 		open(r);
 		return r;
 	}
 
 	@Override
-	public AMapper<?> startArray(final String key) throws IOException {
+	public JsonReaderI<?> startArray(final String key) throws IOException {
 		open(this);
 		startKey(key);
 		// System.out.println("startArray " + key);
-		final CompessorMapper r = new CompessorMapper(out, compression, false);
+		final CompessorMapper r = new CompessorMapper(base, out, compression, false);
 		open(r);
 		return r;
 	}
@@ -123,13 +125,15 @@ public class CompessorMapper extends AMapper<CompessorMapper> {
 
 	private void writeValue(final Object value) throws IOException {
 		if (value instanceof String) {
-			if (!compression.mustProtectValue((String) value)) {
-				out.append((String) value);
-			} else {
-				out.append('"');
-				JSONValue.escape((String) value, out, compression);
-				out.append('"');
-			}
+			compression.writeString(out, (String) value);
+			//
+			// if (!compression.mustProtectValue((String) value))
+			// out.append((String) value);
+			// else {
+			// out.append('"');
+			// JSONValue.escape((String) value, out, compression);
+			// out.append('"');
+			// }
 			// needSep = true;
 		} else {
 			if (isCompressor(value)) {

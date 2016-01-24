@@ -14,10 +14,9 @@ import net.simpleframework.lib.net.minidev.json.JSONObject;
 import net.simpleframework.lib.net.minidev.json.JSONStyle;
 import net.simpleframework.lib.net.minidev.json.JSONUtil;
 import net.simpleframework.lib.net.minidev.json.JSONValue;
-import net.simpleframework.lib.net.minidev.json.mapper.AMapper;
-import net.simpleframework.lib.net.minidev.json.mapper.Mapper;
 import net.simpleframework.lib.net.minidev.json.parser.JSONParser;
 import net.simpleframework.lib.net.minidev.json.parser.ParseException;
+import net.simpleframework.lib.net.minidev.json.writer.JsonReaderI;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -62,28 +61,29 @@ public abstract class JsonUtils {
 
 	private static JSONParser JSON_PARSER = new JSONParser(DEFAULT_PERMISSIVE_MODE);
 
+	@SuppressWarnings("unchecked")
 	public static <T, M extends T> List<T> toList(final String json, final Class<M> beanClass) {
 		try {
-			return JSON_PARSER.parse(json, new ListMapper<List<T>>(beanClass));
+			return (List<T>) JSON_PARSER.parse(json, new ListMapper<T>(beanClass));
 		} catch (final ParseException e) {
 			log.warn(e);
 			return null;
 		}
 	}
 
-	public static class ListMapper<T> extends AMapper<T> {
-
+	public static class ListMapper<T> extends JsonReaderI<T> {
 		private final BeansAccess<?> ba;
 
 		private final Class<?> valueClass;
 
-		private AMapper<?> subMapper;
+		private JsonReaderI<?> subMapper;
 
 		public ListMapper(final Class<?> valueClass) {
 			this(JSONArray.class, valueClass);
 		}
 
 		public ListMapper(final Class<?> listClass, final Class<?> valueClass) {
+			super(JSONValue.defaultReader);
 			this.valueClass = valueClass;
 			ba = BeansAccess.get(listClass.isInterface() ? JSONArray.class : listClass,
 					JSONUtil.JSON_SMART_FIELD_FILTER);
@@ -95,9 +95,9 @@ public abstract class JsonUtils {
 		}
 
 		@Override
-		public AMapper<?> startObject(final String key) {
+		public JsonReaderI<?> startObject(final String key) {
 			if (subMapper == null) {
-				subMapper = Mapper.getMapper(valueClass);
+				subMapper = base.getMapper(valueClass);
 			}
 			return subMapper;
 		}

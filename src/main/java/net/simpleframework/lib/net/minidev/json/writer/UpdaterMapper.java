@@ -1,40 +1,42 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
 import net.simpleframework.lib.net.minidev.json.parser.ParseException;
 
-public class UpdaterMapper<T> extends AMapper<T> {
+public class UpdaterMapper<T> extends JsonReaderI<T> {
 	final T obj;
-	final AMapper<?> mapper;
+	final JsonReaderI<?> mapper;
 
-	public UpdaterMapper(final T obj) {
+	public UpdaterMapper(final JsonReader base, final T obj) {
+		super(base);
 		if (obj == null) {
 			throw new NullPointerException("can not update null Object");
 		}
 		this.obj = obj;
-		this.mapper = Mapper.getMapper(obj.getClass());
+		this.mapper = base.getMapper(obj.getClass());
 	}
 
-	public UpdaterMapper(final T obj, final Type type) {
+	public UpdaterMapper(final JsonReader base, final T obj, final Type type) {
+		super(base);
 		if (obj == null) {
 			throw new NullPointerException("can not update null Object");
 		}
 		this.obj = obj;
-		this.mapper = Mapper.getMapper(type);
+		this.mapper = base.getMapper(type);
 	}
 
 	/**
 	 * called when json-smart parser meet an object key
 	 */
 	@Override
-	public AMapper<?> startObject(final String key) throws ParseException, IOException {
+	public JsonReaderI<?> startObject(final String key) throws ParseException, IOException {
 		final Object bean = mapper.getValue(obj, key);
 		if (bean == null) {
 			return mapper.startObject(key);
 		}
-		return new UpdaterMapper<Object>(bean, mapper.getType(key));
+		return new UpdaterMapper<Object>(base, bean, mapper.getType(key));
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class UpdaterMapper<T> extends AMapper<T> {
 	 *        the destination key name, or null.
 	 */
 	@Override
-	public AMapper<?> startArray(final String key) throws ParseException, IOException {
+	public JsonReaderI<?> startArray(final String key) throws ParseException, IOException {
 		// if (obj != null)
 		return mapper.startArray(key);
 	}

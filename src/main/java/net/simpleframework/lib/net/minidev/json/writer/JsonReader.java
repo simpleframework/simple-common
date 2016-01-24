@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -27,10 +27,14 @@ import net.simpleframework.lib.net.minidev.json.JSONAware;
 import net.simpleframework.lib.net.minidev.json.JSONAwareEx;
 import net.simpleframework.lib.net.minidev.json.JSONObject;
 
-public class Mapper {
-	private final static ConcurrentHashMap<Type, AMapper<?>> cache;
-	static {
-		cache = new ConcurrentHashMap<Type, AMapper<?>>(100);
+public class JsonReader {
+	private final ConcurrentHashMap<Type, JsonReaderI<?>> cache;
+
+	public JsonReaderI<JSONAwareEx> DEFAULT;
+	public JsonReaderI<JSONAwareEx> DEFAULT_ORDERED;
+
+	public JsonReader() {
+		cache = new ConcurrentHashMap<Type, JsonReaderI<?>>(100);
 
 		cache.put(Date.class, BeansMapper.MAPPER_DATE);
 
@@ -58,86 +62,98 @@ public class Mapper {
 		cache.put(boolean[].class, ArraysMapper.MAPPER_PRIM_BOOL);
 		cache.put(Boolean[].class, ArraysMapper.MAPPER_BOOL);
 
-		cache.put(JSONAwareEx.class, DefaultMapper.DEFAULT);
-		cache.put(JSONAware.class, DefaultMapper.DEFAULT);
-		cache.put(JSONArray.class, DefaultMapper.DEFAULT);
-		cache.put(JSONObject.class, DefaultMapper.DEFAULT);
+		this.DEFAULT = new DefaultMapper<JSONAwareEx>(this);
+		this.DEFAULT_ORDERED = new DefaultMapperOrdered(this);
+
+		cache.put(JSONAwareEx.class, this.DEFAULT);
+		cache.put(JSONAware.class, this.DEFAULT);
+		cache.put(JSONArray.class, this.DEFAULT);
+		cache.put(JSONObject.class, this.DEFAULT);
 	}
 
-	public static <T> void register(final Class<T> type, final AMapper<T> mapper) {
+	/**
+	 * remap field name in custom classes
+	 * 
+	 * @param fromJson
+	 *        field name in json
+	 * @param toJava
+	 *        field name in Java
+	 * @since 2.1.1
+	 */
+	public <T> void remapField(final Class<T> type, final String fromJson, final String toJava) {
+		JsonReaderI<T> map = this.getMapper(type);
+		if (!(map instanceof MapperRemapped)) {
+			map = new MapperRemapped<T>(map);
+			registerReader(type, map);
+		}
+		((MapperRemapped<T>) map).renameField(fromJson, toJava);
+	}
+
+	public <T> void registerReader(final Class<T> type, final JsonReaderI<T> mapper) {
 		cache.put(type, mapper);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> AMapper<T> getMapper(final Type type) {
+	public <T> JsonReaderI<T> getMapper(final Type type) {
 		if (type instanceof ParameterizedType) {
 			return getMapper((ParameterizedType) type);
 		}
 		return getMapper((Class<T>) type);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> AMapper<T> getMapper(final Class<T> type) {
+	/**
+	 * Get the corresponding mapper Class, or create it on first call
+	 * 
+	 * @param type
+	 *        to be map
+	 */
+	public <T> JsonReaderI<T> getMapper(final Class<T> type) {
 		// look for cached Mapper
-		AMapper<T> map = (AMapper<T>) cache.get(type);
+		@SuppressWarnings("unchecked")
+		JsonReaderI<T> map = (JsonReaderI<T>) cache.get(type);
 		if (map != null) {
 			return map;
 		}
-
+		/*
+		 * Special handle
+		 */
 		if (type instanceof Class) {
 			if (Map.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection(type);
-				cache.put(type, map);
+				map = new DefaultMapperCollection<T>(this, type);
 			} else if (List.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection(type);
-				cache.put(type, map);
+				map = new DefaultMapperCollection<T>(this, type);
 			}
 			if (map != null) {
+				cache.put(type, map);
 				return map;
 			}
 		}
 
-		// System.out.println("add in ClassCache " + type);
 		if (type.isArray()) {
-			map = new ArraysMapper.GenericMapper<T>(type);
+			map = new ArraysMapper.GenericMapper<T>(this, type);
 		} else if (List.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.ListClass<T>(type);
+			map = new CollectionMapper.ListClass<T>(this, type);
 		} else if (Map.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.MapClass<T>(type);
+			map = new CollectionMapper.MapClass<T>(this, type);
 		} else {
-			map = new BeansMapper.Bean<T>(type);
+			// use bean class
+			map = new BeansMapper.Bean<T>(this, type);
 		}
 		cache.putIfAbsent(type, map);
-
 		return map;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> AMapper<T> getMapper(final ParameterizedType type) {
-		AMapper<T> map = (AMapper<T>) cache.get(type);
+	public <T> JsonReaderI<T> getMapper(final ParameterizedType type) {
+		JsonReaderI<T> map = (JsonReaderI<T>) cache.get(type);
 		if (map != null) {
 			return map;
 		}
-
-		// Type t2 = type.getRawType();
-		// if (t2 instanceof Class) {
-		// Class t3 = (Class) t2;
-		// if (Map.class.isAssignableFrom(t3)) {
-		// map = new DefaultMapperCollection(t3);
-		// cache.put(type, map);
-		// } else if (List.class.isAssignableFrom(t3)) {
-		// map = new DefaultMapperCollection(t3);
-		// cache.put(type, map);
-		// }
-		// return map;
-		// }
-
-		// System.out.println("add in ParamCache " + type);
 		final Class<T> clz = (Class<T>) type.getRawType();
 		if (List.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.ListType<T>(type);
+			map = new CollectionMapper.ListType<T>(this, type);
 		} else if (Map.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.MapType<T>(type);
+			map = new CollectionMapper.MapType<T>(this, type);
 		}
 		cache.putIfAbsent(type, map);
 		return map;

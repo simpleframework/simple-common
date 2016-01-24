@@ -1,4 +1,4 @@
-package net.simpleframework.lib.net.minidev.json.mapper;
+package net.simpleframework.lib.net.minidev.json.writer;
 
 /*
  * Copyright 2011 JSON-SMART authors
@@ -15,39 +15,36 @@ package net.simpleframework.lib.net.minidev.json.mapper;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import net.simpleframework.lib.net.minidev.json.JSONArray;
 import net.simpleframework.lib.net.minidev.json.JSONAwareEx;
-import net.simpleframework.lib.net.minidev.json.JSONObject;
 
-public class DefaultMapper<T> extends AMapper<T> {
-	private DefaultMapper() {
-	}
-
-	public static AMapper<JSONAwareEx> DEFAULT = new DefaultMapper<JSONAwareEx>();
+public class DefaultMapperOrdered extends JsonReaderI<JSONAwareEx> {
+	protected DefaultMapperOrdered(final JsonReader base) {
+		super(base);
+	};
 
 	@Override
-	public AMapper<JSONAwareEx> startObject(final String key) {
-		return DEFAULT;
+	public JsonReaderI<JSONAwareEx> startObject(final String key) {
+		return base.DEFAULT_ORDERED;
 	}
 
 	@Override
-	public AMapper<JSONAwareEx> startArray(final String key) {
-		return DEFAULT;
+	public JsonReaderI<JSONAwareEx> startArray(final String key) {
+		return base.DEFAULT_ORDERED;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void setValue(final Object current, final String key, final Object value) {
+		((Map<String, Object>) current).put(key, value);
 	}
 
 	@Override
 	public Object createObject() {
-		return new JSONObject();
-	}
-
-	@Override
-	public Object createArray() {
-		return new JSONArray();
-	}
-
-	@Override
-	public void setValue(final Object current, final String key, final Object value) {
-		((JSONObject) current).put(key, value);
+		return new LinkedHashMap<String, Object>();
 	}
 
 	@Override
@@ -55,4 +52,8 @@ public class DefaultMapper<T> extends AMapper<T> {
 		((JSONArray) current).add(value);
 	}
 
+	@Override
+	public Object createArray() {
+		return new JSONArray();
+	}
 }
