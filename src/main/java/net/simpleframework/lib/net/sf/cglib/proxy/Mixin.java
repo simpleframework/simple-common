@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.proxy;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,9 +29,10 @@ import net.simpleframework.lib.net.sf.cglib.core.ReflectUtils;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 
 /**
- * <code>Mixin</code> allows multiple objects to be combined into a single
- * larger object. The methods in the generated object simply call the original
- * methods in the underlying "delegate" objects.
+ * <code>Mixin</code> allows
+ * multiple objects to be combined into a single larger object. The
+ * methods in the generated object simply call the original methods in the
+ * underlying "delegate" objects.
  * 
  * @author Chris Nokleberg
  * @version $Id: Mixin.java,v 1.7 2005/09/27 11:42:27 baliuka Exp $
@@ -53,7 +55,8 @@ abstract public class Mixin {
 	/**
 	 * Helper method to create an interface mixin. For finer control over the
 	 * generated instance, use a new instance of <code>Mixin</code> instead of
-	 * this static method. TODO
+	 * this static method.
+	 * TODO
 	 */
 	public static Mixin create(final Object[] delegates) {
 		final Generator gen = new Generator();
@@ -64,7 +67,8 @@ abstract public class Mixin {
 	/**
 	 * Helper method to create an interface mixin. For finer control over the
 	 * generated instance, use a new instance of <code>Mixin</code> instead of
-	 * this static method. TODO
+	 * this static method.
+	 * TODO
 	 */
 	public static Mixin create(final Class[] interfaces, final Object[] delegates) {
 		final Generator gen = new Generator();
@@ -80,9 +84,10 @@ abstract public class Mixin {
 	}
 
 	/**
-	 * Helper method to create a bean mixin. For finer control over the generated
-	 * instance, use a new instance of <code>Mixin</code> instead of this static
-	 * method. TODO
+	 * Helper method to create a bean mixin. For finer control over the
+	 * generated instance, use a new instance of <code>Mixin</code> instead of
+	 * this static method.
+	 * TODO
 	 */
 	public static Mixin createBean(final ClassLoader loader, final Object[] beans) {
 		final Generator gen = new Generator();
@@ -108,6 +113,11 @@ abstract public class Mixin {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return classes[0].getClassLoader(); // is this right?
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(classes[0]);
 		}
 
 		public void setStyle(final int style) {

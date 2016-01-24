@@ -70,7 +70,11 @@ class MixinEmitter extends ClassEmitter {
 			for (int j = 0; j < methods.length; j++) {
 				if (unique.add(MethodWrapper.create(methods[j]))) {
 					final MethodInfo method = ReflectUtils.getMethodInfo(methods[j]);
-					e = EmitUtils.begin_method(this, method, Opcodes.ACC_PUBLIC);
+					int modifiers = Opcodes.ACC_PUBLIC;
+					if ((method.getModifiers() & Opcodes.ACC_VARARGS) == Opcodes.ACC_VARARGS) {
+						modifiers |= Opcodes.ACC_VARARGS;
+					}
+					e = EmitUtils.begin_method(this, method, modifiers);
 					e.load_this();
 					e.getfield(FIELD_NAME);
 					e.aaload((route != null) ? route[i] : i);

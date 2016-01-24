@@ -556,7 +556,8 @@ public class CodeEmitter extends LocalVariablesSorter {
 				&& ((opcode == Opcodes.INVOKEVIRTUAL) || (opcode == Opcodes.INVOKESTATIC))) {
 			// TODO: error
 		}
-		mv.visitMethodInsn(opcode, type.getInternalName(), sig.getName(), sig.getDescriptor());
+		mv.visitMethodInsn(opcode, type.getInternalName(), sig.getName(), sig.getDescriptor(),
+				opcode == Opcodes.INVOKEINTERFACE);
 	}
 
 	public void invoke_interface(final Type owner, final Signature sig) {
@@ -761,10 +762,10 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	/**
-	 * If the argument is a primitive class, replaces the primitive value on the
-	 * top of the stack with the wrapped (Object) equivalent. For example, char
-	 * -> Character. If the class is Void, a null is pushed onto the stack
-	 * instead.
+	 * If the argument is a primitive class, replaces the primitive value
+	 * on the top of the stack with the wrapped (Object) equivalent. For
+	 * example, char -> Character.
+	 * If the class is Void, a null is pushed onto the stack instead.
 	 * 
 	 * @param type
 	 *        the class indicating the current type of the top stack value
@@ -793,9 +794,9 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	/**
-	 * If the argument is a primitive class, replaces the object on the top of
-	 * the stack with the unwrapped (primitive) equivalent. For example,
-	 * Character -> char.
+	 * If the argument is a primitive class, replaces the object
+	 * on the top of the stack with the unwrapped (primitive)
+	 * equivalent. For example, Character -> char.
 	 * 
 	 * @param type
 	 *        the class indicating the desired type of the top stack value
@@ -839,12 +840,14 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	/**
-	 * Allocates and fills an Object[] array with the arguments to the current
-	 * method. Primitive values are inserted as their boxed (Object) equivalents.
+	 * Allocates and fills an Object[] array with the arguments to the
+	 * current method. Primitive values are inserted as their boxed
+	 * (Object) equivalents.
 	 */
 	public void create_arg_array() {
 		/*
-		 * generates: Object[] args = new Object[]{ arg1, new Integer(arg2) };
+		 * generates:
+		 * Object[] args = new Object[]{ arg1, new Integer(arg2) };
 		 */
 
 		push(state.argumentTypes.length);

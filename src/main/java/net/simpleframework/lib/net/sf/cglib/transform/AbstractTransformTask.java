@@ -54,8 +54,10 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 	 * returns transformation for source class
 	 * 
 	 * @param classInfo
-	 *        class information class name := classInfo[ 0 ] super class name
-	 *        := classInfo[ 1 ] interfaces := classInfo[ >1 ]
+	 *        class information
+	 *        class name := classInfo[ 0 ]
+	 *        super class name := classInfo[ 1 ]
+	 *        interfaces := classInfo[ >1 ]
 	 */
 	abstract protected ClassTransformer getClassTransformer(String[] classInfo);
 
@@ -93,7 +95,7 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 
 		final ClassReader reader = getClassReader(file);
 		final String name[] = ClassNameReader.getClassInfo(reader);
-		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
+		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_FRAMES);
 		final ClassTransformer t = getClassTransformer(name);
 		if (t != null) {
 
@@ -226,7 +228,7 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 
 		final ClassReader reader = new ClassReader(new ByteArrayInputStream(bytes));
 		final String name[] = ClassNameReader.getClassInfo(reader);
-		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_MAXS);
+		final DebuggingClassWriter w = new DebuggingClassWriter(ClassWriter.COMPUTE_FRAMES);
 		final ClassTransformer t = getClassTransformer(name);
 		if (t != null) {
 			if (verbose) {

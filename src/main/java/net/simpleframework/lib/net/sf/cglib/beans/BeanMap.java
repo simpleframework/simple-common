@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.beans;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,33 +32,33 @@ import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 
 /**
  * A <code>Map</code>-based view of a JavaBean. The default set of keys is the
- * union of all property names (getters or setters). An attempt to set a
- * read-only property will be ignored, and write-only properties will be
- * returned as <code>null</code>. Removal of objects is not a supported (the key
- * set is fixed).
+ * union of all property names (getters or setters). An attempt to set
+ * a read-only property will be ignored, and write-only properties will
+ * be returned as <code>null</code>. Removal of objects is not a
+ * supported (the key set is fixed).
  * 
  * @author Chris Nokleberg
  */
 abstract public class BeanMap implements Map {
 	/**
-	 * Limit the properties reflected in the key set of the map to readable
-	 * properties.
+	 * Limit the properties reflected in the key set of the map
+	 * to readable properties.
 	 * 
 	 * @see BeanMap.Generator#setRequire
 	 */
 	public static final int REQUIRE_GETTER = 1;
 
 	/**
-	 * Limit the properties reflected in the key set of the map to writable
-	 * properties.
+	 * Limit the properties reflected in the key set of the map
+	 * to writable properties.
 	 * 
 	 * @see BeanMap.Generator#setRequire
 	 */
 	public static final int REQUIRE_SETTER = 2;
 
 	/**
-	 * Helper method to create a new <code>BeanMap</code>. For finer control over
-	 * the generated instance, use a new instance of
+	 * Helper method to create a new <code>BeanMap</code>. For finer
+	 * control over the generated instance, use a new instance of
 	 * <code>BeanMap.Generator</code> instead of this static method.
 	 * 
 	 * @param bean
@@ -90,10 +91,12 @@ abstract public class BeanMap implements Map {
 
 		/**
 		 * Set the bean that the generated map should reflect. The bean may be
-		 * swapped out for another bean of the same type using {@link #setBean}.
+		 * swapped
+		 * out for another bean of the same type using {@link #setBean}.
 		 * Calling this method overrides any value previously set using
-		 * {@link #setBeanClass}. You must call either this method or
-		 * {@link #setBeanClass} before {@link #create}.
+		 * {@link #setBeanClass}.
+		 * You must call either this method or {@link #setBeanClass} before
+		 * {@link #create}.
 		 * 
 		 * @param bean
 		 *        the initial bean
@@ -106,8 +109,8 @@ abstract public class BeanMap implements Map {
 		}
 
 		/**
-		 * Set the class of the bean that the generated map should support. You
-		 * must call either this method or {@link #setBeanClass} before
+		 * Set the class of the bean that the generated map should support.
+		 * You must call either this method or {@link #setBeanClass} before
 		 * {@link #create}.
 		 * 
 		 * @param beanClass
@@ -122,8 +125,7 @@ abstract public class BeanMap implements Map {
 		 * 
 		 * @param require
 		 *        any combination of {@link #REQUIRE_GETTER} and
-		 *        {@link #REQUIRE_SETTER}; default is zero (any property
-		 *        allowed)
+		 *        {@link #REQUIRE_SETTER}; default is zero (any property allowed)
 		 */
 		public void setRequire(final int require) {
 			this.require = require;
@@ -132,6 +134,11 @@ abstract public class BeanMap implements Map {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return beanClass.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(beanClass);
 		}
 
 		/**
@@ -163,8 +170,8 @@ abstract public class BeanMap implements Map {
 	}
 
 	/**
-	 * Create a new <code>BeanMap</code> instance using the specified bean. This
-	 * is faster than using the {@link #create} static method.
+	 * Create a new <code>BeanMap</code> instance using the specified bean.
+	 * This is faster than using the {@link #create} static method.
 	 * 
 	 * @param bean
 	 *        the JavaBean underlying the map
@@ -202,12 +209,12 @@ abstract public class BeanMap implements Map {
 
 	/**
 	 * Get the property of a bean. This allows a <code>BeanMap</code> to be used
-	 * statically for multiple beans--the bean instance tied to the map is
-	 * ignored and the bean passed to this method is used instead.
+	 * statically for multiple beans--the bean instance tied to the
+	 * map is ignored and the bean passed to this method is used instead.
 	 * 
 	 * @param bean
-	 *        the bean to query; must be compatible with the type of this
-	 *        <code>BeanMap</code>
+	 *        the bean to query; must be compatible with the type of
+	 *        this <code>BeanMap</code>
 	 * @param key
 	 *        must be a String
 	 * @return the current value, or null if there is no matching property
@@ -216,8 +223,8 @@ abstract public class BeanMap implements Map {
 
 	/**
 	 * Set the property of a bean. This allows a <code>BeanMap</code> to be used
-	 * statically for multiple beans--the bean instance tied to the map is
-	 * ignored and the bean passed to this method is used instead.
+	 * statically for multiple beans--the bean instance tied to the
+	 * map is ignored and the bean passed to this method is used instead.
 	 * 
 	 * @param key
 	 *        must be a String

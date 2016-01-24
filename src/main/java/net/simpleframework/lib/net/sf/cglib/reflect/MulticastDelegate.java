@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.reflect;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +98,11 @@ abstract public class MulticastDelegate implements Cloneable {
 			return iface.getClassLoader();
 		}
 
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(iface);
+		}
+
 		public void setInterface(final Class iface) {
 			this.iface = iface;
 		}
@@ -140,7 +146,11 @@ abstract public class MulticastDelegate implements Cloneable {
 		}
 
 		private void emitProxy(final ClassEmitter ce, final MethodInfo method) {
-			final CodeEmitter e = EmitUtils.begin_method(ce, method, Opcodes.ACC_PUBLIC);
+			int modifiers = Opcodes.ACC_PUBLIC;
+			if ((method.getModifiers() & Opcodes.ACC_VARARGS) == Opcodes.ACC_VARARGS) {
+				modifiers |= Opcodes.ACC_VARARGS;
+			}
+			final CodeEmitter e = EmitUtils.begin_method(ce, method, modifiers);
 			final Type returnType = method.getSignature().getReturnType();
 			final boolean returns = returnType != Type.VOID_TYPE;
 			Local result = null;

@@ -16,8 +16,8 @@
 package net.simpleframework.lib.net.sf.cglib.core;
 
 /**
- * The default policy used by {@link AbstractClassGenerator}. Generates names
- * such as
+ * The default policy used by {@link AbstractClassGenerator}.
+ * Generates names such as
  * <p>
  * <code>net.simpleframework.lib.net.sf.cglib.Foo$$EnhancerByCGLIB$$38272841</code>
  * <p>
@@ -49,8 +49,8 @@ public class DefaultNamingPolicy implements NamingPolicy {
 	}
 
 	/**
-	 * Returns a string which is incorporated into every generated class name. By
-	 * default returns "ByCGLIB"
+	 * Returns a string which is incorporated into every generated class name.
+	 * By default returns "ByCGLIB"
 	 */
 	protected String getTag() {
 		return "ByCGLIB";

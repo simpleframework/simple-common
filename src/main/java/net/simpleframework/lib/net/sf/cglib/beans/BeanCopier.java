@@ -17,6 +17,7 @@ package net.simpleframework.lib.net.sf.cglib.beans;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Modifier;
+import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,6 +101,11 @@ abstract public class BeanCopier {
 			return source.getClassLoader();
 		}
 
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(source);
+		}
+
 		public BeanCopier create() {
 			final Object key = KEY_FACTORY.newInstance(source.getName(), target.getName(),
 					useConverter);
@@ -117,7 +123,7 @@ abstract public class BeanCopier {
 			EmitUtils.null_constructor(ce);
 			final CodeEmitter e = ce.begin_method(Opcodes.ACC_PUBLIC, COPY, null);
 			final PropertyDescriptor[] getters = ReflectUtils.getBeanGetters(source);
-			final PropertyDescriptor[] setters = ReflectUtils.getBeanGetters(target);
+			final PropertyDescriptor[] setters = ReflectUtils.getBeanSetters(target);
 
 			final Map names = new HashMap();
 			for (int i = 0; i < getters.length; i++) {

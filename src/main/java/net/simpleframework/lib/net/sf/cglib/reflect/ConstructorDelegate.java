@@ -17,6 +17,7 @@ package net.simpleframework.lib.net.sf.cglib.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator;
 import net.simpleframework.lib.net.sf.cglib.core.ClassEmitter;
@@ -82,6 +83,11 @@ abstract public class ConstructorDelegate {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return targetClass.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(targetClass);
 		}
 
 		@Override

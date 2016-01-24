@@ -17,16 +17,18 @@ package net.simpleframework.lib.net.sf.cglib.transform;
 
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
+import net.simpleframework.lib.org.objectweb.asm.Handle;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
+import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 public class MethodVisitorTee extends MethodVisitor {
 	private final MethodVisitor mv1;
 	private final MethodVisitor mv2;
 
 	public MethodVisitorTee(final MethodVisitor mv1, final MethodVisitor mv2) {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 		this.mv1 = mv1;
 		this.mv2 = mv2;
 	}
@@ -109,6 +111,13 @@ public class MethodVisitorTee extends MethodVisitor {
 	}
 
 	@Override
+	public void visitMethodInsn(final int opcode, final String owner, final String name,
+			final String desc, final boolean itf) {
+		mv1.visitMethodInsn(opcode, owner, name, desc, itf);
+		mv2.visitMethodInsn(opcode, owner, name, desc, itf);
+	}
+
+	@Override
 	public void visitJumpInsn(final int opcode, final Label label) {
 		mv1.visitJumpInsn(opcode, label);
 		mv2.visitJumpInsn(opcode, label);
@@ -181,5 +190,51 @@ public class MethodVisitorTee extends MethodVisitor {
 	public void visitEnd() {
 		mv1.visitEnd();
 		mv2.visitEnd();
+	}
+
+	@Override
+	public void visitParameter(final String name, final int access) {
+		mv1.visitParameter(name, access);
+		mv2.visitParameter(name, access);
+	}
+
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		return AnnotationVisitorTee.getInstance(
+				mv1.visitTypeAnnotation(typeRef, typePath, desc, visible),
+				mv2.visitTypeAnnotation(typeRef, typePath, desc, visible));
+	}
+
+	@Override
+	public void visitInvokeDynamicInsn(final String name, final String desc, final Handle bsm,
+			final Object... bsmArgs) {
+		mv1.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+		mv2.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	}
+
+	@Override
+	public AnnotationVisitor visitInsnAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		return AnnotationVisitorTee.getInstance(
+				mv1.visitInsnAnnotation(typeRef, typePath, desc, visible),
+				mv2.visitInsnAnnotation(typeRef, typePath, desc, visible));
+	}
+
+	@Override
+	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		return AnnotationVisitorTee.getInstance(
+				mv1.visitTryCatchAnnotation(typeRef, typePath, desc, visible),
+				mv2.visitTryCatchAnnotation(typeRef, typePath, desc, visible));
+	}
+
+	@Override
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
+			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
+			final String desc, final boolean visible) {
+		return AnnotationVisitorTee.getInstance(
+				mv1.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible),
+				mv2.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible));
 	}
 }

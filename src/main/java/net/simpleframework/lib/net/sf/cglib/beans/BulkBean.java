@@ -15,6 +15,8 @@
  */
 package net.simpleframework.lib.net.sf.cglib.beans;
 
+import java.security.ProtectionDomain;
+
 import net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator;
 import net.simpleframework.lib.net.sf.cglib.core.KeyFactory;
 import net.simpleframework.lib.net.sf.cglib.core.ReflectUtils;
@@ -100,6 +102,11 @@ abstract public class BulkBean {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return target.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(target);
 		}
 
 		public BulkBean create() {

@@ -43,7 +43,7 @@ import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
  * <p>
  * The mergesort algorithm here is an "in-place" variant, which while slower,
  * does not require a temporary array.
- * 
+ *
  * @author Chris Nokleberg
  */
 abstract public class ParallelSorter extends SorterTemplate {
@@ -56,12 +56,13 @@ abstract public class ParallelSorter extends SorterTemplate {
 	abstract public ParallelSorter newInstance(Object[] arrays);
 
 	/**
-	 * Create a new ParallelSorter object for a set of arrays. You may sort the
-	 * arrays multiple times via the same ParallelSorter object.
+	 * Create a new ParallelSorter object for a set of arrays. You may
+	 * sort the arrays multiple times via the same ParallelSorter object.
 	 * 
 	 * @param arrays
-	 *        An array of arrays to sort. The arrays may be a mix of primitive
-	 *        and non-primitive types, but should all be the same length.
+	 *        An array of arrays to sort. The arrays may be a mix
+	 *        of primitive and non-primitive types, but should all be the same
+	 *        length.
 	 * @param loader
 	 *        ClassLoader for generated class, uses "current" if null
 	 */

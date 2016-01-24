@@ -33,7 +33,7 @@ public class AnnotationVisitorTee extends AnnotationVisitor {
 	}
 
 	public AnnotationVisitorTee(final AnnotationVisitor av1, final AnnotationVisitor av2) {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 		this.av1 = av1;
 		this.av2 = av2;
 	}

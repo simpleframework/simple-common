@@ -17,6 +17,7 @@ package net.simpleframework.lib.net.sf.cglib.core;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,10 +27,12 @@ import java.util.WeakHashMap;
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
 
 /**
- * Abstract class for all code-generating CGLIB utilities. In addition to
- * caching generated classes for performance, it provides hooks for customizing
- * the <code>ClassLoader</code>, name of the generated class, and
- * transformations applied before generation.
+ * Abstract class for all code-generating CGLIB utilities.
+ * In addition to caching generated classes for performance, it provides hooks
+ * for
+ * customizing the <code>ClassLoader</code>, name of the generated class, and
+ * transformations
+ * applied before generation.
  */
 abstract public class AbstractClassGenerator implements ClassGenerator {
 	private static final Object NAME_KEY = new Object();
@@ -86,8 +89,8 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 	/**
 	 * Set the <code>ClassLoader</code> in which the class will be generated.
 	 * Concrete subclasses of <code>AbstractClassGenerator</code> (such as
-	 * <code>Enhancer</code>) will try to choose an appropriate default if this
-	 * is unset.
+	 * <code>Enhancer</code>)
+	 * will try to choose an appropriate default if this is unset.
 	 * <p>
 	 * Classes are cached per-<code>ClassLoader</code> using a
 	 * <code>WeakHashMap</code>, to allow the generated classes to be removed
@@ -123,8 +126,8 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 	}
 
 	/**
-	 * Whether use and update the static cache of generated classes for a class
-	 * with the same properties. Default is <code>true</code>.
+	 * Whether use and update the static cache of generated classes
+	 * for a class with the same properties. Default is <code>true</code>.
 	 */
 	public void setUseCache(final boolean useCache) {
 		this.useCache = useCache;
@@ -139,8 +142,9 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 
 	/**
 	 * If set, CGLIB will attempt to load classes from the specified
-	 * <code>ClassLoader</code> before generating them. Because generated class
-	 * names are not guaranteed to be unique, the default is <code>false</code>.
+	 * <code>ClassLoader</code> before generating them. Because generated
+	 * class names are not guaranteed to be unique, the default is
+	 * <code>false</code>.
 	 */
 	public void setAttemptLoad(final boolean attemptLoad) {
 		this.attemptLoad = attemptLoad;
@@ -151,8 +155,8 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 	}
 
 	/**
-	 * Set the strategy to use to create the bytecode from this generator. By
-	 * default an instance of {@see DefaultGeneratorStrategy} is used.
+	 * Set the strategy to use to create the bytecode from this generator.
+	 * By default an instance of {@see DefaultGeneratorStrategy} is used.
 	 */
 	public void setStrategy(GeneratorStrategy strategy) {
 		if (strategy == null) {
@@ -195,12 +199,27 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 
 	abstract protected ClassLoader getDefaultClassLoader();
 
+	/**
+	 * Returns the protection domain to use when defining the class.
+	 * <p>
+	 * Default implementation returns <code>null</code> for using a default
+	 * protection domain. Sub-classes may override to use a more specific
+	 * protection domain.
+	 * </p>
+	 *
+	 * @return the protection domain (<code>null</code> for using a default)
+	 */
+	protected ProtectionDomain getProtectionDomain() {
+		return null;
+	}
+
 	protected Object create(final Object key) {
 		try {
 			Class gen = null;
 
 			synchronized (source) {
 				final ClassLoader loader = getClassLoader();
+				final ProtectionDomain protectionDomain = getProtectionDomain();
 				Map cache2 = null;
 				cache2 = (Map) source.cache.get(loader);
 				if (cache2 == null) {
@@ -228,7 +247,11 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 							final byte[] b = strategy.generate(this);
 							final String className = ClassNameReader.getClassName(new ClassReader(b));
 							getClassNameCache(loader).add(className);
-							gen = ReflectUtils.defineClass(className, b, loader);
+							if (protectionDomain == null) {
+								gen = ReflectUtils.defineClass(className, b, loader);
+							} else {
+								gen = ReflectUtils.defineClass(className, b, loader, protectionDomain);
+							}
 						}
 
 						if (useCache) {

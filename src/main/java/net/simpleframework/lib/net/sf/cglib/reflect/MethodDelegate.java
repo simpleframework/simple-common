@@ -16,6 +16,7 @@
 package net.simpleframework.lib.net.sf.cglib.reflect;
 
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator;
 import net.simpleframework.lib.net.sf.cglib.core.ClassEmitter;
@@ -35,7 +36,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
  * <b>DOCUMENTATION FROM APACHE AVALON DELEGATE CLASS</b>
- * 
+ *
  * <p>
  * Delegates are a typesafe pointer to another method. Since Java does not have
  * language support for such a construct, this utility will construct a proxy
@@ -43,19 +44,19 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * utility is inspired in part by the C# delegate mechanism. We implemented it
  * in a Java-centric manner.
  * </p>
- * 
+ *
  * <h2>Delegate</h2>
  * <p>
  * Any interface with one method can become the interface for a delegate.
  * Consider the example below:
  * </p>
- * 
+ *
  * <pre>
  * public interface MainDelegate {
  * 	int main(String[] args);
  * }
  * </pre>
- * 
+ *
  * <p>
  * The interface above is an example of an interface that can become a delegate.
  * It has only one method, and the interface is public. In order to create a
@@ -63,7 +64,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * <code>MethodDelegate.create(this, "alternateMain", MainDelegate.class)</code>
  * . The following program will show how to use it:
  * </p>
- * 
+ *
  * <pre>
  * public class Main {
  * 	public static int main(String[] args) {
@@ -81,7 +82,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * 	}
  * }
  * </pre>
- * 
+ *
  * <p>
  * By themselves, delegates don't do much. Their true power lies in the fact
  * that they can be treated like objects, and passed to other methods. In fact
@@ -103,7 +104,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * method to forward events to any method that matches the signature (although
  * the method name can be different).
  * </p>
- * 
+ *
  * <h3>Equality</h3> The criteria that we use to test if two delegates are equal
  * are:
  * <ul>
@@ -113,7 +114,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * instances are compared with the identity equality operator, <code>==</code>.</li>
  * <li>They refer to the same method as resolved by <code>Method.equals</code>.</li>
  * </ul>
- * 
+ *
  * @version $Id: MethodDelegate.java,v 1.25 2006/03/05 02:43:19 herbyderby Exp $
  */
 abstract public class MethodDelegate {
@@ -200,6 +201,11 @@ abstract public class MethodDelegate {
 			return targetClass.getClassLoader();
 		}
 
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(targetClass);
+		}
+
 		public MethodDelegate create() {
 			setNamePrefix(targetClass.getName());
 			final Object key = KEY_FACTORY.newInstance(targetClass, methodName, iface);
@@ -241,7 +247,11 @@ abstract public class MethodDelegate {
 
 			// generate proxied method
 			final MethodInfo proxied = ReflectUtils.getMethodInfo(iface.getDeclaredMethods()[0]);
-			e = EmitUtils.begin_method(ce, proxied, Opcodes.ACC_PUBLIC);
+			int modifiers = Opcodes.ACC_PUBLIC;
+			if ((proxied.getModifiers() & Opcodes.ACC_VARARGS) == Opcodes.ACC_VARARGS) {
+				modifiers |= Opcodes.ACC_VARARGS;
+			}
+			e = EmitUtils.begin_method(ce, proxied, modifiers);
 			e.load_this();
 			e.super_getfield("target", Constants.TYPE_OBJECT);
 			e.checkcast(methodInfo.getClassInfo().getType());

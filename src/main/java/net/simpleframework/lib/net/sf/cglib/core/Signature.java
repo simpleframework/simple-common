@@ -18,8 +18,8 @@ package net.simpleframework.lib.net.sf.cglib.core;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
- * A representation of a method signature, containing the method name, return
- * type, and parameter types.
+ * A representation of a method signature, containing the method name,
+ * return type, and parameter types.
  */
 public class Signature {
 	private final String name;

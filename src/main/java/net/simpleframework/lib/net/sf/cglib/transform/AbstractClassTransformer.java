@@ -20,7 +20,7 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 abstract public class AbstractClassTransformer extends ClassTransformer {
 	protected AbstractClassTransformer() {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 	}
 
 	@Override

@@ -21,12 +21,13 @@ import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
+import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 public class ClassVisitorTee extends ClassVisitor {
 	private ClassVisitor cv1, cv2;
 
 	public ClassVisitorTee(final ClassVisitor cv1, final ClassVisitor cv2) {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 		this.cv1 = cv1;
 		this.cv2 = cv2;
 	}
@@ -102,5 +103,13 @@ public class ClassVisitorTee extends ClassVisitor {
 	public void visitAttribute(final Attribute attrs) {
 		cv1.visitAttribute(attrs);
 		cv2.visitAttribute(attrs);
+	}
+
+	@Override
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		return AnnotationVisitorTee.getInstance(
+				cv1.visitTypeAnnotation(typeRef, typePath, desc, visible),
+				cv2.visitTypeAnnotation(typeRef, typePath, desc, visible));
 	}
 }

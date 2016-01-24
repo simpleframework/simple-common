@@ -52,7 +52,7 @@ public class DebuggingClassWriter extends ClassVisitor {
 	}
 
 	public DebuggingClassWriter(final int flags) {
-		super(Opcodes.ASM4, new ClassWriter(flags));
+		super(Opcodes.ASM5, new ClassWriter(flags));
 	}
 
 	@Override

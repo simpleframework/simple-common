@@ -52,12 +52,7 @@ public class ReflectUtils {
 	private static final ProtectionDomain PROTECTION_DOMAIN;
 
 	static {
-		PROTECTION_DOMAIN = (ProtectionDomain) AccessController.doPrivileged(new PrivilegedAction() {
-			@Override
-			public Object run() {
-				return ReflectUtils.class.getProtectionDomain();
-			}
-		});
+		PROTECTION_DOMAIN = getProtectionDomain(ReflectUtils.class);
 
 		AccessController.doPrivileged(new PrivilegedAction() {
 			@Override
@@ -100,6 +95,18 @@ public class ReflectUtils {
 		transforms.put("long", "J");
 		transforms.put("short", "S");
 		transforms.put("boolean", "Z");
+	}
+
+	public static ProtectionDomain getProtectionDomain(final Class source) {
+		if (source == null) {
+			return null;
+		}
+		return (ProtectionDomain) AccessController.doPrivileged(new PrivilegedAction() {
+			@Override
+			public Object run() {
+				return source.getProtectionDomain();
+			}
+		});
 	}
 
 	public static Type[] getExceptionTypes(final Member member) {
@@ -398,8 +405,13 @@ public class ReflectUtils {
 
 	public static Class defineClass(final String className, final byte[] b, final ClassLoader loader)
 			throws Exception {
+		return defineClass(className, b, loader, PROTECTION_DOMAIN);
+	}
+
+	public static Class defineClass(final String className, final byte[] b,
+			final ClassLoader loader, final ProtectionDomain protectionDomain) throws Exception {
 		final Object[] args = new Object[] { className, b, new Integer(0), new Integer(b.length),
-				PROTECTION_DOMAIN };
+				protectionDomain };
 		final Class c = (Class) DEFINE_CLASS.invoke(loader, args);
 		// Force static initializers to run.
 		Class.forName(className, true, loader);

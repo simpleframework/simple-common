@@ -25,8 +25,10 @@ package net.simpleframework.lib.net.sf.cglib.proxy;
 public interface MethodInterceptor extends Callback {
 	/**
 	 * All generated proxied methods call this method instead of the original
-	 * method. The original method may either be invoked by normal reflection
-	 * using the Method object, or by using the MethodProxy (faster).
+	 * method.
+	 * The original method may either be invoked by normal reflection using the
+	 * Method object,
+	 * or by using the MethodProxy (faster).
 	 * 
 	 * @param obj
 	 *        "this", the enhanced object
@@ -35,8 +37,8 @@ public interface MethodInterceptor extends Callback {
 	 * @param args
 	 *        argument array; primitive types are wrapped
 	 * @param proxy
-	 *        used to invoke super (non-intercepted method); may be called as
-	 *        many times as needed
+	 *        used to invoke super (non-intercepted method); may be called
+	 *        as many times as needed
 	 * @throws Throwable
 	 *         any exception may be thrown; if so, super method will not be
 	 *         invoked

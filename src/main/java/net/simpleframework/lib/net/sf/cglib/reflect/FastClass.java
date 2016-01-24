@@ -18,6 +18,7 @@ package net.simpleframework.lib.net.sf.cglib.reflect;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator;
 import net.simpleframework.lib.net.sf.cglib.core.Constants;
@@ -71,6 +72,11 @@ abstract public class FastClass {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return type.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(type);
 		}
 
 		@Override
@@ -155,9 +161,10 @@ abstract public class FastClass {
 	}
 
 	/**
-	 * Return the index of the matching method. The index may be used later to
-	 * invoke the method with less overhead. If more than one method matches
-	 * (i.e. they differ by return type only), one is chosen arbitrarily.
+	 * Return the index of the matching method. The index may be used
+	 * later to invoke the method with less overhead. If more than one
+	 * method matches (i.e. they differ by return type only), one is
+	 * chosen arbitrarily.
 	 * 
 	 * @see #invoke(int, Object, Object[])
 	 * @param name
@@ -169,8 +176,8 @@ abstract public class FastClass {
 	abstract public int getIndex(String name, Class[] parameterTypes);
 
 	/**
-	 * Return the index of the matching constructor. The index may be used later
-	 * to create a new instance with less overhead.
+	 * Return the index of the matching constructor. The index may be used
+	 * later to create a new instance with less overhead.
 	 * 
 	 * @see #newInstance(int, Object[])
 	 * @param parameterTypes

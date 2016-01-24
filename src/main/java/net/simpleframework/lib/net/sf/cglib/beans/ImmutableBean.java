@@ -17,6 +17,7 @@ package net.simpleframework.lib.net.sf.cglib.beans;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator;
 import net.simpleframework.lib.net.sf.cglib.core.ClassEmitter;
@@ -66,6 +67,11 @@ public class ImmutableBean {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return target.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(target);
 		}
 
 		public Object create() {

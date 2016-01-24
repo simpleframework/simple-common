@@ -16,6 +16,7 @@
 package net.simpleframework.lib.net.sf.cglib.beans;
 
 import java.beans.PropertyDescriptor;
+import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,8 +52,9 @@ public class BeanGenerator extends AbstractClassGenerator {
 	}
 
 	/**
-	 * Set the class which the generated class will extend. The class must not be
-	 * declared as final, and must have a non-private no-argument constructor.
+	 * Set the class which the generated class will extend. The class
+	 * must not be declared as final, and must have a non-private
+	 * no-argument constructor.
 	 * 
 	 * @param superclass
 	 *        class to extend, or null to extend Object
@@ -78,6 +80,11 @@ public class BeanGenerator extends AbstractClassGenerator {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	protected ProtectionDomain getProtectionDomain() {
+		return ReflectUtils.getProtectionDomain(superclass);
 	}
 
 	public Object create() {

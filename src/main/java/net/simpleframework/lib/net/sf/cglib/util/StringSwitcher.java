@@ -48,9 +48,10 @@ abstract public class StringSwitcher {
 	}
 
 	/**
-	 * Helper method to create a StringSwitcher. For finer control over the
-	 * generated instance, use a new instance of StringSwitcher.Generator instead
-	 * of this static method.
+	 * Helper method to create a StringSwitcher.
+	 * For finer control over the generated instance, use a new instance of
+	 * StringSwitcher.Generator
+	 * instead of this static method.
 	 * 
 	 * @param strings
 	 *        the array of String keys; must be the same length as the value
@@ -60,8 +61,8 @@ abstract public class StringSwitcher {
 	 *        array
 	 * @param fixedInput
 	 *        if false, an unknown key will be returned from {@link #intValue} as
-	 *        <code>-1</code>; if true, the result will be undefined, and
-	 *        the resulting code will be faster
+	 *        <code>-1</code>; if true,
+	 *        the result will be undefined, and the resulting code will be faster
 	 */
 	public static StringSwitcher create(final String[] strings, final int[] ints,
 			final boolean fixedInput) {
@@ -82,8 +83,8 @@ abstract public class StringSwitcher {
 	 *        the key
 	 * @return the associated integer value, or <code>-1</code> if the key is
 	 *         unknown (unless <code>fixedInput</code> was specified when this
-	 *         <code>StringSwitcher</code> was created, in which case the return
-	 *         value for an unknown key is undefined)
+	 *         <code>StringSwitcher</code> was created,
+	 *         in which case the return value for an unknown key is undefined)
 	 */
 	abstract public int intValue(String s);
 
@@ -102,8 +103,8 @@ abstract public class StringSwitcher {
 		 * Set the array of recognized Strings.
 		 * 
 		 * @param strings
-		 *        the array of String keys; must be the same length as the
-		 *        value array
+		 *        the array of String keys; must be the same length as the value
+		 *        array
 		 * @see #setInts
 		 */
 		public void setStrings(final String[] strings) {
@@ -114,8 +115,8 @@ abstract public class StringSwitcher {
 		 * Set the array of integer results.
 		 * 
 		 * @param ints
-		 *        the array of integer results; must be the same length as the
-		 *        key array
+		 *        the array of integer results; must be the same length as the key
+		 *        array
 		 * @see #setStrings
 		 */
 		public void setInts(final int[] ints) {
@@ -127,8 +128,9 @@ abstract public class StringSwitcher {
 		 * 
 		 * @param fixedInput
 		 *        if false, an unknown key will be returned from {@link #intValue}
-		 *        as <code>-1</code>; if true, the result
-		 *        will be undefined, and the resulting code will be faster
+		 *        as <code>-1</code>; if true,
+		 *        the result will be undefined, and the resulting code will be
+		 *        faster
 		 */
 		public void setFixedInput(final boolean fixedInput) {
 			this.fixedInput = fixedInput;

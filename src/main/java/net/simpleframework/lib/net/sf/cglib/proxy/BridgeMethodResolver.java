@@ -29,8 +29,9 @@ import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 /**
- * Uses bytecode reflection to figure out the targets of all bridge methods that
- * use invokespecial, so that we can later rewrite them to use invokevirtual.
+ * Uses bytecode reflection to figure out the targets of all bridge methods
+ * that use invokespecial, so that we can later rewrite them to use
+ * invokevirtual.
  * 
  * @author sberlin@gmail.com (Sam Berlin)
  */
@@ -68,7 +69,7 @@ class BridgeMethodResolver {
 		private Signature currentMethod = null;
 
 		BridgedFinder(final Set eligableMethods, final Map resolved) {
-			super(Opcodes.ASM4);
+			super(Opcodes.ASM5);
 			this.resolved = resolved;
 			this.eligableMethods = eligableMethods;
 		}
@@ -84,10 +85,10 @@ class BridgeMethodResolver {
 			final Signature sig = new Signature(name, desc);
 			if (eligableMethods.remove(sig)) {
 				currentMethod = sig;
-				return new MethodVisitor(Opcodes.ASM4) {
+				return new MethodVisitor(Opcodes.ASM5) {
 					@Override
 					public void visitMethodInsn(final int opcode, final String owner, final String name,
-							final String desc) {
+							final String desc, final boolean itf) {
 						if (opcode == Opcodes.INVOKESPECIAL && currentMethod != null) {
 							final Signature target = new Signature(name, desc);
 							// If the target signature is the same as the current,

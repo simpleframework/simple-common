@@ -30,9 +30,10 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
- * Generates new interfaces at runtime. By passing a generated interface to the
- * Enhancer's list of interfaces to implement, you can make your enhanced
- * classes handle an arbitrary set of method signatures.
+ * Generates new interfaces at runtime.
+ * By passing a generated interface to the Enhancer's list of interfaces to
+ * implement, you can make your enhanced classes handle an arbitrary set
+ * of method signatures.
  * 
  * @author Chris Nokleberg
  * @version $Id: InterfaceMaker.java,v 1.4 2006/03/05 02:43:19 herbyderby Exp $
@@ -44,7 +45,8 @@ public class InterfaceMaker extends AbstractClassGenerator {
 	/**
 	 * Create a new <code>InterfaceMaker</code>. A new
 	 * <code>InterfaceMaker</code> object should be used for each generated
-	 * interface, and should not be shared across threads.
+	 * interface, and should not
+	 * be shared across threads.
 	 */
 	public InterfaceMaker() {
 		super(SOURCE);
@@ -74,9 +76,10 @@ public class InterfaceMaker extends AbstractClassGenerator {
 	}
 
 	/**
-	 * Add all the public methods in the specified class. Methods from
-	 * superclasses are included, except for methods declared in the base Object
-	 * class (e.g. <code>getClass</code>, <code>equals</code>,
+	 * Add all the public methods in the specified class.
+	 * Methods from superclasses are included, except for methods declared in the
+	 * base
+	 * Object class (e.g. <code>getClass</code>, <code>equals</code>,
 	 * <code>hashCode</code>).
 	 * 
 	 * @param class the class containing the methods to add to the interface

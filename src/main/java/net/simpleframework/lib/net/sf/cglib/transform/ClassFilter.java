@@ -17,7 +17,7 @@
 package net.simpleframework.lib.net.sf.cglib.transform;
 
 /**
- * 
+ *
  * @author baliuka
  */
 public interface ClassFilter {

@@ -88,9 +88,9 @@ public class EmitUtils {
 	}
 
 	/**
-	 * Process an array on the stack. Assumes the top item on the stack is an
-	 * array of the specified type. For each element in the array, puts the
-	 * element on the stack and triggers the callback.
+	 * Process an array on the stack. Assumes the top item on the stack
+	 * is an array of the specified type. For each element in the array,
+	 * puts the element on the stack and triggers the callback.
 	 * 
 	 * @param type
 	 *        the type of the array (type.isArray() must be true)
@@ -125,9 +125,11 @@ public class EmitUtils {
 
 	/**
 	 * Process two arrays on the stack in parallel. Assumes the top two items on
-	 * the stack are arrays of the specified class. The arrays must be the same
-	 * length. For each pair of elements in the arrays, puts the pair on the
-	 * stack and triggers the callback.
+	 * the stack
+	 * are arrays of the specified class. The arrays must be the same length. For
+	 * each pair
+	 * of elements in the arrays, puts the pair on the stack and triggers the
+	 * callback.
 	 * 
 	 * @param type
 	 *        the type of the arrays (type.isArray() must be true)
@@ -488,11 +490,11 @@ public class EmitUtils {
 	// }
 
 	/**
-	 * Branches to the specified label if the top two items on the stack are not
-	 * equal. The items must both be of the specified class. Equality is
-	 * determined by comparing primitive values directly and by invoking the
-	 * <code>equals</code> method for Objects. Arrays are recursively processed
-	 * in the same manner.
+	 * Branches to the specified label if the top two items on the stack
+	 * are not equal. The items must both be of the specified
+	 * class. Equality is determined by comparing primitive values
+	 * directly and by invoking the <code>equals</code> method for
+	 * Objects. Arrays are recursively processed in the same manner.
 	 */
 	public static void not_equals(final CodeEmitter e, final Type type, final Label notEquals,
 			final Customizer customizer) {
@@ -536,9 +538,9 @@ public class EmitUtils {
 	}
 
 	/**
-	 * If both objects on the top of the stack are non-null, does nothing. If one
-	 * is null, or both are null, both are popped off and execution branches to
-	 * the respective label.
+	 * If both objects on the top of the stack are non-null, does nothing.
+	 * If one is null, or both are null, both are popped off and execution
+	 * branches to the respective label.
 	 * 
 	 * @param oneNull
 	 *        label to branch to if only one of the objects is null
@@ -567,12 +569,17 @@ public class EmitUtils {
 	}
 
 	/*
-	 * public static void to_string(CodeEmitter e, Type type, ArrayDelimiters
-	 * delims, Customizer customizer) {
-	 * e.new_instance(Constants.TYPE_STRING_BUFFER); e.dup();
-	 * e.invoke_constructor(Constants.TYPE_STRING_BUFFER); e.swap();
+	 * public static void to_string(CodeEmitter e,
+	 * Type type,
+	 * ArrayDelimiters delims,
+	 * Customizer customizer) {
+	 * e.new_instance(Constants.TYPE_STRING_BUFFER);
+	 * e.dup();
+	 * e.invoke_constructor(Constants.TYPE_STRING_BUFFER);
+	 * e.swap();
 	 * append_string(e, type, delims, customizer);
-	 * e.invoke_virtual(Constants.TYPE_STRING_BUFFER, TO_STRING); }
+	 * e.invoke_virtual(Constants.TYPE_STRING_BUFFER, TO_STRING);
+	 * }
 	 */
 
 	public static void append_string(final CodeEmitter e, final Type type,
@@ -880,9 +887,16 @@ public class EmitUtils {
 	}
 
 	/*
-	 * generates: } catch (RuntimeException e) { throw e; } catch (Error e) {
-	 * throw e; } catch (<DeclaredException> e) { throw e; } catch (Throwable e)
-	 * { throw new <Wrapper>(e); }
+	 * generates:
+	 * } catch (RuntimeException e) {
+	 * throw e;
+	 * } catch (Error e) {
+	 * throw e;
+	 * } catch (<DeclaredException> e) {
+	 * throw e;
+	 * } catch (Throwable e) {
+	 * throw new <Wrapper>(e);
+	 * }
 	 */
 	public static void wrap_undeclared_throwable(final CodeEmitter e, final Block handler,
 			final Type[] exceptions, final Type wrapper) {

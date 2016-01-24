@@ -83,8 +83,8 @@ public class AddDelegateTransformer extends ClassEmitterTransformer {
 
 				@Override
 				public void visitMethodInsn(final int opcode, final String owner, final String name,
-						final String desc) {
-					super.visitMethodInsn(opcode, owner, name, desc);
+						final String desc, final boolean itf) {
+					super.visitMethodInsn(opcode, owner, name, desc, itf);
 					if (transformInit && opcode == Opcodes.INVOKESPECIAL) {
 						load_this();
 						new_instance(delegateType);

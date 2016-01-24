@@ -149,13 +149,19 @@ class MethodInterceptorGenerator implements CallbackGenerator {
 	public void generateStatic(final CodeEmitter e, final Context context, final List methods)
 			throws Exception {
 		/*
-		 * generates: static { Class thisClass = Class.forName("NameOfThisClass");
-		 * Class cls = Class.forName("java.lang.Object"); String[] sigs = new
-		 * String[]{ "toString", "()Ljava/lang/String;", ... }; Method[] methods =
-		 * cls.getDeclaredMethods(); methods = ReflectUtils.findMethods(sigs,
-		 * methods); METHOD_0 = methods[0]; CGLIB$ACCESS_0 =
-		 * MethodProxy.create(cls, thisClass, "()Ljava/lang/String;", "toString",
-		 * "CGLIB$ACCESS_0"); ... }
+		 * generates:
+		 * static {
+		 * Class thisClass = Class.forName("NameOfThisClass");
+		 * Class cls = Class.forName("java.lang.Object");
+		 * String[] sigs = new String[]{ "toString", "()Ljava/lang/String;", ...
+		 * };
+		 * Method[] methods = cls.getDeclaredMethods();
+		 * methods = ReflectUtils.findMethods(sigs, methods);
+		 * METHOD_0 = methods[0];
+		 * CGLIB$ACCESS_0 = MethodProxy.create(cls, thisClass,
+		 * "()Ljava/lang/String;", "toString", "CGLIB$ACCESS_0");
+		 * ...
+		 * }
 		 */
 
 		e.push(0);

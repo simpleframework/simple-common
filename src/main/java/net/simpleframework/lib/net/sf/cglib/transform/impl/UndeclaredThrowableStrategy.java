@@ -26,9 +26,10 @@ import net.simpleframework.lib.net.sf.cglib.transform.TransformingClassGenerator
 
 /**
  * A {@link GeneratorStrategy} suitable for use with
- * {@link net.simpleframework.lib.net.sf.cglib.Enhancer} which causes all
- * undeclared exceptions thrown from within a proxied method to be wrapped in an
- * alternative exception of your choice.
+ * {@link net.simpleframework.lib.net.sf.cglib.Enhancer} which
+ * causes all undeclared exceptions thrown from within a proxied method to be
+ * wrapped
+ * in an alternative exception of your choice.
  */
 public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
 
@@ -38,10 +39,10 @@ public class UndeclaredThrowableStrategy extends DefaultGeneratorStrategy {
 	 * Create a new instance of this strategy.
 	 * 
 	 * @param wrapper
-	 *        a class which extends either directly or indirectly from
-	 *        <code>Throwable</code> and which has at least one constructor
-	 *        that takes a single argument of type <code>Throwable</code>, for
-	 *        example
+	 *        a class which extends either directly or
+	 *        indirectly from <code>Throwable</code> and which has at least one
+	 *        constructor that takes a single argument of type
+	 *        <code>Throwable</code>, for example
 	 *        <code>java.lang.reflect.UndeclaredThrowableException.class</code>
 	 */
 	public UndeclaredThrowableStrategy(final Class wrapper) {

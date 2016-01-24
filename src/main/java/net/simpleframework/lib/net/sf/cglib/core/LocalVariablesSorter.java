@@ -46,8 +46,8 @@ public class LocalVariablesSorter extends MethodVisitor {
 
 	/**
 	 * Mapping from old to new local variable indexes. A local variable at index
-	 * i of size 1 is remapped to 'mapping[2*i]', while a local variable at index
-	 * i of size 2 is remapped to 'mapping[2*i+1]'.
+	 * i of size 1 is remapped to 'mapping[2*i]', while a local variable at
+	 * index i of size 2 is remapped to 'mapping[2*i+1]'.
 	 */
 	private static class State {
 		int[] mapping = new int[40];
@@ -58,7 +58,7 @@ public class LocalVariablesSorter extends MethodVisitor {
 	private final State state;
 
 	public LocalVariablesSorter(final int access, final String desc, final MethodVisitor mv) {
-		super(Opcodes.ASM4, mv);
+		super(Opcodes.ASM5, mv);
 		state = new State();
 		final Type[] args = Type.getArgumentTypes(desc);
 		state.nextLocal = ((Opcodes.ACC_STATIC & access) != 0) ? 0 : 1;
@@ -69,7 +69,7 @@ public class LocalVariablesSorter extends MethodVisitor {
 	}
 
 	public LocalVariablesSorter(final LocalVariablesSorter lvs) {
-		super(Opcodes.ASM4, lvs.mv);
+		super(Opcodes.ASM5, lvs.mv);
 		state = lvs.state;
 		firstLocal = lvs.firstLocal;
 	}

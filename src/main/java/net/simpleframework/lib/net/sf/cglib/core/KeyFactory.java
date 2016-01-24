@@ -17,6 +17,7 @@
 package net.simpleframework.lib.net.sf.cglib.core;
 
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Label;
@@ -25,8 +26,9 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
  * Generates classes to handle multi-valued keys, for use in things such as Maps
- * and Sets. Code for <code>equals</code> and <code>hashCode</code> methods
- * follow the the rules laid out in <i>Effective Java</i> by Joshua Bloch.
+ * and Sets.
+ * Code for <code>equals</code> and <code>hashCode</code> methods follow the
+ * the rules laid out in <i>Effective Java</i> by Joshua Bloch.
  * <p>
  * To generate a <code>KeyFactory</code>, you need to supply an interface which
  * describes the structure of the key. The interface should have a single method
@@ -55,7 +57,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * <code>key1</code> and <code>key2</code> is only guaranteed if
  * <code>key1.equals(key2)</code> <i>and</i> the keys were produced by the same
  * factory.
- * 
+ *
  * @version $Id: KeyFactory.java,v 1.26 2006/03/05 02:43:19 herbyderby Exp $
  */
 abstract public class KeyFactory {
@@ -127,6 +129,11 @@ abstract public class KeyFactory {
 		@Override
 		protected ClassLoader getDefaultClassLoader() {
 			return keyInterface.getClassLoader();
+		}
+
+		@Override
+		protected ProtectionDomain getProtectionDomain() {
+			return ReflectUtils.getProtectionDomain(keyInterface);
 		}
 
 		public void setCustomizer(final Customizer customizer) {

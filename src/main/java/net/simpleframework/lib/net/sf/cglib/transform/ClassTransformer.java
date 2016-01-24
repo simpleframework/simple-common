@@ -20,7 +20,7 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 public abstract class ClassTransformer extends ClassVisitor {
 	public ClassTransformer() {
-		super(Opcodes.ASM4);
+		super(Opcodes.ASM5);
 	}
 
 	public ClassTransformer(final int opcode) {
