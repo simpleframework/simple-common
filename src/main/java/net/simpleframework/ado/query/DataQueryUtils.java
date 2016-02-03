@@ -26,6 +26,7 @@ public abstract class DataQueryUtils {
 	}
 
 	public static <T> List<T> toList(final IDataQuery<T> dataQuery) {
+		dataQuery.setFetchSize(0);
 		final List<T> al = new ArrayList<T>();
 		T t;
 		while (dataQuery != null && (t = dataQuery.next()) != null) {
