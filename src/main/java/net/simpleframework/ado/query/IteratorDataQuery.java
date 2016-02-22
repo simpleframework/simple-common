@@ -24,7 +24,12 @@ public class IteratorDataQuery<T> extends AbstractDataQuery<T> {
 
 	@Override
 	public T next() {
-		return it != null && it.hasNext() ? it.next() : null;
+		final IDataQuery<T> dq = getRawDataQuery();
+		if (dq != this) {
+			return dq.next();
+		} else {
+			return it != null && it.hasNext() ? it.next() : null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
