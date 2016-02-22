@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -164,6 +165,10 @@ public abstract class ArrayUtils {
 
 	public static <T> Vector<T> asVector(final T... a) {
 		return (Vector<T>) _setColl(new Vector<T>(), a);
+	}
+
+	public static <T> Set<T> asSet(final T... a) {
+		return (LinkedHashSet<T>) _setColl(new LinkedHashSet<T>(), a);
 	}
 
 	private static <T> Collection<T> _setColl(final Collection<T> coll, final T... a) {
