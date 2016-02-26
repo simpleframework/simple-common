@@ -9,8 +9,14 @@
   </parent>
   <artifactId>simple-common</artifactId>
   <version>${simple.common}</version>
-  
+
   <dependencies>
+    <dependency>
+      <groupId>com.belerweb</groupId>
+      <artifactId>pinyin4j</artifactId>
+      <optional>true</optional>
+    </dependency>
+    
     <!-- 邮件 -->
     <dependency>
       <groupId>javax.mail</groupId>
@@ -29,7 +35,7 @@
       <artifactId>hessian</artifactId>
       <optional>true</optional>
     </dependency>
-    
+
     <dependency>
       <groupId>com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
@@ -48,14 +54,14 @@
       <artifactId>jsp-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <optional>true</optional>
     </dependency>
   </dependencies>
-  
+
   <build>
     <!-- 打包资源文件到jar包 -->
     <resources>
