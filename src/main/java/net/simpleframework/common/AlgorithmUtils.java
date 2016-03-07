@@ -72,4 +72,8 @@ public abstract class AlgorithmUtils {
 	public static String sha1Hex(final String message) {
 		return sha1Hex(message.getBytes());
 	}
+
+	public static String encryptPass(final String password) {
+		return md5Hex(password == null ? "" : password.trim());
+	}
 }
