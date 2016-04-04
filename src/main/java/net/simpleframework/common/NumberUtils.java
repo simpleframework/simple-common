@@ -16,6 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class NumberUtils {
 	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<String, DecimalFormat>();
 
+	public static float toMoney(final Number number) {
+		return toFloat(number, 2);
+	}
+
 	public static float toFloat(final Number number) {
 		return toFloat(number, 1);
 	}
