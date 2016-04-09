@@ -126,7 +126,7 @@ public abstract class IoUtils {
 
 		if (kryo != null) {
 			final com.esotericsoftware.kryo.io.ByteBufferOutput buffer = new com.esotericsoftware.kryo.io.ByteBufferOutput(
-					1024);
+					1024, -1);
 			((com.esotericsoftware.kryo.Kryo) kryo).writeClassAndObject(buffer, obj);
 			return buffer.toBytes();
 		} else {
