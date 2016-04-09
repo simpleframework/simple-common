@@ -100,13 +100,22 @@ public abstract class IoUtils {
 
 	/********************************* Serializable **********************************/
 
+	static Object kryo;
 	static boolean hessianEnabled = false;
 	static {
 		try {
-			Class.forName("com.caucho.hessian.io.HessianInput");
-			hessianEnabled = true;
+			kryo = Class.forName("com.esotericsoftware.kryo.Kryo").newInstance();
+			BeanUtils.setProperty(kryo, "references", false);
+			log.info("Kryo serialize enabled!");
 		} catch (final Exception ex) {
-			log.warn("Hessian serialize disabled!");
+		}
+		if (kryo == null) {
+			try {
+				Class.forName("com.caucho.hessian.io.HessianInput");
+				hessianEnabled = true;
+				log.info("Hessian serialize enabled!");
+			} catch (final Exception ex) {
+			}
 		}
 	}
 
@@ -114,29 +123,54 @@ public abstract class IoUtils {
 		if (obj == null) {
 			return null;
 		}
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		if (hessianEnabled) {
-			final com.caucho.hessian.io.HessianOutput ho = new com.caucho.hessian.io.HessianOutput(bos);
-			ho.writeObject(obj);
+
+		if (kryo != null) {
+			final com.esotericsoftware.kryo.io.ByteBufferOutput buffer = new com.esotericsoftware.kryo.io.ByteBufferOutput(
+					1024);
+			((com.esotericsoftware.kryo.Kryo) kryo).writeClassAndObject(buffer, obj);
+			return buffer.toBytes();
 		} else {
-			final ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(obj);
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			if (hessianEnabled) {
+				final com.caucho.hessian.io.HessianOutput ho = new com.caucho.hessian.io.HessianOutput(
+						bos);
+				ho.writeObject(obj);
+			} else {
+				final ObjectOutputStream oos = new ObjectOutputStream(bos);
+				oos.writeObject(obj);
+			}
+			return bos.toByteArray();
 		}
-		return bos.toByteArray();
 	}
 
 	public static Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
+		return deserialize(bytes, null);
+	}
+
+	public static Object deserialize(final byte[] bytes, final Class<?> typeClass)
+			throws IOException, ClassNotFoundException {
 		if (bytes == null || bytes.length == 0) {
 			return null;
 		}
-		if (hessianEnabled) {
-			final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
-			final com.caucho.hessian.io.HessianInput hi = new com.caucho.hessian.io.HessianInput(is);
-			return hi.readObject();
+		if (kryo != null) {
+			if (typeClass != null) {
+				((com.esotericsoftware.kryo.Kryo) kryo).register(typeClass);
+				return ((com.esotericsoftware.kryo.Kryo) kryo).readObject(
+						new com.esotericsoftware.kryo.io.ByteBufferInput(bytes), typeClass);
+			} else {
+				return ((com.esotericsoftware.kryo.Kryo) kryo)
+						.readClassAndObject(new com.esotericsoftware.kryo.io.ByteBufferInput(bytes));
+			}
 		} else {
-			final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-			final ObjectInputStream ois = new ObjectInputStream(bis);
-			return ois.readObject();
+			if (hessianEnabled) {
+				final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+				final com.caucho.hessian.io.HessianInput hi = new com.caucho.hessian.io.HessianInput(is);
+				return hi.readObject();
+			} else {
+				final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+				final ObjectInputStream ois = new ObjectInputStream(bis);
+				return ois.readObject();
+			}
 		}
 	}
 
