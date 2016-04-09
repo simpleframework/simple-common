@@ -119,6 +119,9 @@ public abstract class ID {
 	}
 
 	public static class StringID extends AbstractID<String> {
+		public StringID() {
+		}
+
 		public StringID(final String id) {
 			this.id = id != null ? id.trim() : null;
 		}
@@ -127,6 +130,8 @@ public abstract class ID {
 	}
 
 	public static class IntegerID extends AbstractID<Integer> {
+		public IntegerID() {
+		}
 
 		public IntegerID(final int id) {
 			this.id = id;
@@ -136,6 +141,8 @@ public abstract class ID {
 	}
 
 	public static class LongID extends AbstractID<Long> {
+		public LongID() {
+		}
 
 		public LongID(final long id) {
 			this.id = id;
