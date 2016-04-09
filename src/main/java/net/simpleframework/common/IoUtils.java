@@ -26,7 +26,8 @@ import net.simpleframework.common.logger.LogFactory;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class IoUtils {
@@ -107,14 +108,14 @@ public abstract class IoUtils {
 			kryo = Class.forName("com.esotericsoftware.kryo.Kryo").newInstance();
 			BeanUtils.setProperty(kryo, "references", false);
 			log.info("Kryo serialize enabled!");
-		} catch (final Exception ex) {
+		} catch (final Throwable ex) {
 		}
 		if (kryo == null) {
 			try {
 				Class.forName("com.caucho.hessian.io.HessianInput");
 				hessianEnabled = true;
 				log.info("Hessian serialize enabled!");
-			} catch (final Exception ex) {
+			} catch (final Throwable ex) {
 			}
 		}
 	}
@@ -125,10 +126,7 @@ public abstract class IoUtils {
 		}
 
 		if (kryo != null) {
-			final com.esotericsoftware.kryo.io.ByteBufferOutput buffer = new com.esotericsoftware.kryo.io.ByteBufferOutput(
-					1024, -1);
-			((com.esotericsoftware.kryo.Kryo) kryo).writeClassAndObject(buffer, obj);
-			return buffer.toBytes();
+			return IoUtils2.kryo_serialize(kryo, obj);
 		} else {
 			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			if (hessianEnabled) {
@@ -153,14 +151,7 @@ public abstract class IoUtils {
 			return null;
 		}
 		if (kryo != null) {
-			if (typeClass != null) {
-				((com.esotericsoftware.kryo.Kryo) kryo).register(typeClass);
-				return ((com.esotericsoftware.kryo.Kryo) kryo).readObject(
-						new com.esotericsoftware.kryo.io.ByteBufferInput(bytes), typeClass);
-			} else {
-				return ((com.esotericsoftware.kryo.Kryo) kryo)
-						.readClassAndObject(new com.esotericsoftware.kryo.io.ByteBufferInput(bytes));
-			}
+			return IoUtils2.kryo_deserialize(kryo, bytes, typeClass);
 		} else {
 			if (hessianEnabled) {
 				final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
