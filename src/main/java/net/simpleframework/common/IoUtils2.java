@@ -1,5 +1,10 @@
 package net.simpleframework.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import com.caucho.hessian.io.HessianOutput;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.ByteBufferInput;
 import com.esotericsoftware.kryo.io.ByteBufferOutput;
@@ -19,12 +24,26 @@ public abstract class IoUtils2 {
 		return buffer.toBytes();
 	}
 
+	static byte[] hessian_serialize(final Object obj) throws IOException {
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		final HessianOutput ho = new HessianOutput(bos);
+		ho.writeObject(obj);
+		return bos.toByteArray();
+	}
+
 	static Object kryo_deserialize(final Object kryo, final byte[] bytes, final Class<?> typeClass) {
+		final Kryo _kryo = (Kryo) kryo;
 		if (typeClass != null) {
-			((Kryo) kryo).register(typeClass);
-			return ((Kryo) kryo).readObject(new ByteBufferInput(bytes), typeClass);
+			_kryo.register(typeClass);
+			return _kryo.readObject(new ByteBufferInput(bytes), typeClass);
 		} else {
-			return ((Kryo) kryo).readClassAndObject(new ByteBufferInput(bytes));
+			return _kryo.readClassAndObject(new ByteBufferInput(bytes));
 		}
+	}
+
+	static Object hessian_deserialize(final byte[] bytes) throws IOException {
+		final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+		final com.caucho.hessian.io.HessianInput hi = new com.caucho.hessian.io.HessianInput(is);
+		return hi.readObject();
 	}
 }

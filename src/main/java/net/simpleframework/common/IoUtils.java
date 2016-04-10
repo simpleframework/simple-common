@@ -128,16 +128,14 @@ public abstract class IoUtils {
 		if (kryo != null) {
 			return IoUtils2.kryo_serialize(kryo, obj);
 		} else {
-			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			if (hessianEnabled) {
-				final com.caucho.hessian.io.HessianOutput ho = new com.caucho.hessian.io.HessianOutput(
-						bos);
-				ho.writeObject(obj);
+				return IoUtils2.hessian_serialize(obj);
 			} else {
+				final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				final ObjectOutputStream oos = new ObjectOutputStream(bos);
 				oos.writeObject(obj);
+				return bos.toByteArray();
 			}
-			return bos.toByteArray();
 		}
 	}
 
@@ -154,9 +152,7 @@ public abstract class IoUtils {
 			return IoUtils2.kryo_deserialize(kryo, bytes, typeClass);
 		} else {
 			if (hessianEnabled) {
-				final ByteArrayInputStream is = new ByteArrayInputStream(bytes);
-				final com.caucho.hessian.io.HessianInput hi = new com.caucho.hessian.io.HessianInput(is);
-				return hi.readObject();
+				return IoUtils2.hessian_deserialize(bytes);
 			} else {
 				final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 				final ObjectInputStream ois = new ObjectInputStream(bis);
