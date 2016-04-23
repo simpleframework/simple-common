@@ -27,7 +27,7 @@ public abstract class TextNamedObject<T extends TextNamedObject<T>> extends Name
 
 	public T setText(final Object text) {
 		if (text instanceof Date) {
-			setText(Convert.toDateString((Date) text));
+			setText(Convert.toDateTimeString((Date) text));
 		} else {
 			setText(Convert.toString(text));
 		}

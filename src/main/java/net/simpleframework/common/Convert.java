@@ -227,8 +227,12 @@ public abstract class Convert {
 		return date == null ? null : sdf.format(date);
 	}
 
-	public static final String toDateString(final Date date) {
+	public static final String toDateTimeString(final Date date) {
 		return toDateString(date, defaultDatePattern);
+	}
+
+	public static final String toDateString(final Date date) {
+		return toDateString(date, "yyyy-MM-dd");
 	}
 
 	public static final Date toDate(final String dateString, final String pattern) {
