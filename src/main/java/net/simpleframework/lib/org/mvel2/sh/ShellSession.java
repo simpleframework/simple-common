@@ -175,8 +175,7 @@ public class ShellSession {
 							lvrf);
 				} else {
 					final MVELInterpretedRuntime runtime = new MVELInterpretedRuntime(
-							inBuffer.toString(), ctxObject, lvrf);
-					runtime.setPCtx(pCtx);
+							inBuffer.toString(), ctxObject, lvrf, pCtx);
 					outputBuffer = runtime.parse();
 				}
 			} catch (final Exception e) {

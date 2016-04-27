@@ -62,19 +62,8 @@ public class ExpressionCompiler extends AbstractParser {
 	private boolean secondPassOptimization = false;
 
 	public CompiledExpression compile() {
-		return compile(pCtx);
-	}
-
-	@Deprecated
-	/**
-	 * @deprecated use {@link net.simpleframework.lib.org.mvel2.MVEL#compileExpression(String, net.simpleframework.lib.org.mvel2.ParserContext)} instead.
-	 * @param ctx
-	 * @return compile payload.
-	 */
-	public CompiledExpression compile(final ParserContext ctx) {
 		try {
-			this.debugSymbols = ctx.isDebugSymbols();
-			setPCtx(ctx);
+			this.debugSymbols = pCtx.isDebugSymbols();
 			return _compile();
 		} finally {
 			if (pCtx.isFatalError()) {

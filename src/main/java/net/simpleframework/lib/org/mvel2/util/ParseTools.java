@@ -80,19 +80,6 @@ public class ParseTools {
 	public static final Object[] EMPTY_OBJ_ARR = new Object[0];
 	public static final Class[] EMPTY_CLS_ARR = new Class[0];
 
-	static {
-		try {
-			final double version = parseDouble(PropertyTools.getJavaVersion().substring(0, 3));
-			if (version < 1.5) {
-				throw new RuntimeException("unsupported java version: " + version);
-			}
-		} catch (final RuntimeException e) {
-			throw e;
-		} catch (final Exception e) {
-			throw new RuntimeException("unable to initialize math processor", e);
-		}
-	}
-
 	public static List<char[]> parseMethodOrConstructor(final char[] parm) {
 		int start = -1;
 		for (int i = 0; i < parm.length; i++) {
@@ -256,21 +243,24 @@ public class ParseTools {
 			return null;
 		}
 
-		Class[] parmTypes;
+		Class<?>[] parmTypes;
 		Method bestCandidate = null;
 		int bestScore = -1;
 		boolean retry = false;
 
 		do {
 			for (final Method meth : methods) {
-				if (classTarget && (meth.getModifiers() & Modifier.STATIC) == 0) {
+				if (classTarget && !Modifier.isStatic(meth.getModifiers())) {
 					continue;
 				}
 
 				if (method.equals(meth.getName())) {
-					if ((parmTypes = meth.getParameterTypes()).length == 0 && arguments.length == 0) {
-						bestCandidate = meth;
-						break;
+					parmTypes = meth.getParameterTypes();
+					if (parmTypes.length == 0 && arguments.length == 0) {
+						if (bestCandidate == null || isMoreSpecialized(meth, bestCandidate)) {
+							bestCandidate = meth;
+						}
+						continue;
 					}
 
 					final boolean isVarArgs = meth.isVarArgs();
@@ -284,8 +274,7 @@ public class ParseTools {
 							bestCandidate = meth;
 							bestScore = score;
 						} else if (score == bestScore) {
-							if (bestCandidate.getReturnType().isAssignableFrom(meth.getReturnType())
-									&& !isVarArgs) {
+							if (isMoreSpecialized(meth, bestCandidate) && !isVarArgs) {
 								bestCandidate = meth;
 							}
 						}
@@ -318,11 +307,16 @@ public class ParseTools {
 		return bestCandidate;
 	}
 
+	private static boolean isMoreSpecialized(final Method newCandidate, final Method oldCandidate) {
+		return oldCandidate.getReturnType().isAssignableFrom(newCandidate.getReturnType())
+				&& oldCandidate.getDeclaringClass().isAssignableFrom(newCandidate.getDeclaringClass());
+	}
+
 	private static int getMethodScore(final Class[] arguments, final boolean requireExact,
-			final Class[] parmTypes, final boolean varArgs) {
+			final Class<?>[] parmTypes, final boolean varArgs) {
 		int score = 0;
 		for (int i = 0; i != arguments.length; i++) {
-			Class actualParamType;
+			Class<?> actualParamType;
 			if (varArgs && i >= parmTypes.length - 1) {
 				actualParamType = parmTypes[parmTypes.length - 1].getComponentType();
 			} else {
@@ -370,7 +364,7 @@ public class ParseTools {
 		return score;
 	}
 
-	public static int scoreInterface(final Class parm, final Class arg) {
+	public static int scoreInterface(final Class<?> parm, final Class<?> arg) {
 		if (parm.isInterface()) {
 			final Class[] iface = arg.getInterfaces();
 			if (iface != null) {
@@ -388,7 +382,7 @@ public class ParseTools {
 
 	public static Method getExactMatch(final String name, final Class[] args,
 			final Class returnType, final Class cls) {
-		for (final Method meth : cls.getMethods()) {
+		outer: for (final Method meth : cls.getMethods()) {
 			if (name.equals(meth.getName()) && returnType == meth.getReturnType()) {
 				final Class[] parameterTypes = meth.getParameterTypes();
 				if (parameterTypes.length != args.length) {
@@ -397,7 +391,7 @@ public class ParseTools {
 
 				for (int i = 0; i < parameterTypes.length; i++) {
 					if (parameterTypes[i] != args[i]) {
-						return null;
+						continue outer;
 					}
 				}
 				return meth;
@@ -434,7 +428,6 @@ public class ParseTools {
 			return best;
 		}
 
-		currentCls = cls;
 		for (currentCls = cls; currentCls != null; currentCls = currentCls.getSuperclass()) {
 			if ((m = getExactMatch(name, args, rt, currentCls)) != null) {
 				best = m;
@@ -516,7 +509,7 @@ public class ParseTools {
 		}
 
 		WeakReference<Class> ref;
-		Class cls = null;
+		Class cls;
 
 		if ((ref = cache.get(className)) != null && (cls = ref.get()) != null) {
 			return cls;
@@ -577,7 +570,7 @@ public class ParseTools {
 		return new String[] { new String(cs, start, offset) };
 	}
 
-	public static Class boxPrimitive(final Class cls) {
+	public static Class<?> boxPrimitive(final Class cls) {
 		if (cls == int.class || cls == Integer.class) {
 			return Integer.class;
 		} else if (cls == int[].class || cls == Integer[].class) {
@@ -718,7 +711,7 @@ public class ParseTools {
 
 	private static boolean containsCheckOnBooleanArray(final boolean[] array,
 			final Boolean compareTest) {
-		final boolean test = compareTest.booleanValue();
+		final boolean test = compareTest;
 		for (final boolean b : array) {
 			if (b == test) {
 				return true;
@@ -728,7 +721,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnIntArray(final int[] array, final Integer compareTest) {
-		final int test = compareTest.intValue();
+		final int test = compareTest;
 		for (final int i : array) {
 			if (i == test) {
 				return true;
@@ -738,7 +731,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnLongArray(final long[] array, final Long compareTest) {
-		final long test = compareTest.longValue();
+		final long test = compareTest;
 		for (final long l : array) {
 			if (l == test) {
 				return true;
@@ -748,7 +741,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnDoubleArray(final double[] array, final Double compareTest) {
-		final double test = compareTest.doubleValue();
+		final double test = compareTest;
 		for (final double d : array) {
 			if (d == test) {
 				return true;
@@ -758,7 +751,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnFloatArray(final float[] array, final Float compareTest) {
-		final float test = compareTest.floatValue();
+		final float test = compareTest;
 		for (final float f : array) {
 			if (f == test) {
 				return true;
@@ -768,7 +761,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnCharArray(final char[] array, final Character compareTest) {
-		final char test = compareTest.charValue();
+		final char test = compareTest;
 		for (final char c : array) {
 			if (c == test) {
 				return true;
@@ -778,7 +771,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnShortArray(final short[] array, final Short compareTest) {
-		final short test = compareTest.shortValue();
+		final short test = compareTest;
 		for (final short s : array) {
 			if (s == test) {
 				return true;
@@ -788,7 +781,7 @@ public class ParseTools {
 	}
 
 	private static boolean containsCheckOnByteArray(final byte[] array, final Byte compareTest) {
-		final byte test = compareTest.byteValue();
+		final byte test = compareTest;
 		for (final byte b : array) {
 			if (b == test) {
 				return true;
@@ -1714,7 +1707,7 @@ public class ParseTools {
 				}
 			}
 
-			return Integer.decode(new String(val));
+			return Integer.decode(new String(val, start, offset));
 		} else if (!isDigit(val[start + offset - 1])) {
 			switch (val[start + offset - 1]) {
 			case 'l':
@@ -2172,30 +2165,18 @@ public class ParseTools {
 	}
 
 	public static Serializable subCompileExpression(final char[] expression, final ParserContext ctx) {
-		final ExpressionCompiler c = new ExpressionCompiler(expression);
-		if (ctx != null) {
-			c.setPCtx(ctx);
-		}
+		final ExpressionCompiler c = new ExpressionCompiler(expression, ctx);
 		return _optimizeTree(c._compile());
-	}
-
-	public static Serializable subCompileExpression(final char[] expression, final int start,
-			final int offset) {
-		return _optimizeTree(new ExpressionCompiler(expression, start, offset)._compile());
 	}
 
 	public static Serializable subCompileExpression(final char[] expression, final int start,
 			final int offset, final ParserContext ctx) {
-		final ExpressionCompiler c = new ExpressionCompiler(expression, start, offset);
-		if (ctx != null) {
-			c.setPCtx(ctx);
-		}
+		final ExpressionCompiler c = new ExpressionCompiler(expression, start, offset, ctx);
 		return _optimizeTree(c._compile());
 	}
 
 	public static Serializable subCompileExpression(final String expression, final ParserContext ctx) {
-		final ExpressionCompiler c = new ExpressionCompiler(expression);
-		c.setPCtx(ctx);
+		final ExpressionCompiler c = new ExpressionCompiler(expression, ctx);
 		return _optimizeTree(c._compile());
 	}
 
@@ -2310,5 +2291,27 @@ public class ParseTools {
 				inStream.close();
 			}
 		}
+	}
+
+	public static Class forNameWithInner(final String className, final ClassLoader classLoader)
+			throws ClassNotFoundException {
+		try {
+			return Class.forName(className, true, classLoader);
+		} catch (final ClassNotFoundException cnfe) {
+			return findInnerClass(className, classLoader, cnfe);
+		}
+	}
+
+	public static Class findInnerClass(String className, final ClassLoader classLoader,
+			final ClassNotFoundException cnfe) throws ClassNotFoundException {
+		for (int lastDotPos = className.lastIndexOf('.'); lastDotPos > 0; lastDotPos = className
+				.lastIndexOf('.')) {
+			className = className.substring(0, lastDotPos) + "$" + className.substring(lastDotPos + 1);
+			try {
+				return Class.forName(className, true, classLoader);
+			} catch (final ClassNotFoundException e) { /* ignore */
+			}
+		}
+		throw cnfe;
 	}
 }

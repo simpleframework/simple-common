@@ -18,6 +18,8 @@
 
 package net.simpleframework.lib.org.mvel2;
 
+import static net.simpleframework.lib.org.mvel2.util.ParseTools.forNameWithInner;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,7 +37,6 @@ import net.simpleframework.lib.org.mvel2.ast.Proto;
 import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 import net.simpleframework.lib.org.mvel2.integration.Interceptor;
 import net.simpleframework.lib.org.mvel2.util.MethodStub;
-import net.simpleframework.lib.org.mvel2.util.PropertyTools;
 
 /**
  * The resusable parser configuration object.
@@ -127,7 +128,7 @@ public class ParserConfiguration implements Serializable {
 				return true;
 			} else {
 				for (final Field f : c.getDeclaredFields()) {
-					if ((f.getModifiers() & (Modifier.STATIC | Modifier.PUBLIC)) != 0) {
+					if ((f.getModifiers() & (Modifier.STATIC | Modifier.PUBLIC)) == (Modifier.STATIC | Modifier.PUBLIC)) {
 						imports.put(f.getName(), f.get(null));
 					}
 				}
@@ -174,17 +175,10 @@ public class ParserConfiguration implements Serializable {
 		Class cls = null;
 		for (final String pkg : packageImports) {
 			try {
-				cls = Class.forName(pkg + "." + className, true, getClassLoader());
+				cls = forNameWithInner(pkg + "." + className, getClassLoader());
 				found++;
-			} catch (final ClassNotFoundException e) {
+			} catch (final Throwable cnfe) {
 				// do nothing.
-			} catch (final NoClassDefFoundError e) {
-				if (PropertyTools.contains(e.getMessage(), "wrong name")) {
-					// do nothing. this is a weirdness in the jvm.
-					// see MVEL-43
-				} else {
-					throw e;
-				}
 			}
 		}
 

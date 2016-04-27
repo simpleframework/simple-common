@@ -19,8 +19,6 @@ package net.simpleframework.lib.org.mvel2.compiler;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.lang.Double.parseDouble;
-import static java.lang.Thread.currentThread;
 import static net.simpleframework.lib.org.mvel2.Operator.ADD;
 import static net.simpleframework.lib.org.mvel2.Operator.AND;
 import static net.simpleframework.lib.org.mvel2.Operator.ASSERT;
@@ -170,7 +168,6 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.util.ErrorUtil;
 import net.simpleframework.lib.org.mvel2.util.ExecutionStack;
 import net.simpleframework.lib.org.mvel2.util.FunctionParser;
-import net.simpleframework.lib.org.mvel2.util.PropertyTools;
 import net.simpleframework.lib.org.mvel2.util.ProtoParser;
 
 /**
@@ -230,6 +227,10 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected AbstractParser() {
 		pCtx = new ParserContext();
+	}
+
+	protected AbstractParser(final ParserContext pCtx) {
+		this.pCtx = pCtx != null ? pCtx : new ParserContext();
 	}
 
 	/**
@@ -295,14 +296,7 @@ public class AbstractParser implements Parser, Serializable {
 
 			CLASS_LITERALS.put("Array", java.lang.reflect.Array.class);
 
-			if (parseDouble(PropertyTools.getJavaVersion().substring(0, 3)) >= 1.5) {
-				try {
-					CLASS_LITERALS.put("StringBuilder", currentThread().getContextClassLoader()
-							.loadClass("java.lang.StringBuilder"));
-				} catch (final Exception e) {
-					throw new RuntimeException("cannot resolve a built-in literal", e);
-				}
-			}
+			CLASS_LITERALS.put("StringBuilder", StringBuilder.class);
 
 			// Setup LITERALS
 			LITERALS.putAll(CLASS_LITERALS);
@@ -2986,9 +2980,5 @@ public class AbstractParser implements Parser, Serializable {
 
 	private static int asInt(final Object o) {
 		return (Integer) o;
-	}
-
-	public void setPCtx(final ParserContext pCtx) {
-		this.debugSymbols = (this.pCtx = pCtx).isDebugSymbols();
 	}
 }

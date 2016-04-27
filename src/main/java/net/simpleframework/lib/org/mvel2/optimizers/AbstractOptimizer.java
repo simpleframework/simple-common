@@ -19,6 +19,8 @@ package net.simpleframework.lib.org.mvel2.optimizers;
 
 import static java.lang.Thread.currentThread;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.captureStringLiteral;
+import static net.simpleframework.lib.org.mvel2.util.ParseTools.findInnerClass;
+import static net.simpleframework.lib.org.mvel2.util.ParseTools.forNameWithInner;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.isIdentifierPart;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.isWhitespace;
 
@@ -26,6 +28,7 @@ import java.lang.reflect.Method;
 
 import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.MVEL;
+import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.compiler.AbstractParser;
 
 /**
@@ -43,6 +46,13 @@ public class AbstractOptimizer extends AbstractParser {
 	protected boolean staticAccess = false;
 
 	protected int tkStart;
+
+	protected AbstractOptimizer() {
+	}
+
+	protected AbstractOptimizer(final ParserContext pCtx) {
+		super(pCtx);
+	}
 
 	/**
 	 * Try static access of the property, and return an instance of the Field,
@@ -76,15 +86,19 @@ public class AbstractOptimizer extends AbstractParser {
 					if (!meth) {
 						final ClassLoader classLoader = pCtx != null ? pCtx.getClassLoader()
 								: currentThread().getContextClassLoader();
+						String test = new String(expr, start, (cursor = last) - start);
 						try {
-							String test = new String(expr, start, (cursor = last) - start);
 							if (MVEL.COMPILER_OPT_SUPPORT_JAVA_STYLE_CLASS_LITERALS
 									&& test.endsWith(".class")) {
 								test = test.substring(0, test.length() - 6);
 							}
 
 							return Class.forName(test, true, classLoader);
-						} catch (final ClassNotFoundException e) {
+						} catch (final ClassNotFoundException cnfe) {
+							try {
+								return findInnerClass(test, classLoader, cnfe);
+							} catch (final ClassNotFoundException e) { /* ignore */
+							}
 							final Class cls = forNameWithInner(new String(expr, start, i - start),
 									classLoader);
 							final String name = new String(expr, i + 1, end - i - 1);
@@ -171,27 +185,6 @@ public class AbstractOptimizer extends AbstractParser {
 		}
 
 		return null;
-	}
-
-	private Class forNameWithInner(String className, final ClassLoader classLoader)
-			throws ClassNotFoundException {
-		ClassNotFoundException cnfe = null;
-		try {
-			return Class.forName(className, true, classLoader);
-		} catch (final ClassNotFoundException e) {
-			cnfe = e;
-		}
-
-		for (int lastDotPos = className.lastIndexOf('.'); lastDotPos > 0; lastDotPos = className
-				.lastIndexOf('.')) {
-			className = className.substring(0, lastDotPos) + "$" + className.substring(lastDotPos + 1);
-			try {
-				return Class.forName(className, true, classLoader);
-			} catch (final ClassNotFoundException e) {
-			}
-		}
-
-		throw cnfe;
 	}
 
 	protected int nextSubToken() {

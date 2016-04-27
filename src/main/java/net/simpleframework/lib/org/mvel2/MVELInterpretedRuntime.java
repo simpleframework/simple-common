@@ -361,8 +361,27 @@ public class MVELInterpretedRuntime extends AbstractParser {
 		this.variableFactory = resolverFactory;
 	}
 
+	public MVELInterpretedRuntime(final char[] expr, final int start, final int offset,
+			final Object ctx, final VariableResolverFactory resolverFactory, final ParserContext pCtx) {
+		super(pCtx);
+		this.expr = expr;
+		this.start = start;
+		this.end = start + offset;
+		this.length = end - start;
+		this.ctx = ctx;
+		this.variableFactory = resolverFactory;
+	}
+
 	public MVELInterpretedRuntime(final String expression, final Object ctx,
 			final VariableResolverFactory resolverFactory) {
+		setExpression(expression);
+		this.ctx = ctx;
+		this.variableFactory = resolverFactory;
+	}
+
+	public MVELInterpretedRuntime(final String expression, final Object ctx,
+			final VariableResolverFactory resolverFactory, final ParserContext pCtx) {
+		super(pCtx);
 		setExpression(expression);
 		this.ctx = ctx;
 		this.variableFactory = resolverFactory;

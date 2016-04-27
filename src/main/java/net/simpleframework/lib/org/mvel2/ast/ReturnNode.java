@@ -46,7 +46,7 @@ public class ReturnNode extends ASTNode {
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if (accessor == null) {
-			setAccessor((Accessor) subCompileExpression(expr, start, offset));
+			setAccessor((Accessor) subCompileExpression(expr, start, offset, pCtx));
 		}
 
 		factory.setTiltFlag(true);

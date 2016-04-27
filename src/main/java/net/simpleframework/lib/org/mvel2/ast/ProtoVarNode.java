@@ -65,7 +65,7 @@ public class ProtoVarNode extends ASTNode implements Assignment {
 	public Object getReducedValueAccelerated(Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if (statement == null) {
-			statement = (ExecutableStatement) subCompileExpression(expr, start, offset);
+			statement = (ExecutableStatement) subCompileExpression(expr, start, offset, pCtx);
 		}
 		factory.createVariable(name, ctx = statement.getValue(ctx, thisValue, factory), egressType);
 		return ctx;

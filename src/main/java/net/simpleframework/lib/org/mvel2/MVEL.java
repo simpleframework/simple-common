@@ -846,9 +846,9 @@ public class MVEL {
 	 *        - the parser context
 	 */
 	public static void analysisCompile(final char[] expression, final ParserContext ctx) {
-		final ExpressionCompiler compiler = new ExpressionCompiler(expression);
+		final ExpressionCompiler compiler = new ExpressionCompiler(expression, ctx);
 		compiler.setVerifyOnly(true);
-		compiler.compile(ctx);
+		compiler.compile();
 	}
 
 	public static void analysisCompile(final String expression, final ParserContext ctx) {
@@ -856,9 +856,9 @@ public class MVEL {
 	}
 
 	public static Class analyze(final char[] expression, final ParserContext ctx) {
-		final ExpressionCompiler compiler = new ExpressionCompiler(expression);
+		final ExpressionCompiler compiler = new ExpressionCompiler(expression, ctx);
 		compiler.setVerifyOnly(true);
-		compiler.compile(ctx);
+		compiler.compile();
 		return compiler.getReturnType();
 	}
 
@@ -1021,15 +1021,12 @@ public class MVEL {
 	 * @return A cacheable compiled payload.
 	 */
 	public static Serializable compileExpression(final String expression, final ParserContext ctx) {
-		return optimizeTree(new ExpressionCompiler(expression).compile(ctx));
+		return optimizeTree(new ExpressionCompiler(expression, ctx).compile());
 	}
 
 	public static Serializable compileExpression(final char[] expression, final int start,
 			final int offset, final ParserContext ctx) {
-		final ExpressionCompiler c = new ExpressionCompiler(expression, start, offset);
-		if (ctx != null) {
-			c.setPCtx(ctx);
-		}
+		final ExpressionCompiler c = new ExpressionCompiler(expression, start, offset, ctx);
 		return optimizeTree(c._compile());
 	}
 
@@ -1040,7 +1037,7 @@ public class MVEL {
 	}
 
 	public static Serializable compileExpression(final char[] expression, final ParserContext ctx) {
-		return optimizeTree(new ExpressionCompiler(expression).compile(ctx));
+		return optimizeTree(new ExpressionCompiler(expression, ctx).compile());
 	}
 
 	/**

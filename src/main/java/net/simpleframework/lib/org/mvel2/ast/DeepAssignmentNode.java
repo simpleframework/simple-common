@@ -92,7 +92,7 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 	public Object getReducedValueAccelerated(Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if (statement == null) {
-			statement = (ExecutableStatement) subCompileExpression(expr, this.start, this.offset);
+			statement = (ExecutableStatement) subCompileExpression(expr, this.start, this.offset, pCtx);
 			acc = (CompiledAccExpression) compileSetExpression(property.toCharArray(),
 					statement.getKnownEgressType(), pCtx);
 		}

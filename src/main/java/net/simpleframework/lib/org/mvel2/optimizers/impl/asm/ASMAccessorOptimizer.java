@@ -187,7 +187,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			OPCODES_VERSION = Opcodes.V1_4;
 		} else if (javaVersion.startsWith("1.5")) {
 			OPCODES_VERSION = Opcodes.V1_5;
-		} else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
+		} else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")
+				|| javaVersion.startsWith("1.8")) {
 			OPCODES_VERSION = Opcodes.V1_6;
 		} else if (javaVersion.startsWith("1.8")) {
 			OPCODES_VERSION = Opcodes.V1_8;
@@ -1433,16 +1434,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		}
 
 		currType = null;
-		if (ctx == null) {
-			return null;
-		}
 
 		assert debug("\n  **  ENTER -> {collection:<<" + prop + ">>; ctx=" + ctx + "}");
-
-		if (first) {
-			assert debug("ALOAD 1");
-			mv.visitVarInsn(ALOAD, 1);
-		}
 
 		final int start = ++cursor;
 
@@ -1459,6 +1452,14 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		final String tk = new String(expr, start, cursor - start);
 
 		assert debug("{collection token: [" + tk + "]}");
+
+		if (ctx == null) {
+			return null;
+		}
+		if (first) {
+			assert debug("ALOAD 1");
+			mv.visitVarInsn(ALOAD, 1);
+		}
 
 		final ExecutableStatement compiled = (ExecutableStatement) subCompileExpression(
 				tk.toCharArray(), pCtx);
@@ -1582,9 +1583,6 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		}
 
 		currType = null;
-		if (ctx == null) {
-			return null;
-		}
 
 		assert debug("\n  **  ENTER -> {collection:<<" + prop + ">>; ctx=" + ctx + "}");
 
@@ -1603,6 +1601,10 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		final String tk = new String(expr, _start, cursor - _start);
 
 		assert debug("{collection token:<<" + tk + ">>}");
+
+		if (ctx == null) {
+			return null;
+		}
 
 		final ExecutableStatement compiled = (ExecutableStatement) subCompileExpression(tk
 				.toCharArray());
