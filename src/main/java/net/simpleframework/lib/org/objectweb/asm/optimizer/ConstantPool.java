@@ -137,14 +137,16 @@ public class ConstantPool extends HashMap<Constant, Constant> {
 		return result;
 	}
 
-	public Constant newHandle(final int tag, final String owner, final String name, final String desc) {
-		key4.set((char) ('h' - 1 + tag), owner, name, desc);
+	public Constant newHandle(final int tag, final String owner, final String name,
+			final String desc, final boolean itf) {
+		key4.set((char) ('h' + tag - 1 + (itf && tag != Opcodes.H_INVOKEINTERFACE ? 4 : 0)), owner,
+				name, desc);
 		Constant result = get(key4);
 		if (result == null) {
 			if (tag <= Opcodes.H_PUTSTATIC) {
 				newField(owner, name, desc);
 			} else {
-				newMethod(owner, name, desc, tag == Opcodes.H_INVOKEINTERFACE);
+				newMethod(owner, name, desc, itf);
 			}
 			result = new Constant(key4);
 			put(result);
@@ -179,7 +181,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
 			}
 		} else if (cst instanceof Handle) {
 			final Handle h = (Handle) cst;
-			return newHandle(h.getTag(), h.getOwner(), h.getName(), h.getDesc());
+			return newHandle(h.getTag(), h.getOwner(), h.getName(), h.getDesc(), h.isInterface());
 		} else {
 			throw new IllegalArgumentException("value " + cst);
 		}
@@ -216,7 +218,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
 		Constant result = get(key5);
 		if (result == null) {
 			newNameType(name, desc);
-			newHandle(bsm.getTag(), bsm.getOwner(), bsm.getName(), bsm.getDesc());
+			newHandle(bsm.getTag(), bsm.getOwner(), bsm.getName(), bsm.getDesc(), bsm.isInterface());
 			for (int i = 0; i < bsmArgs.length; i++) {
 				newConst(bsmArgs[i]);
 			}

@@ -799,7 +799,11 @@ public class ASMifier extends Printer {
 		buf.setLength(0);
 		buf.append("{\n").append("av0 = ").append(name).append(".visitLocalVariableAnnotation(");
 		buf.append(typeRef);
-		buf.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
+		if (typePath == null) {
+			buf.append(", null, ");
+		} else {
+			buf.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
+		}
 		buf.append("new Label[] {");
 		for (int i = 0; i < start.length; ++i) {
 			buf.append(i == 0 ? " " : ", ");
@@ -874,7 +878,11 @@ public class ASMifier extends Printer {
 		buf.setLength(0);
 		buf.append("{\n").append("av0 = ").append(name).append(".").append(method).append("(");
 		buf.append(typeRef);
-		buf.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
+		if (typePath == null) {
+			buf.append(", null, ");
+		} else {
+			buf.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
+		}
 		appendConstant(desc);
 		buf.append(", ").append(visible).append(");\n");
 		text.add(buf.toString());

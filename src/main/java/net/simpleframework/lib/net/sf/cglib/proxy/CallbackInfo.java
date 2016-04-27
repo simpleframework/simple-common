@@ -19,17 +19,25 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
 
 class CallbackInfo {
 	public static Type[] determineTypes(final Class[] callbackTypes) {
+		return determineTypes(callbackTypes, true);
+	}
+
+	public static Type[] determineTypes(final Class[] callbackTypes, final boolean checkAll) {
 		final Type[] types = new Type[callbackTypes.length];
 		for (int i = 0; i < types.length; i++) {
-			types[i] = determineType(callbackTypes[i]);
+			types[i] = determineType(callbackTypes[i], checkAll);
 		}
 		return types;
 	}
 
 	public static Type[] determineTypes(final Callback[] callbacks) {
+		return determineTypes(callbacks, true);
+	}
+
+	public static Type[] determineTypes(final Callback[] callbacks, final boolean checkAll) {
 		final Type[] types = new Type[callbacks.length];
 		for (int i = 0; i < types.length; i++) {
-			types[i] = determineType(callbacks[i]);
+			types[i] = determineType(callbacks[i], checkAll);
 		}
 		return types;
 	}
@@ -63,15 +71,16 @@ class CallbackInfo {
 		type = Type.getType(cls);
 	}
 
-	private static Type determineType(final Callback callback) {
+	private static Type determineType(final Callback callback, final boolean checkAll) {
 		if (callback == null) {
 			throw new IllegalStateException("Callback is null");
 		}
-		return determineType(callback.getClass());
+		return determineType(callback.getClass(), checkAll);
 	}
 
-	private static Type determineType(final Class callbackType) {
+	private static Type determineType(final Class callbackType, final boolean checkAll) {
 		Class cur = null;
+		Type type = null;
 		for (int i = 0; i < CALLBACKS.length; i++) {
 			final CallbackInfo info = CALLBACKS[i];
 			if (info.cls.isAssignableFrom(callbackType)) {
@@ -80,12 +89,16 @@ class CallbackInfo {
 							+ info.cls);
 				}
 				cur = info.cls;
+				type = info.type;
+				if (!checkAll) {
+					break;
+				}
 			}
 		}
 		if (cur == null) {
 			throw new IllegalStateException("Unknown callback type " + callbackType);
 		}
-		return Type.getType(cur);
+		return type;
 	}
 
 	private static CallbackGenerator getGenerator(final Type callbackType) {

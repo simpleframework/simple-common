@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.util;
 
+
 abstract class SorterTemplate {
 	private static final int MERGESORT_THRESHOLD = 12;
 	private static final int QUICKSORT_THRESHOLD = 7;

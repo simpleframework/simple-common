@@ -701,7 +701,7 @@ public class Processor {
 		}
 
 		private final void writeAttributes(final Attributes atts) throws IOException {
-			final StringBuffer sb = new StringBuffer();
+			final StringBuilder sb = new StringBuilder();
 			final int len = atts.getLength();
 			for (int i = 0; i < len; i++) {
 				sb.append(' ').append(atts.getLocalName(i)).append("=\"").append(esc(atts.getValue(i)))
@@ -718,7 +718,7 @@ public class Processor {
 		 * @return encoded string
 		 */
 		private static final String esc(final String str) {
-			final StringBuffer sb = new StringBuffer(str.length());
+			final StringBuilder sb = new StringBuilder(str.length());
 			for (int i = 0; i < str.length(); i++) {
 				final char ch = str.charAt(i);
 				switch (ch) {

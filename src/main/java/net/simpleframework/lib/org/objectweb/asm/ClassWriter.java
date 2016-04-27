@@ -1041,7 +1041,7 @@ public class ClassWriter extends ClassVisitor {
 			}
 		} else if (cst instanceof Handle) {
 			final Handle h = (Handle) cst;
-			return newHandleItem(h.tag, h.owner, h.name, h.desc);
+			return newHandleItem(h.tag, h.owner, h.name, h.desc, h.itf);
 		} else {
 			throw new IllegalArgumentException("value " + cst);
 		}
@@ -1175,16 +1175,19 @@ public class ClassWriter extends ClassVisitor {
 	 *        the name of the field or method.
 	 * @param desc
 	 *        the descriptor of the field or method.
+	 * @param itf
+	 *        true if the owner is an interface.
 	 * @return a new or an already existing method type reference item.
 	 */
-	Item newHandleItem(final int tag, final String owner, final String name, final String desc) {
+	Item newHandleItem(final int tag, final String owner, final String name, final String desc,
+			final boolean itf) {
 		key4.set(HANDLE_BASE + tag, owner, name, desc);
 		Item result = get(key4);
 		if (result == null) {
 			if (tag <= Opcodes.H_PUTSTATIC) {
 				put112(HANDLE, tag, newField(owner, name, desc));
 			} else {
-				put112(HANDLE, tag, newMethod(owner, name, desc, tag == Opcodes.H_INVOKEINTERFACE));
+				put112(HANDLE, tag, newMethod(owner, name, desc, itf));
 			}
 			result = new Item(index++, key4);
 			put(result);
@@ -1213,9 +1216,42 @@ public class ClassWriter extends ClassVisitor {
 	 *        the descriptor of the field or method.
 	 * @return the index of a new or already existing method type reference
 	 *         item.
+	 * 
+	 * @deprecated this method is superseded by
+	 *             {@link #newHandle(int, String, String, String, boolean)}.
 	 */
+	@Deprecated
 	public int newHandle(final int tag, final String owner, final String name, final String desc) {
-		return newHandleItem(tag, owner, name, desc).index;
+		return newHandle(tag, owner, name, desc, tag == Opcodes.H_INVOKEINTERFACE);
+	}
+
+	/**
+	 * Adds a handle to the constant pool of the class being build. Does nothing
+	 * if the constant pool already contains a similar item. <i>This method is
+	 * intended for {@link Attribute} sub classes, and is normally not needed by
+	 * class generators or adapters.</i>
+	 * 
+	 * @param tag
+	 *        the kind of this handle. Must be {@link Opcodes#H_GETFIELD},
+	 *        {@link Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
+	 *        {@link Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
+	 *        {@link Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL},
+	 *        {@link Opcodes#H_NEWINVOKESPECIAL} or
+	 *        {@link Opcodes#H_INVOKEINTERFACE}.
+	 * @param owner
+	 *        the internal name of the field or method owner class.
+	 * @param name
+	 *        the name of the field or method.
+	 * @param desc
+	 *        the descriptor of the field or method.
+	 * @param itf
+	 *        true if the owner is an interface.
+	 * @return the index of a new or already existing method type reference
+	 *         item.
+	 */
+	public int newHandle(final int tag, final String owner, final String name, final String desc,
+			final boolean itf) {
+		return newHandleItem(tag, owner, name, desc, itf).index;
 	}
 
 	/**
@@ -1246,7 +1282,8 @@ public class ClassWriter extends ClassVisitor {
 		final int position = bootstrapMethods.length; // record current position
 
 		int hashCode = bsm.hashCode();
-		bootstrapMethods.putShort(newHandle(bsm.tag, bsm.owner, bsm.name, bsm.desc));
+		bootstrapMethods
+				.putShort(newHandle(bsm.tag, bsm.owner, bsm.name, bsm.desc, bsm.isInterface()));
 
 		final int argsLength = bsmArgs.length;
 		bootstrapMethods.putShort(argsLength);

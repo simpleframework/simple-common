@@ -2431,11 +2431,12 @@ public class ClassReader {
 			final int tag = readByte(index);
 			final int[] items = this.items;
 			int cpIndex = items[readUnsignedShort(index + 1)];
+			final boolean itf = b[cpIndex - 1] == ClassWriter.IMETH;
 			final String owner = readClass(cpIndex, buf);
 			cpIndex = items[readUnsignedShort(cpIndex + 2)];
 			final String name = readUTF8(cpIndex, buf);
 			final String desc = readUTF8(cpIndex + 2, buf);
-			return new Handle(tag, owner, name, desc);
+			return new Handle(tag, owner, name, desc, itf);
 		}
 	}
 }

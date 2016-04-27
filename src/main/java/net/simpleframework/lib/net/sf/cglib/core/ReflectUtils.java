@@ -51,6 +51,8 @@ public class ReflectUtils {
 	private static Method DEFINE_CLASS;
 	private static final ProtectionDomain PROTECTION_DOMAIN;
 
+	private static final List<Method> OBJECT_METHODS = new ArrayList<Method>();
+
 	static {
 		PROTECTION_DOMAIN = getProtectionDomain(ReflectUtils.class);
 
@@ -73,6 +75,14 @@ public class ReflectUtils {
 				return null;
 			}
 		});
+		final Method[] methods = Object.class.getDeclaredMethods();
+		for (final Method method : methods) {
+			if ("finalize".equals(method.getName())
+					|| (method.getModifiers() & (Modifier.FINAL | Modifier.STATIC)) > 0) {
+				continue;
+			}
+			OBJECT_METHODS.add(method);
+		}
 	}
 
 	private static final String[] CGLIB_PACKAGES = { "java.lang", };
@@ -370,7 +380,12 @@ public class ReflectUtils {
 
 	public static List addAllMethods(final Class type, final List list) {
 
-		list.addAll(java.util.Arrays.asList(type.getDeclaredMethods()));
+		if (type == Object.class) {
+			list.addAll(OBJECT_METHODS);
+		} else {
+			list.addAll(java.util.Arrays.asList(type.getDeclaredMethods()));
+		}
+
 		final Class superclass = type.getSuperclass();
 		if (superclass != null) {
 			addAllMethods(superclass, list);

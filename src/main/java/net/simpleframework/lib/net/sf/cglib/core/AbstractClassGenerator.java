@@ -15,15 +15,15 @@
  */
 package net.simpleframework.lib.net.sf.cglib.core;
 
-import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.security.ProtectionDomain;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
+import net.simpleframework.lib.net.sf.cglib.core.internal.Function;
+import net.simpleframework.lib.net.sf.cglib.core.internal.LoadingCache;
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
 
 /**
@@ -34,9 +34,19 @@ import net.simpleframework.lib.org.objectweb.asm.ClassReader;
  * transformations
  * applied before generation.
  */
-abstract public class AbstractClassGenerator implements ClassGenerator {
-	private static final Object NAME_KEY = new Object();
+abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	private static final ThreadLocal CURRENT = new ThreadLocal();
+
+	private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<ClassLoader, ClassLoaderData>();
+	// private static final WeakLoadingCache<ClassLoader, ClassLoaderData> CACHE
+	// =
+	// new WeakLoadingCache<ClassLoader, ClassLoaderData>(
+	// new Function<ClassLoader, ClassLoaderData>() {
+	// public ClassLoaderData apply(ClassLoader key) {
+	// return new ClassLoaderData(key);
+	// }
+	// }
+	// );
 
 	private GeneratorStrategy strategy = DefaultGeneratorStrategy.INSTANCE;
 	private NamingPolicy namingPolicy = DefaultNamingPolicy.INSTANCE;
@@ -48,9 +58,69 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 	private String className;
 	private boolean attemptLoad;
 
+	protected static class ClassLoaderData {
+		private final ConcurrentMap<String, Boolean> reservedClassNames = new ConcurrentHashMap<String, Boolean>(
+				1, 0.75f, 1);
+		private final LoadingCache<AbstractClassGenerator, Object, Object> generatedClasses;
+		private final WeakReference<ClassLoader> classLoader;
+
+		private final Predicate uniqueNamePredicate = new Predicate() {
+			@Override
+			public boolean evaluate(final Object arg) {
+				return allocateName((String) arg);
+			}
+		};
+
+		private static final Function<AbstractClassGenerator, Object> GET_KEY = new Function<AbstractClassGenerator, Object>() {
+			@Override
+			public Object apply(final AbstractClassGenerator gen) {
+				return gen.key;
+			}
+		};
+
+		public ClassLoaderData(final ClassLoader classLoader) {
+			if (classLoader == null) {
+				throw new IllegalArgumentException("classLoader == null is not yet supported");
+			}
+			this.classLoader = new WeakReference<ClassLoader>(classLoader);
+			final Function<AbstractClassGenerator, Object> load = new Function<AbstractClassGenerator, Object>() {
+				@Override
+				public Object apply(final AbstractClassGenerator gen) {
+					final Class klass = gen.generate(ClassLoaderData.this);
+					return gen.wrapCachedClass(klass);
+				}
+			};
+			generatedClasses = new LoadingCache<AbstractClassGenerator, Object, Object>(GET_KEY, load);
+		}
+
+		public ClassLoader getClassLoader() {
+			return classLoader.get();
+		}
+
+		public boolean allocateName(final String name) {
+			return reservedClassNames.putIfAbsent(name, true) != null;
+		}
+
+		public Predicate getUniqueNamePredicate() {
+			return uniqueNamePredicate;
+		}
+
+		public Object get(final AbstractClassGenerator gen) {
+			final Object cachedValue = generatedClasses.get(gen);
+			return gen.unwrapCachedValue(cachedValue);
+		}
+	}
+
+	protected T wrapCachedClass(final Class klass) {
+		return (T) new WeakReference(klass);
+	}
+
+	protected Object unwrapCachedValue(final T cached) {
+		return ((WeakReference) cached).get();
+	}
+
 	protected static class Source {
 		String name;
-		Map cache = new WeakHashMap();
 
 		public Source(final String name) {
 			this.name = name;
@@ -66,24 +136,15 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 	}
 
 	final protected String getClassName() {
-		if (className == null) {
-			className = getClassName(getClassLoader());
-		}
 		return className;
 	}
 
-	private String getClassName(final ClassLoader loader) {
-		final Set nameCache = getClassNameCache(loader);
-		return namingPolicy.getClassName(namePrefix, source.name, key, new Predicate() {
-			@Override
-			public boolean evaluate(final Object arg) {
-				return nameCache.contains(arg);
-			}
-		});
+	private void setClassName(final String className) {
+		this.className = className;
 	}
 
-	private Set getClassNameCache(final ClassLoader loader) {
-		return (Set) ((Map) source.cache.get(loader)).get(NAME_KEY);
+	private String generateClassName(final Predicate nameTestPredicate) {
+		return namingPolicy.getClassName(namePrefix, source.name, key, nameTestPredicate);
 	}
 
 	/**
@@ -215,61 +276,76 @@ abstract public class AbstractClassGenerator implements ClassGenerator {
 
 	protected Object create(final Object key) {
 		try {
-			Class gen = null;
-
-			synchronized (source) {
-				final ClassLoader loader = getClassLoader();
-				final ProtectionDomain protectionDomain = getProtectionDomain();
-				Map cache2 = null;
-				cache2 = (Map) source.cache.get(loader);
-				if (cache2 == null) {
-					cache2 = new HashMap();
-					cache2.put(NAME_KEY, new HashSet());
-					source.cache.put(loader, cache2);
-				} else if (useCache) {
-					final Reference ref = (Reference) cache2.get(key);
-					gen = (Class) ((ref == null) ? null : ref.get());
-				}
-				if (gen == null) {
-					final Object save = CURRENT.get();
-					CURRENT.set(this);
-					try {
-						this.key = key;
-
-						if (attemptLoad) {
-							try {
-								gen = loader.loadClass(getClassName());
-							} catch (final ClassNotFoundException e) {
-								// ignore
-							}
-						}
-						if (gen == null) {
-							final byte[] b = strategy.generate(this);
-							final String className = ClassNameReader.getClassName(new ClassReader(b));
-							getClassNameCache(loader).add(className);
-							if (protectionDomain == null) {
-								gen = ReflectUtils.defineClass(className, b, loader);
-							} else {
-								gen = ReflectUtils.defineClass(className, b, loader, protectionDomain);
-							}
-						}
-
-						if (useCache) {
-							cache2.put(key, new WeakReference(gen));
-						}
-						return firstInstance(gen);
-					} finally {
-						CURRENT.set(save);
+			final ClassLoader loader = getClassLoader();
+			final Map<ClassLoader, ClassLoaderData> cache = CACHE;
+			ClassLoaderData data = cache.get(loader);
+			if (data == null) {
+				synchronized (AbstractClassGenerator.class) {
+					data = cache.get(loader);
+					if (data == null) {
+						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<ClassLoader, ClassLoaderData>(
+								cache);
+						data = new ClassLoaderData(loader);
+						newCache.put(loader, data);
+						CACHE = newCache;
 					}
 				}
 			}
-			return firstInstance(gen);
+			this.key = key;
+			final Object obj = data.get(this);
+			if (obj instanceof Class) {
+				return firstInstance((Class) obj);
+			}
+			return nextInstance(obj);
 		} catch (final RuntimeException e) {
 			throw e;
 		} catch (final Error e) {
 			throw e;
 		} catch (final Exception e) {
 			throw new CodeGenerationException(e);
+		}
+	}
+
+	protected Class generate(final ClassLoaderData data) {
+		Class gen;
+		final Object save = CURRENT.get();
+		CURRENT.set(this);
+		try {
+			final ClassLoader classLoader = data.getClassLoader();
+			if (classLoader == null) {
+				throw new IllegalStateException("ClassLoader is null while trying to define class "
+						+ getClassName()
+						+ ". It seems that the loader has been expired from a weak reference somehow. "
+						+ "Please file an issue at cglib's issue tracker.");
+			}
+			this.setClassName(generateClassName(data.getUniqueNamePredicate()));
+			if (attemptLoad) {
+				try {
+					gen = classLoader.loadClass(getClassName());
+					return gen;
+				} catch (final ClassNotFoundException e) {
+					// ignore
+				}
+			}
+			final byte[] b = strategy.generate(this);
+			final String className = ClassNameReader.getClassName(new ClassReader(b));
+			final ProtectionDomain protectionDomain = getProtectionDomain();
+			synchronized (classLoader) { // just in case
+				if (protectionDomain == null) {
+					gen = ReflectUtils.defineClass(className, b, classLoader);
+				} else {
+					gen = ReflectUtils.defineClass(className, b, classLoader, protectionDomain);
+				}
+			}
+			return gen;
+		} catch (final RuntimeException e) {
+			throw e;
+		} catch (final Error e) {
+			throw e;
+		} catch (final Exception e) {
+			throw new CodeGenerationException(e);
+		} finally {
+			CURRENT.set(save);
 		}
 	}
 

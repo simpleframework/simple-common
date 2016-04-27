@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.core;
 
+
 /**
  * Customize the generated class name for {@link AbstractClassGenerator}-based
  * utilities.

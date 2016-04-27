@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.beans;
 
+
 public class BulkBeanException extends RuntimeException {
 	private final int index;
 	private Throwable cause;

@@ -15,6 +15,9 @@
  */
 package net.simpleframework.lib.net.sf.cglib.proxy;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
@@ -48,6 +51,7 @@ import net.simpleframework.lib.net.sf.cglib.core.Signature;
 import net.simpleframework.lib.net.sf.cglib.core.Transformer;
 import net.simpleframework.lib.net.sf.cglib.core.TypeUtils;
 import net.simpleframework.lib.net.sf.cglib.core.VisibilityPredicate;
+import net.simpleframework.lib.net.sf.cglib.core.WeakCacheKey;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
@@ -98,16 +102,20 @@ public class Enhancer extends AbstractClassGenerator {
 	};
 
 	private static final Source SOURCE = new Source(Enhancer.class.getName());
-	private static final EnhancerKey KEY_FACTORY = (EnhancerKey) KeyFactory
-			.create(EnhancerKey.class);
+	private static final EnhancerKey KEY_FACTORY = (EnhancerKey) KeyFactory.create(
+			EnhancerKey.class, KeyFactory.HASH_ASM_TYPE, null);
+	private static final EnhancerFactoryKey FACTORY_KEY_FACTORY = (EnhancerFactoryKey) KeyFactory
+			.create(EnhancerFactoryKey.class);
 
 	private static final String BOUND_FIELD = "CGLIB$BOUND";
+	private static final String FACTORY_DATA_FIELD = "CGLIB$FACTORY_DATA";
 	private static final String THREAD_CALLBACKS_FIELD = "CGLIB$THREAD_CALLBACKS";
 	private static final String STATIC_CALLBACKS_FIELD = "CGLIB$STATIC_CALLBACKS";
 	private static final String SET_THREAD_CALLBACKS_NAME = "CGLIB$SET_THREAD_CALLBACKS";
 	private static final String SET_STATIC_CALLBACKS_NAME = "CGLIB$SET_STATIC_CALLBACKS";
 	private static final String CONSTRUCTED_FIELD = "CGLIB$CONSTRUCTED";
 
+	private static final Type OBJECT_TYPE = TypeUtils.parseType("Object");
 	private static final Type FACTORY = TypeUtils
 			.parseType("net.simpleframework.lib.net.sf.cglib.proxy.Factory");
 	private static final Type ILLEGAL_STATE_EXCEPTION = TypeUtils.parseType("IllegalStateException");
@@ -142,18 +150,28 @@ public class Enhancer extends AbstractClassGenerator {
 	private static final Signature BIND_CALLBACKS = TypeUtils
 			.parseSignature("void CGLIB$BIND_CALLBACKS(Object)");
 
+	private EnhancerFactoryData currentData;
+	private Object currentKey;
+
 	/** Internal interface, only public due to ClassLoader issues. */
 	public interface EnhancerKey {
-		public Object newInstance(String type, String[] interfaces, CallbackFilter filter,
-				Type[] callbackTypes, boolean useFactory, boolean interceptDuringConstruction,
-				Long serialVersionUID);
+		public Object newInstance(String type, String[] interfaces,
+				WeakCacheKey<CallbackFilter> filter, Type[] callbackTypes, boolean useFactory,
+				boolean interceptDuringConstruction, Long serialVersionUID);
+	}
+
+	/** Internal interface, only public due to ClassLoader issues. */
+	public interface EnhancerFactoryKey {
+		Object newInstance(EnhancerKey key);
 	}
 
 	private Class[] interfaces;
 	private CallbackFilter filter;
 	private Callback[] callbacks;
 	private Type[] callbackTypes;
+	private boolean validateCallbackTypes;
 	private boolean classOnly;
+	private boolean factoryOnly;
 	private Class superclass;
 	private Class[] argumentTypes;
 	private Object[] arguments;
@@ -322,6 +340,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Object create() {
 		classOnly = false;
+		factoryOnly = false;
 		argumentTypes = null;
 		return createHelper();
 	}
@@ -340,6 +359,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Object create(final Class[] argumentTypes, final Object[] arguments) {
 		classOnly = false;
+		factoryOnly = false;
 		if (argumentTypes == null || arguments == null || argumentTypes.length != arguments.length) {
 			throw new IllegalArgumentException("Arguments must be non-null and of equal length");
 		}
@@ -361,7 +381,22 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Class createClass() {
 		classOnly = true;
+		factoryOnly = false;
 		return (Class) createHelper();
+	}
+
+	/**
+	 * Generate a {@link Factory} implementation if necessary and return it.
+	 * This ignores any callbacks that have been set.
+	 * 
+	 * @see Factory#newInstance(Callback)
+	 * @see Factory#newInstance(Callback[])
+	 * @see Factory#newInstance(Class[], Object[], Callback[])
+	 */
+	public Factory createFactory() {
+		classOnly = false;
+		factoryOnly = true;
+		return (Factory) createHelper();
 	}
 
 	/**
@@ -374,6 +409,20 @@ public class Enhancer extends AbstractClassGenerator {
 		serialVersionUID = sUID;
 	}
 
+	private void preValidate() {
+		if (callbackTypes == null) {
+			callbackTypes = CallbackInfo.determineTypes(callbacks, false);
+			validateCallbackTypes = true;
+		}
+		if (filter == null) {
+			if (callbackTypes.length > 1) {
+				throw new IllegalStateException(
+						"Multiple callback types possible but no filter specified");
+			}
+			filter = ALL_ZERO;
+		}
+	}
+
 	private void validate() {
 		if (classOnly ^ (callbacks == null)) {
 			if (classOnly) {
@@ -384,6 +433,9 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 		if (classOnly && (callbackTypes == null)) {
 			throw new IllegalStateException("Callback types are required");
+		}
+		if (validateCallbackTypes) {
+			callbackTypes = null;
 		}
 		if (callbacks != null && callbackTypes != null) {
 			if (callbacks.length != callbackTypes.length) {
@@ -400,13 +452,6 @@ public class Enhancer extends AbstractClassGenerator {
 		} else if (callbacks != null) {
 			callbackTypes = CallbackInfo.determineTypes(callbacks);
 		}
-		if (filter == null) {
-			if (callbackTypes.length > 1) {
-				throw new IllegalStateException(
-						"Multiple callback types possible but no filter specified");
-			}
-			filter = ALL_ZERO;
-		}
 		if (interfaces != null) {
 			for (int i = 0; i < interfaces.length; i++) {
 				if (interfaces[i] == null) {
@@ -419,16 +464,35 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
+	static class EnhancerFactoryData {
+		public final Class generatedClass;
+		public volatile Factory factory;
+
+		public EnhancerFactoryData(final Class generatedClass) {
+			this.generatedClass = generatedClass;
+		}
+	}
+
 	private Object createHelper() {
+		preValidate();
+		final Object key = KEY_FACTORY.newInstance(
+				(superclass != null) ? superclass.getName() : null, ReflectUtils.getNames(interfaces),
+				filter == ALL_ZERO ? null : new WeakCacheKey<CallbackFilter>(filter), callbackTypes,
+				useFactory, interceptDuringConstruction, serialVersionUID);
+		this.currentKey = key;
+		final Object result = super.create(key);
+		return result;
+	}
+
+	@Override
+	protected Class generate(final ClassLoaderData data) {
 		validate();
 		if (superclass != null) {
 			setNamePrefix(superclass.getName());
 		} else if (interfaces != null) {
 			setNamePrefix(interfaces[ReflectUtils.findPackageProtected(interfaces)].getName());
 		}
-		return super.create(KEY_FACTORY.newInstance((superclass != null) ? superclass.getName()
-				: null, ReflectUtils.getNames(interfaces), filter, callbackTypes, useFactory,
-				interceptDuringConstruction, serialVersionUID));
+		return super.generate(data);
 	}
 
 	@Override
@@ -534,17 +598,24 @@ public class Enhancer extends AbstractClassGenerator {
 		});
 
 		final ClassEmitter e = new ClassEmitter(v);
-		e.begin_class(
-				Opcodes.V1_2,
-				Opcodes.ACC_PUBLIC,
-				getClassName(),
-				Type.getType(sc),
-				(useFactory ? TypeUtils.add(TypeUtils.getTypes(interfaces), FACTORY) : TypeUtils
-						.getTypes(interfaces)), Constants.SOURCE_FILE);
+		if (currentData == null) {
+			e.begin_class(
+					Opcodes.V1_2,
+					Opcodes.ACC_PUBLIC,
+					getClassName(),
+					Type.getType(sc),
+					(useFactory ? TypeUtils.add(TypeUtils.getTypes(interfaces), FACTORY) : TypeUtils
+							.getTypes(interfaces)), Constants.SOURCE_FILE);
+		} else {
+			e.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), null,
+					new Type[] { FACTORY }, Constants.SOURCE_FILE);
+		}
 		final List constructorInfo = CollectionUtils.transform(constructors,
 				MethodInfoTransformer.getInstance());
 
 		e.declare_field(Opcodes.ACC_PRIVATE, BOUND_FIELD, Type.BOOLEAN_TYPE, null);
+		e.declare_field(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, FACTORY_DATA_FIELD, OBJECT_TYPE,
+				null);
 		if (!interceptDuringConstruction) {
 			e.declare_field(Opcodes.ACC_PRIVATE, CONSTRUCTED_FIELD, Type.BOOLEAN_TYPE, null);
 		}
@@ -559,13 +630,17 @@ public class Enhancer extends AbstractClassGenerator {
 			e.declare_field(Opcodes.ACC_PRIVATE, getCallbackField(i), callbackTypes[i], null);
 		}
 
-		emitMethods(e, methods, actualMethods);
-		emitConstructors(e, constructorInfo);
+		if (currentData == null) {
+			emitMethods(e, methods, actualMethods);
+			emitConstructors(e, constructorInfo);
+		} else {
+			emitDefaultConstructor(e);
+		}
 		emitSetThreadCallbacks(e);
 		emitSetStaticCallbacks(e);
 		emitBindCallbacks(e);
 
-		if (useFactory) {
+		if (useFactory || currentData != null) {
 			final int[] keys = getCallbackKeys();
 			emitNewInstanceCallbacks(e);
 			emitNewInstanceCallback(e);
@@ -602,6 +677,7 @@ public class Enhancer extends AbstractClassGenerator {
 
 	@Override
 	protected Object firstInstance(final Class type) throws Exception {
+		// Should not reach here
 		if (classOnly) {
 			return type;
 		} else {
@@ -611,18 +687,54 @@ public class Enhancer extends AbstractClassGenerator {
 
 	@Override
 	protected Object nextInstance(final Object instance) {
-		final Class protoclass = (instance instanceof Class) ? (Class) instance : instance.getClass();
-		if (classOnly) {
-			return protoclass;
-		} else if (instance instanceof Factory) {
-			if (argumentTypes != null) {
-				return ((Factory) instance).newInstance(argumentTypes, arguments, callbacks);
-			} else {
-				return ((Factory) instance).newInstance(callbacks);
-			}
-		} else {
-			return createUsingReflection(protoclass);
+		if (currentKey instanceof EnhancerFactoryKey) {
+			return instance;
 		}
+
+		final EnhancerFactoryData data = (EnhancerFactoryData) instance;
+		if (classOnly) {
+			return data.generatedClass;
+		}
+		Factory factory = data.factory;
+		if (factory == null) {
+			this.currentData = data;
+			final Object factoryKey = FACTORY_KEY_FACTORY.newInstance((EnhancerKey) currentKey);
+			this.currentKey = factoryKey;
+			factory = (Factory) super.create(factoryKey);
+			this.currentData = null;
+			data.factory = factory;
+		}
+		if (factoryOnly) {
+			return factory;
+		}
+		return createUsingFactory(factory);
+	}
+
+	@Override
+	protected Object wrapCachedClass(final Class klass) {
+		if (currentKey instanceof EnhancerFactoryKey) {
+			return new WeakReference(ReflectUtils.newInstance(klass));
+		}
+		final EnhancerFactoryData factoryData = new EnhancerFactoryData(klass);
+		Field factoryDataField = null;
+		try {
+			factoryDataField = klass.getField(FACTORY_DATA_FIELD);
+			factoryDataField.set(null, factoryData);
+		} catch (final NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (final IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return new WeakReference<EnhancerFactoryData>(factoryData);
+	}
+
+	@Override
+	protected Object unwrapCachedValue(final Object cached) {
+		if (currentKey instanceof EnhancerKey) {
+			final EnhancerFactoryData data = ((WeakReference<EnhancerFactoryData>) cached).get();
+			return data;
+		}
+		return super.unwrapCachedValue(cached);
 	}
 
 	/**
@@ -733,6 +845,14 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
+	private Object createUsingFactory(final Factory factory) {
+		if (argumentTypes != null) {
+			return factory.newInstance(argumentTypes, arguments, callbacks);
+		} else {
+			return factory.newInstance(callbacks);
+		}
+	}
+
 	/**
 	 * Helper method to create an intercepted object.
 	 * For finer control over the generated instance, use a new instance of
@@ -795,10 +915,31 @@ public class Enhancer extends AbstractClassGenerator {
 		return e.create();
 	}
 
+	private void emitDefaultConstructor(final ClassEmitter ce) {
+		Constructor<Object> declaredConstructor;
+		try {
+			declaredConstructor = Object.class.getDeclaredConstructor();
+		} catch (final NoSuchMethodException e) {
+			throw new IllegalStateException("Object should have default constructor ", e);
+		}
+		final MethodInfo constructor = (MethodInfo) MethodInfoTransformer.getInstance().transform(
+				declaredConstructor);
+		final CodeEmitter e = EmitUtils.begin_method(ce, constructor, Opcodes.ACC_PUBLIC);
+		e.load_this();
+		e.dup();
+		final Signature sig = constructor.getSignature();
+		e.super_invoke_constructor(sig);
+		e.return_value();
+		e.end_method();
+	}
+
 	private void emitConstructors(final ClassEmitter ce, final List constructors) {
 		boolean seenNull = false;
 		for (final Iterator it = constructors.iterator(); it.hasNext();) {
 			final MethodInfo constructor = (MethodInfo) it.next();
+			if (currentData != null && !"()V".equals(constructor.getSignature().getDescriptor())) {
+				continue;
+			}
 			final CodeEmitter e = EmitUtils.begin_method(ce, constructor, Opcodes.ACC_PUBLIC);
 			e.load_this();
 			e.dup();
@@ -806,11 +947,13 @@ public class Enhancer extends AbstractClassGenerator {
 			final Signature sig = constructor.getSignature();
 			seenNull = seenNull || sig.getDescriptor().equals("()V");
 			e.super_invoke_constructor(sig);
-			e.invoke_static_this(BIND_CALLBACKS);
-			if (!interceptDuringConstruction) {
-				e.load_this();
-				e.push(1);
-				e.putfield(CONSTRUCTED_FIELD);
+			if (currentData == null) {
+				e.invoke_static_this(BIND_CALLBACKS);
+				if (!interceptDuringConstruction) {
+					e.load_this();
+					e.push(1);
+					e.putfield(CONSTRUCTED_FIELD);
+				}
 			}
 			e.return_value();
 			e.end_method();
@@ -908,17 +1051,27 @@ public class Enhancer extends AbstractClassGenerator {
 
 	private void emitNewInstanceCallbacks(final ClassEmitter ce) {
 		final CodeEmitter e = ce.begin_method(Opcodes.ACC_PUBLIC, NEW_INSTANCE, null);
+		final Type thisType = getThisType(e);
 		e.load_arg(0);
-		e.invoke_static_this(SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
 		emitCommonNewInstance(e);
 	}
 
+	private Type getThisType(final CodeEmitter e) {
+		if (currentData == null) {
+			return e.getClassEmitter().getClassType();
+		} else {
+			return Type.getType(currentData.generatedClass);
+		}
+	}
+
 	private void emitCommonNewInstance(final CodeEmitter e) {
-		e.new_instance_this();
+		final Type thisType = getThisType(e);
+		e.new_instance(thisType);
 		e.dup();
-		e.invoke_constructor_this();
+		e.invoke_constructor(thisType);
 		e.aconst_null();
-		e.invoke_static_this(SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
 		e.return_value();
 		e.end_method();
 	}
@@ -937,7 +1090,7 @@ public class Enhancer extends AbstractClassGenerator {
 			e.push(0);
 			e.load_arg(0);
 			e.aastore();
-			e.invoke_static_this(SET_THREAD_CALLBACKS);
+			e.invoke_static(getThisType(e), SET_THREAD_CALLBACKS);
 			break;
 		default:
 			e.throw_exception(ILLEGAL_STATE_EXCEPTION, "More than one callback object required");
@@ -947,9 +1100,10 @@ public class Enhancer extends AbstractClassGenerator {
 
 	private void emitNewInstanceMultiarg(final ClassEmitter ce, final List constructors) {
 		final CodeEmitter e = ce.begin_method(Opcodes.ACC_PUBLIC, MULTIARG_NEW_INSTANCE, null);
+		final Type thisType = getThisType(e);
 		e.load_arg(2);
-		e.invoke_static_this(SET_THREAD_CALLBACKS);
-		e.new_instance_this();
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
+		e.new_instance(thisType);
 		e.dup();
 		e.load_arg(0);
 		EmitUtils.constructor_switch(e, constructors, new ObjectSwitchCallback() {
@@ -963,7 +1117,7 @@ public class Enhancer extends AbstractClassGenerator {
 					e.aaload();
 					e.unbox(types[i]);
 				}
-				e.invoke_constructor_this(constructor.getSignature());
+				e.invoke_constructor(thisType, constructor.getSignature());
 				e.goTo(end);
 			}
 
@@ -973,7 +1127,7 @@ public class Enhancer extends AbstractClassGenerator {
 			}
 		});
 		e.aconst_null();
-		e.invoke_static_this(SET_THREAD_CALLBACKS);
+		e.invoke_static(thisType, SET_THREAD_CALLBACKS);
 		e.return_value();
 		e.end_method();
 	}

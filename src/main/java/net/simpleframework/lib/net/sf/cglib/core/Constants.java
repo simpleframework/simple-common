@@ -53,6 +53,7 @@ public interface Constants extends net.simpleframework.lib.org.objectweb.asm.Opc
 	public static final Type TYPE_SYSTEM = TypeUtils.parseType("System");
 	public static final Type TYPE_SIGNATURE = TypeUtils
 			.parseType("net.simpleframework.lib.net.sf.cglib.core.Signature");
+	public static final Type TYPE_TYPE = Type.getType(Type.class);
 
 	public static final String CONSTRUCTOR_NAME = "<init>";
 	public static final String STATIC_NAME = "<clinit>";

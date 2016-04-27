@@ -30,30 +30,29 @@
 
 package net.simpleframework.lib.org.objectweb.asm.commons;
 
+import java.util.Stack;
+
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.signature.SignatureVisitor;
 
 /**
  * A {@link SignatureVisitor} adapter for type mapping.
  * 
- * @deprecated use {@link SignatureRemapper} instead.
  * @author Eugene Kuleshov
  */
-@Deprecated
-public class RemappingSignatureAdapter extends SignatureVisitor {
+public class SignatureRemapper extends SignatureVisitor {
 
 	private final SignatureVisitor v;
 
 	private final Remapper remapper;
 
-	private String className;
+	private final Stack<String> classNames = new Stack<String>();
 
-	public RemappingSignatureAdapter(final SignatureVisitor v, final Remapper remapper) {
+	public SignatureRemapper(final SignatureVisitor v, final Remapper remapper) {
 		this(Opcodes.ASM5, v, remapper);
 	}
 
-	protected RemappingSignatureAdapter(final int api, final SignatureVisitor v,
-			final Remapper remapper) {
+	protected SignatureRemapper(final int api, final SignatureVisitor v, final Remapper remapper) {
 		super(api);
 		this.v = v;
 		this.remapper = remapper;
@@ -61,14 +60,16 @@ public class RemappingSignatureAdapter extends SignatureVisitor {
 
 	@Override
 	public void visitClassType(final String name) {
-		className = name;
+		classNames.push(name);
 		v.visitClassType(remapper.mapType(name));
 	}
 
 	@Override
 	public void visitInnerClassType(final String name) {
-		final String remappedOuter = remapper.mapType(className) + '$';
-		className = className + '$' + name;
+		final String outerClassName = classNames.pop();
+		final String className = outerClassName + '$' + name;
+		classNames.push(className);
+		final String remappedOuter = remapper.mapType(outerClassName) + '$';
 		final String remappedName = remapper.mapType(className);
 		final int index = remappedName.startsWith(remappedOuter) ? remappedOuter.length()
 				: remappedName.lastIndexOf('$') + 1;
@@ -152,5 +153,6 @@ public class RemappingSignatureAdapter extends SignatureVisitor {
 	@Override
 	public void visitEnd() {
 		v.visitEnd();
+		classNames.pop();
 	}
 }

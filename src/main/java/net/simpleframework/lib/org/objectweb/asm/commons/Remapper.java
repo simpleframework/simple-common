@@ -138,17 +138,19 @@ public abstract class Remapper {
 		if (value instanceof Handle) {
 			final Handle h = (Handle) value;
 			return new Handle(h.getTag(), mapType(h.getOwner()), mapMethodName(h.getOwner(),
-					h.getName(), h.getDesc()), mapMethodDesc(h.getDesc()));
+					h.getName(), h.getDesc()), mapMethodDesc(h.getDesc()), h.isInterface());
 		}
 		return value;
 	}
 
 	/**
-	 * 
+	 * @param signature
+	 *        signature for mapper
 	 * @param typeSignature
 	 *        true if signature is a FieldTypeSignature, such as the
 	 *        signature parameter of the ClassVisitor.visitField or
 	 *        MethodVisitor.visitLocalVariable methods
+	 * @return signature rewritten as a string
 	 */
 	public String mapSignature(final String signature, final boolean typeSignature) {
 		if (signature == null) {
@@ -156,7 +158,7 @@ public abstract class Remapper {
 		}
 		final SignatureReader r = new SignatureReader(signature);
 		final SignatureWriter w = new SignatureWriter();
-		final SignatureVisitor a = createRemappingSignatureAdapter(w);
+		final SignatureVisitor a = createSignatureRemapper(w);
 		if (typeSignature) {
 			r.acceptType(a);
 		} else {
@@ -165,8 +167,16 @@ public abstract class Remapper {
 		return w.toString();
 	}
 
+	/**
+	 * @deprecated use {@link #createSignatureRemapper} instead.
+	 */
+	@Deprecated
 	protected SignatureVisitor createRemappingSignatureAdapter(final SignatureVisitor v) {
-		return new RemappingSignatureAdapter(v, this);
+		return new SignatureRemapper(v, this);
+	}
+
+	protected SignatureVisitor createSignatureRemapper(final SignatureVisitor v) {
+		return createRemappingSignatureAdapter(v);
 	}
 
 	/**
@@ -214,6 +224,10 @@ public abstract class Remapper {
 
 	/**
 	 * Map type name to the new name. Subclasses can override.
+	 * 
+	 * @param typeName
+	 *        the type name
+	 * @return new name, default implementation is the identity.
 	 */
 	public String map(final String typeName) {
 		return typeName;

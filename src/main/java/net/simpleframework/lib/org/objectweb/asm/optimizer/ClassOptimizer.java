@@ -40,8 +40,8 @@ import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
+import net.simpleframework.lib.org.objectweb.asm.commons.ClassRemapper;
 import net.simpleframework.lib.org.objectweb.asm.commons.Remapper;
-import net.simpleframework.lib.org.objectweb.asm.commons.RemappingClassAdapter;
 
 /**
  * A {@link ClassVisitor} that renames fields and methods, and removes debug
@@ -50,7 +50,7 @@ import net.simpleframework.lib.org.objectweb.asm.commons.RemappingClassAdapter;
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
-public class ClassOptimizer extends RemappingClassAdapter {
+public class ClassOptimizer extends ClassRemapper {
 
 	private String pkgName;
 	String clsName;
@@ -179,9 +179,8 @@ public class ClassOptimizer extends RemappingClassAdapter {
 	}
 
 	@Override
-	protected MethodVisitor createRemappingMethodAdapter(final int access, final String newDesc,
-			final MethodVisitor mv) {
-		return new MethodOptimizer(this, access, newDesc, mv, remapper);
+	protected MethodVisitor createMethodRemapper(final MethodVisitor mv) {
+		return new MethodOptimizer(this, mv, remapper);
 	}
 
 	@Override

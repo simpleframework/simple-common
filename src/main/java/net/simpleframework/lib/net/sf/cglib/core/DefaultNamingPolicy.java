@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.core;
 
+
 /**
  * The default policy used by {@link AbstractClassGenerator}.
  * Generates names such as
@@ -30,6 +31,12 @@ package net.simpleframework.lib.net.sf.cglib.core;
 public class DefaultNamingPolicy implements NamingPolicy {
 	public static final DefaultNamingPolicy INSTANCE = new DefaultNamingPolicy();
 
+	/**
+	 * This allows to test collisions of {@code key.hashCode()}.
+	 */
+	private final static boolean STRESS_HASH_CODE = Boolean
+			.getBoolean("net.simpleframework.lib.net.sf.cglib.test.stressHashCodes");
+
 	@Override
 	public String getClassName(String prefix, final String source, final Object key,
 			final Predicate names) {
@@ -39,7 +46,7 @@ public class DefaultNamingPolicy implements NamingPolicy {
 			prefix = "$" + prefix;
 		}
 		final String base = prefix + "$$" + source.substring(source.lastIndexOf('.') + 1) + getTag()
-				+ "$$" + Integer.toHexString(key.hashCode());
+				+ "$$" + Integer.toHexString(STRESS_HASH_CODE ? 0 : key.hashCode());
 		String attempt = base;
 		int index = 2;
 		while (names.evaluate(attempt)) {

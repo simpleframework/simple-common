@@ -18,7 +18,10 @@ package net.simpleframework.lib.net.sf.cglib.core;
 
 import java.lang.reflect.Method;
 import java.security.ProtectionDomain;
+import java.util.Collections;
+import java.util.List;
 
+import net.simpleframework.lib.net.sf.cglib.core.internal.CustomizerRegistry;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
@@ -70,6 +73,7 @@ abstract public class KeyFactory {
 			.parseSignature("StringBuffer append(String)");
 	private static final Type KEY_FACTORY = TypeUtils
 			.parseType("net.simpleframework.lib.net.sf.cglib.core.KeyFactory");
+	private static final Signature GET_SORT = TypeUtils.parseSignature("int getSort()");
 
 	// generated numbers:
 	private final static int PRIMES[] = { 11, 73, 179, 331, 521, 787, 1213, 1823, 2609, 3691, 5189,
@@ -88,6 +92,47 @@ abstract public class KeyFactory {
 		}
 	};
 
+	public static final FieldTypeCustomizer STORE_CLASS_AS_STRING = new FieldTypeCustomizer() {
+		@Override
+		public void customize(final CodeEmitter e, final int index, final Type type) {
+			if (type.equals(Constants.TYPE_CLASS)) {
+				e.invoke_virtual(Constants.TYPE_CLASS, GET_NAME);
+			}
+		}
+
+		@Override
+		public Type getOutType(final int index, final Type type) {
+			if (type.equals(Constants.TYPE_CLASS)) {
+				return Constants.TYPE_STRING;
+			}
+			return type;
+		}
+	};
+
+	/**
+	 * {@link Type#hashCode()} is very expensive as it traverses full descriptor
+	 * to calculate hash code.
+	 * This customizer uses {@link Type#getSort()} as a hash code.
+	 */
+	public static final HashCodeCustomizer HASH_ASM_TYPE = new HashCodeCustomizer() {
+		@Override
+		public boolean customize(final CodeEmitter e, final Type type) {
+			if (Constants.TYPE_TYPE.equals(type)) {
+				e.invoke_virtual(type, GET_SORT);
+				return true;
+			}
+			return false;
+		}
+	};
+
+	/**
+	 * @deprecated this customizer might result in unexpected class leak since
+	 *             key object still holds a strong reference to the Object and
+	 *             class.
+	 *             It is recommended to have pre-processing method that would
+	 *             strip Objects and represent Classes as Strings
+	 */
+	@Deprecated
 	public static final Customizer OBJECT_BY_CLASS = new Customizer() {
 		@Override
 		public void customize(final CodeEmitter e, final Type type) {
@@ -106,19 +151,42 @@ abstract public class KeyFactory {
 		return create(keyInterface.getClassLoader(), keyInterface, customizer);
 	}
 
+	public static KeyFactory create(final Class keyInterface, final KeyFactoryCustomizer first,
+			final List<KeyFactoryCustomizer> next) {
+		return create(keyInterface.getClassLoader(), keyInterface, first, next);
+	}
+
 	public static KeyFactory create(final ClassLoader loader, final Class keyInterface,
 			final Customizer customizer) {
+		return create(loader, keyInterface, customizer,
+				Collections.<KeyFactoryCustomizer> emptyList());
+	}
+
+	public static KeyFactory create(final ClassLoader loader, final Class keyInterface,
+			final KeyFactoryCustomizer customizer, final List<KeyFactoryCustomizer> next) {
 		final Generator gen = new Generator();
 		gen.setInterface(keyInterface);
-		gen.setCustomizer(customizer);
+
+		if (customizer != null) {
+			gen.addCustomizer(customizer);
+		}
+		if (next != null && !next.isEmpty()) {
+			for (final KeyFactoryCustomizer keyFactoryCustomizer : next) {
+				gen.addCustomizer(keyFactoryCustomizer);
+			}
+		}
 		gen.setClassLoader(loader);
 		return gen.create();
 	}
 
 	public static class Generator extends AbstractClassGenerator {
 		private static final Source SOURCE = new Source(KeyFactory.class.getName());
+		private static final Class[] KNOWN_CUSTOMIZER_TYPES = new Class[] { Customizer.class,
+				FieldTypeCustomizer.class };
+
 		private Class keyInterface;
-		private Customizer customizer;
+		// TODO: Make me final when deprecated methods are removed
+		private CustomizerRegistry customizers = new CustomizerRegistry(KNOWN_CUSTOMIZER_TYPES);
 		private int constant;
 		private int multiplier;
 
@@ -136,8 +204,20 @@ abstract public class KeyFactory {
 			return ReflectUtils.getProtectionDomain(keyInterface);
 		}
 
+		/**
+		 * @deprecated Use {@link #addCustomizer(KeyFactoryCustomizer)} instead.
+		 */
+		@Deprecated
 		public void setCustomizer(final Customizer customizer) {
-			this.customizer = customizer;
+			customizers = CustomizerRegistry.singleton(customizer);
+		}
+
+		public void addCustomizer(final KeyFactoryCustomizer customizer) {
+			customizers.add(customizer);
+		}
+
+		public <T> List<T> getCustomizers(final Class<T> klass) {
+			return customizers.get(klass);
 		}
 
 		public void setInterface(final Class keyInterface) {
@@ -188,12 +268,21 @@ abstract public class KeyFactory {
 			e.load_this();
 			e.super_invoke_constructor();
 			e.load_this();
+			final List<FieldTypeCustomizer> fieldTypeCustomizers = getCustomizers(FieldTypeCustomizer.class);
 			for (int i = 0; i < parameterTypes.length; i++) {
-				seed += parameterTypes[i].hashCode();
-				ce.declare_field(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, getFieldName(i),
-						parameterTypes[i], null);
+				final Type parameterType = parameterTypes[i];
+				Type fieldType = parameterType;
+				for (final FieldTypeCustomizer customizer : fieldTypeCustomizers) {
+					fieldType = customizer.getOutType(i, fieldType);
+				}
+				seed += fieldType.hashCode();
+				ce.declare_field(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, getFieldName(i), fieldType,
+						null);
 				e.dup();
 				e.load_arg(i);
+				for (final FieldTypeCustomizer customizer : fieldTypeCustomizers) {
+					customizer.customize(e, i, parameterType);
+				}
 				e.putfield(getFieldName(i));
 			}
 			e.return_value();
@@ -208,7 +297,7 @@ abstract public class KeyFactory {
 			for (int i = 0; i < parameterTypes.length; i++) {
 				e.load_this();
 				e.getfield(getFieldName(i));
-				EmitUtils.hash_code(e, parameterTypes[i], hm, customizer);
+				EmitUtils.hash_code(e, parameterTypes[i], hm, customizers);
 			}
 			e.return_value();
 			e.end_method();
@@ -225,7 +314,7 @@ abstract public class KeyFactory {
 				e.load_arg(0);
 				e.checkcast_this();
 				e.getfield(getFieldName(i));
-				EmitUtils.not_equals(e, parameterTypes[i], fail, customizer);
+				EmitUtils.not_equals(e, parameterTypes[i], fail, customizers);
 			}
 			e.push(1);
 			e.return_value();
@@ -246,7 +335,8 @@ abstract public class KeyFactory {
 				}
 				e.load_this();
 				e.getfield(getFieldName(i));
-				EmitUtils.append_string(e, parameterTypes[i], EmitUtils.DEFAULT_DELIMITERS, customizer);
+				EmitUtils
+						.append_string(e, parameterTypes[i], EmitUtils.DEFAULT_DELIMITERS, customizers);
 			}
 			e.invoke_virtual(Constants.TYPE_STRING_BUFFER, TO_STRING);
 			e.return_value();

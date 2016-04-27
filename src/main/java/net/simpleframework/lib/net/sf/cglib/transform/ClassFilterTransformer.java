@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.transform;
 
+
 public class ClassFilterTransformer extends AbstractClassFilterTransformer {
 	private final ClassFilter filter;
 

@@ -40,21 +40,19 @@ import net.simpleframework.lib.org.objectweb.asm.TypePath;
 /**
  * A {@link ClassVisitor} for type remapping.
  * 
- * @deprecated use {@link ClassRemapper} instead.
  * @author Eugene Kuleshov
  */
-@Deprecated
-public class RemappingClassAdapter extends ClassVisitor {
+public class ClassRemapper extends ClassVisitor {
 
 	protected final Remapper remapper;
 
 	protected String className;
 
-	public RemappingClassAdapter(final ClassVisitor cv, final Remapper remapper) {
+	public ClassRemapper(final ClassVisitor cv, final Remapper remapper) {
 		this(Opcodes.ASM5, cv, remapper);
 	}
 
-	protected RemappingClassAdapter(final int api, final ClassVisitor cv, final Remapper remapper) {
+	protected ClassRemapper(final int api, final ClassVisitor cv, final Remapper remapper) {
 		super(api, cv);
 		this.remapper = remapper;
 	}
@@ -70,7 +68,7 @@ public class RemappingClassAdapter extends ClassVisitor {
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
 		final AnnotationVisitor av = super.visitAnnotation(remapper.mapDesc(desc), visible);
-		return av == null ? null : createRemappingAnnotationAdapter(av);
+		return av == null ? null : createAnnotationRemapper(av);
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public class RemappingClassAdapter extends ClassVisitor {
 			final String desc, final boolean visible) {
 		final AnnotationVisitor av = super.visitTypeAnnotation(typeRef, typePath,
 				remapper.mapDesc(desc), visible);
-		return av == null ? null : createRemappingAnnotationAdapter(av);
+		return av == null ? null : createAnnotationRemapper(av);
 	}
 
 	@Override
@@ -87,7 +85,7 @@ public class RemappingClassAdapter extends ClassVisitor {
 		final FieldVisitor fv = super.visitField(access,
 				remapper.mapFieldName(className, name, desc), remapper.mapDesc(desc),
 				remapper.mapSignature(signature, true), remapper.mapValue(value));
-		return fv == null ? null : createRemappingFieldAdapter(fv);
+		return fv == null ? null : createFieldRemapper(fv);
 	}
 
 	@Override
@@ -98,7 +96,7 @@ public class RemappingClassAdapter extends ClassVisitor {
 				remapper.mapMethodName(className, name, desc), newDesc,
 				remapper.mapSignature(signature, false),
 				exceptions == null ? null : remapper.mapTypes(exceptions));
-		return mv == null ? null : createRemappingMethodAdapter(access, newDesc, mv);
+		return mv == null ? null : createMethodRemapper(mv);
 	}
 
 	@Override
@@ -116,16 +114,15 @@ public class RemappingClassAdapter extends ClassVisitor {
 						: remapper.mapMethodDesc(desc));
 	}
 
-	protected FieldVisitor createRemappingFieldAdapter(final FieldVisitor fv) {
-		return new RemappingFieldAdapter(fv, remapper);
+	protected FieldVisitor createFieldRemapper(final FieldVisitor fv) {
+		return new FieldRemapper(fv, remapper);
 	}
 
-	protected MethodVisitor createRemappingMethodAdapter(final int access, final String newDesc,
-			final MethodVisitor mv) {
-		return new RemappingMethodAdapter(access, newDesc, mv, remapper);
+	protected MethodVisitor createMethodRemapper(final MethodVisitor mv) {
+		return new MethodRemapper(mv, remapper);
 	}
 
-	protected AnnotationVisitor createRemappingAnnotationAdapter(final AnnotationVisitor av) {
-		return new RemappingAnnotationAdapter(av, remapper);
+	protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor av) {
+		return new AnnotationRemapper(av, remapper);
 	}
 }

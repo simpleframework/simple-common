@@ -104,21 +104,21 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
 			att.addAttribute("", "typePath", "typePath", "", typePath.toString());
 		}
 		if (start != null) {
-			final StringBuffer value = new StringBuffer(start[0]);
+			final StringBuilder value = new StringBuilder(start[0]);
 			for (int i = 1; i < start.length; ++i) {
 				value.append(" ").append(start[i]);
 			}
 			att.addAttribute("", "start", "start", "", value.toString());
 		}
 		if (end != null) {
-			final StringBuffer value = new StringBuffer(end[0]);
+			final StringBuilder value = new StringBuilder(end[0]);
 			for (int i = 1; i < end.length; ++i) {
 				value.append(" ").append(end[i]);
 			}
 			att.addAttribute("", "end", "end", "", value.toString());
 		}
 		if (index != null) {
-			final StringBuffer value = new StringBuffer();
+			final StringBuilder value = new StringBuilder();
 			value.append(index[0]);
 			for (int i = 1; i < index.length; ++i) {
 				value.append(" ").append(index[i]);

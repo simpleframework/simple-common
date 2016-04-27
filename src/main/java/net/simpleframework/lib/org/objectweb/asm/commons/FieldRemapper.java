@@ -31,48 +31,39 @@
 package net.simpleframework.lib.org.objectweb.asm.commons;
 
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
+import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
+import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
- * An {@link AnnotationVisitor} adapter for type remapping.
+ * A {@link FieldVisitor} adapter for type remapping.
  * 
- * @deprecated use {@link AnnotationRemapper} instead.
  * @author Eugene Kuleshov
  */
-@Deprecated
-public class RemappingAnnotationAdapter extends AnnotationVisitor {
+public class FieldRemapper extends FieldVisitor {
 
-	protected final Remapper remapper;
+	private final Remapper remapper;
 
-	public RemappingAnnotationAdapter(final AnnotationVisitor av, final Remapper remapper) {
-		this(Opcodes.ASM5, av, remapper);
+	public FieldRemapper(final FieldVisitor fv, final Remapper remapper) {
+		this(Opcodes.ASM5, fv, remapper);
 	}
 
-	protected RemappingAnnotationAdapter(final int api, final AnnotationVisitor av,
-			final Remapper remapper) {
-		super(api, av);
+	protected FieldRemapper(final int api, final FieldVisitor fv, final Remapper remapper) {
+		super(api, fv);
 		this.remapper = remapper;
 	}
 
 	@Override
-	public void visit(final String name, final Object value) {
-		av.visit(name, remapper.mapValue(value));
+	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
+		final AnnotationVisitor av = fv.visitAnnotation(remapper.mapDesc(desc), visible);
+		return av == null ? null : new AnnotationRemapper(av, remapper);
 	}
 
 	@Override
-	public void visitEnum(final String name, final String desc, final String value) {
-		av.visitEnum(name, remapper.mapDesc(desc), value);
-	}
-
-	@Override
-	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
-		final AnnotationVisitor v = av.visitAnnotation(name, remapper.mapDesc(desc));
-		return v == null ? null : (v == av ? this : new RemappingAnnotationAdapter(v, remapper));
-	}
-
-	@Override
-	public AnnotationVisitor visitArray(final String name) {
-		final AnnotationVisitor v = av.visitArray(name);
-		return v == null ? null : (v == av ? this : new RemappingAnnotationAdapter(v, remapper));
+	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
+			final String desc, final boolean visible) {
+		final AnnotationVisitor av = super.visitTypeAnnotation(typeRef, typePath,
+				remapper.mapDesc(desc), visible);
+		return av == null ? null : new AnnotationRemapper(av, remapper);
 	}
 }

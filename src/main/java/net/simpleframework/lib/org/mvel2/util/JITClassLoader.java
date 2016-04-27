@@ -18,7 +18,6 @@
 
 package net.simpleframework.lib.org.mvel2.util;
 
-
 public class JITClassLoader extends ClassLoader implements MVELClassLoader {
 	public JITClassLoader(final ClassLoader classLoader) {
 		super(classLoader);

@@ -39,8 +39,8 @@ import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
+import net.simpleframework.lib.org.objectweb.asm.commons.MethodRemapper;
 import net.simpleframework.lib.org.objectweb.asm.commons.Remapper;
-import net.simpleframework.lib.org.objectweb.asm.commons.RemappingMethodAdapter;
 
 /**
  * A {@link MethodVisitor} that renames fields and methods, and removes debug
@@ -48,13 +48,13 @@ import net.simpleframework.lib.org.objectweb.asm.commons.RemappingMethodAdapter;
  * 
  * @author Eugene Kuleshov
  */
-public class MethodOptimizer extends RemappingMethodAdapter implements Opcodes {
+public class MethodOptimizer extends MethodRemapper implements Opcodes {
 
 	private final ClassOptimizer classOptimizer;
 
-	public MethodOptimizer(final ClassOptimizer classOptimizer, final int access, final String desc,
-			final MethodVisitor mv, final Remapper remapper) {
-		super(Opcodes.ASM5, access, desc, mv, remapper);
+	public MethodOptimizer(final ClassOptimizer classOptimizer, final MethodVisitor mv,
+			final Remapper remapper) {
+		super(Opcodes.ASM5, mv, remapper);
 		this.classOptimizer = classOptimizer;
 	}
 

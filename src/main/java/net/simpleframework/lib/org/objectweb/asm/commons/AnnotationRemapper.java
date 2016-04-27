@@ -36,20 +36,17 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 /**
  * An {@link AnnotationVisitor} adapter for type remapping.
  * 
- * @deprecated use {@link AnnotationRemapper} instead.
  * @author Eugene Kuleshov
  */
-@Deprecated
-public class RemappingAnnotationAdapter extends AnnotationVisitor {
+public class AnnotationRemapper extends AnnotationVisitor {
 
 	protected final Remapper remapper;
 
-	public RemappingAnnotationAdapter(final AnnotationVisitor av, final Remapper remapper) {
+	public AnnotationRemapper(final AnnotationVisitor av, final Remapper remapper) {
 		this(Opcodes.ASM5, av, remapper);
 	}
 
-	protected RemappingAnnotationAdapter(final int api, final AnnotationVisitor av,
-			final Remapper remapper) {
+	protected AnnotationRemapper(final int api, final AnnotationVisitor av, final Remapper remapper) {
 		super(api, av);
 		this.remapper = remapper;
 	}
@@ -67,12 +64,12 @@ public class RemappingAnnotationAdapter extends AnnotationVisitor {
 	@Override
 	public AnnotationVisitor visitAnnotation(final String name, final String desc) {
 		final AnnotationVisitor v = av.visitAnnotation(name, remapper.mapDesc(desc));
-		return v == null ? null : (v == av ? this : new RemappingAnnotationAdapter(v, remapper));
+		return v == null ? null : (v == av ? this : new AnnotationRemapper(v, remapper));
 	}
 
 	@Override
 	public AnnotationVisitor visitArray(final String name) {
 		final AnnotationVisitor v = av.visitArray(name);
-		return v == null ? null : (v == av ? this : new RemappingAnnotationAdapter(v, remapper));
+		return v == null ? null : (v == av ? this : new AnnotationRemapper(v, remapper));
 	}
 }
