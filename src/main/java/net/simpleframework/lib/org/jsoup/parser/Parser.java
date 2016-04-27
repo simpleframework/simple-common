@@ -159,11 +159,10 @@ public class Parser {
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
 		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
 																								// node
-																								// list
-																								// gets
-																								// modified
-																								// when
-																								// re-parented
+		// list gets
+		// modified
+		// when
+		// re-parented
 		for (int i = nodes.length - 1; i > 0; i--) {
 			nodes[i].remove();
 		}

@@ -27,19 +27,13 @@ final class Tokeniser {
 	private String charsString = null; // characters pending an emit. Will fall
 													// to charsBuilder if more than one
 	private final StringBuilder charsBuilder = new StringBuilder(1024); // buffers
-																								// characters
-																								// to
-																								// output
-																								// as
-																								// one
-																								// token,
-																								// if
-																								// more
-																								// than
-																								// one
-																								// emit
-																								// per
-																								// read
+	// characters
+	// to output
+	// as one
+	// token, if
+	// more than
+	// one emit
+	// per read
 	StringBuilder dataBuffer = new StringBuilder(1024); // buffers data looking
 																			// for </script>
 

@@ -72,6 +72,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 		if (startTag.isSelfClosing()) {
 			tokeniser.acknowledgeSelfClosingFlag();
 			if (!tag.isKnownTag()) {
+				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {

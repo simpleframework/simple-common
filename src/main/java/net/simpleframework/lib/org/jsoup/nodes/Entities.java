@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 
+import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 
@@ -87,15 +88,19 @@ public class Entities {
 
 	static String escape(final String string, final Document.OutputSettings out) {
 		final StringBuilder accum = new StringBuilder(string.length() * 2);
-		escape(accum, string, out, false, false, false);
+		try {
+			escape(accum, string, out, false, false, false);
+		} catch (final IOException e) {
+			throw new SerializationException(e); // doesn't happen
+		}
 		return accum.toString();
 	}
 
 	// this method is ugly, and does a lot. but other breakups cause rescanning
 	// and stringbuilder generations
-	static void escape(final StringBuilder accum, final String string,
+	static void escape(final Appendable accum, final String string,
 			final Document.OutputSettings out, final boolean inAttribute,
-			final boolean normaliseWhite, final boolean stripLeadingWhite) {
+			final boolean normaliseWhite, final boolean stripLeadingWhite) throws IOException {
 
 		boolean lastWasWhite = false;
 		boolean reachedNonWhite = false;
@@ -162,16 +167,10 @@ public class Entities {
 					}
 					break;
 				default:
-					// if (canEncode(coreCharset, c, encoder)) {
-					// accum.append(c);
-					// } else if (map.containsKey(c)) {
-					// accum.append('&').append(map.get(c)).append(';');
-					// }
-					// ckan77 2015-11-12
-					if (map.containsKey(c)) {
-						accum.append('&').append(map.get(c)).append(';');
-					} else if (canEncode(coreCharset, c, encoder)) {
+					if (canEncode(coreCharset, c, encoder)) {
 						accum.append(c);
+					} else if (map.containsKey(c)) {
+						accum.append('&').append(map.get(c)).append(';');
 					} else {
 						accum.append("&#x").append(Integer.toHexString(codePoint)).append(';');
 					}

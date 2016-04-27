@@ -1,5 +1,6 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -428,6 +429,7 @@ public class Element extends Node {
 	 * @return this element
 	 */
 	public Element appendText(final String text) {
+		Validate.notNull(text);
 		final TextNode node = new TextNode(text, baseUri());
 		appendChild(node);
 		return this;
@@ -441,6 +443,7 @@ public class Element extends Node {
 	 * @return this element
 	 */
 	public Element prependText(final String text) {
+		Validate.notNull(text);
 		final TextNode node = new TextNode(text, baseUri());
 		prependChild(node);
 		return this;
@@ -582,6 +585,10 @@ public class Element extends Node {
 		}
 
 		if (parent() == null || parent() instanceof Document) {
+			// Document to
+			// selector, as will
+			// always have a
+			// html node
 			return selector.toString();
 		}
 
@@ -1372,12 +1379,18 @@ public class Element extends Node {
 	}
 
 	@Override
-	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
-		if (accum.length() > 0
-				&& out.prettyPrint()
+	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
+			throws IOException {
+		if (out.prettyPrint()
 				&& (tag.formatAsBlock() || (parent() != null && parent().tag().formatAsBlock()) || out
 						.outline())) {
-			indent(accum, depth, out);
+			if (accum instanceof StringBuilder) {
+				if (((StringBuilder) accum).length() > 0) {
+					indent(accum, depth, out);
+				}
+			} else {
+				indent(accum, depth, out);
+			}
 		}
 		accum.append("<").append(tagName());
 		attributes.html(accum, out);
@@ -1396,7 +1409,8 @@ public class Element extends Node {
 	}
 
 	@Override
-	void outerHtmlTail(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out)
+			throws IOException {
 		if (!(childNodes.isEmpty() && tag.isSelfClosing())) {
 			if (out.prettyPrint()
 					&& (!childNodes.isEmpty() && (tag.formatAsBlock() || (out.outline() && (childNodes
@@ -1430,6 +1444,18 @@ public class Element extends Node {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public <T extends Appendable> T html(final T appendable) {
+		for (final Node node : childNodes) {
+			node.outerHtml(appendable);
+		}
+
+		return appendable;
+	}
+
+	/**
 	 * Set this element's inner HTML. Clears the existing HTML first.
 	 * 
 	 * @param html
@@ -1446,30 +1472,6 @@ public class Element extends Node {
 	@Override
 	public String toString() {
 		return outerHtml();
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		if (!super.equals(o)) {
-			return false;
-		}
-
-		final Element element = (Element) o;
-
-		return tag.equals(element.tag);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = super.hashCode();
-		result = 31 * result + (tag != null ? tag.hashCode() : 0);
-		return result;
 	}
 
 	@Override

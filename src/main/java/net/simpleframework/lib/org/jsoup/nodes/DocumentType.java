@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
+
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Document.OutputSettings.Syntax;
 
@@ -40,7 +42,8 @@ public class DocumentType extends Node {
 	}
 
 	@Override
-	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
+			throws IOException {
 		if (out.syntax() == Syntax.html && !has(PUBLIC_ID) && !has(SYSTEM_ID)) {
 			// looks like a html5 doctype, go lowercase for aesthetics
 			accum.append("<!doctype");
@@ -60,7 +63,7 @@ public class DocumentType extends Node {
 	}
 
 	@Override
-	void outerHtmlTail(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out) {
 	}
 
 	private boolean has(final String attribute) {

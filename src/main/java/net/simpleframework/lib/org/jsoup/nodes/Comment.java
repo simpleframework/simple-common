@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
+
 /**
  * A comment node.
  * 
@@ -36,7 +38,8 @@ public class Comment extends Node {
 	}
 
 	@Override
-	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
+			throws IOException {
 		if (out.prettyPrint()) {
 			indent(accum, depth, out);
 		}
@@ -44,7 +47,7 @@ public class Comment extends Node {
 	}
 
 	@Override
-	void outerHtmlTail(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out) {
 	}
 
 	@Override

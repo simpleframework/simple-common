@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
+
 /**
  * A data node, for contents of style, script tags etc, where contents should
  * not show in text().
@@ -50,13 +52,14 @@ public class DataNode extends Node {
 	}
 
 	@Override
-	void outerHtmlHead(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
+			throws IOException {
 		accum.append(getWholeData()); // data is not escaped in return from data
 												// nodes, so " in script, style is plain
 	}
 
 	@Override
-	void outerHtmlTail(final StringBuilder accum, final int depth, final Document.OutputSettings out) {
+	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out) {
 	}
 
 	@Override

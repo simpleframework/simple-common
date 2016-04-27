@@ -1,7 +1,8 @@
 package net.simpleframework.lib.org.jsoup.select;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.IdentityHashMap;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
@@ -369,10 +370,18 @@ public class Selector {
 		Validate.notEmpty(query);
 		Validate.notNull(roots);
 		final Evaluator evaluator = QueryParser.parse(query);
-		final LinkedHashSet<Element> elements = new LinkedHashSet<Element>();
+		final ArrayList<Element> elements = new ArrayList<Element>();
+		final IdentityHashMap<Element, Boolean> seenElements = new IdentityHashMap<Element, Boolean>();
+		// dedupe elements by identity, not equality
 
 		for (final Element root : roots) {
-			elements.addAll(select(evaluator, root));
+			final Elements found = select(evaluator, root);
+			for (final Element el : found) {
+				if (!seenElements.containsKey(el)) {
+					elements.add(el);
+					seenElements.put(el, Boolean.TRUE);
+				}
+			}
 		}
 		return new Elements(elements);
 	}

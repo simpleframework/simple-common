@@ -1,8 +1,10 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
+import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 /**
@@ -90,11 +92,17 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 */
 	public String html() {
 		final StringBuilder accum = new StringBuilder();
-		html(accum, (new Document("")).outputSettings());
+
+		try {
+			html(accum, (new Document("")).outputSettings());
+		} catch (final IOException exception) {
+			throw new SerializationException(exception);
+		}
 		return accum.toString();
 	}
 
-	protected void html(final StringBuilder accum, final Document.OutputSettings out) {
+	protected void html(final Appendable accum, final Document.OutputSettings out)
+			throws IOException {
 		accum.append(key);
 		if (!shouldCollapseAttribute(out)) {
 			accum.append("=\"");

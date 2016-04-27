@@ -1,5 +1,6 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 /**
@@ -188,16 +190,24 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Get the HTML representation of these attributes.
 	 * 
 	 * @return HTML
+	 * @throws SerializationException
+	 *         if the HTML representation of the attributes cannot be
+	 *         constructed.
 	 */
 	public String html() {
 		final StringBuilder accum = new StringBuilder();
-		html(accum, (new Document("")).outputSettings()); // output settings a bit
-																			// funky, but this
-																			// html() seldom used
+		try {
+			html(accum, (new Document("")).outputSettings()); // output settings a
+																				// bit funky, but
+																				// this html()
+																				// seldom used
+		} catch (final IOException e) { // ought never happen
+			throw new SerializationException(e);
+		}
 		return accum.toString();
 	}
 
-	void html(final StringBuilder accum, final Document.OutputSettings out) {
+	void html(final Appendable accum, final Document.OutputSettings out) throws IOException {
 		if (attributes == null) {
 			return;
 		}
