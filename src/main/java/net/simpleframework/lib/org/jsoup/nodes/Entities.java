@@ -167,10 +167,11 @@ public class Entities {
 					}
 					break;
 				default:
-					if (canEncode(coreCharset, c, encoder)) {
-						accum.append(c);
-					} else if (map.containsKey(c)) {
+					// ckan77
+					if (map.containsKey(c)) {
 						accum.append('&').append(map.get(c)).append(';');
+					} else if (canEncode(coreCharset, c, encoder)) {
+						accum.append(c);
 					} else {
 						accum.append("&#x").append(Integer.toHexString(codePoint)).append(';');
 					}
