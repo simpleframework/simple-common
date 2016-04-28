@@ -126,10 +126,10 @@ public abstract class IoUtils {
 		}
 
 		if (kryo != null) {
-			return IoUtils2.kryo_serialize(kryo, obj);
+			return IoUtils_kryo.serialize(kryo, obj);
 		} else {
 			if (hessianEnabled) {
-				return IoUtils2.hessian_serialize(obj);
+				return IoUtils_hessian.serialize(obj);
 			} else {
 				final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				final ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -149,10 +149,10 @@ public abstract class IoUtils {
 			return null;
 		}
 		if (kryo != null) {
-			return IoUtils2.kryo_deserialize(kryo, bytes, typeClass);
+			return IoUtils_kryo.deserialize(kryo, bytes, typeClass);
 		} else {
 			if (hessianEnabled) {
-				return IoUtils2.hessian_deserialize(bytes);
+				return IoUtils_hessian.deserialize(bytes);
 			} else {
 				final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 				final ObjectInputStream ois = new ObjectInputStream(bis);
