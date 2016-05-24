@@ -382,8 +382,8 @@ public class HttpConnection implements Connection {
 			Validate.notEmpty(name, "Header name must not be empty");
 			final Map.Entry<String, String> entry = scanHeaders(name); // remove is
 																							// case
-			// insensitive
-			// too
+																							// insensitive
+																							// too
 			if (entry != null) {
 				headers.remove(entry.getKey()); // ensures correct case
 			}
@@ -702,22 +702,19 @@ public class HttpConnection implements Connection {
 
 					String location = res.header(LOCATION);
 					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
-						// broken
-						// Location:
-						// http:/temp/AAG_New/en/index.php
 						location = location.substring(6);
 					}
 					req.url(StringUtil.resolve(req.url(), encodeUrl(location)));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
-						// response
-						// cookies
-						// to
-						// request
-						// (for
-						// e.g.
-						// login
-						// posts)
+																													// response
+																													// cookies
+																													// to
+																													// request
+																													// (for
+																													// e.g.
+																													// login
+																													// posts)
 						req.cookie(cookie.getKey(), cookie.getValue());
 					}
 					return execute(req, res);

@@ -229,13 +229,13 @@ public class TokenQueue {
 		final int start = pos;
 		final String first = seq.substring(0, 1);
 		final boolean canScan = first.toLowerCase().equals(first.toUpperCase()); // if
-		// first
-		// is
-		// not
-		// cased,
-		// use
-		// index
-		// of
+																											// first
+																											// is
+																											// not
+																											// cased,
+																											// use
+																											// index
+																											// of
 		while (!isEmpty()) {
 			if (matches(seq)) {
 				break;
@@ -244,7 +244,6 @@ public class TokenQueue {
 			if (canScan) {
 				final int skip = queue.indexOf(first, pos) - pos;
 				if (skip == 0) {
-					// force advance of pos
 					pos++;
 				} else if (skip < 0) {
 					pos = queue.length();
@@ -306,8 +305,8 @@ public class TokenQueue {
 	/**
 	 * Pulls a balanced string off the queue. E.g. if queue is
 	 * "(one (two) three) four", (,) will return "one (two) three",
-	 * and leave " four" on the queue. Unbalanced openers and closers can be
-	 * escaped (with \). Those escapes will be left
+	 * and leave " four" on the queue. Unbalanced openers and closers can quoted
+	 * (with ' or ") or escaped (with \). Those escapes will be left
 	 * in the returned string, which is suitable for regexes (where we need to
 	 * preserve the escape), but unsuitable for
 	 * contains text strings; use unescape for that.
@@ -323,6 +322,7 @@ public class TokenQueue {
 		int end = -1;
 		int depth = 0;
 		char last = 0;
+		boolean inQuote = false;
 
 		do {
 			if (isEmpty()) {
@@ -330,6 +330,12 @@ public class TokenQueue {
 			}
 			final Character c = consume();
 			if (last == 0 || last != ESC) {
+				if ((c.equals('\'') || c.equals('"')) && c != open) {
+					inQuote = !inQuote;
+				}
+				if (inQuote) {
+					continue;
+				}
 				if (c.equals(open)) {
 					depth++;
 					if (start == -1) {

@@ -68,22 +68,23 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-														// br,
-	// span]
+														// br, span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
 																					// attribute[].
-	// allowed attributes
-	// [href] for a tag.
+																					// allowed
+																					// attributes
+																					// [href] for a
+																					// tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
-	// set
-	// these
-	// attribute
-	// values
+																													// set
+																													// these
+																													// attribute
+																													// values
 	private final Map<TagName, Map<AttributeKey, Set<Protocol>>> protocols; // allowed
-	// URL
-	// protocols
-	// for
-	// attributes
+																									// URL
+																									// protocols
+																									// for
+																									// attributes
 	private boolean preserveRelativeLinks; // option to preserve relative links
 
 	/**
@@ -334,18 +335,15 @@ public class Whitelist {
 			currentSet.removeAll(attributeSet);
 
 			if (currentSet.isEmpty()) {
-				// attributes are allowed for tag
 				attributes.remove(tagName);
 			}
 		}
 		if (tag.equals(":all")) {
-			// individually set tags
 			for (final TagName name : attributes.keySet()) {
 				final Set<AttributeKey> currentSet = attributes.get(name);
 				currentSet.removeAll(attributeSet);
 
 				if (currentSet.isEmpty()) {
-					// attributes are allowed for tag
 					attributes.remove(name);
 				}
 			}
@@ -414,7 +412,6 @@ public class Whitelist {
 			attrMap.remove(attrKey);
 
 			if (attrMap.isEmpty()) {
-				// enforced attributes are present
 				enforcedAttributes.remove(tagName);
 			}
 		}
@@ -591,8 +588,8 @@ public class Whitelist {
 		String value = el.absUrl(attr.getKey());
 		if (value.length() == 0) {
 			value = attr.getValue(); // if it could not be made abs, run as-is to
+												// allow custom unknown protocols
 		}
-		// allow custom unknown protocols
 		if (!preserveRelativeLinks) {
 			attr.setValue(value);
 		}

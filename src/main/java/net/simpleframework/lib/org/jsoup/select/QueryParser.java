@@ -87,8 +87,7 @@ class QueryParser {
 		Evaluator currentEval; // the evaluator the new eval will be combined to.
 										// could be root, or rightmost or.
 		final Evaluator newEval = parse(subQuery); // the evaluator to add into
-																	// target
-		// evaluator
+																	// target evaluator
 		boolean replaceRightMost = false;
 
 		if (evals.size() == 1) {
@@ -210,7 +209,6 @@ class QueryParser {
 		} else if (tq.matchChomp(":root")) {
 			evals.add(new Evaluator.IsRoot());
 		} else {
-			// unhandled
 			throw new Selector.SelectorParseException(
 					"Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());
 		}
@@ -244,11 +242,10 @@ class QueryParser {
 
 	private void byAttribute() {
 		final TokenQueue cq = new TokenQueue(tq.chompBalanced('[', ']')); // content
-		// queue
+																								// queue
 		final String key = cq.consumeToAny(AttributeEvals); // eq, not, start,
-																				// end,
-		// contain, match, (no
-		// val)
+																				// end, contain,
+																				// match, (no val)
 		Validate.notEmpty(key);
 		cq.consumeWhitespace();
 
@@ -367,8 +364,8 @@ class QueryParser {
 	private void matches(final boolean own) {
 		tq.consume(own ? ":matchesOwn" : ":matches");
 		final String regex = tq.chompBalanced('(', ')'); // don't unescape, as
-																			// regex
-		// bits will be escaped
+																			// regex bits will be
+																			// escaped
 		Validate.notEmpty(regex, ":matches(regex) query must not be empty");
 
 		if (own) {

@@ -183,8 +183,7 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created
-		// above if not existent
+																// created above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<Node>();
 			for (int i = 1; i < elements.size(); i++) {
@@ -377,7 +376,7 @@ public class Document extends Element {
 				if (node instanceof XmlDeclaration) {
 					XmlDeclaration decl = (XmlDeclaration) node;
 
-					if (decl.attr(XmlDeclaration.DECL_KEY).equals("xml")) {
+					if (decl.name().equals("xml")) {
 						decl.attr("encoding", charset().displayName());
 
 						final String version = decl.attr("version");
@@ -399,8 +398,6 @@ public class Document extends Element {
 
 					prependChild(decl);
 				}
-			} else {
-				// Unsupported syntax - nothing to do yet
 			}
 		}
 	}

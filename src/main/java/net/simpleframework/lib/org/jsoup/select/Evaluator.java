@@ -515,11 +515,11 @@ public abstract class Evaluator {
 		protected int calculatePosition(final Element root, final Element element) {
 			int pos = 0;
 			final Elements family = element.parent().children();
-			for (int i = 0; i < family.size(); i++) {
-				if (family.get(i).tag().equals(element.tag())) {
+			for (final Element el : family) {
+				if (el.tag().equals(element.tag())) {
 					pos++;
 				}
-				if (family.get(i) == element) {
+				if (el == element) {
 					break;
 				}
 			}
@@ -615,8 +615,8 @@ public abstract class Evaluator {
 
 			int pos = 0;
 			final Elements family = p.children();
-			for (int i = 0; i < family.size(); i++) {
-				if (family.get(i).tag().equals(element.tag())) {
+			for (final Element el : family) {
+				if (el.tag().equals(element.tag())) {
 					pos++;
 				}
 			}
@@ -633,8 +633,7 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			final List<Node> family = element.childNodes();
-			for (int i = 0; i < family.size(); i++) {
-				final Node n = family.get(i);
+			for (final Node n : family) {
 				if (!(n instanceof Comment || n instanceof XmlDeclaration || n instanceof DocumentType)) {
 					return false;
 				}

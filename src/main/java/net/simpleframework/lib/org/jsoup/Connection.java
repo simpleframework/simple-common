@@ -284,7 +284,7 @@ public interface Connection {
 	 * encoded form key/value pairs. E.g.: <code><pre>Jsoup.connect(url)
 	 * .requestBody(json)
 	 * .header("Content-Type", "application/json")
-	 * .post();</pre></code> If any data key/vals are supplied, they will be send
+	 * .post();</pre></code> If any data key/vals are supplied, they will be sent
 	 * as URL query params.
 	 * 
 	 * @return this Request, for chaining
@@ -742,7 +742,7 @@ public interface Connection {
 		 * .requestBody(json)
 		 * .header("Content-Type", "application/json")
 		 * .post();</pre></code> If any data key/vals are supplied, they will be
-		 * send as URL query params.
+		 * sent as URL query params.
 		 * 
 		 * @return this Request, for chaining
 		 */

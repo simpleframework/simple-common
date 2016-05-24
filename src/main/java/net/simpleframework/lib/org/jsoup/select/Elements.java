@@ -497,7 +497,7 @@ public class Elements extends ArrayList<Element> {
 	 * Remove elements from this list that match the {@link Selector} query.
 	 * <p>
 	 * E.g. HTML: {@code <div class=logo>One</div> <div>Two</div>}<br>
-	 * <code>Elements divs = doc.select("div").not("#logo");</code><br>
+	 * <code>Elements divs = doc.select("div").not(".logo");</code><br>
 	 * Result: {@code divs: [<div>Two</div>]}
 	 * <p>
 	 * 

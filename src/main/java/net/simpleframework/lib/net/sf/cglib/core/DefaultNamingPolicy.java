@@ -15,7 +15,6 @@
  */
 package net.simpleframework.lib.net.sf.cglib.core;
 
-
 /**
  * The default policy used by {@link AbstractClassGenerator}.
  * Generates names such as

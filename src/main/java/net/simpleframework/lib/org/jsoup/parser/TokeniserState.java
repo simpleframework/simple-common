@@ -36,13 +36,7 @@ enum TokeniserState {
 		// from & in data
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			final char[] c = t.consumeCharacterReference(null, false);
-			if (c == null) {
-				t.emit('&');
-			} else {
-				t.emit(c);
-			}
-			t.transition(Data);
+			readCharRef(t, Data);
 		}
 	},
 	Rcdata {
@@ -74,57 +68,19 @@ enum TokeniserState {
 	CharacterReferenceInRcdata {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			final char[] c = t.consumeCharacterReference(null, false);
-			if (c == null) {
-				t.emit('&');
-			} else {
-				t.emit(c);
-			}
-			t.transition(Rcdata);
+			readCharRef(t, Rcdata);
 		}
 	},
 	Rawtext {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			switch (r.current()) {
-			case '<':
-				t.advanceTransition(RawtextLessthanSign);
-				break;
-			case nullChar:
-				t.error(this);
-				r.advance();
-				t.emit(replacementChar);
-				break;
-			case eof:
-				t.emit(new Token.EOF());
-				break;
-			default:
-				final String data = r.consumeToAny('<', nullChar);
-				t.emit(data);
-				break;
-			}
+			readData(t, r, this, RawtextLessthanSign);
 		}
 	},
 	ScriptData {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			switch (r.current()) {
-			case '<':
-				t.advanceTransition(ScriptDataLessthanSign);
-				break;
-			case nullChar:
-				t.error(this);
-				r.advance();
-				t.emit(replacementChar);
-				break;
-			case eof:
-				t.emit(new Token.EOF());
-				break;
-			default:
-				final String data = r.consumeToAny('<', nullChar);
-				t.emit(data);
-				break;
-			}
+			readData(t, r, this, ScriptDataLessthanSign);
 		}
 	},
 	PLAINTEXT {
@@ -327,13 +283,7 @@ enum TokeniserState {
 	RawtextEndTagOpen {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			if (r.matchesLetter()) {
-				t.createTagPending(false);
-				t.transition(RawtextEndTagName);
-			} else {
-				t.emit("</");
-				t.transition(Rawtext);
-			}
+			readEndTag(t, r, RawtextEndTagName, Rawtext);
 		}
 	},
 	RawtextEndTagName {
@@ -364,14 +314,7 @@ enum TokeniserState {
 	ScriptDataEndTagOpen {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
-			if (r.matchesLetter()) {
-				t.createTagPending(false);
-				t.transition(ScriptDataEndTagName);
-			} else {
-				t.emit("</");
-				t.transition(ScriptData);
-			}
-
+			readEndTag(t, r, ScriptDataEndTagName, ScriptData);
 		}
 	},
 	ScriptDataEndTagName {
@@ -1800,6 +1743,48 @@ enum TokeniserState {
 		if (needsExitTransition) {
 			t.emit("</" + t.dataBuffer.toString());
 			t.transition(elseTransition);
+		}
+	}
+
+	private static void readData(final Tokeniser t, final CharacterReader r,
+			final TokeniserState current, final TokeniserState advance) {
+		switch (r.current()) {
+		case '<':
+			t.advanceTransition(advance);
+			break;
+		case nullChar:
+			t.error(current);
+			r.advance();
+			t.emit(replacementChar);
+			break;
+		case eof:
+			t.emit(new Token.EOF());
+			break;
+		default:
+			final String data = r.consumeToAny('<', nullChar);
+			t.emit(data);
+			break;
+		}
+	}
+
+	private static void readCharRef(final Tokeniser t, final TokeniserState advance) {
+		final char[] c = t.consumeCharacterReference(null, false);
+		if (c == null) {
+			t.emit('&');
+		} else {
+			t.emit(c);
+		}
+		t.transition(advance);
+	}
+
+	private static void readEndTag(final Tokeniser t, final CharacterReader r,
+			final TokeniserState a, final TokeniserState b) {
+		if (r.matchesLetter()) {
+			t.createTagPending(false);
+			t.transition(a);
+		} else {
+			t.emit("</");
+			t.transition(b);
 		}
 	}
 

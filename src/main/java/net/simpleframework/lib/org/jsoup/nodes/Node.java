@@ -399,7 +399,6 @@ public abstract class Node implements Cloneable {
 		final List<Node> wrapChildren = Parser.parseFragment(html, context, baseUri());
 		final Node wrapNode = wrapChildren.get(0);
 		if (wrapNode == null || !(wrapNode instanceof Element)) {
-			// with; noop
 			return null;
 		}
 
@@ -722,7 +721,6 @@ public abstract class Node implements Cloneable {
 			return false;
 		}
 
-		final Node node = (Node) o;
 		return this.outerHtml().equals(((Node) o).outerHtml());
 	}
 

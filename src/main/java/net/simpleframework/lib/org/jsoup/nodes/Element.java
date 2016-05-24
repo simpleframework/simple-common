@@ -578,17 +578,15 @@ public class Element extends Node {
 			return "#" + id();
 		}
 
-		final StringBuilder selector = new StringBuilder(tagName());
+		// Translate HTML namespace ns:tag to CSS namespace syntax ns|tag
+		final String tagName = tagName().replace(':', '|');
+		final StringBuilder selector = new StringBuilder(tagName);
 		final String classes = StringUtil.join(classNames(), ".");
 		if (classes.length() > 0) {
 			selector.append('.').append(classes);
 		}
 
 		if (parent() == null || parent() instanceof Document) {
-			// Document to
-			// selector, as will
-			// always have a
-			// html node
 			return selector.toString();
 		}
 

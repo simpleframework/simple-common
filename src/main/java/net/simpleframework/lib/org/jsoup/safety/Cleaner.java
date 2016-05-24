@@ -61,7 +61,6 @@ public class Cleaner {
 
 		final Document clean = Document.createShell(dirtyDocument.baseUri());
 		if (dirtyDocument.body() != null) {
-			// the clean doc will have empty body.
 			copySafeNodes(dirtyDocument.body(), clean.body());
 		}
 

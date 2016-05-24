@@ -73,14 +73,14 @@ abstract class Token {
 															// caught in one hop, not
 															// accumulated
 		private final StringBuilder pendingAttributeValue = new StringBuilder(); // but
-		// values
-		// are
-		// accumulated,
-		// from
-		// e.g.
-		// &
-		// in
-		// hrefs
+																											// values
+																											// are
+																											// accumulated,
+																											// from
+																											// e.g.
+																											// &
+																											// in
+																											// hrefs
 		private String pendingAttributeValueS; // try to get attr vals in one
 															// shot, vs Builder
 		private boolean hasEmptyAttributeValue = false; // distinguish boolean
