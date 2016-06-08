@@ -18,6 +18,11 @@ public class TimePeriod implements Serializable {
 	public static TimePeriod month = new TimePeriod(ETimePeriod.month);
 	public static TimePeriod year = new TimePeriod(ETimePeriod.year);
 
+	public static TimePeriod yesterday() {
+		final Calendar[] cal = DateUtils.getYesterdayInterval();
+		return new TimePeriod(cal[0].getTime(), cal[1].getTime());
+	}
+
 	private ETimePeriod timePeriod;
 
 	private String dateFormat = "yyyy-MM-dd";
