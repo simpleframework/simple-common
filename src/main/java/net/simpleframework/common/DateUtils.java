@@ -61,6 +61,11 @@ public abstract class DateUtils {
 		return new Calendar[] { cal, cal2 };
 	}
 
+	public static boolean between(final Date date, final Calendar[] cal) {
+		final long l = date.getTime();
+		return l > cal[0].getTimeInMillis() && l < cal[1].getTimeInMillis();
+	}
+
 	public static long to24Hour() {
 		final Calendar calendar = getZeroPoint();
 		calendar.add(Calendar.DATE, 1);
