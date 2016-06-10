@@ -53,6 +53,14 @@ public abstract class DateUtils {
 		return cal;
 	}
 
+	public static Calendar[] getLastMonthInterval() {
+		final Calendar cal = DateUtils.getZeroPoint();
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		final Calendar cal2 = (Calendar) cal.clone();
+		cal.add(Calendar.MONTH, -1);
+		return new Calendar[] { cal, cal2 };
+	}
+
 	public static long to24Hour() {
 		final Calendar calendar = getZeroPoint();
 		calendar.add(Calendar.DATE, 1);
