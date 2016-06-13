@@ -95,19 +95,19 @@ public abstract class FileUtils {
 		}
 	}
 
-	private static long kb = 1024, mb = kb * 1024, gb = mb * 1024;
+	public static long KB = 1024, MB = KB * 1024, GB = MB * 1024;
 
 	public static String toFileSize(final long size) {
 		if (size < 0) {
 			return "";
-		} else if (size > gb) {
-			final double d = (double) size / (double) gb;
+		} else if (size > GB) {
+			final double d = (double) size / (double) GB;
 			return Convert.toString(NumberUtils.format(d)) + " GB";
-		} else if (size > mb) {
-			final double d = (double) size / (double) mb;
+		} else if (size > MB) {
+			final double d = (double) size / (double) MB;
 			return Convert.toString(NumberUtils.format(d)) + " MB";
-		} else if (size > kb) {
-			final double d = (double) size / (double) kb;
+		} else if (size > KB) {
+			final double d = (double) size / (double) KB;
 			return Convert.toString(NumberUtils.format(d)) + " KB";
 		} else {
 			return Convert.toString(size) + " B";
@@ -132,11 +132,11 @@ public abstract class FileUtils {
 			} else {
 				final double l = Convert.toDouble(sb.toString());
 				if (c == 'G') {
-					return (long) (gb * l);
+					return (long) (GB * l);
 				} else if (c == 'M') {
-					return (long) (mb * l);
+					return (long) (MB * l);
 				} else if (c == 'K') {
-					return (long) (kb * l);
+					return (long) (KB * l);
 				}
 			}
 		}
