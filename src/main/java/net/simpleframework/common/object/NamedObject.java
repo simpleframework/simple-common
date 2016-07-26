@@ -1,5 +1,9 @@
 package net.simpleframework.common.object;
 
+import java.util.Map;
+
+import net.simpleframework.common.coll.KVMap;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
@@ -10,12 +14,22 @@ package net.simpleframework.common.object;
 public abstract class NamedObject<T extends NamedObject<T>> extends ObjectEx {
 	private String name;
 
+	protected Map<String, Object> attributes;
+
 	public String getName() {
 		return name;
 	}
 
 	public T setName(final String name) {
 		this.name = name;
+		return (T) this;
+	}
+
+	public T addAttribute(final String key, final Object val) {
+		if (attributes == null) {
+			attributes = new KVMap();
+		}
+		attributes.put(key, val);
 		return (T) this;
 	}
 
