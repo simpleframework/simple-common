@@ -1,5 +1,7 @@
 package net.simpleframework.common;
 
+import java.util.Random;
+
 import net.simpleframework.common.coll.ArrayUtils;
 
 /**
@@ -244,6 +246,27 @@ public abstract class StringUtils {
 		final StringBuilder sb = new StringBuilder(str);
 		while (sb.length() > 0 && sb.charAt(sb.length() - 1) == trailingCharacter) {
 			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb.toString();
+	}
+
+	static final char[] RANDOM_NUMs = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
+			'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+			'4', '5', '6', '7', '8', '9' };
+
+	public static String genRandomPwd(final int len) {
+		// 35是因为数组是从0开始的，26个字母+10个数字
+		final int maxl = RANDOM_NUMs.length;
+		final StringBuffer sb = new StringBuffer();
+		final Random r = new Random();
+		int count = 0; // 生成的密码的长度
+		while (count < len) {
+			// 生成随机数，取绝对值，防止生成负数，
+			final int i = Math.abs(r.nextInt(maxl)); // 生成的数最大为36-1
+			if (i >= 0 && i < maxl) {
+				sb.append(RANDOM_NUMs[i]);
+				count++;
+			}
 		}
 		return sb.toString();
 	}
