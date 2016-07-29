@@ -254,7 +254,7 @@ public abstract class StringUtils {
 			'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
 			'4', '5', '6', '7', '8', '9' };
 
-	public static String genRandomPwd(final int len) {
+	public static String genRandomNum(final int len) {
 		// 35是因为数组是从0开始的，26个字母+10个数字
 		final int maxl = RANDOM_NUMs.length;
 		final StringBuffer sb = new StringBuffer();
