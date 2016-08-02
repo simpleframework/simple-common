@@ -109,7 +109,9 @@ public abstract class BeanUtils {
 			if (bean == null) {
 				return false;
 			}
-			return getBeanWrapper(bean.getClass()).containsKey(name);
+			final BeanWrapper wrapper = getBeanWrapper((bean instanceof Class) ? (Class<?>) bean
+					: bean.getClass());
+			return wrapper.containsKey(name);
 		}
 	}
 
@@ -121,7 +123,9 @@ public abstract class BeanUtils {
 			if (bean == null) {
 				return null;
 			}
-			return getBeanWrapper(bean.getClass()).getPropertyType(name);
+			final BeanWrapper wrapper = getBeanWrapper((bean instanceof Class) ? (Class<?>) bean
+					: bean.getClass());
+			return wrapper.getPropertyType(name);
 		}
 	}
 
