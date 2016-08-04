@@ -188,4 +188,11 @@ public abstract class DateUtils {
 		final Timestamp ts = new Timestamp(time.getTime());
 		return (int) ((ts.getTime()) / 1000);
 	}
+
+	public static boolean isExceed(final Date date, final int minute) {
+		final Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MINUTE, minute);
+		return new Date().after(cal.getTime());
+	}
 }
