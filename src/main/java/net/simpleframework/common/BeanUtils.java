@@ -157,6 +157,12 @@ public abstract class BeanUtils {
 		}
 	}
 
+	public static void setProperties(final Object bean, final Map<String, Object> properties) {
+		for (final Map.Entry<String, Object> e : properties.entrySet()) {
+			setProperty(bean, e.getKey(), e.getValue());
+		}
+	}
+
 	public static Map<String, Object> toMap(final Object bean) {
 		return toMap(bean, true);
 	}
