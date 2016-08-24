@@ -142,6 +142,16 @@ public abstract class HttpUtils implements HtmlConst {
 		return true;
 	}
 
+	public static String stripAbsoluteUrl(final String url) {
+		final int s = url.indexOf("://");
+		final int e = s == -1 ? url.indexOf("/") : url.indexOf("/", s + 3);
+		if (e == -1) {
+			return "";
+		} else {
+			return url.substring(e);
+		}
+	}
+
 	public static final String wrapContextPath(final HttpServletRequest httpRequest, final String url) {
 		final String cp = httpRequest.getContextPath();
 		if (!StringUtils.hasText(url)) {
