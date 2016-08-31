@@ -3,6 +3,7 @@ package net.simpleframework.common.coll;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -166,6 +167,25 @@ public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>> implements
 	@Override
 	public boolean containsValue(final Object value) {
 		return kv.containsValue(value);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (final Map.Entry<String, T> entry : entrySet()) {
+			if (i++ > 0) {
+				sb.append("; ");
+			}
+			sb.append(entry.getKey()).append("=");
+			final T val = entry.getValue();
+			if (val instanceof Date) {
+				sb.append(Convert.toDateString((Date) val, "yyyy-MM-dd HH:mm:ss"));
+			} else {
+				sb.append(val);
+			}
+		}
+		return sb.toString();
 	}
 
 	@SuppressWarnings("rawtypes")
