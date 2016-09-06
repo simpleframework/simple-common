@@ -79,34 +79,46 @@ public abstract class DateUtils {
 		return toDifferenceDate(System.currentTimeMillis() - from.getTime());
 	}
 
+	public static String toDifferenceDate(final long dur) {
+		return toDifferenceDate(dur, false);
+	}
+
 	/**
 	 * 把dur转为具体化的时间,比如1小时23分
 	 * 
 	 * @param dur
 	 * @return
 	 */
-	public static String toDifferenceDate(long dur) {
+	public static String toDifferenceDate(long dur, final boolean _short) {
 		dur = dur / 1000;
 		final String s = $m("DateUtils.0");
 		final String m = $m("DateUtils.1");
 		final String h = $m("DateUtils.2");
 		final String d = $m("DateUtils.3");
-		final String p = "";
 		final StringBuilder sb = new StringBuilder();
 		if (dur < 60) {
-			sb.append(dur).append(p).append(s);
+			sb.append(dur).append(s);
 		} else if (dur < HOUR_PERIOD) {
 			final long ii = dur / 60;
 			final long jj = dur % 60;
-			sb.append(ii).append(p).append(m).append(p).append(jj).append(p).append(s);
+			sb.append(ii).append(m);
+			if (!_short) {
+				sb.append(jj).append(s);
+			}
 		} else if (dur < DAY_PERIOD) {
 			final long ii = dur / HOUR_PERIOD;
 			final long jj = dur % HOUR_PERIOD / 60;
-			sb.append(ii).append(p).append(h).append(p).append(jj).append(p).append(m);
+			sb.append(ii).append(h);
+			if (!_short) {
+				sb.append(jj).append(m);
+			}
 		} else {
 			final long ii = dur / DAY_PERIOD;
 			final long jj = dur % DAY_PERIOD / HOUR_PERIOD;
-			sb.append(ii).append(p).append(d).append(p).append(jj).append(p).append(h);
+			sb.append(ii).append(d);
+			if (!_short) {
+				sb.append(jj).append(h);
+			}
 		}
 		return sb.toString();
 	}
