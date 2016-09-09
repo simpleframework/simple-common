@@ -375,7 +375,7 @@ public abstract class HttpUtils implements HtmlConst {
 		for (final Entry<String, Object> entry : queryMap.entrySet()) {
 			final String key = entry.getKey();
 			final Object val = entry.getValue();
-			if (val == null) {
+			if (val == null || "__del".equals(val)) {
 				params.remove(key);
 			} else {
 				params.put(key, val);
