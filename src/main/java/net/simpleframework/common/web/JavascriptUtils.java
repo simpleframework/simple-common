@@ -128,7 +128,7 @@ public abstract class JavascriptUtils implements HtmlConst {
 				if (!to.exists()) {
 					FileUtils.createFile(to);
 				}
-				oWriter = new OutputStreamWriter(new FileOutputStream(to));
+				oWriter = new OutputStreamWriter(new FileOutputStream(to), "utf-8");
 				if (filename.endsWith(".js")) {
 					new com.yahoo.platform.yui.compressor.JavaScriptCompressor(new StringReader(c), null)
 							.compress(oWriter, 200, true, false, false, false);
