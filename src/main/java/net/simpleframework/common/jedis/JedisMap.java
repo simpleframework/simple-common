@@ -70,13 +70,18 @@ public class JedisMap extends HashMap<String, Object> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
-				final byte[] sbytes = mkey.getBytes();
-				final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
-				final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
-				if (set_expire) {
-					jedis.expire(sbytes, expire);
+				if (value == null) {
+					remove(key);
+					return null;
+				} else {
+					final byte[] sbytes = mkey.getBytes();
+					final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
+					final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
+					if (set_expire) {
+						jedis.expire(sbytes, expire);
+					}
+					return ret;
 				}
-				return ret;
 			} catch (final IOException e) {
 				log.warn(e);
 				return null;
