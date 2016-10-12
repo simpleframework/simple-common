@@ -47,8 +47,8 @@ abstract public class BeanCopier {
 			.parseType("net.simpleframework.lib.net.sf.cglib.core.Converter");
 	private static final Type BEAN_COPIER = TypeUtils
 			.parseType("net.simpleframework.lib.net.sf.cglib.beans.BeanCopier");
-	private static final Signature COPY = new Signature("copy", Type.VOID_TYPE, new Type[] {
-			Constants.TYPE_OBJECT, Constants.TYPE_OBJECT, CONVERTER });
+	private static final Signature COPY = new Signature("copy", Type.VOID_TYPE,
+			new Type[] { Constants.TYPE_OBJECT, Constants.TYPE_OBJECT, CONVERTER });
 	private static final Signature CONVERT = TypeUtils
 			.parseSignature("Object convert(Object, Class, Object)");
 

@@ -160,8 +160,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a boolean
 	 */
-	public boolean getBooleanParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public boolean getBooleanParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		final String value = getStringParameter(name).toLowerCase();
 		if ((value.equalsIgnoreCase("true")) || (value.equalsIgnoreCase("on"))
 				|| (value.equalsIgnoreCase("yes"))) {
@@ -170,8 +170,8 @@ public class ParameterParser {
 				|| (value.equalsIgnoreCase("no"))) {
 			return false;
 		} else {
-			throw new NumberFormatException("Parameter " + name + " value " + value
-					+ " is not a boolean");
+			throw new NumberFormatException(
+					"Parameter " + name + " value " + value + " is not a boolean");
 		}
 	}
 
@@ -204,8 +204,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter value could not be converted to a byte
 	 */
-	public byte getByteParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public byte getByteParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return Byte.parseByte(getStringParameter(name));
 	}
 
@@ -275,8 +275,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a double
 	 */
-	public double getDoubleParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public double getDoubleParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return new Double(getStringParameter(name)).doubleValue();
 	}
 
@@ -309,8 +309,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a float
 	 */
-	public float getFloatParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public float getFloatParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return new Float(getStringParameter(name)).floatValue();
 	}
 
@@ -343,8 +343,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a int
 	 */
-	public int getIntParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public int getIntParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return Integer.parseInt(getStringParameter(name));
 	}
 
@@ -377,8 +377,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a long
 	 */
-	public long getLongParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public long getLongParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return Long.parseLong(getStringParameter(name));
 	}
 
@@ -411,8 +411,8 @@ public class ParameterParser {
 	 * @exception NumberFormatException
 	 *            if the parameter could not be converted to a short
 	 */
-	public short getShortParameter(final String name) throws ParameterNotFoundException,
-			NumberFormatException {
+	public short getShortParameter(final String name)
+			throws ParameterNotFoundException, NumberFormatException {
 		return Short.parseShort(getStringParameter(name));
 	}
 

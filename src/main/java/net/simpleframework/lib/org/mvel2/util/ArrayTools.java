@@ -19,7 +19,8 @@ package net.simpleframework.lib.org.mvel2.util;
 
 public class ArrayTools {
 
-	public static int findFirst(final char c, final int start, final int offset, final char[] array) {
+	public static int findFirst(final char c, final int start, final int offset,
+			final char[] array) {
 		final int end = start + offset;
 		for (int i = start; i < end; i++) {
 			if (array[i] == c) {

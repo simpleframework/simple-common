@@ -32,7 +32,8 @@ public class MethodAccessor extends InvokableAccessor {
 	private Method method;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (!coercionNeeded) {
 			try {
 				if (nextNode != null) {
@@ -128,7 +129,8 @@ public class MethodAccessor extends InvokableAccessor {
 		}
 	}
 
-	private Object[] executeAll(final Object ctx, final VariableResolverFactory vars, final Method m) {
+	private Object[] executeAll(final Object ctx, final VariableResolverFactory vars,
+			final Method m) {
 		if (length == 0) {
 			return GetterAccessor.EMPTY;
 		}
@@ -190,8 +192,8 @@ public class MethodAccessor extends InvokableAccessor {
 					elCtx, variableFactory, value);
 		} catch (final IllegalArgumentException e) {
 			if (ctx != null && method.getDeclaringClass() != ctx.getClass()) {
-				final Method o = getBestCandidate(parameterTypes, method.getName(), ctx.getClass(), ctx
-						.getClass().getMethods(), true);
+				final Method o = getBestCandidate(parameterTypes, method.getName(), ctx.getClass(),
+						ctx.getClass().getMethods(), true);
 				if (o != null) {
 					return nextNode.setValue(executeOverrideTarget(o, ctx, elCtx, variableFactory),
 							elCtx, variableFactory, value);

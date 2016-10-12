@@ -258,10 +258,12 @@ public abstract class MethodVisitor {
 	 * <li>{@link Opcodes#F_APPEND} representing frame with current locals are
 	 * the same as the locals in the previous frame, except that additional
 	 * locals are defined (<code>nLocal</code> is 1, 2 or 3 and
-	 * <code>local</code> elements contains values representing added types).</li>
+	 * <code>local</code> elements contains values representing added
+	 * types).</li>
 	 * <li>{@link Opcodes#F_CHOP} representing frame with current locals are the
 	 * same as the locals in the previous frame, except that the last 1-3 locals
-	 * are absent and with the empty stack (<code>nLocals</code> is 1, 2 or 3).</li>
+	 * are absent and with the empty stack (<code>nLocals</code> is 1, 2 or
+	 * 3).</li>
 	 * <li>{@link Opcodes#F_FULL} representing complete frame data.</li>
 	 * </ul>
 	 * </li>
@@ -819,15 +821,15 @@ public abstract class MethodVisitor {
 	 * @return a visitor to visit the annotation values, or <tt>null</tt> if
 	 *         this visitor is not interested in visiting this annotation.
 	 */
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		if (api < Opcodes.ASM5) {
 			throw new RuntimeException();
 		}
 		if (mv != null) {
-			return mv
-					.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
+			return mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc,
+					visible);
 		}
 		return null;
 	}

@@ -386,9 +386,17 @@ public class Elements extends ArrayList<Element> {
 
 	/**
 	 * Wrap the supplied HTML around each matched elements. For example, with
-	 * HTML {@code <p><b>This</b> is <b>Jsoup</b></p>},
+	 * HTML {@code 
+	 * <p>
+	 * <b>This</b> is <b>Jsoup</b>
+	 * </p>
+	 * },
 	 * <code>doc.select("b").wrap("&lt;i&gt;&lt;/i&gt;");</code> becomes
-	 * {@code <p><i><b>This</b></i> is <i><b>jsoup</b></i></p>}
+	 * {@code 
+	 * <p>
+	 * <i><b>This</b></i> is <i><b>jsoup</b></i>
+	 * </p>
+	 * }
 	 * 
 	 * @param html
 	 *        HTML to wrap around each element, e.g.
@@ -439,11 +447,23 @@ public class Elements extends ArrayList<Element> {
 	 * to setting the inner HTML of each
 	 * element to nothing.
 	 * <p>
-	 * E.g. HTML: {@code <div><p>Hello <b>there</b></p> <p>now</p></div>}<br>
+	 * E.g. HTML: {@code <div>
+	 * <p>
+	 * Hello <b>there</b>
+	 * </p>
+	 *  
+	 * <p>
+	 * now
+	 * </p>
+	 * </div>}<br>
 	 * <code>doc.select("p").empty();</code><br>
 	 * HTML = {@code <div>
-	 * <p></p>
-	 * <p></p>
+	 * 
+	<p>
+	</p>
+	 * 
+	<p>
+	</p>
 	 * </div>}
 	 * 
 	 * @return this, for chaining
@@ -461,7 +481,15 @@ public class Elements extends ArrayList<Element> {
 	 * Remove each matched element from the DOM. This is similar to setting the
 	 * outer HTML of each element to nothing.
 	 * <p>
-	 * E.g. HTML: {@code <div><p>Hello</p> <p>there</p> <img /></div>}<br>
+	 * E.g. HTML: {@code <div>
+	 * <p>
+	 * Hello
+	 * </p>
+	 *  
+	 * <p>
+	 * there
+	 * </p>
+	 *  <img /></div>}<br>
 	 * <code>doc.select("p").remove();</code><br>
 	 * HTML = {@code <div> <img /></div>}
 	 * <p>

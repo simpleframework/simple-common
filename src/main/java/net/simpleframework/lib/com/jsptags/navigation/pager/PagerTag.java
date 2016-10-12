@@ -42,8 +42,7 @@ public final class PagerTag extends TagSupport {
 
 	static final String
 	// scope values
-			PAGE = "page",
-			REQUEST = "request",
+	PAGE = "page", REQUEST = "request",
 			// index values
 			CENTER = "center", FORWARD = "forward", HALF_FULL = "half-full";
 
@@ -163,8 +162,8 @@ public final class PagerTag extends TagSupport {
 
 	public final void setScope(final String val) throws JspException {
 		if (!(val == null || PAGE.equals(val) || REQUEST.equals(val))) {
-			throw new JspTagException("value for attribute \"scope\" "
-					+ "must be either \"page\" or \"request\".");
+			throw new JspTagException(
+					"value for attribute \"scope\" " + "must be either \"page\" or \"request\".");
 		}
 		scope = val;
 	}

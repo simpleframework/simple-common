@@ -79,15 +79,18 @@ public class BinaryOperation extends BooleanNode {
 			if (!left.getEgressType().isAssignableFrom(right.getEgressType())
 					&& !right.getEgressType().isAssignableFrom(left.getEgressType())) {
 				if (right.isLiteral() && canConvert(left.getEgressType(), right.getEgressType())) {
-					final Class targetType = isAritmeticOperation(operation) ? egressType : left
-							.getEgressType();
-					this.right = new LiteralNode(convert(
-							right.getReducedValueAccelerated(null, null, null), targetType), pCtx);
-				} else if (!(areCompatible(left.getEgressType(), right.getEgressType()) || ((operation == Operator.EQUAL || operation == Operator.NEQUAL) && CompatibilityStrategy
-						.areEqualityCompatible(left.getEgressType(), right.getEgressType())))) {
+					final Class targetType = isAritmeticOperation(operation) ? egressType
+							: left.getEgressType();
+					this.right = new LiteralNode(
+							convert(right.getReducedValueAccelerated(null, null, null), targetType), pCtx);
+				} else if (!(areCompatible(left.getEgressType(), right.getEgressType())
+						|| ((operation == Operator.EQUAL || operation == Operator.NEQUAL)
+								&& CompatibilityStrategy.areEqualityCompatible(left.getEgressType(),
+										right.getEgressType())))) {
 
-					throw new CompileException("incompatible types in statement: "
-							+ right.getEgressType() + " (compared from: " + left.getEgressType() + ")",
+					throw new CompileException(
+							"incompatible types in statement: " + right.getEgressType()
+									+ " (compared from: " + left.getEgressType() + ")",
 							left.getExpr() != null ? left.getExpr() : right.getExpr(),
 							left.getExpr() != null ? left.getStart() : right.getStart());
 				}
@@ -111,12 +114,11 @@ public class BinaryOperation extends BooleanNode {
 	}
 
 	private boolean areCompatible(final Class<?> leftClass, final Class<?> rightClass) {
-		return leftClass.equals(NullType.class)
-				|| rightClass.equals(NullType.class)
-				|| (Number.class.isAssignableFrom(rightClass) && Number.class
-						.isAssignableFrom(leftClass))
-				|| ((rightClass.isPrimitive() || leftClass.isPrimitive()) && canConvert(
-						boxPrimitive(leftClass), boxPrimitive(rightClass)));
+		return leftClass.equals(NullType.class) || rightClass.equals(NullType.class)
+				|| (Number.class.isAssignableFrom(rightClass)
+						&& Number.class.isAssignableFrom(leftClass))
+				|| ((rightClass.isPrimitive() || leftClass.isPrimitive())
+						&& canConvert(boxPrimitive(leftClass), boxPrimitive(rightClass)));
 	}
 
 	@Override

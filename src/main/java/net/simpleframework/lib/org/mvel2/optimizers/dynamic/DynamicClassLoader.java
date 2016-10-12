@@ -33,7 +33,8 @@ public class DynamicClassLoader extends ClassLoader implements MVELClassLoader {
 	}
 
 	@Override
-	public Class defineClassX(final String className, final byte[] b, final int start, final int end) {
+	public Class defineClassX(final String className, final byte[] b, final int start,
+			final int end) {
 		totalClasses++;
 		return super.defineClass(className, b, start, end);
 	}

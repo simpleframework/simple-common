@@ -27,8 +27,8 @@ public class FastMethod extends FastMember {
 	}
 
 	private static int helper(final FastClass fc, final Method method) {
-		final int index = fc.getIndex(new Signature(method.getName(), Type
-				.getMethodDescriptor(method)));
+		final int index = fc
+				.getIndex(new Signature(method.getName(), Type.getMethodDescriptor(method)));
 		if (index < 0) {
 			final Class[] types = method.getParameterTypes();
 			System.err.println("hash=" + method.getName().hashCode() + " size=" + types.length);

@@ -96,13 +96,12 @@ public class PropertyTools {
 
 		Method candidate = null;
 		for (final Method meth : clazz.getMethods()) {
-			if ((meth.getModifiers() & PUBLIC) != 0
-					&& (meth.getModifiers() & STATIC) == 0
+			if ((meth.getModifiers() & PUBLIC) != 0 && (meth.getModifiers() & STATIC) == 0
 					&& meth.getParameterTypes().length == 0
-					&& (getter.equals(meth.getName())
-							|| property.equals(meth.getName())
-							|| ((isGet.equals(meth.getName()) || simpleIsGet.equals(meth.getName())) && meth
-									.getReturnType() == boolean.class) || simple.equals(meth.getName()))) {
+					&& (getter.equals(meth.getName()) || property.equals(meth.getName())
+							|| ((isGet.equals(meth.getName()) || simpleIsGet.equals(meth.getName()))
+									&& meth.getReturnType() == boolean.class)
+							|| simple.equals(meth.getName()))) {
 				if (candidate == null
 						|| candidate.getReturnType().isAssignableFrom(meth.getReturnType())) {
 					candidate = meth;
@@ -212,7 +211,7 @@ public class PropertyTools {
 	 * @see System.getProperty("java.version");
 	 */
 	public static String getJavaVersion() {
-		return System.getProperty("mvel.java.version") != null ? System
-				.getProperty("mvel.java.version") : System.getProperty("java.version");
+		return System.getProperty("mvel.java.version") != null
+				? System.getProperty("mvel.java.version") : System.getProperty("java.version");
 	}
 }

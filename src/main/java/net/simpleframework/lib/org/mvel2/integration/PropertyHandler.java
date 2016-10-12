@@ -36,7 +36,8 @@ public interface PropertyHandler {
 	 *        - the root variable factory provided by the runtime.
 	 * @return - the value of the property.
 	 */
-	public Object getProperty(String name, Object contextObj, VariableResolverFactory variableFactory);
+	public Object getProperty(String name, Object contextObj,
+			VariableResolverFactory variableFactory);
 
 	/**
 	 * Sets the value of the property.

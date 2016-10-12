@@ -120,7 +120,8 @@ public class FilterItem implements Serializable {
 			final double d = Convert.toDouble(v, Double.MIN_VALUE);
 			final double d2 = Convert.toDouble(v2, Double.MIN_VALUE);
 			if ((r == EFilterRelation.gt && d > d2) || (r == EFilterRelation.gt_equal && d >= d2)
-					|| (r == EFilterRelation.lt && d < d2) || (r == EFilterRelation.lt_equal && d <= d2)) {
+					|| (r == EFilterRelation.lt && d < d2)
+					|| (r == EFilterRelation.lt_equal && d <= d2)) {
 				return false;
 			}
 		} else if (Date.class.isAssignableFrom(propertyType)) {

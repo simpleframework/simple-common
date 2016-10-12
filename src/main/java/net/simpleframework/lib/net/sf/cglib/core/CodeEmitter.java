@@ -102,8 +102,8 @@ public class CodeEmitter extends LocalVariablesSorter {
 		}
 	}
 
-	CodeEmitter(final ClassEmitter ce, final MethodVisitor mv, final int access,
-			final Signature sig, final Type[] exceptionTypes) {
+	CodeEmitter(final ClassEmitter ce, final MethodVisitor mv, final int access, final Signature sig,
+			final Type[] exceptionTypes) {
 		super(access, sig.getDescriptor(), mv);
 		this.ce = ce;
 		state = new State(ce.getClassInfo(), access, sig, exceptionTypes);
@@ -787,8 +787,8 @@ public class CodeEmitter extends LocalVariablesSorter {
 					dup_x1();
 					swap();
 				}
-				invoke_constructor(boxed, new Signature(Constants.CONSTRUCTOR_NAME, Type.VOID_TYPE,
-						new Type[] { type }));
+				invoke_constructor(boxed,
+						new Signature(Constants.CONSTRUCTOR_NAME, Type.VOID_TYPE, new Type[] { type }));
 			}
 		}
 	}

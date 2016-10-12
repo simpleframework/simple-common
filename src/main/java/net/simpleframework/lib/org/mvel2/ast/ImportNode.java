@@ -37,7 +37,8 @@ public class ImportNode extends ASTNode {
 
 	private static final char[] WC_TEST = new char[] { '.', '*' };
 
-	public ImportNode(final char[] expr, final int start, final int offset, final ParserContext pCtx) {
+	public ImportNode(final char[] expr, final int start, final int offset,
+			final ParserContext pCtx) {
 		super(pCtx);
 		this.expr = expr;
 		this.start = start;
@@ -59,8 +60,8 @@ public class ImportNode extends ASTNode {
 				this.importClass = Class.forName(clsName, true, classLoader);
 			} catch (final ClassNotFoundException e) {
 				int idx;
-				clsName = (clsName.substring(0, idx = clsName.lastIndexOf('.')) + "$" + clsName
-						.substring(idx + 1)).trim();
+				clsName = (clsName.substring(0, idx = clsName.lastIndexOf('.')) + "$"
+						+ clsName.substring(idx + 1)).trim();
 
 				try {
 					this.importClass = Class.forName(clsName, true, classLoader);
@@ -85,10 +86,11 @@ public class ImportNode extends ASTNode {
 		// if the factory is an ImmutableDefaultFactory it means this import is
 		// unused so we can skip it safely
 		if (!(factory instanceof ImmutableDefaultFactory)
-				&& !(factory instanceof StackResetResolverFactory && ((StackResetResolverFactory) factory)
-						.getDelegate() instanceof ImmutableDefaultFactory)) {
-			findClassImportResolverFactory(factory, pCtx).addPackageImport(
-					new String(expr, start, _offset - start));
+				&& !(factory instanceof StackResetResolverFactory
+						&& ((StackResetResolverFactory) factory)
+								.getDelegate() instanceof ImmutableDefaultFactory)) {
+			findClassImportResolverFactory(factory, pCtx)
+					.addPackageImport(new String(expr, start, _offset - start));
 		}
 		return null;
 	}

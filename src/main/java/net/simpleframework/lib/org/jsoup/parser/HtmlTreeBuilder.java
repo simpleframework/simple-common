@@ -73,8 +73,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		return super.parse(input, baseUri, errors);
 	}
 
-	List<Node> parseFragment(final String inputFragment, final Element context,
-			final String baseUri, final ParseErrorList errors) {
+	List<Node> parseFragment(final String inputFragment, final Element context, final String baseUri,
+			final ParseErrorList errors) {
 		// context may be null
 		state = HtmlTreeBuilderState.Initial;
 		initialiseParse(inputFragment, baseUri, errors);
@@ -427,7 +427,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		replaceInQueue(stack, out, in);
 	}
 
-	private void replaceInQueue(final ArrayList<Element> queue, final Element out, final Element in) {
+	private void replaceInQueue(final ArrayList<Element> queue, final Element out,
+			final Element in) {
 		final int i = queue.lastIndexOf(out);
 		Validate.isTrue(i != -1);
 		queue.set(i, in);

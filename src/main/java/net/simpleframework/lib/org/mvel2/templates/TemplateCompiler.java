@@ -135,14 +135,16 @@ public class TemplateCompiler {
 					}
 					if ((x = captureOrbToken()) != -1) {
 						start = x;
-						switch ((opcode = OPCODES.get(name = new String(capture()))) == null ? 0 : opcode) {
+						switch ((opcode = OPCODES.get(name = new String(capture()))) == null ? 0
+								: opcode) {
 						case Opcodes.IF:
 							/**
 							 * Capture any residual text node, and push the if
 							 * statement on the nesting stack.
 							 */
-							stack.push(n = markTextNode(n).next = codeCache ? new CompiledIfNode(start,
-									name, template, captureOrbInternal(), start, parserContext)
+							stack.push(n = markTextNode(n).next = codeCache
+									? new CompiledIfNode(start, name, template, captureOrbInternal(), start,
+											parserContext)
 									: new IfNode(start, name, template, captureOrbInternal(), start));
 
 							n.setTerminus(new TerminalNode());
@@ -154,9 +156,10 @@ public class TemplateCompiler {
 								markTextNode(n).next = (last = (IfNode) stack.pop()).getTerminus();
 
 								last.demarcate(last.getTerminus(), template);
-								last.next = n = codeCache ? new CompiledIfNode(start, name, template,
-										captureOrbInternal(), start, parserContext) : new IfNode(start, name,
-										template, captureOrbInternal(), start);
+								last.next = n = codeCache
+										? new CompiledIfNode(start, name, template, captureOrbInternal(),
+												start, parserContext)
+										: new IfNode(start, name, template, captureOrbInternal(), start);
 								n.setTerminus(last.getTerminus());
 
 								stack.push(n);
@@ -164,8 +167,9 @@ public class TemplateCompiler {
 							break;
 
 						case Opcodes.FOREACH:
-							stack.push(n = markTextNode(n).next = codeCache ? new CompiledForEachNode(
-									start, name, template, captureOrbInternal(), start, parserContext)
+							stack.push(n = markTextNode(n).next = codeCache
+									? new CompiledForEachNode(start, name, template, captureOrbInternal(),
+											start, parserContext)
 									: new ForEachNode(start, name, template, captureOrbInternal(), start));
 
 							n.setTerminus(new TerminalNode());
@@ -173,29 +177,33 @@ public class TemplateCompiler {
 							break;
 
 						case Opcodes.INCLUDE_FILE:
-							n = markTextNode(n).next = codeCache ? new CompiledIncludeNode(start, name,
-									template, captureOrbInternal(), start = cursor + 1, parserContext)
+							n = markTextNode(n).next = codeCache
+									? new CompiledIncludeNode(start, name, template, captureOrbInternal(),
+											start = cursor + 1, parserContext)
 									: new IncludeNode(start, name, template, captureOrbInternal(),
 											start = cursor + 1);
 							break;
 
 						case Opcodes.INCLUDE_NAMED:
-							n = markTextNode(n).next = codeCache ? new CompiledNamedIncludeNode(start,
-									name, template, captureOrbInternal(), start = cursor + 1, parserContext)
+							n = markTextNode(n).next = codeCache
+									? new CompiledNamedIncludeNode(start, name, template,
+											captureOrbInternal(), start = cursor + 1, parserContext)
 									: new NamedIncludeNode(start, name, template, captureOrbInternal(),
 											start = cursor + 1);
 							break;
 
 						case Opcodes.CODE:
-							n = markTextNode(n).next = codeCache ? new CompiledCodeNode(start, name,
-									template, captureOrbInternal(), start = cursor + 1, parserContext)
+							n = markTextNode(n).next = codeCache
+									? new CompiledCodeNode(start, name, template, captureOrbInternal(),
+											start = cursor + 1, parserContext)
 									: new CodeNode(start, name, template, captureOrbInternal(),
 											start = cursor + 1);
 							break;
 
 						case Opcodes.EVAL:
-							n = markTextNode(n).next = codeCache ? new CompiledEvalNode(start, name,
-									template, captureOrbInternal(), start = cursor + 1, parserContext)
+							n = markTextNode(n).next = codeCache
+									? new CompiledEvalNode(start, name, template, captureOrbInternal(),
+											start = cursor + 1, parserContext)
 									: new EvalNode(start, name, template, captureOrbInternal(),
 											start = cursor + 1);
 							break;
@@ -207,10 +215,11 @@ public class TemplateCompiler {
 							break;
 
 						case Opcodes.DECLARE:
-							stack.push(n = markTextNode(n).next = codeCache ? new CompiledDeclareNode(
-									start, name, template, captureOrbInternal(), start = cursor + 1,
-									parserContext) : new DeclareNode(start, name, template,
-									captureOrbInternal(), start = cursor + 1));
+							stack.push(n = markTextNode(n).next = codeCache
+									? new CompiledDeclareNode(start, name, template, captureOrbInternal(),
+											start = cursor + 1, parserContext)
+									: new DeclareNode(start, name, template, captureOrbInternal(),
+											start = cursor + 1));
 
 							n.setTerminus(new TerminalNode());
 
@@ -236,10 +245,11 @@ public class TemplateCompiler {
 
 						default:
 							if (name.length() == 0) {
-								n = markTextNode(n).next = codeCache ? new CompiledExpressionNode(start,
-										name, template, captureOrbInternal(), start = cursor + 1,
-										parserContext) : new ExpressionNode(start, name, template,
-										captureOrbInternal(), start = cursor + 1);
+								n = markTextNode(n).next = codeCache
+										? new CompiledExpressionNode(start, name, template,
+												captureOrbInternal(), start = cursor + 1, parserContext)
+										: new ExpressionNode(start, name, template, captureOrbInternal(),
+												start = cursor + 1);
 							} else if (customNodes != null && customNodes.containsKey(name)) {
 								final Class<? extends Node> customNode = customNodes.get(name);
 
@@ -250,8 +260,8 @@ public class TemplateCompiler {
 									n.setCEnd(start = cursor + 1);
 									n.setEnd(n.getCEnd());
 
-									n.setContents(subset(template, n.getCStart(),
-											n.getCEnd() - n.getCStart() - 1));
+									n.setContents(
+											subset(template, n.getCStart(), n.getCEnd() - n.getCStart() - 1));
 
 									if (n.isOpenNode()) {
 										stack.push(n);
@@ -294,8 +304,9 @@ public class TemplateCompiler {
 		}
 
 		if (!stack.isEmpty()) {
-			final CompileException ce = new CompileException("unclosed @"
-					+ ((Node) stack.peek()).getName() + "{} block. expected @end{}", template, cursor);
+			final CompileException ce = new CompileException(
+					"unclosed @" + ((Node) stack.peek()).getName() + "{} block. expected @end{}",
+					template, cursor);
 			ce.setColumn(cursor - colStart);
 			ce.setLineNumber(line);
 			throw ce;
@@ -390,11 +401,13 @@ public class TemplateCompiler {
 		return new TemplateCompiler(template, true, ParserContext.create()).compile();
 	}
 
-	public static CompiledTemplate compileTemplate(final String template, final ParserContext context) {
+	public static CompiledTemplate compileTemplate(final String template,
+			final ParserContext context) {
 		return new TemplateCompiler(template, true, context).compile();
 	}
 
-	public static CompiledTemplate compileTemplate(final char[] template, final ParserContext context) {
+	public static CompiledTemplate compileTemplate(final char[] template,
+			final ParserContext context) {
 		return new TemplateCompiler(template, true, context).compile();
 	}
 

@@ -540,8 +540,8 @@ public class ParserContext implements Serializable {
 				for (final Method m : ctxType.getMethods()) {
 					if ((m.getModifiers() & Modifier.PUBLIC) != 0) {
 						if (m.getName().startsWith("get")
-								|| (m.getName().startsWith("is") && (m.getReturnType()
-										.equals(boolean.class) || m.getReturnType().equals(Boolean.class)))) {
+								|| (m.getName().startsWith("is") && (m.getReturnType().equals(boolean.class)
+										|| m.getReturnType().equals(Boolean.class)))) {
 							String propertyName = ReflectionUtil.getPropertyFromAccessor(m.getName());
 							scope.add(propertyName);
 							propertyName = propertyName.substring(0, 1).toUpperCase()
@@ -773,8 +773,8 @@ public class ParserContext implements Serializable {
 			} else if (val instanceof MethodStub) {
 				addImport(entry.getKey(), (MethodStub) val);
 			} else {
-				throw new RuntimeException("invalid element in imports map: " + entry.getKey() + " ("
-						+ val + ")");
+				throw new RuntimeException(
+						"invalid element in imports map: " + entry.getKey() + " (" + val + ")");
 			}
 		}
 	}
@@ -868,8 +868,8 @@ public class ParserContext implements Serializable {
 	}
 
 	public int getLineFor(final String sourceName, final int cursor) {
-		return (sourceLineLookups != null && sourceLineLookups.containsKey(sourceName)) ? sourceLineLookups
-				.get(sourceName).getLineFromCursor(cursor) : -1;
+		return (sourceLineLookups != null && sourceLineLookups.containsKey(sourceName))
+				? sourceLineLookups.get(sourceName).getLineFromCursor(cursor) : -1;
 	}
 
 	public boolean isVisitedLine(final String sourceName, final int lineNumber) {

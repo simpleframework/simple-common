@@ -32,8 +32,8 @@ class NoOpGenerator implements CallbackGenerator {
 		for (final Iterator it = methods.iterator(); it.hasNext();) {
 			final MethodInfo method = (MethodInfo) it.next();
 			if (TypeUtils.isBridge(method.getModifiers())
-					|| (TypeUtils.isProtected(context.getOriginalModifiers(method)) && TypeUtils
-							.isPublic(method.getModifiers()))) {
+					|| (TypeUtils.isProtected(context.getOriginalModifiers(method))
+							&& TypeUtils.isPublic(method.getModifiers()))) {
 				final CodeEmitter e = EmitUtils.begin_method(ce, method);
 				e.load_this();
 				e.load_args();

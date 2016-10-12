@@ -47,7 +47,8 @@ public class AnalyzerException extends Exception {
 		this.node = node;
 	}
 
-	public AnalyzerException(final AbstractInsnNode node, final String msg, final Throwable exception) {
+	public AnalyzerException(final AbstractInsnNode node, final String msg,
+			final Throwable exception) {
 		super(msg, exception);
 		this.node = node;
 	}

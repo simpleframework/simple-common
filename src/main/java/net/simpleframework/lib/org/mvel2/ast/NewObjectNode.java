@@ -63,7 +63,8 @@ public class NewObjectNode extends ASTNode {
 
 	private static final Class[] EMPTYCLS = new Class[0];
 
-	public NewObjectNode(final TypeDescriptor typeDescr, final int fields, final ParserContext pCtx) {
+	public NewObjectNode(final TypeDescriptor typeDescr, final int fields,
+			final ParserContext pCtx) {
 		super(pCtx);
 		this.typeDescr = typeDescr;
 		this.fields = fields;
@@ -86,8 +87,8 @@ public class NewObjectNode extends ASTNode {
 					egressType = Class.forName(typeDescr.getClassName(), true, getClassLoader());
 				} catch (final ClassNotFoundException e) {
 					if (pCtx.isStrongTyping()) {
-						pCtx.addError(new ErrorDetail(expr, start, true, "could not resolve class: "
-								+ typeDescr.getClassName()));
+						pCtx.addError(new ErrorDetail(expr, start, true,
+								"could not resolve class: " + typeDescr.getClassName()));
 					}
 					return;
 					// do nothing.
@@ -110,16 +111,16 @@ public class NewObjectNode extends ASTNode {
 
 			if (pCtx != null) {
 				if (egressType == null) {
-					pCtx.addError(new ErrorDetail(expr, start, true, "could not resolve class: "
-							+ typeDescr.getClassName()));
+					pCtx.addError(new ErrorDetail(expr, start, true,
+							"could not resolve class: " + typeDescr.getClassName()));
 					return;
 				}
 
 				if (!typeDescr.isArray()) {
 					final String[] cnsResid = captureContructorAndResidual(expr, start, offset);
 
-					final List<char[]> constructorParms = parseMethodOrConstructor(cnsResid[0]
-							.toCharArray());
+					final List<char[]> constructorParms = parseMethodOrConstructor(
+							cnsResid[0].toCharArray());
 
 					final Class[] parms = new Class[constructorParms.size()];
 					for (int i = 0; i < parms.length; i++) {
@@ -273,7 +274,8 @@ public class NewObjectNode extends ASTNode {
 
 				if (constructorParms != null) {
 					final Class cls = findClass(factory,
-							new String(subset(name, 0, findFirst('(', 0, name.length, name))).trim(), pCtx);
+							new String(subset(name, 0, findFirst('(', 0, name.length, name))).trim(),
+							pCtx);
 
 					final Object[] parms = new Object[constructorParms.size()];
 					for (int i = 0; i < constructorParms.size(); i++) {
@@ -293,8 +295,8 @@ public class NewObjectNode extends ASTNode {
 					}
 
 					if (cnsRes.length > 1) {
-						return PropertyAccessor.get(cnsRes[1], cns.newInstance(parms), factory,
-								thisValue, pCtx);
+						return PropertyAccessor.get(cnsRes[1], cns.newInstance(parms), factory, thisValue,
+								pCtx);
 					} else {
 						return cns.newInstance(parms);
 					}
@@ -315,7 +317,8 @@ public class NewObjectNode extends ASTNode {
 		} catch (final ClassNotFoundException e) {
 			throw new CompileException("unable to resolve class: " + e.getMessage(), expr, start, e);
 		} catch (final NoSuchMethodException e) {
-			throw new CompileException("cannot resolve constructor: " + e.getMessage(), expr, start, e);
+			throw new CompileException("cannot resolve constructor: " + e.getMessage(), expr, start,
+					e);
 		} catch (final Exception e) {
 			throw new CompileException("could not instantiate class: " + e.getMessage(), expr, start,
 					e);

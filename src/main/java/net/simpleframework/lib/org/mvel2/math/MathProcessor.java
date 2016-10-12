@@ -232,7 +232,8 @@ public strictfp class MathProcessor {
 			final int type2, final Object val2) {
 		if (operation < 20) {
 			if (((type1 > 49 || operation == EQUAL || operation == NEQUAL) && type1 == type2)
-					|| (isIntegerType(type1) && isIntegerType(type2) && operation >= BW_AND && operation <= BW_NOT)) {
+					|| (isIntegerType(type1) && isIntegerType(type2) && operation >= BW_AND
+							&& operation <= BW_NOT)) {
 				return doOperationsSameType(type1, val1, operation, val2);
 			} else if (isNumericOperation(type1, val1, operation, type2, val2)) {
 				return doPrimWrapperArithmetic(getNumber(val1, type1), operation,
@@ -259,10 +260,9 @@ public strictfp class MathProcessor {
 
 	private static boolean isNumericOperation(final int type1, final Object val1,
 			final int operation, final int type2, final Object val2) {
-		return (type1 > 99 && type2 > 99)
-				|| (operation != ADD
-						&& (type1 > 99 || type2 > 99 || operation < LTHAN || operation > GETHAN)
-						&& isNumber(val1) && isNumber(val2));
+		return (type1 > 99 && type2 > 99) || (operation != ADD
+				&& (type1 > 99 || type2 > 99 || operation < LTHAN || operation > GETHAN)
+				&& isNumber(val1) && isNumber(val2));
 	}
 
 	private static boolean isIntegerType(final int type) {
@@ -298,8 +298,8 @@ public strictfp class MathProcessor {
 					return val2 != null
 							&& (((Comparable) val1).compareTo(val2) >= 1 ? Boolean.TRUE : Boolean.FALSE);
 				} catch (final ClassCastException e) {
-					throw new RuntimeException("uncomparable values <<" + val1 + ">> and <<" + val2
-							+ ">>", e);
+					throw new RuntimeException(
+							"uncomparable values <<" + val1 + ">> and <<" + val2 + ">>", e);
 				}
 			} else {
 				return Boolean.FALSE;
@@ -313,8 +313,8 @@ public strictfp class MathProcessor {
 					return val2 != null && ((Comparable) val1).compareTo(val2) >= 0 ? Boolean.TRUE
 							: Boolean.FALSE;
 				} catch (final ClassCastException e) {
-					throw new RuntimeException("uncomparable values <<" + val1 + ">> and <<" + val2
-							+ ">>", e);
+					throw new RuntimeException(
+							"uncomparable values <<" + val1 + ">> and <<" + val2 + ">>", e);
 				}
 
 			} else {
@@ -328,8 +328,8 @@ public strictfp class MathProcessor {
 					return val2 != null && ((Comparable) val1).compareTo(val2) <= -1 ? Boolean.TRUE
 							: Boolean.FALSE;
 				} catch (final ClassCastException e) {
-					throw new RuntimeException("uncomparable values <<" + val1 + ">> and <<" + val2
-							+ ">>", e);
+					throw new RuntimeException(
+							"uncomparable values <<" + val1 + ">> and <<" + val2 + ">>", e);
 				}
 
 			} else {
@@ -343,8 +343,8 @@ public strictfp class MathProcessor {
 					return val2 != null && ((Comparable) val1).compareTo(val2) <= 0 ? Boolean.TRUE
 							: Boolean.FALSE;
 				} catch (final ClassCastException e) {
-					throw new RuntimeException("uncomparable values <<" + val1 + ">> and <<" + val2
-							+ ">>", e);
+					throw new RuntimeException(
+							"uncomparable values <<" + val1 + ">> and <<" + val2 + ">>", e);
 				}
 
 			} else {
@@ -361,9 +361,9 @@ public strictfp class MathProcessor {
 		throw new RuntimeException(
 				"could not perform numeric operation on non-numeric types: left-type="
 						+ (val1 != null ? val1.getClass().getName() : "null") + "; right-type="
-						+ (val2 != null ? val2.getClass().getName() : "null") + " [vals ("
-						+ valueOf(val1) + ", " + valueOf(val2) + ") operation="
-						+ DebugTools.getOperatorName(operation) + " (opcode:" + operation + ") ]");
+						+ (val2 != null ? val2.getClass().getName() : "null") + " [vals (" + valueOf(val1)
+						+ ", " + valueOf(val2) + ") operation=" + DebugTools.getOperatorName(operation)
+						+ " (opcode:" + operation + ") ]");
 	}
 
 	private static Boolean safeEquals(final Object val1, final Object val2) {
@@ -638,8 +638,8 @@ public strictfp class MathProcessor {
 			case MULT:
 				return ((Float) val1) * ((Float) val2);
 			case POWER:
-				return narrowType(new InternalNumber((Float) val1, MATH_CONTEXT).pow(
-						new InternalNumber((Float) val2).intValue(), MATH_CONTEXT), -1);
+				return narrowType(new InternalNumber((Float) val1, MATH_CONTEXT)
+						.pow(new InternalNumber((Float) val2).intValue(), MATH_CONTEXT), -1);
 			case MOD:
 				return ((Float) val1) % ((Float) val2);
 			case GTHAN:
@@ -779,8 +779,8 @@ public strictfp class MathProcessor {
 			return ((Byte) in).doubleValue();
 		}
 
-		throw new RuntimeException("cannot convert <" + in + "> to a numeric type: " + in.getClass()
-				+ " [" + type + "]");
+		throw new RuntimeException(
+				"cannot convert <" + in + "> to a numeric type: " + in.getClass() + " [" + type + "]");
 
 	}
 
@@ -824,7 +824,7 @@ public strictfp class MathProcessor {
 
 		}
 
-		throw new RuntimeException("cannot convert <" + in + "> to a numeric type: " + in.getClass()
-				+ " [" + type + "]");
+		throw new RuntimeException(
+				"cannot convert <" + in + "> to a numeric type: " + in.getClass() + " [" + type + "]");
 	}
 }

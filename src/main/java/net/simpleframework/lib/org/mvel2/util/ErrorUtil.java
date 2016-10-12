@@ -7,8 +7,8 @@ import net.simpleframework.lib.org.mvel2.ErrorDetail;
  * @author Mike Brock .
  */
 public class ErrorUtil {
-	public static CompileException rewriteIfNeeded(final CompileException caught,
-			final char[] outer, final int outerCursor) {
+	public static CompileException rewriteIfNeeded(final CompileException caught, final char[] outer,
+			final int outerCursor) {
 		if (outer != caught.getExpr()) {
 			if (caught.getExpr().length <= caught.getCursor()) {
 				caught.setCursor(caught.getExpr().length - 1);
@@ -20,8 +20,8 @@ public class ErrorUtil {
 
 				final String outerStr = new String(outer);
 
-				final int newCursor = outerStr
-						.substring(outerStr.indexOf(new String(caught.getExpr()))).indexOf(innerExpr);
+				final int newCursor = outerStr.substring(outerStr.indexOf(new String(caught.getExpr())))
+						.indexOf(innerExpr);
 
 				caught.setCursor(newCursor);
 			} catch (final Throwable t) {

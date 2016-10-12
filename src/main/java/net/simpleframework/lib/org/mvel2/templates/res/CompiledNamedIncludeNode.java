@@ -64,26 +64,28 @@ public class CompiledNamedIncludeNode extends Node {
 		if (next != null) {
 			final String namedTemplate = MVEL.executeExpression(cIncludeExpression, ctx, factory,
 					String.class);
-			final CompiledTemplate ct = runtime.getNamedTemplateRegistry().getNamedTemplate(
-					namedTemplate);
+			final CompiledTemplate ct = runtime.getNamedTemplateRegistry()
+					.getNamedTemplate(namedTemplate);
 
 			if (ct == null) {
 				throw new TemplateError("named template does not exist: " + namedTemplate);
 			}
 
-			return next.eval(
-					runtime,
-					appender.append(String.valueOf(TemplateRuntime.execute(ct, ctx, factory,
-							runtime.getNamedTemplateRegistry()))), ctx, factory);
+			return next.eval(runtime, appender.append(String.valueOf(
+					TemplateRuntime.execute(ct, ctx, factory, runtime.getNamedTemplateRegistry()))), ctx,
+					factory);
 
 			// return next.eval(runtime,
 			// appender.append(String.valueOf(TemplateRuntime.execute(runtime.getNamedTemplateRegistry().getNamedTemplate(MVEL.executeExpression(cIncludeExpression,
 			// ctx, factory, String.class)), ctx, factory))), ctx, factory);
 		} else {
-			return appender.append(String.valueOf(TemplateRuntime.execute(
-					runtime.getNamedTemplateRegistry().getNamedTemplate(
-							MVEL.executeExpression(cIncludeExpression, ctx, factory, String.class)), ctx,
-					factory, runtime.getNamedTemplateRegistry())));
+			return appender
+					.append(
+							String.valueOf(TemplateRuntime.execute(
+									runtime.getNamedTemplateRegistry()
+											.getNamedTemplate(MVEL.executeExpression(cIncludeExpression, ctx,
+													factory, String.class)),
+									ctx, factory, runtime.getNamedTemplateRegistry())));
 		}
 	}
 

@@ -21,7 +21,8 @@ package net.simpleframework.lib.net.sf.cglib.transform.impl;
 public class AbstractInterceptFieldCallback implements InterceptFieldCallback {
 
 	@Override
-	public int writeInt(final Object obj, final String name, final int oldValue, final int newValue) {
+	public int writeInt(final Object obj, final String name, final int oldValue,
+			final int newValue) {
 		return newValue;
 	}
 

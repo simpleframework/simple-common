@@ -174,8 +174,8 @@ public class ReceiveMailSession {
 		return email;
 	}
 
-	protected void processPart(final ReceivedEmail email, final Part part) throws IOException,
-			MessagingException {
+	protected void processPart(final ReceivedEmail email, final Part part)
+			throws IOException, MessagingException {
 		final Object content = part.getContent();
 
 		if (content instanceof String) {

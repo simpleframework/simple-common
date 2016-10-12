@@ -104,32 +104,32 @@ public class Type {
 	/**
 	 * The <tt>void</tt> type.
 	 */
-	public static final Type VOID_TYPE = new Type(VOID, null,
-			('V' << 24) | (5 << 16) | (0 << 8) | 0, 1);
+	public static final Type VOID_TYPE = new Type(VOID, null, ('V' << 24) | (5 << 16) | (0 << 8) | 0,
+			1);
 
 	/**
 	 * The <tt>boolean</tt> type.
 	 */
-	public static final Type BOOLEAN_TYPE = new Type(BOOLEAN, null, ('Z' << 24) | (0 << 16)
-			| (5 << 8) | 1, 1);
+	public static final Type BOOLEAN_TYPE = new Type(BOOLEAN, null,
+			('Z' << 24) | (0 << 16) | (5 << 8) | 1, 1);
 
 	/**
 	 * The <tt>char</tt> type.
 	 */
-	public static final Type CHAR_TYPE = new Type(CHAR, null,
-			('C' << 24) | (0 << 16) | (6 << 8) | 1, 1);
+	public static final Type CHAR_TYPE = new Type(CHAR, null, ('C' << 24) | (0 << 16) | (6 << 8) | 1,
+			1);
 
 	/**
 	 * The <tt>byte</tt> type.
 	 */
-	public static final Type BYTE_TYPE = new Type(BYTE, null,
-			('B' << 24) | (0 << 16) | (5 << 8) | 1, 1);
+	public static final Type BYTE_TYPE = new Type(BYTE, null, ('B' << 24) | (0 << 16) | (5 << 8) | 1,
+			1);
 
 	/**
 	 * The <tt>short</tt> type.
 	 */
-	public static final Type SHORT_TYPE = new Type(SHORT, null, ('S' << 24) | (0 << 16) | (7 << 8)
-			| 1, 1);
+	public static final Type SHORT_TYPE = new Type(SHORT, null,
+			('S' << 24) | (0 << 16) | (7 << 8) | 1, 1);
 
 	/**
 	 * The <tt>int</tt> type.
@@ -140,20 +140,20 @@ public class Type {
 	/**
 	 * The <tt>float</tt> type.
 	 */
-	public static final Type FLOAT_TYPE = new Type(FLOAT, null, ('F' << 24) | (2 << 16) | (2 << 8)
-			| 1, 1);
+	public static final Type FLOAT_TYPE = new Type(FLOAT, null,
+			('F' << 24) | (2 << 16) | (2 << 8) | 1, 1);
 
 	/**
 	 * The <tt>long</tt> type.
 	 */
-	public static final Type LONG_TYPE = new Type(LONG, null,
-			('J' << 24) | (1 << 16) | (1 << 8) | 2, 1);
+	public static final Type LONG_TYPE = new Type(LONG, null, ('J' << 24) | (1 << 16) | (1 << 8) | 2,
+			1);
 
 	/**
 	 * The <tt>double</tt> type.
 	 */
-	public static final Type DOUBLE_TYPE = new Type(DOUBLE, null, ('D' << 24) | (3 << 16) | (3 << 8)
-			| 2, 1);
+	public static final Type DOUBLE_TYPE = new Type(DOUBLE, null,
+			('D' << 24) | (3 << 16) | (3 << 8) | 2, 1);
 
 	// ------------------------------------------------------------------------
 	// Fields
@@ -281,7 +281,7 @@ public class Type {
 				return DOUBLE_TYPE;
 			} else if (c == Float.TYPE) {
 				return FLOAT_TYPE;
-			} else /* if (c == Long.TYPE) */{
+			} else /* if (c == Long.TYPE) */ {
 				return LONG_TYPE;
 			}
 		} else {
@@ -481,7 +481,7 @@ public class Type {
 				++len;
 			}
 			return new Type(OBJECT, buf, off + 1, len - 1);
-			// case '(':
+		// case '(':
 		default:
 			return new Type(METHOD, buf, off, buf.length - off);
 		}
@@ -768,7 +768,7 @@ public class Type {
 					car = 'D';
 				} else if (d == Float.TYPE) {
 					car = 'F';
-				} else /* if (d == Long.TYPE) */{
+				} else /* if (d == Long.TYPE) */ {
 					car = 'J';
 				}
 				buf.append(car);

@@ -56,10 +56,8 @@ public class IfNode extends BlockNode implements NestedStatement {
 		idxAlloc = pCtx != null && pCtx.isIndexAllocation();
 
 		if ((fields & COMPILE_IMMEDIATE) != 0) {
-			expectType(
-					pCtx,
-					this.condition = (ExecutableStatement) subCompileExpression(expr, start, offset,
-							pCtx), Boolean.class, true);
+			expectType(pCtx, this.condition = (ExecutableStatement) subCompileExpression(expr, start,
+					offset, pCtx), Boolean.class, true);
 
 			if (pCtx != null) {
 				pCtx.pushVariableScope();
@@ -77,14 +75,14 @@ public class IfNode extends BlockNode implements NestedStatement {
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if ((Boolean) condition.getValue(ctx, thisValue, factory)) {
-			return nestedStatement.getValue(ctx, thisValue, idxAlloc ? factory
-					: new MapVariableResolverFactory(new HashMap(0), factory));
+			return nestedStatement.getValue(ctx, thisValue,
+					idxAlloc ? factory : new MapVariableResolverFactory(new HashMap(0), factory));
 		} else if (elseIf != null) {
-			return elseIf.getReducedValueAccelerated(ctx, thisValue, idxAlloc ? factory
-					: new MapVariableResolverFactory(new HashMap(0), factory));
+			return elseIf.getReducedValueAccelerated(ctx, thisValue,
+					idxAlloc ? factory : new MapVariableResolverFactory(new HashMap(0), factory));
 		} else if (elseBlock != null) {
-			return elseBlock.getValue(ctx, thisValue, idxAlloc ? factory
-					: new MapVariableResolverFactory(new HashMap(0), factory));
+			return elseBlock.getValue(ctx, thisValue,
+					idxAlloc ? factory : new MapVariableResolverFactory(new HashMap(0), factory));
 		} else {
 			return null;
 		}
@@ -94,14 +92,14 @@ public class IfNode extends BlockNode implements NestedStatement {
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if ((Boolean) eval(expr, start, offset, ctx, factory)) {
-			return eval(expr, blockStart, blockOffset, ctx, new MapVariableResolverFactory(
-					new HashMap(0), factory));
+			return eval(expr, blockStart, blockOffset, ctx,
+					new MapVariableResolverFactory(new HashMap(0), factory));
 		} else if (elseIf != null) {
-			return elseIf.getReducedValue(ctx, thisValue, new MapVariableResolverFactory(
-					new HashMap(0), factory));
+			return elseIf.getReducedValue(ctx, thisValue,
+					new MapVariableResolverFactory(new HashMap(0), factory));
 		} else if (elseBlock != null) {
-			return elseBlock.getValue(ctx, thisValue, new MapVariableResolverFactory(new HashMap(0),
-					factory));
+			return elseBlock.getValue(ctx, thisValue,
+					new MapVariableResolverFactory(new HashMap(0), factory));
 		} else {
 			return null;
 		}

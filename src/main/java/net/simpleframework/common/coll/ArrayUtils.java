@@ -32,8 +32,8 @@ public abstract class ArrayUtils {
 			clsSet.add(element.getClass());
 		}
 
-		final Class<?> cls = clsSet.size() == 1 ? clsSet.iterator().next() : array.getClass()
-				.getComponentType();
+		final Class<?> cls = clsSet.size() == 1 ? clsSet.iterator().next()
+				: array.getClass().getComponentType();
 		final Object[] ret = (Object[]) Array.newInstance(cls, oSet.size());
 		int j = 0;
 
@@ -95,7 +95,8 @@ public abstract class ArrayUtils {
 		return indexOf(array, value) != -1;
 	}
 
-	public static boolean contains(final String[] array, final String value, final boolean ignoreCase) {
+	public static boolean contains(final String[] array, final String value,
+			final boolean ignoreCase) {
 		return indexOf(array, value, ignoreCase) != -1;
 	}
 

@@ -28,8 +28,8 @@ public class StaticFieldStub implements StaticStub {
 	}
 
 	@Override
-	public Object call(final Object ctx, final Object thisCtx,
-			final VariableResolverFactory factory, final Object[] parameters) {
+	public Object call(final Object ctx, final Object thisCtx, final VariableResolverFactory factory,
+			final Object[] parameters) {
 		return cachedValue;
 	}
 }

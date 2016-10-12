@@ -24,7 +24,8 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 public class ItemResolverFactory extends BaseVariableResolverFactory {
 	private final ItemResolver resolver;
 
-	public ItemResolverFactory(final ItemResolver resolver, final VariableResolverFactory nextFactory) {
+	public ItemResolverFactory(final ItemResolver resolver,
+			final VariableResolverFactory nextFactory) {
 		this.resolver = resolver;
 		this.nextFactory = nextFactory;
 	}
@@ -40,7 +41,8 @@ public class ItemResolverFactory extends BaseVariableResolverFactory {
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		if (isTarget(name)) {
 			throw new RuntimeException("variable already defined in scope: " + name);
 		} else {

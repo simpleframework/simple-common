@@ -112,7 +112,8 @@ public class ConvertDate {
 		}
 	}
 
-	private static void fillMap(final TreeMap<String, Integer> map, String key, final Integer value) {
+	private static void fillMap(final TreeMap<String, Integer> map, String key,
+			final Integer value) {
 		map.put(key, value);
 		key = key.replace("é", "e");
 		key = key.replace("û", "u");
@@ -155,8 +156,8 @@ public class ConvertDate {
 			}
 			return null;
 		}
-		throw new RuntimeException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to int");
+		throw new RuntimeException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to int");
 	}
 
 	private static Date getYYYYMMDD(final StringTokenizer st, String s1) {

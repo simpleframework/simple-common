@@ -113,7 +113,8 @@ public class HttpsMessage extends net.simpleframework.lib.com.oreilly.servlet.Ht
 					final Class<?> clsFactory = Class
 							.forName("com.ms.net.wininet.WininetStreamHandlerFactory");
 					if (null != clsFactory) {
-						URL.setURLStreamHandlerFactory((URLStreamHandlerFactory) clsFactory.newInstance());
+						URL.setURLStreamHandlerFactory(
+								(URLStreamHandlerFactory) clsFactory.newInstance());
 					}
 				} catch (final ClassNotFoundException cfe) {
 					throw new Exception(

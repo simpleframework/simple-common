@@ -53,8 +53,8 @@ public class InlineCollectionNode extends ASTNode {
 			parseGraph(true, null, pctx);
 			try {
 				final AccessorOptimizer ao = OptimizerFactory.getThreadAccessorOptimizer();
-				accessor = ao.optimizeCollection(pctx, collectionGraph, egressType, expr,
-						trailingStart, trailingOffset, null, null, null);
+				accessor = ao.optimizeCollection(pctx, collectionGraph, egressType, expr, trailingStart,
+						trailingOffset, null, null, null);
 				egressType = ao.getEgressType();
 			} finally {
 				OptimizerFactory.clearThreadAccessorOptimizer();
@@ -93,8 +93,8 @@ public class InlineCollectionNode extends ASTNode {
 					parseGraph(true, null, null);
 				}
 
-				accessor = ao.optimizeCollection(pCtx, collectionGraph, egressType, expr,
-						trailingStart, trailingOffset, ctx, thisValue, factory);
+				accessor = ao.optimizeCollection(pCtx, collectionGraph, egressType, expr, trailingStart,
+						trailingOffset, ctx, thisValue, factory);
 				egressType = ao.getEgressType();
 
 				return accessor.getValue(ctx, thisValue, factory);
@@ -164,12 +164,13 @@ public class InlineCollectionNode extends ASTNode {
 				dim = 1;
 			}
 
-			final Object newArray = Array
-					.newInstance(getSubComponentType(type), ((Object[]) o).length);
+			final Object newArray = Array.newInstance(getSubComponentType(type),
+					((Object[]) o).length);
 
 			try {
-				final Class cls = dim > 1 ? findClass(null, repeatChar('[', dim - 1) + "L"
-						+ getBaseComponentType(type).getName() + ";", pCtx) : type;
+				final Class cls = dim > 1 ? findClass(null,
+						repeatChar('[', dim - 1) + "L" + getBaseComponentType(type).getName() + ";", pCtx)
+						: type;
 
 				int c = 0;
 				for (final Object item : (Object[]) o) {
@@ -180,8 +181,8 @@ public class InlineCollectionNode extends ASTNode {
 			} catch (final IllegalArgumentException e) {
 				throw new CompileException("type mismatch in array", expr, start, e);
 			} catch (final ClassNotFoundException e) {
-				throw new RuntimeException("this error should never throw:"
-						+ getBaseComponentType(type).getName(), e);
+				throw new RuntimeException(
+						"this error should never throw:" + getBaseComponentType(type).getName(), e);
 			}
 		} else {
 			if (type.isArray()) {

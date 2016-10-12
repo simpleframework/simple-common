@@ -62,8 +62,8 @@ abstract public class BulkBean {
 		return setters.clone();
 	}
 
-	public static BulkBean create(final Class target, final String[] getters,
-			final String[] setters, final Class[] types) {
+	public static BulkBean create(final Class target, final String[] getters, final String[] setters,
+			final Class[] types) {
 		final Generator gen = new Generator();
 		gen.setTarget(target);
 		gen.setGetters(getters);

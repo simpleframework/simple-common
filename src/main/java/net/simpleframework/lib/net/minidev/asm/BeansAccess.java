@@ -180,8 +180,8 @@ public abstract class BeansAccess<T> {
 	public void set(final T object, final String methodName, final Object value) {
 		final int i = getIndex(methodName);
 		if (i == -1) {
-			throw new net.simpleframework.lib.net.minidev.asm.ex.NoSuchFieldException(methodName
-					+ " in " + object.getClass() + " to put value : " + value);
+			throw new net.simpleframework.lib.net.minidev.asm.ex.NoSuchFieldException(
+					methodName + " in " + object.getClass() + " to put value : " + value);
 		}
 		set(object, i, value);
 	}

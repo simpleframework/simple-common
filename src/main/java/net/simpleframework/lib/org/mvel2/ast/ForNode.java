@@ -48,8 +48,8 @@ public class ForNode extends BlockNode {
 		super(pCtx);
 
 		final boolean varsEscape = buildForEach(this.expr = expr, this.start = start,
-				this.offset = offset, this.blockStart = blockStart, this.blockOffset = blockEnd,
-				fields, pCtx);
+				this.offset = offset, this.blockStart = blockStart, this.blockOffset = blockEnd, fields,
+				pCtx);
 
 		this.indexAlloc = pCtx != null && pCtx.isIndexAllocation();
 
@@ -82,9 +82,10 @@ public class ForNode extends BlockNode {
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			VariableResolverFactory factory) {
 		Object v;
-		for (initializer.getValue(ctx, thisValue, factory = new MapVariableResolverFactory(
-				new HashMap<String, Object>(1), factory)); (Boolean) condition.getValue(ctx, thisValue,
-				factory); after.getValue(ctx, thisValue, factory)) {
+		for (initializer.getValue(ctx, thisValue,
+				factory = new MapVariableResolverFactory(new HashMap<String, Object>(1),
+						factory)); (Boolean) condition.getValue(ctx, thisValue, factory); after
+								.getValue(ctx, thisValue, factory)) {
 			v = compiledBlock.getValue(ctx, thisValue, factory);
 			if (factory.tiltFlag()) {
 				return v;
@@ -109,20 +110,19 @@ public class ForNode extends BlockNode {
 				spCtx = new ParserContext();
 			}
 
-			this.initializer = (ExecutableStatement) subCompileExpression(condition, start, cursor
-					- start - 1, spCtx);
+			this.initializer = (ExecutableStatement) subCompileExpression(condition, start,
+					cursor - start - 1, spCtx);
 
 			if (pCtx != null) {
 				pCtx.pushVariableScope();
 			}
 
 			try {
-				expectType(
-						pCtx,
+				expectType(pCtx,
 						this.condition = (ExecutableStatement) subCompileExpression(condition,
-								start = cursor, (cursor = nextCondPart(condition, start, end, false))
-										- start - 1, spCtx), Boolean.class,
-						((fields & COMPILE_IMMEDIATE) != 0));
+								start = cursor,
+								(cursor = nextCondPart(condition, start, end, false)) - start - 1, spCtx),
+						Boolean.class, ((fields & COMPILE_IMMEDIATE) != 0));
 			} catch (final CompileException e) {
 				if (e.getExpr().length == 0) {
 					e.setExpr(expr);
@@ -148,8 +148,8 @@ public class ForNode extends BlockNode {
 				pCtx.addVariables(spCtx.getVariables());
 			}
 
-			this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart,
-					blockEnd, spCtx);
+			this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart, blockEnd,
+					spCtx);
 			if (pCtx != null) {
 				pCtx.setInputs(spCtx.getInputs());
 			}

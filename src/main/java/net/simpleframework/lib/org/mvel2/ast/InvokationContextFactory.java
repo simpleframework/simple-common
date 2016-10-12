@@ -26,7 +26,8 @@ public class InvokationContextFactory extends MapVariableResolverFactory {
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		if (isResolveable(name) && !protoContext.isResolveable(name)) {
 			return nextFactory.createVariable(name, value, type);
 		} else {

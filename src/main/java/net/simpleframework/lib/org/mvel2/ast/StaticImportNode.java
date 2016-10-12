@@ -48,8 +48,9 @@ public class StaticImportNode extends ASTNode {
 			final ClassLoader classLoader = getClassLoader();
 
 			declaringClass = Class.forName(
-					new String(expr, start, (mark = findLast('.', start, offset, this.expr = expr))
-							- start), true, classLoader);
+					new String(expr, start,
+							(mark = findLast('.', start, offset, this.expr = expr)) - start),
+					true, classLoader);
 
 			methodName = new String(expr, ++mark, offset - (mark - start));
 

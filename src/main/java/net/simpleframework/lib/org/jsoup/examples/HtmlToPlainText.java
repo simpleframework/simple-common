@@ -40,10 +40,8 @@ public class HtmlToPlainText {
 	private static final int timeout = 5 * 1000;
 
 	public static void main(final String... args) throws IOException {
-		Validate
-				.isTrue(
-						args.length == 1 || args.length == 2,
-						"usage: java -cp jsoup.jar net.simpleframework.lib.org.jsoup.examples.HtmlToPlainText url [selector]");
+		Validate.isTrue(args.length == 1 || args.length == 2,
+				"usage: java -cp jsoup.jar net.simpleframework.lib.org.jsoup.examples.HtmlToPlainText url [selector]");
 		final String url = args[0];
 		final String selector = args.length == 2 ? args[1] : null;
 
@@ -129,9 +127,8 @@ public class HtmlToPlainText {
 				width = 0; // reset counter if starts with a newline. only from
 								// formats above, not in natural text
 			}
-			if (text.equals(" ")
-					&& (accum.length() == 0 || StringUtil.in(accum.substring(accum.length() - 1), " ",
-							"\n"))) {
+			if (text.equals(" ") && (accum.length() == 0
+					|| StringUtil.in(accum.substring(accum.length() - 1), " ", "\n"))) {
 				return; // don't accumulate long runs of empty spaces
 			}
 

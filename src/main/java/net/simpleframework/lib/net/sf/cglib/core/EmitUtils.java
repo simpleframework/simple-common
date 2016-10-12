@@ -858,7 +858,8 @@ public class EmitUtils {
 				final Map test = CollectionUtils.bucket(members, new Transformer() {
 					@Override
 					public Object transform(final Object value) {
-						return TypeUtils.emulateClassGetName(typer.getParameterTypes((MethodInfo) value)[j]);
+						return TypeUtils
+								.emulateClassGetName(typer.getParameterTypes((MethodInfo) value)[j]);
 					}
 				});
 				if (buckets == null || test.size() > buckets.size()) {
@@ -908,7 +909,8 @@ public class EmitUtils {
 		e.athrow();
 	}
 
-	public static void add_properties(final ClassEmitter ce, final String[] names, final Type[] types) {
+	public static void add_properties(final ClassEmitter ce, final String[] names,
+			final Type[] types) {
 		for (int i = 0; i < names.length; i++) {
 			final String fieldName = "$cglib_prop_" + names[i];
 			ce.declare_field(Opcodes.ACC_PRIVATE, fieldName, types[i], null);
@@ -920,15 +922,15 @@ public class EmitUtils {
 			final String fieldName) {
 		final String property = TypeUtils.upperFirst(name);
 		CodeEmitter e;
-		e = ce.begin_method(Opcodes.ACC_PUBLIC, new Signature("get" + property, type,
-				Constants.TYPES_EMPTY), null);
+		e = ce.begin_method(Opcodes.ACC_PUBLIC,
+				new Signature("get" + property, type, Constants.TYPES_EMPTY), null);
 		e.load_this();
 		e.getfield(fieldName);
 		e.return_value();
 		e.end_method();
 
-		e = ce.begin_method(Opcodes.ACC_PUBLIC, new Signature("set" + property, Type.VOID_TYPE,
-				new Type[] { type }), null);
+		e = ce.begin_method(Opcodes.ACC_PUBLIC,
+				new Signature("set" + property, Type.VOID_TYPE, new Type[] { type }), null);
 		e.load_this();
 		e.load_arg(0);
 		e.putfield(fieldName);
@@ -950,8 +952,8 @@ public class EmitUtils {
 	 */
 	public static void wrap_undeclared_throwable(final CodeEmitter e, final Block handler,
 			final Type[] exceptions, final Type wrapper) {
-		final Set set = (exceptions == null) ? Collections.EMPTY_SET : new HashSet(
-				Arrays.asList(exceptions));
+		final Set set = (exceptions == null) ? Collections.EMPTY_SET
+				: new HashSet(Arrays.asList(exceptions));
 
 		if (set.contains(Constants.TYPE_THROWABLE)) {
 			return;

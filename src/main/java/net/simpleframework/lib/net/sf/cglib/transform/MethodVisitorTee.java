@@ -230,9 +230,9 @@ public class MethodVisitorTee extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		return AnnotationVisitorTee.getInstance(
 				mv1.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible),
 				mv2.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible));

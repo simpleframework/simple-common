@@ -80,8 +80,8 @@ abstract public class MulticastDelegate implements Cloneable {
 		private static final Source SOURCE = new Source(MulticastDelegate.class.getName());
 		private static final Type MULTICAST_DELEGATE = TypeUtils
 				.parseType("net.simpleframework.lib.net.sf.cglib.reflect.MulticastDelegate");
-		private static final Signature NEW_INSTANCE = new Signature("newInstance",
-				MULTICAST_DELEGATE, new Type[0]);
+		private static final Signature NEW_INSTANCE = new Signature("newInstance", MULTICAST_DELEGATE,
+				new Type[0]);
 		private static final Signature ADD_DELEGATE = new Signature("add", MULTICAST_DELEGATE,
 				new Type[] { Constants.TYPE_OBJECT });
 		private static final Signature ADD_HELPER = new Signature("addHelper", MULTICAST_DELEGATE,
@@ -114,8 +114,8 @@ abstract public class MulticastDelegate implements Cloneable {
 
 		@Override
 		public void generateClass(final ClassVisitor cv) {
-			final MethodInfo method = ReflectUtils.getMethodInfo(ReflectUtils
-					.findInterfaceMethod(iface));
+			final MethodInfo method = ReflectUtils
+					.getMethodInfo(ReflectUtils.findInterfaceMethod(iface));
 
 			final ClassEmitter ce = new ClassEmitter(cv);
 			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), MULTICAST_DELEGATE,

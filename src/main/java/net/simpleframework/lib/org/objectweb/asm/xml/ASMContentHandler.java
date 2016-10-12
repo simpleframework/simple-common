@@ -545,8 +545,8 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 				final int itfIndex = val.indexOf(' ', tagIndex + 1);
 
 				final boolean itf = itfIndex != -1;
-				final int tag = Integer.parseInt(val.substring(tagIndex + 1, itf ? val.length() - 1
-						: itfIndex));
+				final int tag = Integer
+						.parseInt(val.substring(tagIndex + 1, itf ? val.length() - 1 : itfIndex));
 				final String owner = val.substring(0, dotIndex);
 				final String name = val.substring(dotIndex + 1, descIndex);
 				final String desc = val.substring(descIndex, tagIndex - 1);
@@ -705,8 +705,8 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		@Override
 		@SuppressWarnings("unchecked")
 		public final void begin(final String name, final Attributes attrs) {
-			((ArrayList<String>) ((HashMap<?, ?>) peek()).get("interfaces")).add(attrs
-					.getValue("name"));
+			((ArrayList<String>) ((HashMap<?, ?>) peek()).get("interfaces"))
+					.add(attrs.getValue("name"));
 		}
 	}
 
@@ -813,8 +813,8 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		@Override
 		@SuppressWarnings("unchecked")
 		public final void begin(final String name, final Attributes attrs) {
-			((ArrayList<String>) ((HashMap<?, ?>) peek()).get("exceptions")).add(attrs
-					.getValue("name"));
+			((ArrayList<String>) ((HashMap<?, ?>) peek()).get("exceptions"))
+					.add(attrs.getValue("name"));
 		}
 	}
 
@@ -884,8 +884,8 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		@Override
 		@SuppressWarnings("unchecked")
 		public final void begin(final String name, final Attributes attrs) {
-			((ArrayList<Label>) ((HashMap<?, ?>) peek()).get("labels")).add(getLabel(attrs
-					.getValue("name")));
+			((ArrayList<Label>) ((HashMap<?, ?>) peek()).get("labels"))
+					.add(getLabel(attrs.getValue("name")));
 		}
 	}
 
@@ -1345,8 +1345,8 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		@Override
 		public void begin(final String nm, final Attributes attrs) {
 			final AnnotationVisitor av = (AnnotationVisitor) peek();
-			push(av == null ? null : av
-					.visitAnnotation(attrs.getValue("name"), attrs.getValue("desc")));
+			push(av == null ? null
+					: av.visitAnnotation(attrs.getValue("name"), attrs.getValue("desc")));
 		}
 
 		@Override

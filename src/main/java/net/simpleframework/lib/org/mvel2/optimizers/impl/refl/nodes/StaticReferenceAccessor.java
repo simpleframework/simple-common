@@ -28,7 +28,8 @@ public class StaticReferenceAccessor implements AccessorNode {
 	Object literal;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (nextNode != null) {
 			return nextNode.getValue(literal, elCtx, vars);
 		} else {

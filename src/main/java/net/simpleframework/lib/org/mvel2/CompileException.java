@@ -219,8 +219,8 @@ public class CompileException extends RuntimeException {
 	}
 
 	private String generateErrorMessage() {
-		final StringAppender appender = new StringAppender().append("[Error: " + super.getMessage()
-				+ "]\n");
+		final StringAppender appender = new StringAppender()
+				.append("[Error: " + super.getMessage() + "]\n");
 
 		int offset = appender.length();
 

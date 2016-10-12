@@ -43,8 +43,8 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 	private CompiledAccExpression acc;
 	private ExecutableStatement statement;
 
-	public DeepAssignmentNode(final char[] expr, final int start, final int offset,
-			final int fields, final int operation, final String name, final ParserContext pCtx) {
+	public DeepAssignmentNode(final char[] expr, final int start, final int offset, final int fields,
+			final int operation, final String name, final ParserContext pCtx) {
 		super(pCtx);
 		this.fields |= DEEP_PROPERTY | fields;
 
@@ -56,7 +56,8 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 		if (operation != -1) {
 			this.egressType = ((statement = (ExecutableStatement) subCompileExpression(
 					createShortFormOperativeAssignment(this.property = name, expr, start, offset,
-							operation), pCtx))).getKnownEgressType();
+							operation),
+					pCtx))).getKnownEgressType();
 		} else if ((mark = find(expr, start, offset, '=')) != -1) {
 			property = createStringTrimmed(expr, start, mark - start);
 
@@ -83,8 +84,8 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 		}
 	}
 
-	public DeepAssignmentNode(final char[] expr, final int start, final int offset,
-			final int fields, final ParserContext pCtx) {
+	public DeepAssignmentNode(final char[] expr, final int start, final int offset, final int fields,
+			final ParserContext pCtx) {
 		this(expr, start, offset, fields, -1, null, pCtx);
 	}
 
@@ -92,7 +93,8 @@ public class DeepAssignmentNode extends ASTNode implements Assignment {
 	public Object getReducedValueAccelerated(Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if (statement == null) {
-			statement = (ExecutableStatement) subCompileExpression(expr, this.start, this.offset, pCtx);
+			statement = (ExecutableStatement) subCompileExpression(expr, this.start, this.offset,
+					pCtx);
 			acc = (CompiledAccExpression) compileSetExpression(property.toCharArray(),
 					statement.getKnownEgressType(), pCtx);
 		}

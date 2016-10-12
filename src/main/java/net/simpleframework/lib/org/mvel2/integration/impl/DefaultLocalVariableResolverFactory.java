@@ -25,8 +25,8 @@ import net.simpleframework.lib.org.mvel2.UnresolveablePropertyException;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolver;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
-public class DefaultLocalVariableResolverFactory extends MapVariableResolverFactory implements
-		LocalVariableResolverFactory {
+public class DefaultLocalVariableResolverFactory extends MapVariableResolverFactory
+		implements LocalVariableResolverFactory {
 	public DefaultLocalVariableResolverFactory() {
 		super(new HashMap<String, Object>());
 	}
@@ -68,8 +68,8 @@ public class DefaultLocalVariableResolverFactory extends MapVariableResolverFact
 			 * variable onto the
 			 * register table.
 			 */
-			return indexedVariableResolvers[index] = super
-					.getVariableResolver(indexedVariableNames[index]);
+			return indexedVariableResolvers[index] = super.getVariableResolver(
+					indexedVariableNames[index]);
 		}
 		return indexedVariableResolvers[index];
 	}
@@ -95,7 +95,8 @@ public class DefaultLocalVariableResolverFactory extends MapVariableResolverFact
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		if (indexedVariableNames == null) {
 			return super.createVariable(name, value, type);
 		}
@@ -123,8 +124,8 @@ public class DefaultLocalVariableResolverFactory extends MapVariableResolverFact
 		}
 
 		if (!newVar && vr != null && vr.getType() != null) {
-			throw new RuntimeException("variable already defined within scope: " + vr.getType() + " "
-					+ name);
+			throw new RuntimeException(
+					"variable already defined within scope: " + vr.getType() + " " + name);
 		} else {
 			addResolver(name, vr = new MapVariableResolver(variables, name, type)).setValue(value);
 			return vr;

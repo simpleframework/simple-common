@@ -242,7 +242,8 @@ public class Analyzer<V extends Value> implements Opcodes {
 							final JumpInsnNode caller = subroutine.callers.get(i);
 							final int call = insns.indexOf(caller);
 							if (frames[call] != null) {
-								merge(call + 1, frames[call], current, subroutines[call], subroutine.access);
+								merge(call + 1, frames[call], current, subroutines[call],
+										subroutine.access);
 								newControlFlowEdge(insn, call + 1);
 							}
 						}
@@ -285,11 +286,11 @@ public class Analyzer<V extends Value> implements Opcodes {
 					}
 				}
 			} catch (final AnalyzerException e) {
-				throw new AnalyzerException(e.node, "Error at instruction " + insn + ": "
-						+ e.getMessage(), e);
+				throw new AnalyzerException(e.node,
+						"Error at instruction " + insn + ": " + e.getMessage(), e);
 			} catch (final Exception e) {
-				throw new AnalyzerException(insnNode, "Error at instruction " + insn + ": "
-						+ e.getMessage(), e);
+				throw new AnalyzerException(insnNode,
+						"Error at instruction " + insn + ": " + e.getMessage(), e);
 			}
 		}
 

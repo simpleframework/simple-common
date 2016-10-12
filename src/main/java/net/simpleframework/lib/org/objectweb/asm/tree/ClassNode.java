@@ -142,7 +142,7 @@ public class ClassNode extends ClassVisitor {
 	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label visible
 	 */
@@ -153,7 +153,7 @@ public class ClassNode extends ClassVisitor {
 	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label invisible
 	 */
@@ -226,8 +226,8 @@ public class ClassNode extends ClassVisitor {
 	// ------------------------------------------------------------------------
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		this.version = version;
 		this.access = access;
 		this.name = name;

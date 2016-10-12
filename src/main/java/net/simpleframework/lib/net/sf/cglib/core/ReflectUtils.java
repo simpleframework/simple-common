@@ -134,8 +134,8 @@ public class ReflectUtils {
 			return new Signature(member.getName(), Type.getMethodDescriptor((Method) member));
 		} else if (member instanceof Constructor) {
 			final Type[] types = TypeUtils.getTypes(((Constructor) member).getParameterTypes());
-			return new Signature(Constants.CONSTRUCTOR_NAME, Type.getMethodDescriptor(Type.VOID_TYPE,
-					types));
+			return new Signature(Constants.CONSTRUCTOR_NAME,
+					Type.getMethodDescriptor(Type.VOID_TYPE, types));
 
 		} else {
 			throw new IllegalArgumentException("Cannot get signature of a field");
@@ -205,8 +205,8 @@ public class ReflectUtils {
 		return getClass(className, loader, CGLIB_PACKAGES);
 	}
 
-	private static Class getClass(String className, final ClassLoader loader, final String[] packages)
-			throws ClassNotFoundException {
+	private static Class getClass(String className, final ClassLoader loader,
+			final String[] packages) throws ClassNotFoundException {
 		final String save = className;
 		int dimensions = 0;
 		int index = 0;
@@ -423,8 +423,8 @@ public class ReflectUtils {
 		return defineClass(className, b, loader, PROTECTION_DOMAIN);
 	}
 
-	public static Class defineClass(final String className, final byte[] b,
-			final ClassLoader loader, final ProtectionDomain protectionDomain) throws Exception {
+	public static Class defineClass(final String className, final byte[] b, final ClassLoader loader,
+			final ProtectionDomain protectionDomain) throws Exception {
 		final Object[] args = new Object[] { className, b, new Integer(0), new Integer(b.length),
 				protectionDomain };
 		final Class c = (Class) DEFINE_CLASS.invoke(loader, args);

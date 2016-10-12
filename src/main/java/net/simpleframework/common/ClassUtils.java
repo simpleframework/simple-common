@@ -253,8 +253,8 @@ public abstract class ClassUtils {
 		void doResources(String filepath, boolean isDirectory) throws Exception;
 	}
 
-	public static abstract class ScanClassResourcesCallback extends ObjectEx implements
-			IScanResourcesCallback {
+	public static abstract class ScanClassResourcesCallback extends ObjectEx
+			implements IScanResourcesCallback {
 
 		private final ClassLoader cl = IScanResourcesCallback.class.getClassLoader();
 

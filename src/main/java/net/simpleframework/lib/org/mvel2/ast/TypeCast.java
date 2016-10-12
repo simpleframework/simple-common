@@ -49,8 +49,9 @@ public class TypeCast extends ASTNode {
 				if (canCast(statement.getKnownEgressType(), cast)) {
 					widen = true;
 				} else {
-					throw new CompileException("unable to cast type: " + statement.getKnownEgressType()
-							+ "; to: " + cast, expr, start);
+					throw new CompileException(
+							"unable to cast type: " + statement.getKnownEgressType() + "; to: " + cast,
+							expr, start);
 				}
 			}
 		}
@@ -73,16 +74,16 @@ public class TypeCast extends ASTNode {
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		// noinspection unchecked
-		return widen ? typeCheck(statement.getValue(ctx, thisValue, factory), egressType) : convert(
-				statement.getValue(ctx, thisValue, factory), egressType);
+		return widen ? typeCheck(statement.getValue(ctx, thisValue, factory), egressType)
+				: convert(statement.getValue(ctx, thisValue, factory), egressType);
 	}
 
 	@Override
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		// noinspection unchecked
-		return widen ? typeCheck(eval(expr, start, offset, ctx, factory), egressType) : convert(
-				eval(expr, start, offset, ctx, factory), egressType);
+		return widen ? typeCheck(eval(expr, start, offset, ctx, factory), egressType)
+				: convert(eval(expr, start, offset, ctx, factory), egressType);
 	}
 
 	private static Object typeCheck(final Object inst, final Class type) {
@@ -92,8 +93,8 @@ public class TypeCast extends ASTNode {
 		if (type.isInstance(inst)) {
 			return inst;
 		} else {
-			throw new ClassCastException(inst.getClass().getName() + " cannot be cast to: "
-					+ type.getClass().getName());
+			throw new ClassCastException(
+					inst.getClass().getName() + " cannot be cast to: " + type.getClass().getName());
 		}
 	}
 

@@ -30,7 +30,8 @@ public class SimpleVariableResolverFactory extends BaseVariableResolverFactory {
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		if (variableResolvers == null) {
 			variableResolvers = new HashMap<String, VariableResolver>(5, 0.6f);
 		}

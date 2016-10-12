@@ -263,7 +263,8 @@ public final class SAXCodeAdapter extends MethodVisitor {
 	}
 
 	@Override
-	public final void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
+	public final void visitLookupSwitchInsn(final Label dflt, final int[] keys,
+			final Label[] labels) {
 		final AttributesImpl att = new AttributesImpl();
 		att.addAttribute("", "dflt", "dflt", "", getLabel(dflt));
 		final String o = Printer.OPCODES[Opcodes.LOOKUPSWITCH];
@@ -369,9 +370,9 @@ public final class SAXCodeAdapter extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		final String[] s = new String[start.length];
 		final String[] e = new String[end.length];
 		for (int i = 0; i < s.length; ++i) {

@@ -128,8 +128,8 @@ public class SendMailSession {
 
 		if ((attachments == null) && (totalMessages == 1)) {
 			final EmailMessage emailMessage = messages.get(0);
-			msg.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET
-					+ emailMessage.getEncoding());
+			msg.setContent(emailMessage.getContent(),
+					emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
 		} else {
 			final Multipart multipart = new MimeMultipart();
 			Multipart msgMultipart = multipart;
@@ -141,8 +141,8 @@ public class SendMailSession {
 			}
 			for (final EmailMessage emailMessage : messages) {
 				final MimeBodyPart messageData = new MimeBodyPart();
-				messageData.setContent(emailMessage.getContent(), emailMessage.getMimeType() + CHARSET
-						+ emailMessage.getEncoding());
+				messageData.setContent(emailMessage.getContent(),
+						emailMessage.getMimeType() + CHARSET + emailMessage.getEncoding());
 				msgMultipart.addBodyPart(messageData);
 			}
 			if (attachments != null) {

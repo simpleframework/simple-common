@@ -173,8 +173,8 @@ public class MultipartParser {
 		// Check the content length to prevent denial of service attacks
 		final int length = req.getContentLength();
 		if (length > maxSize) {
-			throw new IOException("Posted content length of " + length + " exceeds limit of "
-					+ maxSize);
+			throw new IOException(
+					"Posted content length of " + length + " exceeds limit of " + maxSize);
 		}
 
 		// Get the boundary string; it's included in the content type.

@@ -59,8 +59,8 @@ public abstract class ID {
 		synchronized (lock) {
 			id = COUNTER++;
 		}
-		return new StringID(Long.toString(time, Character.MAX_RADIX)
-				+ Long.toString(id, Character.MAX_RADIX));
+		return new StringID(
+				Long.toString(time, Character.MAX_RADIX) + Long.toString(id, Character.MAX_RADIX));
 	}
 
 	/**
@@ -71,8 +71,8 @@ public abstract class ID {
 	public abstract Object getValue();
 
 	@SuppressWarnings("serial")
-	public static abstract class AbstractID<T extends Comparable<T>> extends ID implements
-			Comparable<AbstractID<T>>, Serializable, JSONAware {
+	public static abstract class AbstractID<T extends Comparable<T>> extends ID
+			implements Comparable<AbstractID<T>>, Serializable, JSONAware {
 		protected T id;
 
 		@Override

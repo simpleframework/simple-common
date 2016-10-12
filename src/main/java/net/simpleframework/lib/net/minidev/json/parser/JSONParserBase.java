@@ -92,7 +92,9 @@ abstract class JSONParserBase {
 		this.acceptLeadinZero = (permissiveMode & JSONParser.ACCEPT_LEADING_ZERO) > 0;
 		this.acceptUselessComma = (permissiveMode & JSONParser.ACCEPT_USELESS_COMMA) > 0;
 		this.useHiPrecisionFloat = (permissiveMode & JSONParser.USE_HI_PRECISION_FLOAT) > 0;
-		this.checkTaillingData = (permissiveMode & (JSONParser.ACCEPT_TAILLING_DATA | JSONParser.ACCEPT_TAILLING_SPACE)) != (JSONParser.ACCEPT_TAILLING_DATA | JSONParser.ACCEPT_TAILLING_SPACE);
+		this.checkTaillingData = (permissiveMode & (JSONParser.ACCEPT_TAILLING_DATA
+				| JSONParser.ACCEPT_TAILLING_SPACE)) != (JSONParser.ACCEPT_TAILLING_DATA
+						| JSONParser.ACCEPT_TAILLING_SPACE);
 		this.checkTaillingSpace = (permissiveMode & JSONParser.ACCEPT_TAILLING_SPACE) == 0;
 	}
 
@@ -310,7 +312,7 @@ abstract class JSONParserBase {
 			case '\t':
 				read();
 				continue;
-				// invalid stats
+			// invalid stats
 			case ':':
 			case '}':
 			case ']':
@@ -318,16 +320,16 @@ abstract class JSONParserBase {
 				// start object
 			case '{':
 				return readObject(mapper);
-				// start Array
+			// start Array
 			case '[':
 				return readArray(mapper);
-				// start string
+			// start string
 			case '"':
 			case '\'':
 				readString();
 				//
 				return mapper.convert(xs);
-				// string or null
+			// string or null
 			case 'n':
 				readNQString(stopX);
 				if ("null".equals(xs)) {
@@ -339,7 +341,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return mapper.convert(xs);
-				// string or false
+			// string or false
 			case 'f':
 				readNQString(stopX);
 				if ("false".equals(xs)) {
@@ -351,7 +353,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return mapper.convert(xs);
-				// string or true
+			// string or true
 			case 't':
 				readNQString(stopX);
 				if ("true".equals(xs)) {
@@ -363,7 +365,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return mapper.convert(xs);
-				// string or NaN
+			// string or NaN
 			case 'N':
 				readNQString(stopX);
 				if (!acceptNaN) {
@@ -378,7 +380,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return mapper.convert(xs);
-				// digits
+			// digits
 			case '0':
 			case '1':
 			case '2':
@@ -419,7 +421,7 @@ abstract class JSONParserBase {
 			case '\t':
 				read();
 				continue;
-				// invalid stats
+			// invalid stats
 			case ':':
 			case '}':
 			case ']':
@@ -427,16 +429,16 @@ abstract class JSONParserBase {
 				// start object
 			case '{':
 				return readObject(mapper.startObject(lastKey));
-				// start Array
+			// start Array
 			case '[':
 				return readArray(mapper.startArray(lastKey));
-				// start string
+			// start string
 			case '"':
 			case '\'':
 				readString();
 				//
 				return xs;
-				// string or null
+			// string or null
 			case 'n':
 				readNQString(stop);
 				if ("null".equals(xs)) {
@@ -448,7 +450,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return xs;
-				// string or false
+			// string or false
 			case 'f':
 				readNQString(stop);
 				if ("false".equals(xs)) {
@@ -460,7 +462,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return xs;
-				// string or true
+			// string or true
 			case 't':
 				readNQString(stop);
 				if ("true".equals(xs)) {
@@ -472,7 +474,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return xs;
-				// string or NaN
+			// string or NaN
 			case 'N':
 				readNQString(stop);
 				if (!acceptNaN) {
@@ -487,7 +489,7 @@ abstract class JSONParserBase {
 				}
 				//
 				return xs;
-				// digits
+			// digits
 			case '0':
 			case '1':
 			case '2':

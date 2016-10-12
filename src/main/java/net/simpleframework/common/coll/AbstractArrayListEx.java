@@ -10,8 +10,8 @@ import java.util.Collection;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class AbstractArrayListEx<T extends AbstractArrayListEx<T, M>, M> extends
-		ArrayList<M> {
+public abstract class AbstractArrayListEx<T extends AbstractArrayListEx<T, M>, M>
+		extends ArrayList<M> {
 
 	public T append(final M... elements) {
 		if (elements != null) {

@@ -107,8 +107,8 @@ public abstract class ClassVisitor {
 	 *        {@link Type#getInternalName() getInternalName}). May be
 	 *        <tt>null</tt>.
 	 */
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		if (cv != null) {
 			cv.visit(version, access, name, signature, superName, interfaces);
 		}

@@ -75,8 +75,8 @@ public class JSONUtil {
 			} else if (dest == boolean.class) {
 				return obj;
 			}
-			throw new RuntimeException("Primitive: Can not convert " + obj.getClass().getName()
-					+ " to " + dest.getName());
+			throw new RuntimeException(
+					"Primitive: Can not convert " + obj.getClass().getName() + " to " + dest.getName());
 		} else {
 			if (dest.isEnum()) {
 				return Enum.valueOf((Class<Enum>) dest, obj.toString());
@@ -129,8 +129,8 @@ public class JSONUtil {
 					return Character.valueOf(asString.charAt(0));
 				}
 			}
-			throw new RuntimeException("Object: Can not Convert " + obj.getClass().getName() + " to "
-					+ dest.getName());
+			throw new RuntimeException(
+					"Object: Can not Convert " + obj.getClass().getName() + " to " + dest.getName());
 		}
 	}
 
@@ -166,8 +166,8 @@ public class JSONUtil {
 			} else if (dest == boolean.class) {
 				return obj;
 			}
-			throw new RuntimeException("Primitive: Can not convert " + obj.getClass().getName()
-					+ " to " + dest.getName());
+			throw new RuntimeException(
+					"Primitive: Can not convert " + obj.getClass().getName() + " to " + dest.getName());
 		} else {
 			if (dest.isEnum()) {
 				return Enum.valueOf((Class<Enum>) dest, obj.toString());
@@ -220,8 +220,8 @@ public class JSONUtil {
 					return Character.valueOf(asString.charAt(0));
 				}
 			}
-			throw new RuntimeException("Object: Can not Convert " + obj.getClass().getName() + " to "
-					+ dest.getName());
+			throw new RuntimeException(
+					"Object: Can not Convert " + obj.getClass().getName() + " to " + dest.getName());
 		}
 	}
 

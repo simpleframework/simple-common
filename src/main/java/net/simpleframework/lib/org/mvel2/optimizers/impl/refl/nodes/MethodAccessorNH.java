@@ -41,7 +41,8 @@ public class MethodAccessorNH implements AccessorNode {
 	private PropertyHandler nullHandler;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (!coercionNeeded) {
 			try {
 				final Object v = method.invoke(ctx, executeAll(elCtx, vars));
@@ -72,9 +73,9 @@ public class MethodAccessorNH implements AccessorNode {
 		} else {
 			try {
 				if (nextNode != null) {
-					return nextNode
-							.getValue(method.invoke(ctx, executeAndCoerce(parameterTypes, elCtx, vars)),
-									elCtx, vars);
+					return nextNode.getValue(
+							method.invoke(ctx, executeAndCoerce(parameterTypes, elCtx, vars)), elCtx,
+							vars);
 				} else {
 					return method.invoke(ctx, executeAndCoerce(parameterTypes, elCtx, vars));
 				}

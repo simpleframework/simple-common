@@ -34,8 +34,8 @@ public class DefaultGeneratorStrategy implements GeneratorStrategy {
 	protected final ClassWriter getClassWriter() {
 		// Cause compile / runtime errors for people who implemented the old
 		// interface without using @Override
-		throw new UnsupportedOperationException("You are calling "
-				+ "getClassWriter, which no longer exists in this cglib version.");
+		throw new UnsupportedOperationException(
+				"You are calling " + "getClassWriter, which no longer exists in this cglib version.");
 	}
 
 	protected byte[] transform(final byte[] b) throws Exception {

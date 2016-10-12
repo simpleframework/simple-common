@@ -99,8 +99,8 @@ class FastClassEmitter extends ClassEmitter {
 		// getIndex(Class[])
 		e = begin_method(Opcodes.ACC_PUBLIC, CONSTRUCTOR_GET_INDEX, null);
 		e.load_args();
-		final List info = CollectionUtils
-				.transform(constructors, MethodInfoTransformer.getInstance());
+		final List info = CollectionUtils.transform(constructors,
+				MethodInfoTransformer.getInstance());
 		EmitUtils.constructor_switch(e, info, new GetIndexCallback(e, info));
 		e.end_method();
 

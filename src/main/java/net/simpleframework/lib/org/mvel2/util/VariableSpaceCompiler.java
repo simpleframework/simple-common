@@ -11,12 +11,13 @@ import net.simpleframework.lib.org.mvel2.ParserContext;
 public class VariableSpaceCompiler {
 	private static final Object[] EMPTY_OBJ = new Object[0];
 
-	public static SharedVariableSpaceModel compileShared(final String expr, final ParserContext pCtx) {
+	public static SharedVariableSpaceModel compileShared(final String expr,
+			final ParserContext pCtx) {
 		return compileShared(expr, pCtx, EMPTY_OBJ);
 	}
 
-	public static SharedVariableSpaceModel compileShared(final String expr,
-			final ParserContext pCtx, final Object[] vars) {
+	public static SharedVariableSpaceModel compileShared(final String expr, final ParserContext pCtx,
+			final Object[] vars) {
 		final String[] varNames = pCtx.getIndexedVarNames();
 
 		final ParserContext analysisContext = ParserContext.create();

@@ -260,11 +260,11 @@ public class Tag {
 	// sources
 	private static final String[] blockTags = { "html", "head", "body", "frameset", "script",
 			"noscript", "style", "meta", "link", "title", "frame", "noframes", "section", "nav",
-			"aside", "hgroup", "header", "footer", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul",
-			"ol", "pre", "div", "blockquote", "hr", "address", "figure", "figcaption", "form",
-			"fieldset", "ins", "del", "s", "dl", "dt", "dd", "li", "table", "caption", "thead",
-			"tfoot", "tbody", "colgroup", "col", "tr", "th", "td", "video", "audio", "canvas",
-			"details", "menu", "plaintext", "template", "article", "main", "svg", "math" };
+			"aside", "hgroup", "header", "footer", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol",
+			"pre", "div", "blockquote", "hr", "address", "figure", "figcaption", "form", "fieldset",
+			"ins", "del", "s", "dl", "dt", "dd", "li", "table", "caption", "thead", "tfoot", "tbody",
+			"colgroup", "col", "tr", "th", "td", "video", "audio", "canvas", "details", "menu",
+			"plaintext", "template", "article", "main", "svg", "math" };
 	private static final String[] inlineTags = { "object", "base", "font", "tt", "i", "b", "u",
 			"big", "small", "em", "strong", "dfn", "code", "samp", "kbd", "var", "cite", "abbr",
 			"time", "acronym", "mark", "ruby", "rt", "rp", "a", "img", "br", "wbr", "map", "q", "sub",
@@ -278,7 +278,8 @@ public class Tag {
 	private static final String[] formatAsInlineTags = { "title", "a", "p", "h1", "h2", "h3", "h4",
 			"h5", "h6", "pre", "address", "li", "th", "td", "script", "style", "ins", "del", "s" };
 	private static final String[] preserveWhitespaceTags = { "pre", "plaintext", "title", "textarea"
-	// script is not here as it is a data node, which always preserve whitespace
+			// script is not here as it is a data node, which always preserve
+			// whitespace
 	};
 	// todo: I think we just need submit tags, and can scrub listed
 	private static final String[] formListedTags = { "button", "fieldset", "input", "keygen",

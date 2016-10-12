@@ -176,8 +176,8 @@ public class CheckClassAdapter extends ClassVisitor {
 	public static void main(final String[] args) throws Exception {
 		if (args.length != 1) {
 			System.err.println("Verifies the given class.");
-			System.err.println("Usage: CheckClassAdapter "
-					+ "<fully qualified class name or class file name>");
+			System.err.println(
+					"Usage: CheckClassAdapter " + "<fully qualified class name or class file name>");
 			return;
 		}
 		ClassReader cr;
@@ -360,16 +360,17 @@ public class CheckClassAdapter extends ClassVisitor {
 	// ------------------------------------------------------------------------
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		if (start) {
 			throw new IllegalStateException("visit must be called only once");
 		}
 		start = true;
 		checkState();
-		checkAccess(access, Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_SUPER
-				+ Opcodes.ACC_INTERFACE + Opcodes.ACC_ABSTRACT + Opcodes.ACC_SYNTHETIC
-				+ Opcodes.ACC_ANNOTATION + Opcodes.ACC_ENUM + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+		checkAccess(access,
+				Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_SUPER + Opcodes.ACC_INTERFACE
+						+ Opcodes.ACC_ABSTRACT + Opcodes.ACC_SYNTHETIC + Opcodes.ACC_ANNOTATION
+						+ Opcodes.ACC_ENUM + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
 		if (name == null || !name.endsWith("package-info")) {
 			CheckMethodAdapter.checkInternalName(name, "class name");
 		}
@@ -442,9 +443,10 @@ public class CheckClassAdapter extends ClassVisitor {
 				CheckMethodAdapter.checkIdentifier(innerName, start, -1, "inner class name");
 			}
 		}
-		checkAccess(access, Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED
-				+ Opcodes.ACC_STATIC + Opcodes.ACC_FINAL + Opcodes.ACC_INTERFACE + Opcodes.ACC_ABSTRACT
-				+ Opcodes.ACC_SYNTHETIC + Opcodes.ACC_ANNOTATION + Opcodes.ACC_ENUM);
+		checkAccess(access,
+				Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED + Opcodes.ACC_STATIC
+						+ Opcodes.ACC_FINAL + Opcodes.ACC_INTERFACE + Opcodes.ACC_ABSTRACT
+						+ Opcodes.ACC_SYNTHETIC + Opcodes.ACC_ANNOTATION + Opcodes.ACC_ENUM);
 		super.visitInnerClass(name, outerName, innerName, access);
 	}
 
@@ -452,9 +454,10 @@ public class CheckClassAdapter extends ClassVisitor {
 	public FieldVisitor visitField(final int access, final String name, final String desc,
 			final String signature, final Object value) {
 		checkState();
-		checkAccess(access, Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED
-				+ Opcodes.ACC_STATIC + Opcodes.ACC_FINAL + Opcodes.ACC_VOLATILE + Opcodes.ACC_TRANSIENT
-				+ Opcodes.ACC_SYNTHETIC + Opcodes.ACC_ENUM + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+		checkAccess(access,
+				Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED + Opcodes.ACC_STATIC
+						+ Opcodes.ACC_FINAL + Opcodes.ACC_VOLATILE + Opcodes.ACC_TRANSIENT
+						+ Opcodes.ACC_SYNTHETIC + Opcodes.ACC_ENUM + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
 		CheckMethodAdapter.checkUnqualifiedName(version, name, "field name");
 		CheckMethodAdapter.checkDesc(desc, false);
 		if (signature != null) {
@@ -471,10 +474,11 @@ public class CheckClassAdapter extends ClassVisitor {
 	public MethodVisitor visitMethod(final int access, final String name, final String desc,
 			final String signature, final String[] exceptions) {
 		checkState();
-		checkAccess(access, Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED
-				+ Opcodes.ACC_STATIC + Opcodes.ACC_FINAL + Opcodes.ACC_SYNCHRONIZED
-				+ Opcodes.ACC_BRIDGE + Opcodes.ACC_VARARGS + Opcodes.ACC_NATIVE + Opcodes.ACC_ABSTRACT
-				+ Opcodes.ACC_STRICT + Opcodes.ACC_SYNTHETIC + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
+		checkAccess(access,
+				Opcodes.ACC_PUBLIC + Opcodes.ACC_PRIVATE + Opcodes.ACC_PROTECTED + Opcodes.ACC_STATIC
+						+ Opcodes.ACC_FINAL + Opcodes.ACC_SYNCHRONIZED + Opcodes.ACC_BRIDGE
+						+ Opcodes.ACC_VARARGS + Opcodes.ACC_NATIVE + Opcodes.ACC_ABSTRACT
+						+ Opcodes.ACC_STRICT + Opcodes.ACC_SYNTHETIC + Opcodes.ACC_DEPRECATED + 0x40000); // ClassWriter.ACC_SYNTHETIC_ATTRIBUTE
 		if (!"<init>".equals(name) && !"<clinit>".equals(name)) {
 			CheckMethodAdapter.checkMethodIdentifier(version, name, "method name");
 		}
@@ -489,8 +493,8 @@ public class CheckClassAdapter extends ClassVisitor {
 		}
 		CheckMethodAdapter cma;
 		if (checkDataFlow) {
-			cma = new CheckMethodAdapter(access, name, desc, super.visitMethod(access, name, desc,
-					signature, exceptions), labels);
+			cma = new CheckMethodAdapter(access, name, desc,
+					super.visitMethod(access, name, desc, signature, exceptions), labels);
 		} else {
 			cma = new CheckMethodAdapter(super.visitMethod(access, name, desc, signature, exceptions),
 					labels);
@@ -514,12 +518,13 @@ public class CheckClassAdapter extends ClassVisitor {
 		if (sort != TypeReference.CLASS_TYPE_PARAMETER
 				&& sort != TypeReference.CLASS_TYPE_PARAMETER_BOUND
 				&& sort != TypeReference.CLASS_EXTENDS) {
-			throw new IllegalArgumentException("Invalid type reference sort 0x"
-					+ Integer.toHexString(sort));
+			throw new IllegalArgumentException(
+					"Invalid type reference sort 0x" + Integer.toHexString(sort));
 		}
 		checkTypeRefAndPath(typeRef, typePath);
 		CheckMethodAdapter.checkDesc(desc, false);
-		return new CheckAnnotationAdapter(super.visitTypeAnnotation(typeRef, typePath, desc, visible));
+		return new CheckAnnotationAdapter(
+				super.visitTypeAnnotation(typeRef, typePath, desc, visible));
 	}
 
 	@Override
@@ -573,8 +578,8 @@ public class CheckClassAdapter extends ClassVisitor {
 		final int pri = (access & Opcodes.ACC_PRIVATE) == 0 ? 0 : 1;
 		final int pro = (access & Opcodes.ACC_PROTECTED) == 0 ? 0 : 1;
 		if (pub + pri + pro > 1) {
-			throw new IllegalArgumentException("public private and protected are mutually exclusive: "
-					+ access);
+			throw new IllegalArgumentException(
+					"public private and protected are mutually exclusive: " + access);
 		}
 		final int fin = (access & Opcodes.ACC_FINAL) == 0 ? 0 : 1;
 		final int abs = (access & Opcodes.ACC_ABSTRACT) == 0 ? 0 : 1;
@@ -701,23 +706,24 @@ public class CheckClassAdapter extends ClassVisitor {
 			mask = 0xFF0000FF;
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid type reference sort 0x"
-					+ Integer.toHexString(typeRef >>> 24));
+			throw new IllegalArgumentException(
+					"Invalid type reference sort 0x" + Integer.toHexString(typeRef >>> 24));
 		}
 		if ((typeRef & ~mask) != 0) {
-			throw new IllegalArgumentException("Invalid type reference 0x"
-					+ Integer.toHexString(typeRef));
+			throw new IllegalArgumentException(
+					"Invalid type reference 0x" + Integer.toHexString(typeRef));
 		}
 		if (typePath != null) {
 			for (int i = 0; i < typePath.getLength(); ++i) {
 				final int step = typePath.getStep(i);
 				if (step != TypePath.ARRAY_ELEMENT && step != TypePath.INNER_TYPE
 						&& step != TypePath.TYPE_ARGUMENT && step != TypePath.WILDCARD_BOUND) {
-					throw new IllegalArgumentException("Invalid type path step " + i + " in " + typePath);
+					throw new IllegalArgumentException(
+							"Invalid type path step " + i + " in " + typePath);
 				}
 				if (step != TypePath.TYPE_ARGUMENT && typePath.getStepArgument(i) != 0) {
-					throw new IllegalArgumentException("Invalid type path step argument for step " + i
-							+ " in " + typePath);
+					throw new IllegalArgumentException(
+							"Invalid type path step argument for step " + i + " in " + typePath);
 				}
 			}
 		}

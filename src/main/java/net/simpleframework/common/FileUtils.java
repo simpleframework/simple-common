@@ -83,8 +83,8 @@ public abstract class FileUtils {
 		createFile(to);
 		OutputStream outputStream = null;
 		try {
-			IoUtils.copyStream(inputStream, outputStream = new BufferedOutputStream(
-					new FileOutputStream(to)));
+			IoUtils.copyStream(inputStream,
+					outputStream = new BufferedOutputStream(new FileOutputStream(to)));
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
@@ -202,8 +202,8 @@ public abstract class FileUtils {
 
 			@Override
 			public void doFile(final ZipInputStream is, final File destFile) throws IOException {
-				final BufferedOutputStream oStream = new BufferedOutputStream(new FileOutputStream(
-						destFile));
+				final BufferedOutputStream oStream = new BufferedOutputStream(
+						new FileOutputStream(destFile));
 				try {
 					IoUtils.copyStream(is, oStream);
 				} finally {

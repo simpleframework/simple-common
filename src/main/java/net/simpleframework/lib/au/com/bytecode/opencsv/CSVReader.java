@@ -66,7 +66,8 @@ public class CSVReader implements Closeable {
 	 *        the delimiter to use for separating entries.
 	 */
 	public CSVReader(final Reader reader, final char separator) {
-		this(reader, separator, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER);
+		this(reader, separator, CSVParser.DEFAULT_QUOTE_CHARACTER,
+				CSVParser.DEFAULT_ESCAPE_CHARACTER);
 	}
 
 	/**
@@ -134,7 +135,8 @@ public class CSVReader implements Closeable {
 	 * @param line
 	 *        the line number to skip for start reading
 	 */
-	public CSVReader(final Reader reader, final char separator, final char quotechar, final int line) {
+	public CSVReader(final Reader reader, final char separator, final char quotechar,
+			final int line) {
 		this(reader, separator, quotechar, CSVParser.DEFAULT_ESCAPE_CHARACTER, line,
 				CSVParser.DEFAULT_STRICT_QUOTES);
 	}

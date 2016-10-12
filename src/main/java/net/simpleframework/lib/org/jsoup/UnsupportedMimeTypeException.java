@@ -9,7 +9,8 @@ public class UnsupportedMimeTypeException extends IOException {
 	private final String mimeType;
 	private final String url;
 
-	public UnsupportedMimeTypeException(final String message, final String mimeType, final String url) {
+	public UnsupportedMimeTypeException(final String message, final String mimeType,
+			final String url) {
 		super(message);
 		this.mimeType = mimeType;
 		this.url = url;

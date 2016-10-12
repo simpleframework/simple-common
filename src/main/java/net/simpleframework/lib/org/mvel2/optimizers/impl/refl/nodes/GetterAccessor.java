@@ -36,7 +36,8 @@ public class GetterAccessor implements AccessorNode {
 	public static final Object[] EMPTY = new Object[0];
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			if (nextNode != null) {
 				return nextNode.getValue(method.invoke(ctx, EMPTY), elCtx, vars);
@@ -45,8 +46,8 @@ public class GetterAccessor implements AccessorNode {
 			}
 		} catch (final IllegalArgumentException e) {
 			if (ctx != null && method.getDeclaringClass() != ctx.getClass()) {
-				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(), ctx
-						.getClass().getMethods(), true);
+				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(),
+						ctx.getClass().getMethods(), true);
 				if (o != null) {
 					return executeOverrideTarget(o, ctx, elCtx, vars);
 				}
@@ -63,12 +64,13 @@ public class GetterAccessor implements AccessorNode {
 			}
 		} catch (final NullPointerException e) {
 			if (ctx == null) {
-				throw new RuntimeException("unable to invoke method: "
-						+ method.getDeclaringClass().getName() + "." + method.getName() + ": "
-						+ "target of method is null", e);
-			} else {
 				throw new RuntimeException(
-						"cannot invoke getter: " + method.getName() + " (see trace)", e);
+						"unable to invoke method: " + method.getDeclaringClass().getName() + "."
+								+ method.getName() + ": " + "target of method is null",
+						e);
+			} else {
+				throw new RuntimeException("cannot invoke getter: " + method.getName() + " (see trace)",
+						e);
 			}
 		} catch (final Exception e) {
 			throw new RuntimeException("cannot invoke getter: " + method.getName() + " [declr.class: "
@@ -123,8 +125,9 @@ public class GetterAccessor implements AccessorNode {
 		} catch (final CompileException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new RuntimeException("error " + method.getName() + ": " + e.getClass().getName()
-					+ ":" + e.getMessage(), e);
+			throw new RuntimeException(
+					"error " + method.getName() + ": " + e.getClass().getName() + ":" + e.getMessage(),
+					e);
 		}
 	}
 

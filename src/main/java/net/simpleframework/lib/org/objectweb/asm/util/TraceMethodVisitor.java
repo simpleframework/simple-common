@@ -73,8 +73,8 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
 		final Printer p = this.p.visitMethodTypeAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitTypeAnnotation(typeRef, typePath,
-				desc, visible);
+		final AnnotationVisitor av = mv == null ? null
+				: mv.visitTypeAnnotation(typeRef, typePath, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 
@@ -95,8 +95,8 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
 			final boolean visible) {
 		final Printer p = this.p.visitParameterAnnotation(parameter, desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitParameterAnnotation(parameter, desc,
-				visible);
+		final AnnotationVisitor av = mv == null ? null
+				: mv.visitParameterAnnotation(parameter, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 
@@ -225,8 +225,8 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	public AnnotationVisitor visitInsnAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
 		final Printer p = this.p.visitInsnAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitInsnAnnotation(typeRef, typePath,
-				desc, visible);
+		final AnnotationVisitor av = mv == null ? null
+				: mv.visitInsnAnnotation(typeRef, typePath, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 
@@ -241,8 +241,8 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
 		final Printer p = this.p.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitTryCatchAnnotation(typeRef,
-				typePath, desc, visible);
+		final AnnotationVisitor av = mv == null ? null
+				: mv.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 
@@ -254,13 +254,13 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		final Printer p = this.p.visitLocalVariableAnnotation(typeRef, typePath, start, end, index,
 				desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitLocalVariableAnnotation(typeRef,
-				typePath, start, end, index, desc, visible);
+		final AnnotationVisitor av = mv == null ? null
+				: mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 

@@ -99,7 +99,8 @@ public class TypeDescriptor implements Serializable {
 				if ((fields & COMPILE_IMMEDIATE) != 0) {
 					compiledArraySize = new ExecutableStatement[arraySize.length];
 					for (int i = 0; i < compiledArraySize.length; i++) {
-						compiledArraySize[i] = (ExecutableStatement) subCompileExpression(arraySize[i].value);
+						compiledArraySize[i] = (ExecutableStatement) subCompileExpression(
+								arraySize[i].value);
 					}
 				}
 
@@ -159,15 +160,16 @@ public class TypeDescriptor implements Serializable {
 	public static Class getClassReference(final Class baseType, final TypeDescriptor tDescr,
 			final VariableResolverFactory factory, final ParserContext ctx)
 			throws ClassNotFoundException {
-		return findClass(factory, repeatChar('[', tDescr.arraySize.length) + "L" + baseType.getName()
-				+ ";", ctx);
+		return findClass(factory,
+				repeatChar('[', tDescr.arraySize.length) + "L" + baseType.getName() + ";", ctx);
 	}
 
 	public static Class getClassReference(final ParserContext ctx, Class cls,
 			final TypeDescriptor tDescr) throws ClassNotFoundException {
 		if (tDescr.isArray()) {
-			cls = cls.isPrimitive() ? toPrimitiveArrayType(cls) : findClass(null,
-					repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
+			cls = cls.isPrimitive() ? toPrimitiveArrayType(cls)
+					: findClass(null,
+							repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
 		}
 		return cls;
 	}
@@ -178,20 +180,23 @@ public class TypeDescriptor implements Serializable {
 		if (ctx != null && ctx.hasImport(tDescr.className)) {
 			cls = ctx.getImport(tDescr.className);
 			if (tDescr.isArray()) {
-				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls) : findClass(null,
-						repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
+				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls)
+						: findClass(null,
+								repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
 			}
 		} else if (ctx == null && hasContextFreeImport(tDescr.className)) {
 			cls = getContextFreeImport(tDescr.className);
 			if (tDescr.isArray()) {
-				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls) : findClass(null,
-						repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
+				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls)
+						: findClass(null,
+								repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
 			}
 		} else {
 			cls = createClass(tDescr.getClassName(), ctx);
 			if (tDescr.isArray()) {
-				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls) : findClass(null,
-						repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
+				cls = cls.isPrimitive() ? toPrimitiveArrayType(cls)
+						: findClass(null,
+								repeatChar('[', tDescr.arraySize.length) + "L" + cls.getName() + ";", ctx);
 			}
 		}
 

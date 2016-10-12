@@ -42,11 +42,11 @@ public class OptimizerFactory {
 		 */
 		try {
 			if (OptimizerFactory.class.getClassLoader() != null) {
-				OptimizerFactory.class.getClassLoader().loadClass(
-						"net.simpleframework.lib.org.mvel2.asm.ClassWriter");
+				OptimizerFactory.class.getClassLoader()
+						.loadClass("net.simpleframework.lib.org.mvel2.asm.ClassWriter");
 			} else {
-				ClassLoader.getSystemClassLoader().loadClass(
-						"net.simpleframework.lib.org.mvel2.asm.ClassWriter");
+				ClassLoader.getSystemClassLoader()
+						.loadClass("net.simpleframework.lib.org.mvel2.asm.ClassWriter");
 			}
 			accessorCompilers.put("ASM", new ASMAccessorOptimizer());
 		} catch (final ClassNotFoundException e) {
@@ -93,7 +93,8 @@ public class OptimizerFactory {
 		}
 	}
 
-	public static void setThreadAccessorOptimizer(final Class<? extends AccessorOptimizer> optimizer) {
+	public static void setThreadAccessorOptimizer(
+			final Class<? extends AccessorOptimizer> optimizer) {
 		if (optimizer == null) {
 			throw new RuntimeException("null optimizer");
 		}

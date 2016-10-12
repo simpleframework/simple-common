@@ -152,8 +152,8 @@ public class Jsoup {
 	 *         if the file could not be found, or read, or if the charsetName is
 	 *         invalid.
 	 */
-	public static Document parse(final InputStream in, final String charsetName, final String baseUri)
-			throws IOException {
+	public static Document parse(final InputStream in, final String charsetName,
+			final String baseUri) throws IOException {
 		return DataUtil.load(in, charsetName, baseUri);
 	}
 
@@ -259,7 +259,8 @@ public class Jsoup {
 	 * @return safe HTML (body fragment)
 	 * @see Cleaner#clean(Document)
 	 */
-	public static String clean(final String bodyHtml, final String baseUri, final Whitelist whitelist) {
+	public static String clean(final String bodyHtml, final String baseUri,
+			final Whitelist whitelist) {
 		final Document dirty = parseBodyFragment(bodyHtml, baseUri);
 		final Cleaner cleaner = new Cleaner(whitelist);
 		final Document clean = cleaner.clean(dirty);

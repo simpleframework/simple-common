@@ -14,14 +14,14 @@ public class NewPrototypeNode extends ASTNode {
 	@Override
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		return ((Proto) factory.getVariableResolver(protoName).getValue()).newInstance(ctx,
-				thisValue, factory);
+		return ((Proto) factory.getVariableResolver(protoName).getValue()).newInstance(ctx, thisValue,
+				factory);
 	}
 
 	@Override
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		return ((Proto) factory.getVariableResolver(protoName).getValue()).newInstance(ctx,
-				thisValue, factory);
+		return ((Proto) factory.getVariableResolver(protoName).getValue()).newInstance(ctx, thisValue,
+				factory);
 	}
 }

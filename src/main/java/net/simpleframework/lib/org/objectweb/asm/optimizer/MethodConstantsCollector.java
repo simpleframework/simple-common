@@ -98,8 +98,8 @@ public class MethodConstantsCollector extends MethodVisitor {
 		} else {
 			cp.newUTF8("RuntimeInvisibleParameterAnnotations");
 		}
-		return new AnnotationConstantsCollector(
-				mv.visitParameterAnnotation(parameter, desc, visible), cp);
+		return new AnnotationConstantsCollector(mv.visitParameterAnnotation(parameter, desc, visible),
+				cp);
 	}
 
 	@Override
@@ -150,8 +150,8 @@ public class MethodConstantsCollector extends MethodVisitor {
 		} else {
 			cp.newUTF8("RuntimeInvisibleTypeAnnotations");
 		}
-		return new AnnotationConstantsCollector(mv.visitInsnAnnotation(typeRef, typePath, desc,
-				visible), cp);
+		return new AnnotationConstantsCollector(
+				mv.visitInsnAnnotation(typeRef, typePath, desc, visible), cp);
 	}
 
 	@Override
@@ -172,8 +172,8 @@ public class MethodConstantsCollector extends MethodVisitor {
 		} else {
 			cp.newUTF8("RuntimeInvisibleTypeAnnotations");
 		}
-		return new AnnotationConstantsCollector(mv.visitTryCatchAnnotation(typeRef, typePath, desc,
-				visible), cp);
+		return new AnnotationConstantsCollector(
+				mv.visitTryCatchAnnotation(typeRef, typePath, desc, visible), cp);
 	}
 
 	@Override
@@ -191,17 +191,18 @@ public class MethodConstantsCollector extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		cp.newUTF8(desc);
 		if (visible) {
 			cp.newUTF8("RuntimeVisibleTypeAnnotations");
 		} else {
 			cp.newUTF8("RuntimeInvisibleTypeAnnotations");
 		}
-		return new AnnotationConstantsCollector(mv.visitLocalVariableAnnotation(typeRef, typePath,
-				start, end, index, desc, visible), cp);
+		return new AnnotationConstantsCollector(
+				mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible),
+				cp);
 	}
 
 	@Override

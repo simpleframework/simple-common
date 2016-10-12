@@ -41,8 +41,8 @@ public class UndeclaredThrowableTransformer extends ClassEmitterTransformer {
 			}
 		}
 		if (!found) {
-			throw new IllegalArgumentException(wrapper
-					+ " does not have a single-arg constructor that takes a Throwable");
+			throw new IllegalArgumentException(
+					wrapper + " does not have a single-arg constructor that takes a Throwable");
 		}
 	}
 
@@ -54,7 +54,7 @@ public class UndeclaredThrowableTransformer extends ClassEmitterTransformer {
 		}
 		return new CodeEmitter(e) {
 			private Block handler;
-			/* init */{
+			/* init */ {
 				handler = begin_block();
 			}
 

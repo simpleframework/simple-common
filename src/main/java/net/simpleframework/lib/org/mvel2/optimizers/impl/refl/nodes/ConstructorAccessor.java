@@ -47,8 +47,11 @@ public class ConstructorAccessor extends InvokableAccessor {
 
 			} else {
 				if (nextNode != null) {
-					return nextNode.getValue(constructor.newInstance(executeAndCoerce(parameterTypes,
-							elCtx, variableFactory, constructor.isVarArgs())), elCtx, variableFactory);
+					return nextNode
+							.getValue(
+									constructor.newInstance(executeAndCoerce(parameterTypes, elCtx,
+											variableFactory, constructor.isVarArgs())),
+									elCtx, variableFactory);
 				} else {
 					return constructor.newInstance(executeAndCoerce(parameterTypes, elCtx,
 							variableFactory, constructor.isVarArgs()));

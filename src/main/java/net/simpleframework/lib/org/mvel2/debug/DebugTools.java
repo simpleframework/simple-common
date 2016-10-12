@@ -359,7 +359,8 @@ public class DebugTools {
 		return "UNKNOWN_OPERATOR";
 	}
 
-	public static Class determineType(final String name, final CompiledExpression compiledExpression) {
+	public static Class determineType(final String name,
+			final CompiledExpression compiledExpression) {
 		final ASTIterator iter = new ASTLinkedList(compiledExpression.getFirstNode());
 		ASTNode node;
 		while (iter.hasMoreNodes()) {

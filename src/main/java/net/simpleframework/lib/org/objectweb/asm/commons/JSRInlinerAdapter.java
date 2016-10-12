@@ -200,8 +200,8 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
 
 		// Go through the head of each subroutine and find any nodes reachable
 		// to that subroutine without following any JSR links.
-		for (final Iterator<Map.Entry<LabelNode, BitSet>> it = subroutineHeads.entrySet().iterator(); it
-				.hasNext();) {
+		for (final Iterator<Map.Entry<LabelNode, BitSet>> it = subroutineHeads.entrySet()
+				.iterator(); it.hasNext();) {
 			final Map.Entry<LabelNode, BitSet> entry = it.next();
 			final LabelNode lab = entry.getKey();
 			final BitSet sub = entry.getValue();
@@ -473,8 +473,8 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
 					// This is only possible if the mainSubroutine owns a RET
 					// instruction, which should never happen for verifiable
 					// code.
-					throw new RuntimeException("Instruction #" + i
-							+ " is a RET not owned by any subroutine");
+					throw new RuntimeException(
+							"Instruction #" + i + " is a RET not owned by any subroutine");
 				}
 				newInstructions.add(new JumpInsnNode(GOTO, retlabel));
 			} else if (insn.getOpcode() == JSR) {

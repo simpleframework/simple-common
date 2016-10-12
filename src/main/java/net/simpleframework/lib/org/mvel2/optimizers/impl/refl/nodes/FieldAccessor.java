@@ -41,7 +41,8 @@ public class FieldAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			if (nextNode != null) {
 				return nextNode.getValue(field.get(ctx), elCtx, vars);
@@ -58,8 +59,9 @@ public class FieldAccessor implements AccessorNode {
 			final VariableResolverFactory variableFactory, Object value) {
 		if (nextNode != null) {
 			try {
-				return nextNode.setValue(field.get(ctx), elCtx, variableFactory, value == null
-						&& primitive ? PropertyTools.getPrimitiveInitialValue(field.getType()) : value);
+				return nextNode.setValue(field.get(ctx), elCtx, variableFactory,
+						value == null && primitive
+								? PropertyTools.getPrimitiveInitialValue(field.getType()) : value);
 			} catch (final Exception e) {
 				throw new RuntimeException("unable to access field", e);
 			}

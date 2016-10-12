@@ -46,7 +46,8 @@ public class AnnotationRemapper extends AnnotationVisitor {
 		this(Opcodes.ASM5, av, remapper);
 	}
 
-	protected AnnotationRemapper(final int api, final AnnotationVisitor av, final Remapper remapper) {
+	protected AnnotationRemapper(final int api, final AnnotationVisitor av,
+			final Remapper remapper) {
 		super(api, av);
 		this.remapper = remapper;
 	}

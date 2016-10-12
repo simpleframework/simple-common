@@ -39,7 +39,8 @@ public class DynamicFieldAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			if (nextNode != null) {
 				return nextNode.getValue(field.get(ctx), elCtx, vars);

@@ -92,8 +92,8 @@ public class ParserConfiguration implements Serializable {
 		if (imports != null && imports.containsKey(name) && imports.get(name) instanceof Class) {
 			return (Class) imports.get(name);
 		}
-		return (Class) (AbstractParser.LITERALS.get(name) instanceof Class ? AbstractParser.LITERALS
-				.get(name) : null);
+		return (Class) (AbstractParser.LITERALS.get(name) instanceof Class
+				? AbstractParser.LITERALS.get(name) : null);
 	}
 
 	public MethodStub getStaticImport(final String name) {
@@ -128,7 +128,8 @@ public class ParserConfiguration implements Serializable {
 				return true;
 			} else {
 				for (final Field f : c.getDeclaredFields()) {
-					if ((f.getModifiers() & (Modifier.STATIC | Modifier.PUBLIC)) == (Modifier.STATIC | Modifier.PUBLIC)) {
+					if ((f.getModifiers() & (Modifier.STATIC | Modifier.PUBLIC)) == (Modifier.STATIC
+							| Modifier.PUBLIC)) {
 						imports.put(f.getName(), f.get(null));
 					}
 				}
@@ -258,8 +259,8 @@ public class ParserConfiguration implements Serializable {
 			} else if (val instanceof Proto) {
 				addImport(entry.getKey(), (Proto) entry.getValue());
 			} else {
-				throw new RuntimeException("invalid element in imports map: " + entry.getKey() + " ("
-						+ val + ")");
+				throw new RuntimeException(
+						"invalid element in imports map: " + entry.getKey() + " (" + val + ")");
 			}
 		}
 	}

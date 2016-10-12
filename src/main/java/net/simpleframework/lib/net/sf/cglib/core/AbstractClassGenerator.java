@@ -313,10 +313,10 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 		try {
 			final ClassLoader classLoader = data.getClassLoader();
 			if (classLoader == null) {
-				throw new IllegalStateException("ClassLoader is null while trying to define class "
-						+ getClassName()
-						+ ". It seems that the loader has been expired from a weak reference somehow. "
-						+ "Please file an issue at cglib's issue tracker.");
+				throw new IllegalStateException(
+						"ClassLoader is null while trying to define class " + getClassName()
+								+ ". It seems that the loader has been expired from a weak reference somehow. "
+								+ "Please file an issue at cglib's issue tracker.");
 			}
 			this.setClassName(generateClassName(data.getUniqueNamePredicate()));
 			if (attemptLoad) {

@@ -66,8 +66,8 @@ public class RegExMatch extends ASTNode {
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		if (p == null) {
-			return compile(valueOf(patternStmt.getValue(ctx, thisValue, factory))).matcher(
-					valueOf(stmt.getValue(ctx, thisValue, factory))).matches();
+			return compile(valueOf(patternStmt.getValue(ctx, thisValue, factory)))
+					.matcher(valueOf(stmt.getValue(ctx, thisValue, factory))).matches();
 		} else {
 			return p.matcher(valueOf(stmt.getValue(ctx, thisValue, factory))).matches();
 		}
@@ -77,8 +77,8 @@ public class RegExMatch extends ASTNode {
 	public Object getReducedValue(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		try {
-			return compile(valueOf(eval(expr, patternStart, patternOffset, ctx, factory))).matcher(
-					valueOf(eval(expr, start, offset, ctx, factory))).matches();
+			return compile(valueOf(eval(expr, patternStart, patternOffset, ctx, factory)))
+					.matcher(valueOf(eval(expr, start, offset, ctx, factory))).matches();
 		} catch (final PatternSyntaxException e) {
 			throw new CompileException("bad regular expression", expr, patternStart, e);
 		}

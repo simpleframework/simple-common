@@ -225,8 +225,8 @@ final class Item {
 		// ClassWriter.IMETH:
 		// ClassWriter.HANDLE_BASE + 1..9
 		default:
-			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode()
-					* strVal3.hashCode());
+			hashCode = 0x7FFFFFFF
+					& (type + strVal1.hashCode() * strVal2.hashCode() * strVal3.hashCode());
 		}
 	}
 
@@ -245,8 +245,8 @@ final class Item {
 		this.longVal = bsmIndex;
 		this.strVal1 = name;
 		this.strVal2 = desc;
-		this.hashCode = 0x7FFFFFFF & (ClassWriter.INDY + bsmIndex * strVal1.hashCode()
-				* strVal2.hashCode());
+		this.hashCode = 0x7FFFFFFF
+				& (ClassWriter.INDY + bsmIndex * strVal1.hashCode() * strVal2.hashCode());
 	}
 
 	/**

@@ -46,7 +46,8 @@ public class DynamicSetterAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		return null;
 	}
 

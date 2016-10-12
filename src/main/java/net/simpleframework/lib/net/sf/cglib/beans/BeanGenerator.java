@@ -152,7 +152,8 @@ public class BeanGenerator extends AbstractClassGenerator {
 		addProperties(gen, ReflectUtils.getBeanProperties(type));
 	}
 
-	public static void addProperties(final BeanGenerator gen, final PropertyDescriptor[] descriptors) {
+	public static void addProperties(final BeanGenerator gen,
+			final PropertyDescriptor[] descriptors) {
 		for (int i = 0; i < descriptors.length; i++) {
 			gen.addProperty(descriptors[i].getName(), descriptors[i].getPropertyType());
 		}

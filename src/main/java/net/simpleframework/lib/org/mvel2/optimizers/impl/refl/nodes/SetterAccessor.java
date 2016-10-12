@@ -26,14 +26,13 @@ public class SetterAccessor implements AccessorNode {
 			if (coercionRequired) {
 				return method.invoke(ctx, convert(value, targetType));
 			} else {
-				return method.invoke(ctx,
-						value == null && primitive ? PropertyTools.getPrimitiveInitialValue(targetType)
-								: value);
+				return method.invoke(ctx, value == null && primitive
+						? PropertyTools.getPrimitiveInitialValue(targetType) : value);
 			}
 		} catch (final IllegalArgumentException e) {
 			if (ctx != null && method.getDeclaringClass() != ctx.getClass()) {
-				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(), ctx
-						.getClass().getMethods(), true);
+				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(),
+						ctx.getClass().getMethods(), true);
 				if (o != null) {
 					return executeOverrideTarget(o, ctx, value);
 				}
@@ -51,7 +50,8 @@ public class SetterAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		return null;
 	}
 

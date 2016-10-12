@@ -91,14 +91,16 @@ public class ExecutionStack {
 	}
 
 	public void copy2(final ExecutionStack es) {
-		element = new StackElement(new StackElement(element, es.element.value), es.element.next.value);
+		element = new StackElement(new StackElement(element, es.element.value),
+				es.element.next.value);
 		es.element = es.element.next.next;
 		size += 2;
 		es.size -= 2;
 	}
 
 	public void copyx2(final ExecutionStack es) {
-		element = new StackElement(new StackElement(element, es.element.next.value), es.element.value);
+		element = new StackElement(new StackElement(element, es.element.next.value),
+				es.element.value);
 		es.element = es.element.next.next;
 		size += 2;
 		es.size -= 2;
@@ -169,22 +171,22 @@ public class ExecutionStack {
 	}
 
 	public void xswap_op() {
-		element = new StackElement(element.next.next.next, doOperations(element.next.next.value,
-				(Integer) element.next.value, element.value));
+		element = new StackElement(element.next.next.next,
+				doOperations(element.next.next.value, (Integer) element.next.value, element.value));
 		size -= 2;
 		assert size == deepCount();
 	}
 
 	public void op() {
-		element = new StackElement(element.next.next.next, doOperations(element.next.next.value,
-				(Integer) element.value, element.next.value));
+		element = new StackElement(element.next.next.next,
+				doOperations(element.next.next.value, (Integer) element.value, element.next.value));
 		size -= 2;
 		assert size == deepCount();
 	}
 
 	public void op(final int operator) {
-		element = new StackElement(element.next.next, doOperations(element.next.value, operator,
-				element.value));
+		element = new StackElement(element.next.next,
+				doOperations(element.next.value, operator, element.value));
 		size--;
 		assert size == deepCount();
 	}

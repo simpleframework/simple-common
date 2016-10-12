@@ -115,10 +115,9 @@ public class TextNode extends Node {
 	@Override
 	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
-		if (out.prettyPrint()
-				&& ((siblingIndex() == 0 && parentNode instanceof Element
-						&& ((Element) parentNode).tag().formatAsBlock() && !isBlank()) || (out.outline()
-						&& siblingNodes().size() > 0 && !isBlank()))) {
+		if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof Element
+				&& ((Element) parentNode).tag().formatAsBlock() && !isBlank())
+				|| (out.outline() && siblingNodes().size() > 0 && !isBlank()))) {
 			indent(accum, depth, out);
 		}
 

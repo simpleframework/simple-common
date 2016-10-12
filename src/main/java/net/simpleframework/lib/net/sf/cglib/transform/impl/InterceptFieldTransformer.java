@@ -36,8 +36,8 @@ public class InterceptFieldTransformer extends ClassEmitterTransformer {
 			.parseType("net.simpleframework.lib.net.sf.cglib.transform.impl.InterceptFieldEnabled");
 	private static final Signature ENABLED_SET = new Signature("setInterceptFieldCallback",
 			Type.VOID_TYPE, new Type[] { CALLBACK });
-	private static final Signature ENABLED_GET = new Signature("getInterceptFieldCallback",
-			CALLBACK, new Type[0]);
+	private static final Signature ENABLED_GET = new Signature("getInterceptFieldCallback", CALLBACK,
+			new Type[0]);
 
 	private final InterceptFieldFilter filter;
 
@@ -184,14 +184,14 @@ public class InterceptFieldTransformer extends ClassEmitterTransformer {
 
 	private static Signature readCallbackSig(final Type type) {
 		final Type remap = remap(type);
-		return new Signature("read" + callbackName(remap), remap, new Type[] { Constants.TYPE_OBJECT,
-				Constants.TYPE_STRING, remap });
+		return new Signature("read" + callbackName(remap), remap,
+				new Type[] { Constants.TYPE_OBJECT, Constants.TYPE_STRING, remap });
 	}
 
 	private static Signature writeCallbackSig(final Type type) {
 		final Type remap = remap(type);
-		return new Signature("write" + callbackName(remap), remap, new Type[] {
-				Constants.TYPE_OBJECT, Constants.TYPE_STRING, remap, remap });
+		return new Signature("write" + callbackName(remap), remap,
+				new Type[] { Constants.TYPE_OBJECT, Constants.TYPE_STRING, remap, remap });
 	}
 
 	private static Type remap(final Type type) {
@@ -205,7 +205,7 @@ public class InterceptFieldTransformer extends ClassEmitterTransformer {
 	}
 
 	private static String callbackName(final Type type) {
-		return (type == Constants.TYPE_OBJECT) ? "Object" : TypeUtils.upperFirst(TypeUtils
-				.getClassName(type));
+		return (type == Constants.TYPE_OBJECT) ? "Object"
+				: TypeUtils.upperFirst(TypeUtils.getClassName(type));
 	}
 }

@@ -78,16 +78,16 @@ public class JsonWriter {
 
 	final static public JsonWriterI<JSONStreamAwareEx> JSONStreamAwareWriter = new JsonWriterI<JSONStreamAwareEx>() {
 		@Override
-		public <E extends JSONStreamAwareEx> void writeJSONString(final E value,
-				final Appendable out, final JSONStyle compression) throws IOException {
+		public <E extends JSONStreamAwareEx> void writeJSONString(final E value, final Appendable out,
+				final JSONStyle compression) throws IOException {
 			value.writeJSONString(out);
 		}
 	};
 
 	final static public JsonWriterI<JSONStreamAwareEx> JSONStreamAwareExWriter = new JsonWriterI<JSONStreamAwareEx>() {
 		@Override
-		public <E extends JSONStreamAwareEx> void writeJSONString(final E value,
-				final Appendable out, final JSONStyle compression) throws IOException {
+		public <E extends JSONStreamAwareEx> void writeJSONString(final E value, final Appendable out,
+				final JSONStyle compression) throws IOException {
 			value.writeJSONString(out, compression);
 		}
 	};

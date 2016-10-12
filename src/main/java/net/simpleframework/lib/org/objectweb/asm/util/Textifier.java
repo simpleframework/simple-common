@@ -198,8 +198,8 @@ public class Textifier extends Printer {
 		}
 		if (!ok) {
 			System.err.println("Prints a disassembled view of the given class.");
-			System.err.println("Usage: Textifier [-debug] "
-					+ "<fully qualified class name or class file name>");
+			System.err.println(
+					"Usage: Textifier [-debug] " + "<fully qualified class name or class file name>");
 			return;
 		}
 		ClassReader cr;
@@ -216,8 +216,8 @@ public class Textifier extends Printer {
 	// ------------------------------------------------------------------------
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		this.access = access;
 		final int major = version & 0xFFFF;
 		final int minor = version >>> 16;
@@ -338,8 +338,8 @@ public class Textifier extends Printer {
 		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
 			buf.append(tab).append("// DEPRECATED\n");
 		}
-		buf.append(tab).append("// access flags 0x")
-				.append(Integer.toHexString(access).toUpperCase()).append('\n');
+		buf.append(tab).append("// access flags 0x").append(Integer.toHexString(access).toUpperCase())
+				.append('\n');
 		if (signature != null) {
 			buf.append(tab);
 			appendDescriptor(FIELD_SIGNATURE, signature);
@@ -380,8 +380,8 @@ public class Textifier extends Printer {
 		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
 			buf.append(tab).append("// DEPRECATED\n");
 		}
-		buf.append(tab).append("// access flags 0x")
-				.append(Integer.toHexString(access).toUpperCase()).append('\n');
+		buf.append(tab).append("// access flags 0x").append(Integer.toHexString(access).toUpperCase())
+				.append('\n');
 
 		if (signature != null) {
 			buf.append(tab);
@@ -946,8 +946,8 @@ public class Textifier extends Printer {
 	}
 
 	@Override
-	public Printer visitInsnAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
+	public Printer visitInsnAnnotation(final int typeRef, final TypePath typePath, final String desc,
+			final boolean visible) {
 		return visitTypeAnnotation(typeRef, typePath, desc, visible);
 	}
 
@@ -1322,8 +1322,8 @@ public class Textifier extends Printer {
 					.append(ref.getTypeParameterBoundIndex());
 			break;
 		case TypeReference.METHOD_TYPE_PARAMETER_BOUND:
-			buf.append("METHOD_TYPE_PARAMETER_BOUND ").append(ref.getTypeParameterIndex())
-					.append(", ").append(ref.getTypeParameterBoundIndex());
+			buf.append("METHOD_TYPE_PARAMETER_BOUND ").append(ref.getTypeParameterIndex()).append(", ")
+					.append(ref.getTypeParameterBoundIndex());
 			break;
 		case TypeReference.FIELD:
 			buf.append("FIELD");

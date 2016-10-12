@@ -19,7 +19,8 @@ import java.util.Map;
  * the License.
  */
 
-public class HeaderColumnNameTranslateMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
+public class HeaderColumnNameTranslateMappingStrategy<T>
+		extends HeaderColumnNameMappingStrategy<T> {
 	private final Map<String, String> columnMapping = new HashMap<String, String>();
 
 	@Override

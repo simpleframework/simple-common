@@ -136,8 +136,8 @@ public final class TraceClassVisitor extends ClassVisitor {
 	}
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		p.visit(version, access, name, signature, superName, interfaces);
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
@@ -165,8 +165,8 @@ public final class TraceClassVisitor extends ClassVisitor {
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
 		final Printer p = this.p.visitClassTypeAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = cv == null ? null : cv.visitTypeAnnotation(typeRef, typePath,
-				desc, visible);
+		final AnnotationVisitor av = cv == null ? null
+				: cv.visitTypeAnnotation(typeRef, typePath, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 
@@ -187,8 +187,8 @@ public final class TraceClassVisitor extends ClassVisitor {
 	public FieldVisitor visitField(final int access, final String name, final String desc,
 			final String signature, final Object value) {
 		final Printer p = this.p.visitField(access, name, desc, signature, value);
-		final FieldVisitor fv = cv == null ? null : cv.visitField(access, name, desc, signature,
-				value);
+		final FieldVisitor fv = cv == null ? null
+				: cv.visitField(access, name, desc, signature, value);
 		return new TraceFieldVisitor(fv, p);
 	}
 
@@ -196,8 +196,8 @@ public final class TraceClassVisitor extends ClassVisitor {
 	public MethodVisitor visitMethod(final int access, final String name, final String desc,
 			final String signature, final String[] exceptions) {
 		final Printer p = this.p.visitMethod(access, name, desc, signature, exceptions);
-		final MethodVisitor mv = cv == null ? null : cv.visitMethod(access, name, desc, signature,
-				exceptions);
+		final MethodVisitor mv = cv == null ? null
+				: cv.visitMethod(access, name, desc, signature, exceptions);
 		return new TraceMethodVisitor(mv, p);
 	}
 

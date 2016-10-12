@@ -27,7 +27,8 @@ public abstract class Convert {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> T convert(final Object value, final Class<T> targetClass, final T defaultValue) {
+	public static <T> T convert(final Object value, final Class<T> targetClass,
+			final T defaultValue) {
 		if (value == null) {
 			return defaultValue != null ? defaultValue : null;
 		}

@@ -9,8 +9,8 @@ import net.simpleframework.ado.ColumnMeta;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractTextDescriptionBean extends AbstractDescriptionBean implements
-		ITextBeanAware {
+public abstract class AbstractTextDescriptionBean extends AbstractDescriptionBean
+		implements ITextBeanAware {
 
 	@ColumnMeta(columnText = "#(Text)")
 	private String text;

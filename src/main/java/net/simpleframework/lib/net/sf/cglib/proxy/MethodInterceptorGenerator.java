@@ -55,11 +55,11 @@ class MethodInterceptorGenerator implements CallbackGenerator {
 			.parseSignature("java.lang.reflect.Method[] getDeclaredMethods()");
 	private static final Signature GET_DECLARING_CLASS = TypeUtils
 			.parseSignature("Class getDeclaringClass()");
-	private static final Signature FIND_METHODS = TypeUtils
-			.parseSignature("java.lang.reflect.Method[] findMethods(String[], java.lang.reflect.Method[])");
-	private static final Signature MAKE_PROXY = new Signature("create", METHOD_PROXY, new Type[] {
-			Constants.TYPE_CLASS, Constants.TYPE_CLASS, Constants.TYPE_STRING, Constants.TYPE_STRING,
-			Constants.TYPE_STRING });
+	private static final Signature FIND_METHODS = TypeUtils.parseSignature(
+			"java.lang.reflect.Method[] findMethods(String[], java.lang.reflect.Method[])");
+	private static final Signature MAKE_PROXY = new Signature("create", METHOD_PROXY,
+			new Type[] { Constants.TYPE_CLASS, Constants.TYPE_CLASS, Constants.TYPE_STRING,
+					Constants.TYPE_STRING, Constants.TYPE_STRING });
 	private static final Signature INTERCEPT = new Signature("intercept", Constants.TYPE_OBJECT,
 			new Type[] { Constants.TYPE_OBJECT, METHOD, Constants.TYPE_OBJECT_ARRAY, METHOD_PROXY });
 	private static final Signature FIND_PROXY = new Signature(FIND_PROXY_NAME, METHOD_PROXY,

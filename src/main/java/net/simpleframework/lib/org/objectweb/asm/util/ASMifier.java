@@ -142,8 +142,8 @@ public class ASMifier extends Printer {
 		}
 		if (!ok) {
 			System.err.println("Prints the ASM code to generate the given class.");
-			System.err.println("Usage: ASMifier [-debug] "
-					+ "<fully qualified class name or class file name>");
+			System.err.println(
+					"Usage: ASMifier [-debug] " + "<fully qualified class name or class file name>");
 			return;
 		}
 		ClassReader cr;
@@ -160,8 +160,8 @@ public class ASMifier extends Printer {
 	// ------------------------------------------------------------------------
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		String simpleName;
 		final int n = name.lastIndexOf('/');
 		if (n == -1) {
@@ -999,8 +999,8 @@ public class ASMifier extends Printer {
 			buf.append("ACC_NATIVE");
 			first = false;
 		}
-		if ((access & Opcodes.ACC_ENUM) != 0
-				&& ((access & ACCESS_CLASS) != 0 || (access & ACCESS_FIELD) != 0 || (access & ACCESS_INNER) != 0)) {
+		if ((access & Opcodes.ACC_ENUM) != 0 && ((access & ACCESS_CLASS) != 0
+				|| (access & ACCESS_FIELD) != 0 || (access & ACCESS_INNER) != 0)) {
 			if (!first) {
 				buf.append(" + ");
 			}

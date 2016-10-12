@@ -111,8 +111,8 @@ public class FunctionParser {
 		/**
 		 * Produce the funciton node.
 		 */
-		return new Function(name, expr, startCond, endCond - startCond, blockStart, blockEnd
-				- blockStart, fields, pCtx);
+		return new Function(name, expr, startCond, endCond - startCond, blockStart,
+				blockEnd - blockStart, fields, pCtx);
 	}
 
 	public String getName() {

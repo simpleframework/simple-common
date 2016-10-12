@@ -1334,9 +1334,9 @@ class MethodWriter extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		if (!ClassReader.ANNOTATIONS) {
 			return null;
 		}

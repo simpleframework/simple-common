@@ -66,8 +66,8 @@ public class ObjectInspector implements Command {
 
 		try {
 			final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			final ObjectOutputStream objectOut = new ObjectOutputStream(new BufferedOutputStream(
-					outStream));
+			final ObjectOutputStream objectOut = new ObjectOutputStream(
+					new BufferedOutputStream(outStream));
 			objectOut.writeObject(val);
 			objectOut.flush();
 			outStream.flush();

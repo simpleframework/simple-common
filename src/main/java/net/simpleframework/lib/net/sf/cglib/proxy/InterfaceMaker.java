@@ -82,7 +82,8 @@ public class InterfaceMaker extends AbstractClassGenerator {
 	 * Object class (e.g. <code>getClass</code>, <code>equals</code>,
 	 * <code>hashCode</code>).
 	 * 
-	 * @param class the class containing the methods to add to the interface
+	 * @param class
+	 *        the class containing the methods to add to the interface
 	 */
 	public void add(final Class clazz) {
 		final Method[] methods = clazz.getMethods();
@@ -120,8 +121,8 @@ public class InterfaceMaker extends AbstractClassGenerator {
 	@Override
 	public void generateClass(final ClassVisitor v) throws Exception {
 		final ClassEmitter ce = new ClassEmitter(v);
-		ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC | Opcodes.ACC_INTERFACE, getClassName(),
-				null, null, Constants.SOURCE_FILE);
+		ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC | Opcodes.ACC_INTERFACE, getClassName(), null,
+				null, Constants.SOURCE_FILE);
 		for (final Iterator it = signatures.keySet().iterator(); it.hasNext();) {
 			final Signature sig = (Signature) it.next();
 			final Type[] exceptions = (Type[]) signatures.get(sig);

@@ -66,15 +66,24 @@ public class NamedIncludeNode extends Node {
 		}
 
 		if (next != null) {
-			return next.eval(runtime, appender.append(String.valueOf(TemplateRuntime.execute(
-					runtime.getNamedTemplateRegistry().getNamedTemplate(
-							MVEL.eval(contents, includeStart, includeOffset, ctx, factory, String.class)),
-					ctx, factory))), ctx, factory);
+			return next
+					.eval(runtime,
+							appender
+									.append(String.valueOf(TemplateRuntime.execute(
+											runtime.getNamedTemplateRegistry()
+													.getNamedTemplate(MVEL.eval(contents, includeStart,
+															includeOffset, ctx, factory, String.class)),
+											ctx, factory))),
+							ctx, factory);
 		} else {
-			return appender.append(String.valueOf(TemplateRuntime.execute(
-					runtime.getNamedTemplateRegistry().getNamedTemplate(
-							MVEL.eval(contents, includeStart, includeOffset, ctx, factory, String.class)),
-					ctx, factory)));
+			return appender
+					.append(
+							String.valueOf(
+									TemplateRuntime.execute(
+											runtime.getNamedTemplateRegistry()
+													.getNamedTemplate(MVEL.eval(contents, includeStart,
+															includeOffset, ctx, factory, String.class)),
+											ctx, factory)));
 		}
 	}
 

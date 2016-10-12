@@ -49,7 +49,8 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * <ol>
  * 
  * <li>as long as the INVOKESPECIAL for the object initialization has not been
- * reached, every bytecode instruction is dispatched in the ctor code visitor</li>
+ * reached, every bytecode instruction is dispatched in the ctor code
+ * visitor</li>
  * 
  * <li>when this one is reached, it is only added in the ctor code visitor and a
  * JP invoke is added</li>

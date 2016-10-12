@@ -176,8 +176,8 @@ abstract public class Mixin {
 			}
 			setNamePrefix(classes[ReflectUtils.findPackageProtected(classes)].getName());
 
-			return (Mixin) super.create(KEY_FACTORY.newInstance(style, ReflectUtils.getNames(classes),
-					route));
+			return (Mixin) super.create(
+					KEY_FACTORY.newInstance(style, ReflectUtils.getNames(classes), route));
 		}
 
 		@Override

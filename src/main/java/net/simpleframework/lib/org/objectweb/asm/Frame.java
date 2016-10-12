@@ -643,7 +643,7 @@ final class Frame {
 			// stores the internal name, not the descriptor!
 			t = desc.substring(index + 1, desc.length() - 1);
 			return OBJECT | cw.addType(t);
-			// case '[':
+		// case '[':
 		default:
 			// extracts the dimensions and the element type
 			int data;

@@ -202,8 +202,8 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 	 * information (step 1,2, and 3) for SVUID computation.
 	 */
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		computeSVUID = (access & Opcodes.ACC_ENUM) == 0;
 
 		if (computeSVUID) {
@@ -234,10 +234,9 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 			 * ACC_SYNCHRONIZED, ACC_NATIVE, ACC_ABSTRACT and ACC_STRICT flags
 			 * are used.
 			 */
-			final int mods = access
-					& (Opcodes.ACC_PUBLIC | Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED
-							| Opcodes.ACC_STATIC | Opcodes.ACC_FINAL | Opcodes.ACC_SYNCHRONIZED
-							| Opcodes.ACC_NATIVE | Opcodes.ACC_ABSTRACT | Opcodes.ACC_STRICT);
+			final int mods = access & (Opcodes.ACC_PUBLIC | Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED
+					| Opcodes.ACC_STATIC | Opcodes.ACC_FINAL | Opcodes.ACC_SYNCHRONIZED
+					| Opcodes.ACC_NATIVE | Opcodes.ACC_ABSTRACT | Opcodes.ACC_STRICT);
 
 			// all non private methods
 			if ((access & Opcodes.ACC_PRIVATE) == 0) {
@@ -273,9 +272,9 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 			 */
 			if ((access & Opcodes.ACC_PRIVATE) == 0
 					|| (access & (Opcodes.ACC_STATIC | Opcodes.ACC_TRANSIENT)) == 0) {
-				final int mods = access
-						& (Opcodes.ACC_PUBLIC | Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED
-								| Opcodes.ACC_STATIC | Opcodes.ACC_FINAL | Opcodes.ACC_VOLATILE | Opcodes.ACC_TRANSIENT);
+				final int mods = access & (Opcodes.ACC_PUBLIC | Opcodes.ACC_PRIVATE
+						| Opcodes.ACC_PROTECTED | Opcodes.ACC_STATIC | Opcodes.ACC_FINAL
+						| Opcodes.ACC_VOLATILE | Opcodes.ACC_TRANSIENT);
 				svuidFields.add(new Item(name, mods, desc));
 			}
 		}
@@ -367,8 +366,8 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 				access = (svuidMethods.size() > 0) ? (access | Opcodes.ACC_ABSTRACT)
 						: (access & ~Opcodes.ACC_ABSTRACT);
 			}
-			dos.writeInt(access
-					& (Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_INTERFACE | Opcodes.ACC_ABSTRACT));
+			dos.writeInt(access & (Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_INTERFACE
+					| Opcodes.ACC_ABSTRACT));
 
 			/*
 			 * 3. The name of each interface sorted by name written using UTF

@@ -164,8 +164,8 @@ final class Tokeniser {
 		reader.mark();
 		if (reader.matchConsume("#")) { // numbered
 			final boolean isHexMode = reader.matchConsumeIgnoreCase("X");
-			final String numRef = isHexMode ? reader.consumeHexSequence() : reader
-					.consumeDigitSequence();
+			final String numRef = isHexMode ? reader.consumeHexSequence()
+					: reader.consumeDigitSequence();
 			if (numRef.length() == 0) { // didn't match anything
 				characterReferenceError("numeric reference with no numerals");
 				reader.rewindToMark();
@@ -200,8 +200,8 @@ final class Tokeniser {
 			final boolean looksLegit = reader.matches(';');
 			// found if a base named entity without a ;, or an extended entity with
 			// the ;.
-			final boolean found = (Entities.isBaseNamedEntity(nameRef) || (Entities
-					.isNamedEntity(nameRef) && looksLegit));
+			final boolean found = (Entities.isBaseNamedEntity(nameRef)
+					|| (Entities.isNamedEntity(nameRef) && looksLegit));
 
 			if (!found) {
 				reader.rewindToMark();
@@ -210,9 +210,8 @@ final class Tokeniser {
 				}
 				return null;
 			}
-			if (inAttribute
-					&& (reader.matchesLetter() || reader.matchesDigit() || reader.matchesAny('=', '-',
-							'_'))) {
+			if (inAttribute && (reader.matchesLetter() || reader.matchesDigit()
+					|| reader.matchesAny('=', '-', '_'))) {
 				// don't want that to match
 				reader.rewindToMark();
 				return null;

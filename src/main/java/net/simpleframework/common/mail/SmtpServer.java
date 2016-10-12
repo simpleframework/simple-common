@@ -38,7 +38,8 @@ public class SmtpServer implements SendMailSessionProvider {
 		this(host, DEFAULT_SMTP_PORT, authenticator);
 	}
 
-	public SmtpServer(final String host, final int port, final String username, final String password) {
+	public SmtpServer(final String host, final int port, final String username,
+			final String password) {
 		this(host, port, new SimpleAuthenticator(username, password));
 	}
 

@@ -19,8 +19,8 @@ import net.simpleframework.common.JsonUtils;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings({ "serial", "unchecked" })
-public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>> implements Map<String, T>,
-		Serializable {
+public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>>
+		implements Map<String, T>, Serializable {
 	private Map<String, T> kv;
 
 	/* 设置插入的null值 */

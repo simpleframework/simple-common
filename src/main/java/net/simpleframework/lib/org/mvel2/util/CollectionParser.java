@@ -154,8 +154,9 @@ public class CollectionParser {
 				 * Sub-parse nested collections.
 				 */
 				final Object o = new CollectionParser(newType).parseCollection(property,
-						(st = cursor) + 1, (cursor = balancedCapture(property, st, end, property[st]))
-								- st - 1, subcompile, colType, pCtx);
+						(st = cursor) + 1,
+						(cursor = balancedCapture(property, st, end, property[st])) - st - 1, subcompile,
+						colType, pCtx);
 
 				if (type == MAP) {
 					map.put(curr, o);
@@ -266,8 +267,9 @@ public class CollectionParser {
 					.getKnownEgressType();
 			if (r != null && !isAssignableFrom(colType, r)
 					&& (isStrongType() || !DataConversion.canConvert(r, colType))) {
-				throw new CompileException("expected type: " + colType.getName() + "; but found: "
-						+ r.getName(), property, cursor);
+				throw new CompileException(
+						"expected type: " + colType.getName() + "; but found: " + r.getName(), property,
+						cursor);
 			}
 		}
 	}

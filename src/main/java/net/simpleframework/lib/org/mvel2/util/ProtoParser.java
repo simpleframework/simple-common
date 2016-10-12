@@ -84,8 +84,9 @@ public class ProtoParser {
 									start);
 						}
 
-						final FunctionParser parser = new FunctionParser(new String(expr, start, cursor
-								- start), cursor, endOffset, expr, 0, pCtx, null);
+						final FunctionParser parser = new FunctionParser(
+								new String(expr, start, cursor - start), cursor, endOffset, expr, 0, pCtx,
+								null);
 
 						proto.declareReceiver(parser.getName(), parser.parse());
 						cursor = parser.getCursor() + 1;
@@ -99,8 +100,8 @@ public class ProtoParser {
 			}
 
 			if (cursor > endOffset) {
-				throw new CompileException("unexpected end of statement in proto declaration: "
-						+ protoName, expr, start);
+				throw new CompileException(
+						"unexpected end of statement in proto declaration: " + protoName, expr, start);
 			}
 
 			switch (expr[cursor]) {
@@ -298,14 +299,16 @@ public class ProtoParser {
 				while (cursor > last && ParseTools.isIdentifierPart(expr[cursor])) {
 					cursor--;
 				}
-				while (cursor > last && (ParseTools.isWhitespace(expr[cursor]) || expr[cursor] == ';')) {
+				while (cursor > last
+						&& (ParseTools.isWhitespace(expr[cursor]) || expr[cursor] == ';')) {
 					cursor--;
 				}
 
 				if (cursor != last) {
 					throw new CompileException(
 							"unresolved reference (possible illegal forward-reference?): "
-									+ ProtoParser.getNextUnresolvedWaiting(), expr, proto.getCursorStart());
+									+ ProtoParser.getNextUnresolvedWaiting(),
+							expr, proto.getCursorStart());
 				}
 			}
 		}

@@ -48,7 +48,8 @@ public class MapVariableResolverFactory extends BaseVariableResolverFactory {
 		this.nextFactory = nextFactory;
 	}
 
-	public MapVariableResolverFactory(final Map<String, Object> variables, final boolean cachingSafe) {
+	public MapVariableResolverFactory(final Map<String, Object> variables,
+			final boolean cachingSafe) {
 		this.variables = variables;
 	}
 
@@ -66,7 +67,8 @@ public class MapVariableResolverFactory extends BaseVariableResolverFactory {
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		VariableResolver vr;
 		try {
 			vr = getVariableResolver(name);
@@ -75,8 +77,8 @@ public class MapVariableResolverFactory extends BaseVariableResolverFactory {
 		}
 
 		if (vr != null && vr.getType() != null) {
-			throw new RuntimeException("variable already defined within scope: " + vr.getType() + " "
-					+ name);
+			throw new RuntimeException(
+					"variable already defined within scope: " + vr.getType() + " " + name);
 		} else {
 			addResolver(name, vr = new MapVariableResolver(variables, name, type)).setValue(value);
 			return vr;

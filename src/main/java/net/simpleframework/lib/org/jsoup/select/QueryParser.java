@@ -14,7 +14,8 @@ import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
  */
 class QueryParser {
 	private final static String[] combinators = { ",", ">", "+", "~", " " };
-	private static final String[] AttributeEvals = new String[] { "=", "!=", "^=", "$=", "*=", "~=" };
+	private static final String[] AttributeEvals = new String[] { "=", "!=", "^=", "$=", "*=",
+			"~=" };
 
 	private final TokenQueue tq;
 	private final String query;
@@ -105,17 +106,17 @@ class QueryParser {
 		// for most combinators: change the current eval into an AND of the
 		// current eval and the new eval
 		if (combinator == '>') {
-			currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.ImmediateParent(
-					currentEval));
+			currentEval = new CombiningEvaluator.And(newEval,
+					new StructuralEvaluator.ImmediateParent(currentEval));
 		} else if (combinator == ' ') {
-			currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.Parent(
-					currentEval));
+			currentEval = new CombiningEvaluator.And(newEval,
+					new StructuralEvaluator.Parent(currentEval));
 		} else if (combinator == '+') {
 			currentEval = new CombiningEvaluator.And(newEval,
 					new StructuralEvaluator.ImmediatePreviousSibling(currentEval));
 		} else if (combinator == '~') {
-			currentEval = new CombiningEvaluator.And(newEval, new StructuralEvaluator.PreviousSibling(
-					currentEval));
+			currentEval = new CombiningEvaluator.And(newEval,
+					new StructuralEvaluator.PreviousSibling(currentEval));
 		} else if (combinator == ',') { // group or.
 			CombiningEvaluator.Or or;
 			if (currentEval instanceof CombiningEvaluator.Or) {
@@ -267,7 +268,8 @@ class QueryParser {
 			} else if (cq.matchChomp("*=")) {
 				evals.add(new Evaluator.AttributeWithValueContaining(key, cq.remainder()));
 			} else if (cq.matchChomp("~=")) {
-				evals.add(new Evaluator.AttributeWithValueMatching(key, Pattern.compile(cq.remainder())));
+				evals.add(
+						new Evaluator.AttributeWithValueMatching(key, Pattern.compile(cq.remainder())));
 			} else {
 				throw new Selector.SelectorParseException(
 						"Could not parse attribute query '%s': unexpected token at '%s'", query,
@@ -294,8 +296,8 @@ class QueryParser {
 	}
 
 	// pseudo selectors :first-child, :last-child, :nth-child, ...
-	private static final Pattern NTH_AB = Pattern.compile(
-			"((\\+|-)?(\\d+)?)n(\\s*(\\+|-)?\\s*\\d+)?", Pattern.CASE_INSENSITIVE);
+	private static final Pattern NTH_AB = Pattern
+			.compile("((\\+|-)?(\\d+)?)n(\\s*(\\+|-)?\\s*\\d+)?", Pattern.CASE_INSENSITIVE);
 	private static final Pattern NTH_B = Pattern.compile("(\\+|-)?(\\d+)");
 
 	private void cssNthChild(final boolean backwards, final boolean ofType) {

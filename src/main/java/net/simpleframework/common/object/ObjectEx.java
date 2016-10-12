@@ -24,7 +24,8 @@ public abstract class ObjectEx {
 		return ObjectFactory.singleton(beanClass, listeners);
 	}
 
-	public static Object singleton(final String className, final IObjectCreatorListener... listeners) {
+	public static Object singleton(final String className,
+			final IObjectCreatorListener... listeners) {
 		return ObjectFactory.singleton(className, listeners);
 	}
 

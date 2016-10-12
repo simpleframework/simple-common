@@ -53,8 +53,8 @@ public class VersionDetector {
 			ver = "2.0";
 			Class.forName("javax.servlet.RequestDispatcher");
 			ver = "2.1";
-			Class.forName("javax.servlet.http.HttpServletResponse").getDeclaredField(
-					"SC_EXPECTATION_FAILED");
+			Class.forName("javax.servlet.http.HttpServletResponse")
+					.getDeclaredField("SC_EXPECTATION_FAILED");
 			ver = "2.2";
 			Class.forName("javax.servlet.Filter");
 			ver = "2.3";

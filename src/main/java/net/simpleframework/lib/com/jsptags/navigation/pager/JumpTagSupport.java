@@ -31,8 +31,8 @@ public abstract class JumpTagSupport extends PageTagSupport {
 
 	public final void setUnless(final String value) throws JspException {
 		if (!(value == null || CURRENT.equals(value) || INDEXED.equals(value))) {
-			throw new JspTagException("value for attribute \"unless\" "
-					+ "must be either \"current\" or \"indexed\".");
+			throw new JspTagException(
+					"value for attribute \"unless\" " + "must be either \"current\" or \"indexed\".");
 		}
 		unless = value;
 	}

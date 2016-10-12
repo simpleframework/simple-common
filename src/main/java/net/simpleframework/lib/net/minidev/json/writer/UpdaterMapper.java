@@ -65,8 +65,8 @@ public class UpdaterMapper<T> extends JsonReaderI<T> {
 	 * add a value in an array json object.
 	 */
 	@Override
-	public void addValue(final Object current, final Object value) throws ParseException,
-			IOException {
+	public void addValue(final Object current, final Object value)
+			throws ParseException, IOException {
 		// if (obj != null)
 		mapper.addValue(current, value);
 	}

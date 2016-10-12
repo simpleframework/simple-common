@@ -340,7 +340,8 @@ public class ClassReader {
 					copyBootstrapMethods(classWriter, items2, buf);
 				}
 				nameType = items[readUnsignedShort(index + 2)];
-				item.set(readUTF8(nameType, buf), readUTF8(nameType + 2, buf), readUnsignedShort(index));
+				item.set(readUTF8(nameType, buf), readUTF8(nameType + 2, buf),
+						readUnsignedShort(index));
 				break;
 			// case ClassWriter.STR:
 			// case ClassWriter.CLASS:
@@ -429,9 +430,8 @@ public class ClassReader {
 	 *         if an exception occurs during reading.
 	 */
 	public ClassReader(final String name) throws IOException {
-		this(
-				readClass(ClassLoader.getSystemResourceAsStream(name.replace('.', '/') + ".class"),
-						true));
+		this(readClass(ClassLoader.getSystemResourceAsStream(name.replace('.', '/') + ".class"),
+				true));
 	}
 
 	/**
@@ -636,15 +636,15 @@ public class ClassReader {
 		if (ANNOTATIONS && tanns != 0) {
 			for (int i = readUnsignedShort(tanns), v = tanns + 2; i > 0; --i) {
 				v = readAnnotationTarget(context, v);
-				v = readAnnotationValues(v + 2, c, true, classVisitor.visitTypeAnnotation(
-						context.typeRef, context.typePath, readUTF8(v, c), true));
+				v = readAnnotationValues(v + 2, c, true, classVisitor
+						.visitTypeAnnotation(context.typeRef, context.typePath, readUTF8(v, c), true));
 			}
 		}
 		if (ANNOTATIONS && itanns != 0) {
 			for (int i = readUnsignedShort(itanns), v = itanns + 2; i > 0; --i) {
 				v = readAnnotationTarget(context, v);
-				v = readAnnotationValues(v + 2, c, true, classVisitor.visitTypeAnnotation(
-						context.typeRef, context.typePath, readUTF8(v, c), false));
+				v = readAnnotationValues(v + 2, c, true, classVisitor
+						.visitTypeAnnotation(context.typeRef, context.typePath, readUTF8(v, c), false));
 			}
 		}
 
@@ -1475,8 +1475,8 @@ public class ClassReader {
 						}
 					}
 				}
-				mv.visitLocalVariable(readUTF8(u + 4, c), readUTF8(u + 6, c), vsignature,
-						labels[start], labels[start + length], index);
+				mv.visitLocalVariable(readUTF8(u + 4, c), readUTF8(u + 6, c), vsignature, labels[start],
+						labels[start + length], index);
 				u += 10;
 			}
 		}
@@ -1486,9 +1486,9 @@ public class ClassReader {
 			for (int i = 0; i < tanns.length; ++i) {
 				if ((readByte(tanns[i]) >> 1) == (0x40 >> 1)) {
 					int v = readAnnotationTarget(context, tanns[i]);
-					v = readAnnotationValues(v + 2, c, true, mv.visitLocalVariableAnnotation(
-							context.typeRef, context.typePath, context.start, context.end, context.index,
-							readUTF8(v, c), true));
+					v = readAnnotationValues(v + 2, c, true,
+							mv.visitLocalVariableAnnotation(context.typeRef, context.typePath,
+									context.start, context.end, context.index, readUTF8(v, c), true));
 				}
 			}
 		}
@@ -1496,9 +1496,9 @@ public class ClassReader {
 			for (int i = 0; i < itanns.length; ++i) {
 				if ((readByte(itanns[i]) >> 1) == (0x40 >> 1)) {
 					int v = readAnnotationTarget(context, itanns[i]);
-					v = readAnnotationValues(v + 2, c, true, mv.visitLocalVariableAnnotation(
-							context.typeRef, context.typePath, context.start, context.end, context.index,
-							readUTF8(v, c), false));
+					v = readAnnotationValues(v + 2, c, true,
+							mv.visitLocalVariableAnnotation(context.typeRef, context.typePath,
+									context.start, context.end, context.index, readUTF8(v, c), false));
 				}
 			}
 		}
@@ -1981,7 +1981,8 @@ public class ClassReader {
 	 *        where the parsed stack map frame must be stored.
 	 * @return the offset of the first byte following the parsed frame.
 	 */
-	private int readFrame(int stackMap, final boolean zip, final boolean unzip, final Context frame) {
+	private int readFrame(int stackMap, final boolean zip, final boolean unzip,
+			final Context frame) {
 		final char[] c = frame.buffer;
 		final Label[] labels = frame.labels;
 		int tag;

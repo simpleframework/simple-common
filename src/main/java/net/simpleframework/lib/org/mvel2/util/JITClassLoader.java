@@ -24,7 +24,8 @@ public class JITClassLoader extends ClassLoader implements MVELClassLoader {
 	}
 
 	@Override
-	public Class<?> defineClassX(final String className, final byte[] b, final int off, final int len) {
+	public Class<?> defineClassX(final String className, final byte[] b, final int off,
+			final int len) {
 		return super.defineClass(className, b, off, len);
 	}
 }

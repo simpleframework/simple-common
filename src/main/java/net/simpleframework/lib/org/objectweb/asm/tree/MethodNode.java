@@ -106,7 +106,7 @@ public class MethodNode extends MethodVisitor {
 	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label visible
 	 */
@@ -117,7 +117,7 @@ public class MethodNode extends MethodVisitor {
 	 * list of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label invisible
 	 */
@@ -164,7 +164,7 @@ public class MethodNode extends MethodVisitor {
 	 * {@link AbstractInsnNode} objects.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             AbstractInsnNode
 	 * @label instructions
 	 */
@@ -175,7 +175,7 @@ public class MethodNode extends MethodVisitor {
 	 * {@link TryCatchBlockNode} objects.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TryCatchBlockNode
 	 */
 	public List<TryCatchBlockNode> tryCatchBlocks;
@@ -195,7 +195,7 @@ public class MethodNode extends MethodVisitor {
 	 * {@link LocalVariableNode} objects. May be <tt>null</tt>
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             LocalVariableNode
 	 */
 	public List<LocalVariableNode> localVariables;
@@ -272,8 +272,8 @@ public class MethodNode extends MethodVisitor {
 	 * @throws IllegalStateException
 	 *         If a subclass calls this constructor.
 	 */
-	public MethodNode(final int access, final String name, final String desc,
-			final String signature, final String[] exceptions) {
+	public MethodNode(final int access, final String name, final String desc, final String signature,
+			final String[] exceptions) {
 		this(Opcodes.ASM5, access, name, desc, signature, exceptions);
 		if (getClass() != MethodNode.class) {
 			throw new IllegalStateException();
@@ -574,9 +574,9 @@ public class MethodNode extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		final LocalVariableAnnotationNode an = new LocalVariableAnnotationNode(typeRef, typePath,
 				getLabelNodes(start), getLabelNodes(end), index, desc);
 		if (visible) {
@@ -692,7 +692,8 @@ public class MethodNode extends MethodVisitor {
 					}
 				}
 			}
-			if (visibleLocalVariableAnnotations != null && visibleLocalVariableAnnotations.size() > 0) {
+			if (visibleLocalVariableAnnotations != null
+					&& visibleLocalVariableAnnotations.size() > 0) {
 				throw new RuntimeException();
 			}
 			if (invisibleLocalVariableAnnotations != null
@@ -809,8 +810,8 @@ public class MethodNode extends MethodVisitor {
 			for (i = 0; i < n; ++i) {
 				visibleLocalVariableAnnotations.get(i).accept(mv, true);
 			}
-			n = invisibleLocalVariableAnnotations == null ? 0 : invisibleLocalVariableAnnotations
-					.size();
+			n = invisibleLocalVariableAnnotations == null ? 0
+					: invisibleLocalVariableAnnotations.size();
 			for (i = 0; i < n; ++i) {
 				invisibleLocalVariableAnnotations.get(i).accept(mv, false);
 			}

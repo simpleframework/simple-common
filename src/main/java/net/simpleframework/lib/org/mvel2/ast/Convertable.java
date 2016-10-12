@@ -20,10 +20,8 @@ public class Convertable extends ASTNode {
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
 		final Object o = stmt.getReducedValueAccelerated(ctx, thisValue, factory);
-		return o != null
-				&& DataConversion
-						.canConvert((Class) clsStmt.getReducedValueAccelerated(ctx, thisValue, factory),
-								o.getClass());
+		return o != null && DataConversion.canConvert(
+				(Class) clsStmt.getReducedValueAccelerated(ctx, thisValue, factory), o.getClass());
 
 	}
 

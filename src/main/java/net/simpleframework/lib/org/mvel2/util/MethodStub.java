@@ -67,9 +67,8 @@ public class MethodStub implements StaticStub {
 	}
 
 	@Override
-	public Object call(final Object ctx, final Object thisCtx,
-			final VariableResolverFactory factory, final Object[] parameters)
-			throws IllegalAccessException, InvocationTargetException {
+	public Object call(final Object ctx, final Object thisCtx, final VariableResolverFactory factory,
+			final Object[] parameters) throws IllegalAccessException, InvocationTargetException {
 		return method.invoke(ctx, parameters);
 	}
 }

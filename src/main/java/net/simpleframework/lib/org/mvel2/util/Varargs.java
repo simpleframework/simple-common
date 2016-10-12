@@ -9,8 +9,8 @@ public class Varargs {
 		if (!isVarArgs) {
 			return args;
 		}
-		final Object lastArgument = args.length > 0 ? args[args.length - 1] : Array.newInstance(
-				parameterTypes[parameterTypes.length - 1].getComponentType(), 0);
+		final Object lastArgument = args.length > 0 ? args[args.length - 1]
+				: Array.newInstance(parameterTypes[parameterTypes.length - 1].getComponentType(), 0);
 		if (parameterTypes.length == args.length
 				&& (lastArgument == null || lastArgument.getClass().isArray())) {
 			return args;

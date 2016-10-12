@@ -30,7 +30,8 @@ public class StaticVarAccessor implements AccessorNode {
 	Field field;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			if (nextNode != null) {
 				return nextNode.getValue(field.get(null), elCtx, vars);

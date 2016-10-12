@@ -33,8 +33,8 @@ public class Or extends BooleanNode {
 	@Override
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		return (((Boolean) left.getReducedValueAccelerated(ctx, thisValue, factory)) || ((Boolean) right
-				.getReducedValueAccelerated(ctx, thisValue, factory)));
+		return (((Boolean) left.getReducedValueAccelerated(ctx, thisValue, factory))
+				|| ((Boolean) right.getReducedValueAccelerated(ctx, thisValue, factory)));
 	}
 
 	@Override

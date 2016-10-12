@@ -42,7 +42,8 @@ public class CompessorMapper extends JsonReaderI<CompessorMapper> {
 		return obj instanceof CompessorMapper;
 	}
 
-	public CompessorMapper(final JsonReader base, final Appendable out, final JSONStyle compression) {
+	public CompessorMapper(final JsonReader base, final Appendable out,
+			final JSONStyle compression) {
 		this(base, out, compression, null);
 		// isRoot = true;
 	}

@@ -36,8 +36,8 @@ public abstract class HtmlSimulate {
 		try {
 			eval(ClassUtils.getResourceAsString(HtmlSimulate.class, "env.rhino.1.2.js"),
 					"env.rhino.1.2");
-			eval(IoUtils.getStringFromInputStream(new URL("http://code.jquery.com/jquery-1.7.2.min.js")
-					.openStream()), "jquery");
+			eval(IoUtils.getStringFromInputStream(
+					new URL("http://code.jquery.com/jquery-1.7.2.min.js").openStream()), "jquery");
 		} catch (final Throwable e) {
 			log.error(e);
 		}
@@ -68,8 +68,8 @@ public abstract class HtmlSimulate {
 			// "parser.utils.js")), "parser.utils");
 			// System.out.println(scope.get("oUrl", scope));
 
-			System.out.println(htmlToHtml(ClassUtils.getResourceAsString(HtmlSimulate.class,
-					"test_case.html")));
+			System.out.println(
+					htmlToHtml(ClassUtils.getResourceAsString(HtmlSimulate.class, "test_case.html")));
 
 			// System.out
 			// .println(urlToHtml("http://localhost:9090/dtproject/demo/com-sansoft-project-biaozhun-MyBiaozhunPage"));

@@ -63,7 +63,8 @@ public class FilePart extends Part {
 	 *            if an input or output exception has occurred.
 	 */
 	FilePart(final String name, final ServletInputStream in, final String boundary,
-			final String contentType, final String fileName, final String filePath) throws IOException {
+			final String contentType, final String fileName, final String filePath)
+			throws IOException {
 		super(name);
 		this.fileName = fileName;
 		this.filePath = filePath;

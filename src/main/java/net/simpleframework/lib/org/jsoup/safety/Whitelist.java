@@ -111,7 +111,7 @@ public class Whitelist {
 	 * <p>
 	 * This whitelist allows a fuller range of text nodes:
 	 * <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
-     ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
+	  ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
 	 * appropriate attributes.
 	 * </p>
 	 * <p>
@@ -126,10 +126,9 @@ public class Whitelist {
 	 * @return whitelist
 	 */
 	public static Whitelist basic() {
-		return new Whitelist()
-				.addTags("a", "b", "blockquote", "br", "cite", "code", "dd", "dl", "dt", "em", "i",
-						"li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub", "sup",
-						"u", "ul")
+		return new Whitelist().addTags("a", "b", "blockquote", "br", "cite", "code", "dd", "dl", "dt",
+				"em", "i", "li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub",
+				"sup", "u", "ul")
 
 				.addAttributes("a", "href").addAttributes("blockquote", "cite")
 				.addAttributes("q", "cite")
@@ -159,8 +158,8 @@ public class Whitelist {
 	/**
 	 * This whitelist allows a full range of text and structural body HTML:
 	 * <code>a, b, blockquote, br, caption, cite,
-     code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
-     sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
+	  code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
+	  sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
 	 * <p>
 	 * Links do not have an enforced <code>rel=nofollow</code> attribute, but you
 	 * can add that if desired.
@@ -169,11 +168,10 @@ public class Whitelist {
 	 * @return whitelist
 	 */
 	public static Whitelist relaxed() {
-		return new Whitelist()
-				.addTags("a", "b", "blockquote", "br", "caption", "cite", "code", "col", "colgroup",
-						"dd", "div", "dl", "dt", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i", "img",
-						"li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub", "sup",
-						"table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul")
+		return new Whitelist().addTags("a", "b", "blockquote", "br", "caption", "cite", "code", "col",
+				"colgroup", "dd", "div", "dl", "dt", "em", "h1", "h2", "h3", "h4", "h5", "h6", "i",
+				"img", "li", "ol", "p", "pre", "q", "small", "span", "strike", "strong", "sub", "sup",
+				"table", "tbody", "td", "tfoot", "th", "thead", "tr", "u", "ul")
 
 				.addAttributes("a", "href", "title").addAttributes("blockquote", "cite")
 				.addAttributes("col", "span", "width").addAttributes("colgroup", "span", "width")

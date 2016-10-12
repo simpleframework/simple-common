@@ -42,15 +42,15 @@ public class AccessFieldTransformer extends ClassEmitterTransformer {
 		final String property = TypeUtils.upperFirst(callback.getPropertyName(getClassType(), name));
 		if (property != null) {
 			CodeEmitter e;
-			e = begin_method(Opcodes.ACC_PUBLIC, new Signature("get" + property, type,
-					Constants.TYPES_EMPTY), null);
+			e = begin_method(Opcodes.ACC_PUBLIC,
+					new Signature("get" + property, type, Constants.TYPES_EMPTY), null);
 			e.load_this();
 			e.getfield(name);
 			e.return_value();
 			e.end_method();
 
-			e = begin_method(Opcodes.ACC_PUBLIC, new Signature("set" + property, Type.VOID_TYPE,
-					new Type[] { type }), null);
+			e = begin_method(Opcodes.ACC_PUBLIC,
+					new Signature("set" + property, Type.VOID_TYPE, new Type[] { type }), null);
 			e.load_this();
 			e.load_arg(0);
 			e.putfield(name);

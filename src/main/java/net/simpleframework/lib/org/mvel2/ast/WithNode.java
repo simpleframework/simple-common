@@ -90,7 +90,8 @@ public class WithNode extends BlockNode implements NestedStatement {
 	}
 
 	public static ParmValuePair[] compileWithExpressions(final char[] block, final int start,
-			final int offset, final String nestParm, final Class egressType, final ParserContext pCtx) {
+			final int offset, final String nestParm, final Class egressType,
+			final ParserContext pCtx) {
 		/**
 		 *
 		 * MAINTENANCE NOTE: AN INTERPRETED MODE VERSION OF THIS CODE IS
@@ -170,8 +171,8 @@ public class WithNode extends BlockNode implements NestedStatement {
 									.append(new String(block, _st, _end - _st)).toString();
 						}
 
-						parms.add(new ParmValuePair(null, (ExecutableStatement) subCompileExpression(
-								expr, pCtx), egressType, pCtx));
+						parms.add(new ParmValuePair(null,
+								(ExecutableStatement) subCompileExpression(expr, pCtx), egressType, pCtx));
 
 					} catch (final CompileException e) {
 						e.setCursor(_st + (e.getCursor() - (e.getExpr().length - offset)));
@@ -183,17 +184,19 @@ public class WithNode extends BlockNode implements NestedStatement {
 					_st = ++i;
 				} else {
 					if (nestParm == null) {
-						throw new CompileException("operative assignment not possible here", block, start);
+						throw new CompileException("operative assignment not possible here", block,
+								start);
 					}
 
 					try {
-						parms.add(new ParmValuePair(parm,
-								oper != -1 ? (ExecutableStatement) subCompileExpression(
+						parms.add(new ParmValuePair(parm, oper != -1
+								? (ExecutableStatement) subCompileExpression(
 										createShortFormOperativeAssignment(nestParm + "." + parm, block, _st,
-												_end - _st, oper), pCtx)
+												_end - _st, oper),
+										pCtx)
 								// or
-										: (ExecutableStatement) subCompileExpression(block, _st, _end - _st,
-												pCtx), egressType, pCtx));
+								: (ExecutableStatement) subCompileExpression(block, _st, _end - _st, pCtx),
+								egressType, pCtx));
 					} catch (final CompileException e) {
 						e.setCursor(_st + (e.getCursor() - (e.getExpr().length - offset)));
 						e.setExpr(block);
@@ -222,20 +225,22 @@ public class WithNode extends BlockNode implements NestedStatement {
 								.append(new String(block, _st, _end - _st)).toString();
 					}
 
-					parms.add(new ParmValuePair(null, (ExecutableStatement) subCompileExpression(expr,
-							pCtx), egressType, pCtx));
+					parms.add(new ParmValuePair(null,
+							(ExecutableStatement) subCompileExpression(expr, pCtx), egressType, pCtx));
 				} else {
 					if (nestParm == null) {
-						throw new CompileException("operative assignment not possible here", block, start);
+						throw new CompileException("operative assignment not possible here", block,
+								start);
 					}
 
-					parms.add(new ParmValuePair(parm,
-							oper != -1 ? (ExecutableStatement) subCompileExpression(
+					parms.add(new ParmValuePair(parm, oper != -1
+							? (ExecutableStatement) subCompileExpression(
 									createShortFormOperativeAssignment(nestParm + "." + parm, block, _st,
-											_end - _st, oper), pCtx)
+											_end - _st, oper),
+									pCtx)
 							// or
-									: (ExecutableStatement) subCompileExpression(block, _st, _end - _st,
-											pCtx), egressType, pCtx));
+							: (ExecutableStatement) subCompileExpression(block, _st, _end - _st, pCtx),
+							egressType, pCtx));
 				}
 			} catch (final CompileException e) {
 				throw ErrorUtil.rewriteIfNeeded(e, block, _st);

@@ -9,7 +9,8 @@ import net.simpleframework.common.ID;
  *         http://www.simpleframework.net
  */
 @SuppressWarnings("serial")
-public abstract class AbstractUserAwareBean extends AbstractDateAwareBean implements IUserAwareBean {
+public abstract class AbstractUserAwareBean extends AbstractDateAwareBean
+		implements IUserAwareBean {
 
 	/* 创建人 */
 	private ID userId;

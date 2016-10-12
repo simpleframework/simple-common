@@ -111,7 +111,9 @@ public class Element extends Node {
 
 	/**
 	 * Test if this element is a block-level element. (E.g. {@code <div> == true}
-	 * or an inline element {@code <p> == false}).
+	 * or an inline element {@code 
+	 * <p>
+	 *  == false}).
 	 * 
 	 * @return true if block, false if not (and thus inline)
 	 */
@@ -263,7 +265,8 @@ public class Element extends Node {
 	 *         <li>{@code p.ownText()} = {@code "One Three Four"}</li>
 	 *         <li>{@code p.children()} = {@code Elements[<span>, <br>
 	 * ]}</li>
-	 *         <li>{@code p.childNodes()} = {@code List<Node>["One ", <span>, " Three ",
+	 *         <li>{@code p.childNodes()} =
+	 *         {@code List<Node>["One ", <span>, " Three ",
 	 * <br>
 	 * , " Four"]}</li>
 	 *         <li>{@code p.textNodes()} =
@@ -1061,7 +1064,11 @@ public class Element extends Node {
 	 * Gets the combined text of this element and all its children. Whitespace is
 	 * normalized and trimmed.
 	 * <p>
-	 * For example, given HTML {@code <p>Hello  <b>there</b> now! </p>},
+	 * For example, given HTML {@code 
+	 * <p>
+	 * Hello  <b>there</b> now! 
+	 * </p>
+	 * },
 	 * {@code p.text()} returns {@code "Hello there now!"}
 	 *
 	 * @return unencoded text, or empty string if none.
@@ -1096,7 +1103,11 @@ public class Element extends Node {
 	 * Gets the text owned by this element only; does not get the combined text
 	 * of all children.
 	 * <p>
-	 * For example, given HTML {@code <p>Hello <b>there</b> now!</p>},
+	 * For example, given HTML {@code 
+	 * <p>
+	 * Hello <b>there</b> now!
+	 * </p>
+	 * },
 	 * {@code p.ownText()} returns {@code "Hello now!"}, whereas {@code p.text()}
 	 * returns {@code "Hello there now!"}. Note that the text within the
 	 * {@code b} element is not returned, as it is not a direct child of the
@@ -1144,8 +1155,8 @@ public class Element extends Node {
 		// needless stack searches
 		if (node != null && node instanceof Element) {
 			final Element element = (Element) node;
-			return element.tag.preserveWhitespace() || element.parent() != null
-					&& element.parent().tag.preserveWhitespace();
+			return element.tag.preserveWhitespace()
+					|| element.parent() != null && element.parent().tag.preserveWhitespace();
 		}
 		return false;
 	}
@@ -1379,9 +1390,8 @@ public class Element extends Node {
 	@Override
 	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
-		if (out.prettyPrint()
-				&& (tag.formatAsBlock() || (parent() != null && parent().tag().formatAsBlock()) || out
-						.outline())) {
+		if (out.prettyPrint() && (tag.formatAsBlock()
+				|| (parent() != null && parent().tag().formatAsBlock()) || out.outline())) {
 			if (accum instanceof StringBuilder) {
 				if (((StringBuilder) accum).length() > 0) {
 					indent(accum, depth, out);
@@ -1410,9 +1420,9 @@ public class Element extends Node {
 	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
 		if (!(childNodes.isEmpty() && tag.isSelfClosing())) {
-			if (out.prettyPrint()
-					&& (!childNodes.isEmpty() && (tag.formatAsBlock() || (out.outline() && (childNodes
-							.size() > 1 || (childNodes.size() == 1 && !(childNodes.get(0) instanceof TextNode))))))) {
+			if (out.prettyPrint() && (!childNodes.isEmpty()
+					&& (tag.formatAsBlock() || (out.outline() && (childNodes.size() > 1
+							|| (childNodes.size() == 1 && !(childNodes.get(0) instanceof TextNode))))))) {
 				indent(accum, depth, out);
 			}
 			accum.append("</").append(tagName()).append(">");
@@ -1421,9 +1431,16 @@ public class Element extends Node {
 
 	/**
 	 * Retrieves the element's inner HTML. E.g. on a {@code <div>} with one empty
-	 * {@code <p>}, would return {@code <p></p>}. (Whereas {@link #outerHtml()}
+	 * {@code 
+	 * <p>
+	 * }, would return {@code 
+	 * <p>
+	 * </p>
+	 * }. (Whereas {@link #outerHtml()}
 	 * would return {@code <div>
-	 * <p></p>
+	 * 
+	<p>
+	</p>
 	 * </div>}.)
 	 * 
 	 * @return String of HTML.

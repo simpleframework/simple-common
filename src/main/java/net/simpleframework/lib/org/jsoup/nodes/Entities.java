@@ -99,8 +99,8 @@ public class Entities {
 	// this method is ugly, and does a lot. but other breakups cause rescanning
 	// and stringbuilder generations
 	static void escape(final Appendable accum, final String string,
-			final Document.OutputSettings out, final boolean inAttribute,
-			final boolean normaliseWhite, final boolean stripLeadingWhite) throws IOException {
+			final Document.OutputSettings out, final boolean inAttribute, final boolean normaliseWhite,
+			final boolean stripLeadingWhite) throws IOException {
 
 		boolean lastWasWhite = false;
 		boolean reachedNonWhite = false;
@@ -283,8 +283,8 @@ public class Entities {
 		}
 
 		for (final Map.Entry entry : properties.entrySet()) {
-			final Character val = Character.valueOf((char) Integer.parseInt((String) entry.getValue(),
-					16));
+			final Character val = Character
+					.valueOf((char) Integer.parseInt((String) entry.getValue(), 16));
 			final String name = (String) entry.getKey();
 			entities.put(name, val);
 		}

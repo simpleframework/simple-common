@@ -62,7 +62,8 @@ public class IfNode extends Node {
 	@Override
 	public Object eval(final TemplateRuntime runtime, final TemplateOutputStream appender,
 			final Object ctx, final VariableResolverFactory factory) {
-		if (cEnd == cStart || MVEL.eval(contents, cStart, cEnd - cStart, ctx, factory, Boolean.class)) {
+		if (cEnd == cStart
+				|| MVEL.eval(contents, cStart, cEnd - cStart, ctx, factory, Boolean.class)) {
 			return trueNode.eval(runtime, appender, ctx, factory);
 		}
 		return next != null ? next.eval(runtime, appender, ctx, factory) : null;

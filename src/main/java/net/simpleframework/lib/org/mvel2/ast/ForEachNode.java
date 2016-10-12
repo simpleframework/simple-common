@@ -147,8 +147,8 @@ public class ForEachNode extends BlockNode {
 			enforceTypeSafety(itemType, getBaseComponentType(iterCond.getClass()));
 		}
 
-		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart,
-				blockOffset, pCtx);
+		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart, blockOffset,
+				pCtx);
 
 		Object v;
 		if (iterCond instanceof Iterable) {
@@ -186,8 +186,9 @@ public class ForEachNode extends BlockNode {
 				}
 			}
 		} else {
-			throw new CompileException("non-iterable type: "
-					+ (iterCond != null ? iterCond.getClass().getName() : "null"), expr, start);
+			throw new CompileException(
+					"non-iterable type: " + (iterCond != null ? iterCond.getClass().getName() : "null"),
+					expr, start);
 		}
 
 		return null;

@@ -45,8 +45,8 @@ public class LongCH implements ConversionHandler {
 	@Override
 	public Object convertFrom(final Object in) {
 		if (!CNV.containsKey(in.getClass())) {
-			throw new ConversionException("cannot convert type: " + in.getClass().getName() + " to: "
-					+ Long.class.getName());
+			throw new ConversionException(
+					"cannot convert type: " + in.getClass().getName() + " to: " + Long.class.getName());
 		}
 		return CNV.get(in.getClass()).convert(in);
 	}

@@ -221,8 +221,8 @@ public class JarOptimizer {
 					}
 					o = HIERARCHY.get(o);
 				}
-				System.out.println("WARNING: " + owner + ' ' + member + " called in " + this.owner
-						+ ' ' + method + " is not defined in JDK 1.3 API");
+				System.out.println("WARNING: " + owner + ' ' + member + " called in " + this.owner + ' '
+						+ method + " is not defined in JDK 1.3 API");
 			}
 		}
 	}

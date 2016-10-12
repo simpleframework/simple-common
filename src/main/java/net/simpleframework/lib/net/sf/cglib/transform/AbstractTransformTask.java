@@ -90,8 +90,8 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 	 * @throws IOException
 	 * @throws MalformedURLException
 	 */
-	private void processClassFile(final File file) throws Exception, FileNotFoundException,
-			IOException, MalformedURLException {
+	private void processClassFile(final File file)
+			throws Exception, FileNotFoundException, IOException, MalformedURLException {
 
 		final ClassReader reader = getClassReader(file);
 		final String name[] = ClassNameReader.getClassInfo(reader);
@@ -102,8 +102,9 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 			if (verbose) {
 				log("processing " + file.toURI());
 			}
-			new TransformingClassGenerator(new ClassReaderGenerator(getClassReader(file),
-					attributes(), getFlags()), t).generateClass(w);
+			new TransformingClassGenerator(
+					new ClassReaderGenerator(getClassReader(file), attributes(), getFlags()), t)
+							.generateClass(w);
 			final FileOutputStream fos = new FileOutputStream(file);
 			try {
 				fos.write(w.toByteArray());
@@ -142,8 +143,8 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 			log("processing " + file.toURI());
 		}
 
-		final File tempFile = File.createTempFile(file.getName(), null, new File(file
-				.getAbsoluteFile().getParent()));
+		final File tempFile = File.createTempFile(file.getName(), null,
+				new File(file.getAbsoluteFile().getParent()));
 		try {
 
 			final ZipInputStream zip = new ZipInputStream(new FileInputStream(file));
@@ -234,8 +235,9 @@ abstract public class AbstractTransformTask extends AbstractProcessTask {
 			if (verbose) {
 				log("processing " + name[0]);
 			}
-			new TransformingClassGenerator(new ClassReaderGenerator(new ClassReader(
-					new ByteArrayInputStream(bytes)), attributes(), getFlags()), t).generateClass(w);
+			new TransformingClassGenerator(new ClassReaderGenerator(
+					new ClassReader(new ByteArrayInputStream(bytes)), attributes(), getFlags()), t)
+							.generateClass(w);
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out.write(w.toByteArray());
 			return out.toByteArray();

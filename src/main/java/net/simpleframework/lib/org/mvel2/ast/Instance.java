@@ -18,8 +18,8 @@ public class Instance extends ASTNode {
 	@Override
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		return ((Class) clsStmt.getReducedValueAccelerated(ctx, thisValue, factory)).isInstance(stmt
-				.getReducedValueAccelerated(ctx, thisValue, factory));
+		return ((Class) clsStmt.getReducedValueAccelerated(ctx, thisValue, factory))
+				.isInstance(stmt.getReducedValueAccelerated(ctx, thisValue, factory));
 	}
 
 	@Override

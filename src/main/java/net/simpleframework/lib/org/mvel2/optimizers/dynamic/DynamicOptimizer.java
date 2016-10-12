@@ -53,8 +53,8 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	}
 
 	private static void _init() {
-		setMVELClassLoader(classLoader = new DynamicClassLoader(currentThread()
-				.getContextClassLoader(), maximumTenure));
+		setMVELClassLoader(classLoader = new DynamicClassLoader(
+				currentThread().getContextClassLoader(), maximumTenure));
 	}
 
 	public static void enforceTenureLimit() {
@@ -75,7 +75,8 @@ public class DynamicOptimizer extends AbstractOptimizer implements AccessorOptim
 	@Override
 	public Accessor optimizeAccessor(final ParserContext pCtx, final char[] property,
 			final int start, final int offset, final Object ctx, final Object thisRef,
-			final VariableResolverFactory factory, final boolean rootThisRef, final Class ingressType) {
+			final VariableResolverFactory factory, final boolean rootThisRef,
+			final Class ingressType) {
 		readLock.lock();
 		try {
 			pCtx.optimizationNotify();

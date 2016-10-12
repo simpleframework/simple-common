@@ -47,7 +47,8 @@ public class ListAccessorNest implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (nextNode != null) {
 			return nextNode.getValue(((List) ctx).get((Integer) index.getValue(ctx, elCtx, vars)),
 					elCtx, vars);

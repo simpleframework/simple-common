@@ -56,7 +56,8 @@ public class StaticMethodImportResolverFactory extends BaseVariableResolverFacto
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		return null;
 	}
 

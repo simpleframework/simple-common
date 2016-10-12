@@ -27,8 +27,8 @@ import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolver;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
-public class TypeInjectionResolverFactoryImpl extends MapVariableResolverFactory implements
-		TypeInjectionResolverFactory {
+public class TypeInjectionResolverFactoryImpl extends MapVariableResolverFactory
+		implements TypeInjectionResolverFactory {
 	public TypeInjectionResolverFactoryImpl() {
 		this.variables = new HashMap();
 	}
@@ -39,8 +39,9 @@ public class TypeInjectionResolverFactoryImpl extends MapVariableResolverFactory
 
 	public TypeInjectionResolverFactoryImpl(final ParserContext ctx,
 			final VariableResolverFactory nextVariableResolverFactory) {
-		super(ctx.getImports(), ctx.hasFunction() ? new TypeInjectionResolverFactoryImpl(
-				ctx.getFunctions(), nextVariableResolverFactory) : nextVariableResolverFactory);
+		super(ctx.getImports(), ctx.hasFunction()
+				? new TypeInjectionResolverFactoryImpl(ctx.getFunctions(), nextVariableResolverFactory)
+				: nextVariableResolverFactory);
 	}
 
 	public TypeInjectionResolverFactoryImpl(final Map<String, Object> variables,
@@ -65,7 +66,8 @@ public class TypeInjectionResolverFactoryImpl extends MapVariableResolverFactory
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		if (nextFactory == null) {
 			nextFactory = new MapVariableResolverFactory(new HashMap());
 		}

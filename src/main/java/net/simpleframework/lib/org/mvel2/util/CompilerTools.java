@@ -135,8 +135,8 @@ public class CompilerTools {
 							inv = false;
 
 							if (!reduc) {
-								bo = new BinaryOperation(tkOp.getOperator(), tk, new LiteralNode(
-										p_inv ? signNumber(val) : val, pCtx), pCtx);
+								bo = new BinaryOperation(tkOp.getOperator(), tk,
+										new LiteralNode(p_inv ? signNumber(val) : val, pCtx), pCtx);
 							} else {
 								tk2 = new LiteralNode(val, pCtx);
 							}
@@ -161,8 +161,8 @@ public class CompilerTools {
 						if (PTABLE[op2] > PTABLE[op]) {
 							// bo.setRightMost(new BinaryOperation(op2,
 							// bo.getRightMost(), astLinkedList.nextNode(), pCtx));
-							bo.setRightMost(boOptimize(op2, bo.getRightMost(), astLinkedList.nextNode(),
-									pCtx));
+							bo.setRightMost(
+									boOptimize(op2, bo.getRightMost(), astLinkedList.nextNode(), pCtx));
 						} else if (bo.getOperation() != op2 && PTABLE[op] == PTABLE[op2]) {
 							if (PTABLE[bo.getOperation()] == PTABLE[op2]) {
 								// bo = new BinaryOperation(op2, bo,
@@ -205,8 +205,8 @@ public class CompilerTools {
 					optimizeOperator(tkOp.getOperator(), tk, tkOp, astLinkedList, optimizedAst, pCtx);
 				} else if (!tkOp.isAssignment() && !tkOp.isOperator()
 						&& tk.getLiteralValue() instanceof Class) {
-					optimizedAst.addTokenNode(new DeclTypedVarNode(tkOp.getName(), tkOp.getExpr(), tkOp
-							.getStart(), tk.getOffset(), (Class) tk.getLiteralValue(), 0, pCtx));
+					optimizedAst.addTokenNode(new DeclTypedVarNode(tkOp.getName(), tkOp.getExpr(),
+							tkOp.getStart(), tk.getOffset(), (Class) tk.getLiteralValue(), 0, pCtx));
 				} else if (tkOp.isAssignment() && tk.getLiteralValue() instanceof Class) {
 					tk.discard();
 					optimizedAst.addTokenNode(tkOp);
@@ -370,7 +370,8 @@ public class CompilerTools {
 	 * @param compile
 	 * @return - ordered Map
 	 */
-	public static Map<String, Function> extractAllDeclaredFunctions(final CompiledExpression compile) {
+	public static Map<String, Function> extractAllDeclaredFunctions(
+			final CompiledExpression compile) {
 		final Map<String, Function> allFunctions = new LinkedHashMap<String, Function>();
 		final ASTIterator instructions = new ASTLinkedList(compile.getFirstNode());
 
@@ -411,14 +412,15 @@ public class CompilerTools {
 						+ "; but found type: " + (retType != null ? retType.getName() : "<Unknown>"),
 						new char[0], 0);
 			}
-		} else if (retType == null || !Object.class.equals(retType)
-				&& !boxPrimitive(type).isAssignableFrom(retType)) {
+		} else if (retType == null
+				|| !Object.class.equals(retType) && !boxPrimitive(type).isAssignableFrom(retType)) {
 			throw new CompileException("was expecting type: " + type.getName() + "; but found type: "
 					+ (retType != null ? retType.getName() : "<Unknown>"), new char[0], 0);
 		}
 	}
 
-	public static Class getReturnTypeFromOp(final int operation, final Class left, final Class right) {
+	public static Class getReturnTypeFromOp(final int operation, final Class left,
+			final Class right) {
 		switch (operation) {
 		case Operator.LETHAN:
 		case Operator.LTHAN:
@@ -495,8 +497,8 @@ public class CompilerTools {
 		} else if (number instanceof Short) {
 			return -((Short) number);
 		} else {
-			throw new CompileException("expected a numeric type but found: "
-					+ number.getClass().getName(), new char[0], 0);
+			throw new CompileException(
+					"expected a numeric type but found: " + number.getClass().getName(), new char[0], 0);
 		}
 	}
 

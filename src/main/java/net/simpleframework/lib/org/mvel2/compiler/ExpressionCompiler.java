@@ -85,9 +85,10 @@ public class ExpressionCompiler extends AbstractParser {
 				}
 
 				// noinspection ThrowFromFinallyBlock
-				throw new CompileException("Failed to compileShared: " + pCtx.getErrorList().size()
-						+ " compilation error(s): " + err.toString(), pCtx.getErrorList(), expr, cursor,
-						pCtx);
+				throw new CompileException(
+						"Failed to compileShared: " + pCtx.getErrorList().size()
+								+ " compilation error(s): " + err.toString(),
+						pCtx.getErrorList(), expr, cursor, pCtx);
 			}
 		}
 
@@ -144,8 +145,8 @@ public class ExpressionCompiler extends AbstractParser {
 					CompiledExpression compiled = cec.get(key);
 					Class rt = rtc.get(key);
 					if (compiled == null) {
-						final ExpressionCompiler subCompiler = new ExpressionCompiler(expr,
-								tk.getStart(), tk.getOffset(), pCtx);
+						final ExpressionCompiler subCompiler = new ExpressionCompiler(expr, tk.getStart(),
+								tk.getOffset(), pCtx);
 						compiled = subCompiler._compile();
 						rt = subCompiler.getReturnType();
 						cec.put(key, compiled);
@@ -175,12 +176,11 @@ public class ExpressionCompiler extends AbstractParser {
 						 * candidate for a compileShared-time literal
 						 * reduction.
 						 */
-						if ((tkLA = nextTokenSkipSymbols()) != null
-								&& tkLA.isLiteral()
-								&& tkOp.getOperator() < 34
-								&& ((lastOp == -1 || (lastOp < PTABLE.length && PTABLE[lastOp] < PTABLE[tkOp
-										.getOperator()])))) {
-							stk.push(tk.getLiteralValue(), tkLA.getLiteralValue(), op = tkOp.getOperator());
+						if ((tkLA = nextTokenSkipSymbols()) != null && tkLA.isLiteral()
+								&& tkOp.getOperator() < 34 && ((lastOp == -1 || (lastOp < PTABLE.length
+										&& PTABLE[lastOp] < PTABLE[tkOp.getOperator()])))) {
+							stk.push(tk.getLiteralValue(), tkLA.getLiteralValue(),
+									op = tkOp.getOperator());
 
 							/**
 							 * Reduce the token now.
@@ -225,8 +225,9 @@ public class ExpressionCompiler extends AbstractParser {
 													.addTokenNode(new LiteralNode(getStackValueResult(), pCtx));
 										}
 
-										astBuild.addTokenNode(new OperatorNode(tkOp2.getOperator(), expr, st,
-												pCtx), verify(pCtx, tkLA2));
+										astBuild.addTokenNode(
+												new OperatorNode(tkOp2.getOperator(), expr, st, pCtx),
+												verify(pCtx, tkLA2));
 										break;
 									}
 
@@ -313,7 +314,8 @@ public class ExpressionCompiler extends AbstractParser {
 
 			if (!verifyOnly) {
 				return new CompiledExpression(finalizePayload(astBuild, secondPassOptimization, pCtx),
-						pCtx.getSourceFile(), returnType, pCtx.getParserConfiguration(), literalOnly == 1);
+						pCtx.getSourceFile(), returnType, pCtx.getParserConfiguration(),
+						literalOnly == 1);
 			} else {
 				try {
 					returnType = CompilerTools.getReturnType(astBuild, pCtx.isStrongTyping());
@@ -413,8 +415,8 @@ public class ExpressionCompiler extends AbstractParser {
 						return new LiteralNode(returnType, pCtx);
 					}
 					if (propVerifier.isInput()) {
-						pCtx.addInput(tk.getAbsoluteName(), propVerifier.isDeepProperty() ? Object.class
-								: returnType);
+						pCtx.addInput(tk.getAbsoluteName(),
+								propVerifier.isDeepProperty() ? Object.class : returnType);
 					}
 
 					if (!propVerifier.isMethodCall() && !returnType.isEnum()
@@ -453,8 +455,8 @@ public class ExpressionCompiler extends AbstractParser {
 								 * We convert the literal to the proper type.
 								 */
 								try {
-									a.setValueStatement(new ExecutableLiteral(convert(
-											c.getValue(null, null), returnType)));
+									a.setValueStatement(new ExecutableLiteral(
+											convert(c.getValue(null, null), returnType)));
 									return tk;
 								} catch (final Exception e) {
 									// fall through.
@@ -469,8 +471,8 @@ public class ExpressionCompiler extends AbstractParser {
 							}
 
 							throw new CompileException("cannot assign type "
-									+ c.getKnownEgressType().getName() + " to " + returnType.getName(),
-									expr, st);
+									+ c.getKnownEgressType().getName() + " to " + returnType.getName(), expr,
+									st);
 						}
 					}
 				}

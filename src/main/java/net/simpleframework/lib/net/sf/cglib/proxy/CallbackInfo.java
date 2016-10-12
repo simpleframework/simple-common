@@ -85,8 +85,8 @@ class CallbackInfo {
 			final CallbackInfo info = CALLBACKS[i];
 			if (info.cls.isAssignableFrom(callbackType)) {
 				if (cur != null) {
-					throw new IllegalStateException("Callback implements both " + cur + " and "
-							+ info.cls);
+					throw new IllegalStateException(
+							"Callback implements both " + cur + " and " + info.cls);
 				}
 				cur = info.cls;
 				type = info.type;

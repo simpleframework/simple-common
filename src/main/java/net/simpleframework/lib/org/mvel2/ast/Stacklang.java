@@ -65,7 +65,8 @@ public class Stacklang extends BlockNode {
 			final VariableResolverFactory factory) {
 		final ExecutionStack stack = (ExecutionStack) ctx;
 
-		for (int i1 = 0, instructionListSize = instructionList.size(); i1 < instructionListSize; i1++) {
+		for (int i1 = 0, instructionListSize = instructionList
+				.size(); i1 < instructionListSize; i1++) {
 			final Instruction instruction = instructionList.get(i1);
 
 			System.out

@@ -56,8 +56,8 @@ public abstract class PagerTagSupport extends TagSupport {
 			if (pagerTag == null) {
 				pagerTag = findRequestPagerTag(PagerTag.DEFAULT_ID);
 				if (pagerTag == null) {
-					throw new JspTagException("not nested within a pager tag"
-							+ " and no pager tag found at request scope.");
+					throw new JspTagException(
+							"not nested within a pager tag" + " and no pager tag found at request scope.");
 				}
 			}
 		}

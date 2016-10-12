@@ -256,11 +256,10 @@ public class PropertyVerifier extends AbstractOptimizer {
 			}
 		}
 
-		if (pCtx != null
-				&& pCtx.getLastTypeParameters() != null
+		if (pCtx != null && pCtx.getLastTypeParameters() != null
 				&& pCtx.getLastTypeParameters().length != 0
-				&& ((Collection.class.isAssignableFrom(ctx) && !(switchStateReg = false)) || (Map.class
-						.isAssignableFrom(ctx) && (switchStateReg = true)))) {
+				&& ((Collection.class.isAssignableFrom(ctx) && !(switchStateReg = false))
+						|| (Map.class.isAssignableFrom(ctx) && (switchStateReg = true)))) {
 			final Type parm = pCtx.getLastTypeParameters()[switchStateReg ? 1 : 0];
 			pCtx.setLastTypeParameters(null);
 
@@ -281,8 +280,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 			fqcn = true;
 			resolvedExternally = false;
 			if (tryStaticMethodRef instanceof Class) {
-				classLiteral = !(MVEL.COMPILER_OPT_SUPPORT_JAVA_STYLE_CLASS_LITERALS && new String(
-						expr, end - 6, 6).equals(".class"));
+				classLiteral = !(MVEL.COMPILER_OPT_SUPPORT_JAVA_STYLE_CLASS_LITERALS
+						&& new String(expr, end - 6, 6).equals(".class"));
 				return classLiteral ? (Class) tryStaticMethodRef : Class.class;
 			} else if (tryStaticMethodRef instanceof Field) {
 				try {
@@ -307,8 +306,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 			}
 		}
 
-		if (pCtx != null && pCtx.getParserConfiguration() != null ? pCtx.getParserConfiguration()
-				.isAllowNakedMethCall() : MVEL.COMPILER_OPT_ALLOW_NAKED_METH_CALL) {
+		if (pCtx != null && pCtx.getParserConfiguration() != null
+				? pCtx.getParserConfiguration().isAllowNakedMethCall()
+				: MVEL.COMPILER_OPT_ALLOW_NAKED_METH_CALL) {
 			final Class cls = getMethod(ctx, property);
 			if (cls != Object.class) {
 				return cls;
@@ -352,7 +352,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 				if (typePos < 0) {
 					return returnGenericType(m);
 				}
-				final Type actualType = ((ParameterizedType) superType).getActualTypeArguments()[typePos];
+				final Type actualType = ((ParameterizedType) superType)
+						.getActualTypeArguments()[typePos];
 				return actualType instanceof Class ? (Class) actualType : returnGenericType(m);
 			}
 		}
@@ -363,8 +364,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 		// push return type parameters onto parser context, only if this is a
 		// parametric type
 		if (parametricReturnType instanceof ParameterizedType) {
-			pCtx.setLastTypeParameters(((ParameterizedType) parametricReturnType)
-					.getActualTypeArguments());
+			pCtx.setLastTypeParameters(
+					((ParameterizedType) parametricReturnType).getActualTypeArguments());
 			final ParameterizedType pt = (ParameterizedType) parametricReturnType;
 
 			final Type[] gpt = pt.getActualTypeArguments();
@@ -387,8 +388,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 		// push return type parameters onto parser context, only if this is a
 		// parametric type
 		if (parametricReturnType instanceof ParameterizedType) {
-			pCtx.setLastTypeParameters(((ParameterizedType) parametricReturnType)
-					.getActualTypeArguments());
+			pCtx.setLastTypeParameters(
+					((ParameterizedType) parametricReturnType).getActualTypeArguments());
 		}
 
 		if (paramTypes != null && paramTypes.containsKey(returnTypeArg)) {
@@ -423,10 +424,10 @@ public class PropertyVerifier extends AbstractOptimizer {
 		}
 
 		if (pCtx.isStrictTypeEnforcement()) {
-			if (Map.class.isAssignableFrom(property.length() != 0 ? ctx = getBeanProperty(ctx,
-					property) : ctx)) {
-				ctx = (Class) (pCtx.getLastTypeParameters().length != 0 ? pCtx.getLastTypeParameters()[1]
-						: Object.class);
+			if (Map.class.isAssignableFrom(
+					property.length() != 0 ? ctx = getBeanProperty(ctx, property) : ctx)) {
+				ctx = (Class) (pCtx.getLastTypeParameters().length != 0
+						? pCtx.getLastTypeParameters()[1] : Object.class);
 			} else if (Collection.class.isAssignableFrom(ctx)) {
 				if (pCtx.getLastTypeParameters().length == 0) {
 					ctx = Object.class;
@@ -441,8 +442,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 			} else if (ctx.isArray()) {
 				ctx = ctx.getComponentType();
 			} else if (pCtx.isStrongTyping()) {
-				throw new CompileException(
-						"unknown collection type: " + ctx + "; property=" + property, expr, start);
+				throw new CompileException("unknown collection type: " + ctx + "; property=" + property,
+						expr, start);
 			}
 		} else {
 			ctx = Object.class;
@@ -501,9 +502,11 @@ public class PropertyVerifier extends AbstractOptimizer {
 				final Function f = pCtx.getFunction(name);
 				if (f != null && f.getEgressType() != null) {
 					resolvedExternally = false;
-					f.checkArgumentCount(parseParameterList(
-							(((cursor = balancedCapture(expr, cursor, end, '(')) - st) > 1 ? ParseTools
-									.subset(expr, st + 1, cursor - st - 1) : new char[0]), 0, -1).size());
+					f.checkArgumentCount(
+							parseParameterList(
+									(((cursor = balancedCapture(expr, cursor, end, '(')) - st) > 1
+											? ParseTools.subset(expr, st + 1, cursor - st - 1) : new char[0]),
+									0, -1).size());
 
 					return f.getEgressType();
 				} else if (pCtx.hasVarOrInput("this")) {
@@ -568,9 +571,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 					for (final ErrorDetail detail : pCtx.getErrorList()) {
 						if (!errors.contains(detail)) {
 							detail.setExpr(expr);
-							detail.setCursor(new String(expr).substring(this.st).indexOf(
-									new String(subtokens.get(i)))
-									+ this.st);
+							detail.setCursor(
+									new String(expr).substring(this.st).indexOf(new String(subtokens.get(i)))
+											+ this.st);
 							detail.setColumn(0);
 							detail.setLineNumber(0);
 							detail.calcRowAndColumn();
@@ -597,8 +600,10 @@ public class PropertyVerifier extends AbstractOptimizer {
 		 * resolve it.
 		 */
 
-		if ((m = getBestCandidate(args, name, ctx, ctx.getMethods(), pCtx.isStrongTyping())) == null) {
-			if ((m = getBestCandidate(args, name, ctx, ctx.getDeclaredMethods(), pCtx.isStrongTyping())) == null) {
+		if ((m = getBestCandidate(args, name, ctx, ctx.getMethods(),
+				pCtx.isStrongTyping())) == null) {
+			if ((m = getBestCandidate(args, name, ctx, ctx.getDeclaredMethods(),
+					pCtx.isStrongTyping())) == null) {
 				final StringAppender errorBuild = new StringAppender();
 				for (int i = 0; i < args.length; i++) {
 					errorBuild.append(args[i] != null ? args[i].getName() : null);
@@ -607,7 +612,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 					}
 				}
 
-				if (("size".equals(name) || "length".equals(name)) && args.length == 0 && ctx.isArray()) {
+				if (("size".equals(name) || "length".equals(name)) && args.length == 0
+						&& ctx.isArray()) {
 					return Integer.class;
 				}
 
@@ -659,9 +665,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 				final TypeVariable[] typeVariables = ctx.getTypeParameters();
 				for (int i = 0; i < typeVariables.length; i++) {
 					final Type typeArg = pCtx.getLastTypeParameters()[i];
-					typeArgs.put(typeVariables[i].getName(),
-							typeArg instanceof Class ? (Class) pCtx.getLastTypeParameters()[i]
-									: Object.class);
+					typeArgs.put(typeVariables[i].getName(), typeArg instanceof Class
+							? (Class) pCtx.getLastTypeParameters()[i] : Object.class);
 				}
 			}
 
@@ -674,8 +679,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 			// push return type parameters onto parser context, only if this is a
 			// parametric type
 			if (parametricReturnType instanceof ParameterizedType) {
-				pCtx.setLastTypeParameters(((ParameterizedType) parametricReturnType)
-						.getActualTypeArguments());
+				pCtx.setLastTypeParameters(
+						((ParameterizedType) parametricReturnType).getActualTypeArguments());
 			}
 
 			if (paramTypes != null && paramTypes.containsKey(returnTypeArg)) {
@@ -707,8 +712,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 				scope = "<package local>";
 			}
 
-			addFatalError("the referenced method is not accessible: " + ctx.getName() + "." + name
-					+ "(" + errorBuild.toString() + ")" + " (scope: " + scope + "; required: public",
+			addFatalError(
+					"the referenced method is not accessible: " + ctx.getName() + "." + name + "("
+							+ errorBuild.toString() + ")" + " (scope: " + scope + "; required: public",
 					this.tkStart);
 		}
 

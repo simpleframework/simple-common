@@ -36,7 +36,8 @@ public class ArrayAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (nextNode != null) {
 			return nextNode.getValue(Array.get(ctx, index), elCtx, vars);
 		} else {
@@ -51,8 +52,8 @@ public class ArrayAccessor implements AccessorNode {
 				// Object, VariableResolverFactory)
 				// is a bad idea and currently there is nowhere to easily introduce
 				// pre-emptive accessor validity.
-				throw new ClassCastException("Argument of type '" + ctx.getClass()
-						+ "' is not an Array");
+				throw new ClassCastException(
+						"Argument of type '" + ctx.getClass() + "' is not an Array");
 			}
 		}
 	}

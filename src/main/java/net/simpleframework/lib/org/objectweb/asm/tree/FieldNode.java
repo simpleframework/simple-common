@@ -99,7 +99,7 @@ public class FieldNode extends FieldVisitor {
 	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label visible
 	 */
@@ -110,7 +110,7 @@ public class FieldNode extends FieldVisitor {
 	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label invisible
 	 */

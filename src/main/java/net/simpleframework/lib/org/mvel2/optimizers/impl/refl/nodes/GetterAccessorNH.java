@@ -37,13 +37,14 @@ public class GetterAccessorNH implements AccessorNode {
 	public static final Object[] EMPTY = new Object[0];
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			return nullHandle(method.getName(), method.invoke(ctx, EMPTY), ctx, elCtx, vars);
 		} catch (final IllegalArgumentException e) {
 			if (ctx != null && method.getDeclaringClass() != ctx.getClass()) {
-				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(), ctx
-						.getClass().getMethods(), true);
+				final Method o = getBestCandidate(EMPTY, method.getName(), ctx.getClass(),
+						ctx.getClass().getMethods(), true);
 				if (o != null) {
 					return executeOverrideTarget(o, ctx, elCtx, vars);
 				}
@@ -108,8 +109,9 @@ public class GetterAccessorNH implements AccessorNode {
 		} catch (final CompileException e) {
 			throw e;
 		} catch (final Exception e) {
-			throw new RuntimeException("error " + method.getName() + ": " + e.getClass().getName()
-					+ ":" + e.getMessage(), e);
+			throw new RuntimeException(
+					"error " + method.getName() + ": " + e.getClass().getName() + ":" + e.getMessage(),
+					e);
 		}
 	}
 

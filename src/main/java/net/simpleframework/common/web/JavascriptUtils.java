@@ -133,8 +133,8 @@ public abstract class JavascriptUtils implements HtmlConst {
 					new com.yahoo.platform.yui.compressor.JavaScriptCompressor(new StringReader(c), null)
 							.compress(oWriter, 200, true, false, false, false);
 				} else {
-					new com.yahoo.platform.yui.compressor.CssCompressor(new StringReader(c)).compress(
-							oWriter, 200);
+					new com.yahoo.platform.yui.compressor.CssCompressor(new StringReader(c))
+							.compress(oWriter, 200);
 				}
 			} catch (final Exception e) {
 				if (c != null) {

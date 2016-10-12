@@ -88,8 +88,8 @@ public class ClassEmitter extends ClassTransformer {
 				return access;
 			}
 		};
-		cv.visit(version, access, classInfo.getType().getInternalName(), null, classInfo
-				.getSuperType().getInternalName(), TypeUtils.toInternalNames(interfaces));
+		cv.visit(version, access, classInfo.getType().getInternalName(), null,
+				classInfo.getSuperType().getInternalName(), TypeUtils.toInternalNames(interfaces));
 		if (source != null) {
 			cv.visitSource(source, null);
 		}
@@ -192,8 +192,8 @@ public class ClassEmitter extends ClassTransformer {
 		final FieldInfo info = new FieldInfo(access, name, type, value);
 		if (existing != null) {
 			if (!info.equals(existing)) {
-				throw new IllegalArgumentException("Field \"" + name
-						+ "\" has been declared differently");
+				throw new IllegalArgumentException(
+						"Field \"" + name + "\" has been declared differently");
 			}
 		} else {
 			fieldInfo.put(name, info);
@@ -209,8 +209,8 @@ public class ClassEmitter extends ClassTransformer {
 	FieldInfo getFieldInfo(final String name) {
 		final FieldInfo field = (FieldInfo) fieldInfo.get(name);
 		if (field == null) {
-			throw new IllegalArgumentException("Field " + name + " is not declared in "
-					+ getClassType().getClassName());
+			throw new IllegalArgumentException(
+					"Field " + name + " is not declared in " + getClassType().getClassName());
 		}
 		return field;
 	}
@@ -257,8 +257,8 @@ public class ClassEmitter extends ClassTransformer {
 	}
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		begin_class(version, access, name.replace('/', '.'), TypeUtils.fromInternalName(superName),
 				TypeUtils.fromInternalNames(interfaces), null); // TODO
 	}

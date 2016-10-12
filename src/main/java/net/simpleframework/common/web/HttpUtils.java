@@ -152,7 +152,8 @@ public abstract class HttpUtils implements HtmlConst {
 		}
 	}
 
-	public static final String wrapContextPath(final HttpServletRequest httpRequest, final String url) {
+	public static final String wrapContextPath(final HttpServletRequest httpRequest,
+			final String url) {
 		final String cp = httpRequest.getContextPath();
 		if (!StringUtils.hasText(url)) {
 			return StringUtils.text(cp, "/");

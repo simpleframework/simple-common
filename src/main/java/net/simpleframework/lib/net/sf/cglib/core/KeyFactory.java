@@ -268,7 +268,8 @@ abstract public class KeyFactory {
 			e.load_this();
 			e.super_invoke_constructor();
 			e.load_this();
-			final List<FieldTypeCustomizer> fieldTypeCustomizers = getCustomizers(FieldTypeCustomizer.class);
+			final List<FieldTypeCustomizer> fieldTypeCustomizers = getCustomizers(
+					FieldTypeCustomizer.class);
 			for (int i = 0; i < parameterTypes.length; i++) {
 				final Type parameterType = parameterTypes[i];
 				Type fieldType = parameterType;
@@ -335,8 +336,8 @@ abstract public class KeyFactory {
 				}
 				e.load_this();
 				e.getfield(getFieldName(i));
-				EmitUtils
-						.append_string(e, parameterTypes[i], EmitUtils.DEFAULT_DELIMITERS, customizers);
+				EmitUtils.append_string(e, parameterTypes[i], EmitUtils.DEFAULT_DELIMITERS,
+						customizers);
 			}
 			e.invoke_virtual(Constants.TYPE_STRING_BUFFER, TO_STRING);
 			e.return_value();

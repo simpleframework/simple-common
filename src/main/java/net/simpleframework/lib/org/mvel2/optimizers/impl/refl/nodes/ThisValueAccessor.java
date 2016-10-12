@@ -26,7 +26,8 @@ public class ThisValueAccessor implements AccessorNode {
 	private AccessorNode nextNode;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (nextNode != null) {
 			return this.nextNode.getValue(elCtx, elCtx, vars);
 		} else {

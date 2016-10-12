@@ -37,7 +37,7 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
  */
 class BridgeMethodResolver {
 
-	private final Map/* <Class, Set<Signature> */declToBridge;
+	private final Map/* <Class, Set<Signature> */ declToBridge;
 
 	public BridgeMethodResolver(final Map declToBridge) {
 		this.declToBridge = declToBridge;
@@ -47,7 +47,7 @@ class BridgeMethodResolver {
 	 * Finds all bridge methods that are being called with invokespecial &
 	 * returns them.
 	 */
-	public Map/* <Signature, Signature> */resolveAll() {
+	public Map/* <Signature, Signature> */ resolveAll() {
 		final Map resolved = new HashMap();
 		for (final Iterator entryIter = declToBridge.entrySet().iterator(); entryIter.hasNext();) {
 			final Map.Entry entry = (Map.Entry) entryIter.next();
@@ -63,8 +63,8 @@ class BridgeMethodResolver {
 	}
 
 	private static class BridgedFinder extends ClassVisitor {
-		private final Map/* <Signature, Signature> */resolved;
-		private final Set/* <Signature> */eligableMethods;
+		private final Map/* <Signature, Signature> */ resolved;
+		private final Set/* <Signature> */ eligableMethods;
 
 		private Signature currentMethod = null;
 

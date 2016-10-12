@@ -49,8 +49,8 @@ public abstract class ImageUtils {
 		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		final Graphics2D g = bi.createGraphics();
 
-		final GradientPaint gp = new GradientPaint(0, 0, Color.WHITE, width, height, getRandColor(
-				120, 200), false);
+		final GradientPaint gp = new GradientPaint(0, 0, Color.WHITE, width, height,
+				getRandColor(120, 200), false);
 		g.setPaint(gp);
 		g.fillRect(0, 0, width, height);
 		for (int i = 0; i < 50; i++) {
@@ -160,9 +160,8 @@ public abstract class ImageUtils {
 				return;
 			}
 			final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
-			final BufferedImage bi = new BufferedImage(w, h,
-					sbi.getAlphaRaster() != null ? BufferedImage.TYPE_INT_ARGB
-							: BufferedImage.TYPE_INT_RGB);
+			final BufferedImage bi = new BufferedImage(w, h, sbi.getAlphaRaster() != null
+					? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 			final Graphics2D g = bi.createGraphics();
 			g.drawImage(sbi, 0, 0, w, h, null);
 			g.dispose();

@@ -349,8 +349,8 @@ public class JSONValue {
 	public static String compress(final String input, final JSONStyle style) {
 		try {
 			final StringBuilder sb = new StringBuilder();
-			new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(input, new CompessorMapper(defaultReader,
-					sb, style));
+			new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(input,
+					new CompessorMapper(defaultReader, sb, style));
 			return sb.toString();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -398,7 +398,8 @@ public class JSONValue {
 	 * @return Instance of the following: JSONObject, JSONArray, String,
 	 *         java.lang.Number, java.lang.Boolean, null
 	 */
-	public static Object parseWithException(final InputStream in) throws IOException, ParseException {
+	public static Object parseWithException(final InputStream in)
+			throws IOException, ParseException {
 		return new JSONParser(DEFAULT_PERMISSIVE_MODE).parse(in, defaultReader.DEFAULT);
 	}
 

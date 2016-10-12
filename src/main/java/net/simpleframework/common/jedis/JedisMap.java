@@ -2,6 +2,8 @@ package net.simpleframework.common.jedis;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.IoUtils;
@@ -20,11 +22,14 @@ import redis.clients.jedis.JedisPool;
 public class JedisMap extends HashMap<String, Object> {
 	private final int expire;
 
+	private final String mkey;
+
 	private JedisPool pool;
 
-	public JedisMap(final JedisPool _pool, final int _expire) {
-		expire = _expire;
+	public JedisMap(final JedisPool _pool, final String _mkey, final int _expire) {
 		pool = _pool;
+		mkey = getClass().getSimpleName() + ":" + _mkey;
+		expire = _expire;
 		try {
 			if (pool != null) {
 				pool.getResource().close();
@@ -34,8 +39,8 @@ public class JedisMap extends HashMap<String, Object> {
 		}
 	}
 
-	public JedisMap(final JedisPool _pool) {
-		this(_pool, 0);
+	public JedisMap(final JedisPool _pool, final String _key) {
+		this(_pool, _key, 0);
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public class JedisMap extends HashMap<String, Object> {
 			try {
 				jedis = pool.getResource();
 				final String sk = Convert.toString(key);
-				return IoUtils.deserialize(jedis.get(sk.getBytes()));
+				return IoUtils.deserialize(jedis.hget(mkey.getBytes(), sk.getBytes()));
 			} catch (final Exception e) {
 				log.warn(e);
 				return null;
@@ -65,11 +70,13 @@ public class JedisMap extends HashMap<String, Object> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
-				if (expire > 0) {
-					return jedis.setex(key.getBytes(), expire, IoUtils.serialize(value));
-				} else {
-					return jedis.set(key.getBytes(), IoUtils.serialize(value));
+				final byte[] sbytes = mkey.getBytes();
+				final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
+				final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
+				if (set_expire) {
+					jedis.expire(sbytes, expire);
 				}
+				return ret;
 			} catch (final IOException e) {
 				log.warn(e);
 				return null;
@@ -89,8 +96,13 @@ public class JedisMap extends HashMap<String, Object> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
+				final byte[] sbytes = mkey.getBytes();
 				final String sk = Convert.toString(key);
-				return jedis.del(sk);
+				final Long ret = jedis.hdel(sbytes, sk.getBytes());
+				if (jedis.hlen(sbytes) == 0) {
+					jedis.del(sbytes);
+				}
+				return ret;
 			} finally {
 				if (jedis != null) {
 					jedis.close();
@@ -108,7 +120,7 @@ public class JedisMap extends HashMap<String, Object> {
 			try {
 				jedis = pool.getResource();
 				final String sk = Convert.toString(key);
-				return jedis.exists(sk.getBytes());
+				return jedis.hexists(mkey.getBytes(), sk.getBytes());
 			} finally {
 				if (jedis != null) {
 					jedis.close();
@@ -116,6 +128,27 @@ public class JedisMap extends HashMap<String, Object> {
 			}
 		} else {
 			return super.containsKey(key);
+		}
+	}
+
+	@Override
+	public Set<String> keySet() {
+		if (pool != null) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				final Set<String> set = new HashSet<String>();
+				for (final byte[] k : jedis.hkeys(mkey.getBytes())) {
+					set.add(new String(k));
+				}
+				return set;
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		} else {
+			return super.keySet();
 		}
 	}
 

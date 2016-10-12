@@ -455,8 +455,8 @@ public class HttpConnection implements Connection {
 		}
 	}
 
-	public static class Request extends HttpConnection.Base<Connection.Request> implements
-			Connection.Request {
+	public static class Request extends HttpConnection.Base<Connection.Request>
+			implements Connection.Request {
 		private Proxy proxy; // nullable
 		private int timeoutMilliseconds;
 		private int maxBodySizeBytes;
@@ -616,8 +616,8 @@ public class HttpConnection implements Connection {
 		}
 	}
 
-	public static class Response extends HttpConnection.Base<Connection.Response> implements
-			Connection.Response {
+	public static class Response extends HttpConnection.Base<Connection.Response>
+			implements Connection.Response {
 		private static final int MAX_REDIRECTS = 20;
 		private static SSLSocketFactory sslSocketFactory;
 		private static final String LOCATION = "Location";
@@ -720,8 +720,8 @@ public class HttpConnection implements Connection {
 					return execute(req, res);
 				}
 				if ((status < 200 || status >= 400) && !req.ignoreHttpErrors()) {
-					throw new HttpStatusException("HTTP error fetching URL", status, req.url()
-							.toString());
+					throw new HttpStatusException("HTTP error fetching URL", status,
+							req.url().toString());
 				}
 
 				// check that we can handle the returned content type; if not, abort
@@ -772,8 +772,8 @@ public class HttpConnection implements Connection {
 																								// body
 					InputStream bodyStream = null;
 					try {
-						bodyStream = conn.getErrorStream() != null ? conn.getErrorStream() : conn
-								.getInputStream();
+						bodyStream = conn.getErrorStream() != null ? conn.getErrorStream()
+								: conn.getInputStream();
 						if (res.hasHeaderWithValue(CONTENT_ENCODING, "gzip")) {
 							bodyStream = new GZIPInputStream(bodyStream);
 						}
@@ -821,9 +821,8 @@ public class HttpConnection implements Connection {
 
 		@Override
 		public Document parse() throws IOException {
-			Validate
-					.isTrue(executed,
-							"Request must be executed (with .execute(), .get(), or .post() before parsing response");
+			Validate.isTrue(executed,
+					"Request must be executed (with .execute(), .get(), or .post() before parsing response");
 			final Document doc = DataUtil.parseByteData(byteData, charset, url.toExternalForm(),
 					req.parser());
 			byteData.rewind();
@@ -835,9 +834,8 @@ public class HttpConnection implements Connection {
 
 		@Override
 		public String body() {
-			Validate
-					.isTrue(executed,
-							"Request must be executed (with .execute(), .get(), or .post() before getting response body");
+			Validate.isTrue(executed,
+					"Request must be executed (with .execute(), .get(), or .post() before getting response body");
 			// charset gets set from header on execute, and from meta-equiv on
 			// parse. parse may not have happened yet
 			String body;
@@ -852,17 +850,16 @@ public class HttpConnection implements Connection {
 
 		@Override
 		public byte[] bodyAsBytes() {
-			Validate
-					.isTrue(executed,
-							"Request must be executed (with .execute(), .get(), or .post() before getting response body");
+			Validate.isTrue(executed,
+					"Request must be executed (with .execute(), .get(), or .post() before getting response body");
 			return byteData.array();
 		}
 
 		// set up connection defaults, and details from request
 		private static HttpURLConnection createConnection(final Connection.Request req)
 				throws IOException {
-			final HttpURLConnection conn = (HttpURLConnection) (req.proxy() == null ? req.url()
-					.openConnection() : req.url().openConnection(req.proxy()));
+			final HttpURLConnection conn = (HttpURLConnection) (req.proxy() == null
+					? req.url().openConnection() : req.url().openConnection(req.proxy()));
 
 			conn.setRequestMethod(req.method().name());
 			conn.setInstanceFollowRedirects(false); // don't rely on native
@@ -921,11 +918,13 @@ public class HttpConnection implements Connection {
 				final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
 					@Override
-					public void checkClientTrusted(final X509Certificate[] chain, final String authType) {
+					public void checkClientTrusted(final X509Certificate[] chain,
+							final String authType) {
 					}
 
 					@Override
-					public void checkServerTrusted(final X509Certificate[] chain, final String authType) {
+					public void checkServerTrusted(final X509Certificate[] chain,
+							final String authType) {
 					}
 
 					@Override
@@ -964,7 +963,8 @@ public class HttpConnection implements Connection {
 
 			// if from a redirect, map previous response cookies into this response
 			if (previousResponse != null) {
-				for (final Map.Entry<String, String> prevCookie : previousResponse.cookies().entrySet()) {
+				for (final Map.Entry<String, String> prevCookie : previousResponse.cookies()
+						.entrySet()) {
 					if (!hasCookie(prevCookie.getKey())) {
 						cookie(prevCookie.getKey(), prevCookie.getValue());
 					}
@@ -1056,8 +1056,8 @@ public class HttpConnection implements Connection {
 		private static void writePost(final Connection.Request req, final OutputStream outputStream,
 				final String bound) throws IOException {
 			final Collection<Connection.KeyVal> data = req.data();
-			final BufferedWriter w = new BufferedWriter(new OutputStreamWriter(outputStream,
-					req.postDataCharset()));
+			final BufferedWriter w = new BufferedWriter(
+					new OutputStreamWriter(outputStream, req.postDataCharset()));
 
 			if (bound != null) {
 				// boundary will be set if we're in multipart mode
@@ -1173,7 +1173,8 @@ public class HttpConnection implements Connection {
 			return new KeyVal().key(key).value(value);
 		}
 
-		public static KeyVal create(final String key, final String filename, final InputStream stream) {
+		public static KeyVal create(final String key, final String filename,
+				final InputStream stream) {
 			return new KeyVal().key(key).value(filename).inputStream(stream);
 		}
 

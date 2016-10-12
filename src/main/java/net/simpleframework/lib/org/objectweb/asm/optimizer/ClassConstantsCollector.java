@@ -53,8 +53,8 @@ public class ClassConstantsCollector extends ClassVisitor {
 	}
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		if ((access & Opcodes.ACC_DEPRECATED) != 0) {
 			cp.newUTF8("Deprecated");
 		}
@@ -186,7 +186,7 @@ public class ClassConstantsCollector extends ClassVisitor {
 				cp.newClass(exceptions[i]);
 			}
 		}
-		return new MethodConstantsCollector(
-				cv.visitMethod(access, name, desc, signature, exceptions), cp);
+		return new MethodConstantsCollector(cv.visitMethod(access, name, desc, signature, exceptions),
+				cp);
 	}
 }

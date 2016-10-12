@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-@Target({ ElementType.FIELD, ElementType.METHOD /* get */})
+@Target({ ElementType.FIELD, ElementType.METHOD /* get */ })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ColumnMeta {
 	/**

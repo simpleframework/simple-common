@@ -37,8 +37,8 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  *          Exp $
  */
 abstract public class ConstructorDelegate {
-	private static final ConstructorKey KEY_FACTORY = (ConstructorKey) KeyFactory.create(
-			ConstructorKey.class, KeyFactory.CLASS_BY_NAME);
+	private static final ConstructorKey KEY_FACTORY = (ConstructorKey) KeyFactory
+			.create(ConstructorKey.class, KeyFactory.CLASS_BY_NAME);
 
 	interface ConstructorKey {
 		public Object newInstance(String declaring, String iface);

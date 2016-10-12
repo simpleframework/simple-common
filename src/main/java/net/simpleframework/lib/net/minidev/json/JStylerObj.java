@@ -203,11 +203,13 @@ class JStylerObj {
 	}
 
 	public static boolean isSpecial(final char c) {
-		return (c == '{' || c == '[' || c == ',' || c == '}' || c == ']' || c == ':' || c == '\'' || c == '"');
+		return (c == '{' || c == '[' || c == ',' || c == '}' || c == ']' || c == ':' || c == '\''
+				|| c == '"');
 	}
 
 	public static boolean isUnicode(final char c) {
-		return ((c >= '\u0000' && c <= '\u001F') || (c >= '\u007F' && c <= '\u009F') || (c >= '\u2000' && c <= '\u20FF'));
+		return ((c >= '\u0000' && c <= '\u001F') || (c >= '\u007F' && c <= '\u009F')
+				|| (c >= '\u2000' && c <= '\u20FF'));
 	}
 
 	public static boolean isKeyword(final String s) {

@@ -216,7 +216,8 @@ public class LocaleNegotiator {
 			// So the bundle is the same as our fallback bundle.
 			// We can still have a match, but only if our locale's language
 			// matches the default locale's language.
-			else if (bundle == fallback && loc.getLanguage().equals(Locale.getDefault().getLanguage())) {
+			else if (bundle == fallback
+					&& loc.getLanguage().equals(Locale.getDefault().getLanguage())) {
 				// Another way to match
 				return bundle;
 			} else {

@@ -29,8 +29,7 @@ public abstract class TextUtils {
 					i + 1 < rawtextlen && -128 <= rawtext[i + 1] && rawtext[i + 1] <= -65) {
 				goodbytes += 2;
 				i++;
-			} else if (-32 <= rawtext[i] && rawtext[i] <= -17
-					&& // Three bytes
+			} else if (-32 <= rawtext[i] && rawtext[i] <= -17 && // Three bytes
 					i + 2 < rawtextlen && -128 <= rawtext[i + 1] && rawtext[i + 1] <= -65
 					&& -128 <= rawtext[i + 2] && rawtext[i + 2] <= -65) {
 				goodbytes += 3;

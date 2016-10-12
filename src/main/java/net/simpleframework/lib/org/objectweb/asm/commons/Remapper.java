@@ -137,8 +137,9 @@ public abstract class Remapper {
 		}
 		if (value instanceof Handle) {
 			final Handle h = (Handle) value;
-			return new Handle(h.getTag(), mapType(h.getOwner()), mapMethodName(h.getOwner(),
-					h.getName(), h.getDesc()), mapMethodDesc(h.getDesc()), h.isInterface());
+			return new Handle(h.getTag(), mapType(h.getOwner()),
+					mapMethodName(h.getOwner(), h.getName(), h.getDesc()), mapMethodDesc(h.getDesc()),
+					h.isInterface());
 		}
 		return value;
 	}

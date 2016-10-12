@@ -58,8 +58,8 @@ public class ClassRemapper extends ClassVisitor {
 	}
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		this.className = name;
 		super.visit(version, access, remapper.mapType(name), remapper.mapSignature(signature, false),
 				remapper.mapType(superName), interfaces == null ? null : remapper.mapTypes(interfaces));
@@ -82,9 +82,9 @@ public class ClassRemapper extends ClassVisitor {
 	@Override
 	public FieldVisitor visitField(final int access, final String name, final String desc,
 			final String signature, final Object value) {
-		final FieldVisitor fv = super.visitField(access,
-				remapper.mapFieldName(className, name, desc), remapper.mapDesc(desc),
-				remapper.mapSignature(signature, true), remapper.mapValue(value));
+		final FieldVisitor fv = super.visitField(access, remapper.mapFieldName(className, name, desc),
+				remapper.mapDesc(desc), remapper.mapSignature(signature, true),
+				remapper.mapValue(value));
 		return fv == null ? null : createFieldRemapper(fv);
 	}
 
@@ -110,8 +110,8 @@ public class ClassRemapper extends ClassVisitor {
 	@Override
 	public void visitOuterClass(final String owner, final String name, final String desc) {
 		super.visitOuterClass(remapper.mapType(owner),
-				name == null ? null : remapper.mapMethodName(owner, name, desc), desc == null ? null
-						: remapper.mapMethodDesc(desc));
+				name == null ? null : remapper.mapMethodName(owner, name, desc),
+				desc == null ? null : remapper.mapMethodDesc(desc));
 	}
 
 	protected FieldVisitor createFieldRemapper(final FieldVisitor fv) {

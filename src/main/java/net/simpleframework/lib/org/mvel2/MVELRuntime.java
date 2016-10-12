@@ -115,7 +115,8 @@ public class MVELRuntime {
 				case TERNARY:
 					if (!stk.popBoolean()) {
 						// noinspection StatementWithEmptyBody
-						while (tk.nextASTNode != null && !(tk = tk.nextASTNode).isOperator(TERNARY_ELSE)) {
+						while (tk.nextASTNode != null
+								&& !(tk = tk.nextASTNode).isOperator(TERNARY_ELSE)) {
 							;
 						}
 					}
@@ -141,7 +142,8 @@ public class MVELRuntime {
 					continue;
 				}
 
-				stk.push(tk.nextASTNode.getReducedValueAccelerated(ctx, ctx, variableFactory), operator);
+				stk.push(tk.nextASTNode.getReducedValueAccelerated(ctx, ctx, variableFactory),
+						operator);
 
 				try {
 					while (stk.isReduceable()) {
@@ -172,8 +174,9 @@ public class MVELRuntime {
 			return stk.peek();
 		} catch (final NullPointerException e) {
 			if (tk != null && tk.isOperator() && tk.nextASTNode != null) {
-				throw new CompileException("incomplete statement: " + tk.getName()
-						+ " (possible use of reserved keyword as identifier: " + tk.getName() + ")",
+				throw new CompileException(
+						"incomplete statement: " + tk.getName()
+								+ " (possible use of reserved keyword as identifier: " + tk.getName() + ")",
 						tk.getExpr(), tk.getStart());
 			} else {
 				throw e;

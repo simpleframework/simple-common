@@ -45,8 +45,8 @@ public class CompiledEvalNode extends Node {
 	@Override
 	public Object eval(final TemplateRuntime runtime, final TemplateOutputStream appender,
 			final Object ctx, final VariableResolverFactory factory) {
-		appender.append(String.valueOf(TemplateRuntime.eval(
-				valueOf(MVEL.executeExpression(ce, ctx, factory)), ctx, factory)));
+		appender.append(String.valueOf(
+				TemplateRuntime.eval(valueOf(MVEL.executeExpression(ce, ctx, factory)), ctx, factory)));
 		return next != null ? next.eval(runtime, appender, ctx, factory) : null;
 	}
 
@@ -57,7 +57,7 @@ public class CompiledEvalNode extends Node {
 
 	@Override
 	public String toString() {
-		return "EvalNode:" + name + "{" + (contents == null ? "" : new String(contents))
-				+ "} (start=" + begin + ";end=" + end + ")";
+		return "EvalNode:" + name + "{" + (contents == null ? "" : new String(contents)) + "} (start="
+				+ begin + ";end=" + end + ")";
 	}
 }

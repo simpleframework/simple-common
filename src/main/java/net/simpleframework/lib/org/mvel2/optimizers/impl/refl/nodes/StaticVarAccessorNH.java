@@ -32,7 +32,8 @@ public class StaticVarAccessorNH implements AccessorNode {
 	private final PropertyHandler nullHandler;
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			Object v = field.get(ctx);
 			if (v == null) {

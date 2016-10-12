@@ -166,8 +166,8 @@ public class AnalyzerAdapter extends MethodVisitor {
 	 *        the method visitor to which this adapter delegates calls. May
 	 *        be <tt>null</tt>.
 	 */
-	protected AnalyzerAdapter(final int api, final String owner, final int access,
-			final String name, final String desc, final MethodVisitor mv) {
+	protected AnalyzerAdapter(final int api, final String owner, final int access, final String name,
+			final String desc, final MethodVisitor mv) {
 		super(api, mv);
 		this.owner = owner;
 		locals = new ArrayList<Object>();
@@ -238,7 +238,8 @@ public class AnalyzerAdapter extends MethodVisitor {
 		maxStack = Math.max(maxStack, this.stack.size());
 	}
 
-	private static void visitFrameTypes(final int n, final Object[] types, final List<Object> result) {
+	private static void visitFrameTypes(final int n, final Object[] types,
+			final List<Object> result) {
 		for (int i = 0; i < n; ++i) {
 			final Object type = types[i];
 			result.add(type);

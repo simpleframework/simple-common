@@ -171,16 +171,16 @@ public class LocalVariablesSorter extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
 		final Type t = Type.getType(desc);
 		final int[] newIndex = new int[index.length];
 		for (int i = 0; i < newIndex.length; ++i) {
 			newIndex[i] = remap(index[i], t);
 		}
-		return mv
-				.visitLocalVariableAnnotation(typeRef, typePath, start, end, newIndex, desc, visible);
+		return mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, newIndex, desc,
+				visible);
 	}
 
 	@Override

@@ -28,7 +28,8 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
 public class IndexedVariableResolverFactory extends BaseVariableResolverFactory {
 
-	public IndexedVariableResolverFactory(final String[] varNames, final VariableResolver[] resolvers) {
+	public IndexedVariableResolverFactory(final String[] varNames,
+			final VariableResolver[] resolvers) {
 		this.indexedVariableNames = varNames;
 		this.indexedVariableResolvers = resolvers;
 	}
@@ -50,8 +51,8 @@ public class IndexedVariableResolverFactory extends BaseVariableResolverFactory 
 	private static VariableResolver[] createResolvers(final Object[] values, final int size) {
 		final VariableResolver[] vr = new VariableResolver[size];
 		for (int i = 0; i < size; i++) {
-			vr[i] = i >= values.length ? new SimpleValueResolver(null) : new IndexVariableResolver(i,
-					values);
+			vr[i] = i >= values.length ? new SimpleValueResolver(null)
+					: new IndexVariableResolver(i, values);
 		}
 		return vr;
 	}
@@ -79,7 +80,8 @@ public class IndexedVariableResolverFactory extends BaseVariableResolverFactory 
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		final VariableResolver vr = getResolver(name);
 		if (vr != null) {
 			vr.setValue(value);

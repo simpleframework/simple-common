@@ -50,8 +50,8 @@ public class DoUntilNode extends BlockNode {
 			pCtx.pushVariableScope();
 		}
 
-		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart,
-				blockOffset, pCtx);
+		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart, blockOffset,
+				pCtx);
 
 		if (pCtx != null) {
 			pCtx.popVariableScope();

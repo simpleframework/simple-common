@@ -132,8 +132,9 @@ public class CompiledExpression implements Serializable, ExecutableStatement {
 
 	public Object getDirectValue(final Object staticContext, final VariableResolverFactory factory) {
 		return execute(false, this, staticContext,
-				importInjectionRequired ? new ClassImportResolverFactory(parserConfiguration, factory,
-						true) : new StackResetResolverFactory(factory));
+				importInjectionRequired
+						? new ClassImportResolverFactory(parserConfiguration, factory, true)
+						: new StackResetResolverFactory(factory));
 	}
 
 	private void setupOptimizers() {

@@ -34,7 +34,8 @@ class ParallelSorterEmitter extends ClassEmitter {
 			new Type[] { Constants.TYPE_OBJECT_ARRAY });
 	private static final Signature SWAP = TypeUtils.parseSignature("void swap(int, int)");
 
-	public ParallelSorterEmitter(final ClassVisitor v, final String className, final Object[] arrays) {
+	public ParallelSorterEmitter(final ClassVisitor v, final String className,
+			final Object[] arrays) {
 		super(v);
 		begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, className, PARALLEL_SORTER, null,
 				Constants.SOURCE_FILE);

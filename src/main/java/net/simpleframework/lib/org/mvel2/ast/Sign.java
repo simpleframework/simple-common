@@ -26,8 +26,8 @@ public class Sign extends ASTNode {
 		this.fields = fields;
 
 		if ((fields & COMPILE_IMMEDIATE) != 0) {
-			stmt = (ExecutableStatement) ParseTools.subCompileExpression(expr, this.start,
-					this.offset, pCtx);
+			stmt = (ExecutableStatement) ParseTools.subCompileExpression(expr, this.start, this.offset,
+					pCtx);
 
 			egressType = stmt.getKnownEgressType();
 

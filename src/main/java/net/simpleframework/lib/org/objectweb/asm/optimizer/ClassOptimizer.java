@@ -72,8 +72,8 @@ public class ClassOptimizer extends ClassRemapper {
 	// ------------------------------------------------------------------------
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		super.visit(Opcodes.V1_2, access, name, null, superName, interfaces);
 		final int index = name.lastIndexOf('/');
 		if (index > 0) {
@@ -209,8 +209,8 @@ public class ClassOptimizer extends ClassRemapper {
 			mv.visitLabel(l1);
 			mv.visitInsn(Opcodes.ARETURN);
 			mv.visitLabel(l2);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/ClassNotFoundException",
-					"getMessage", "()Ljava/lang/String;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/ClassNotFoundException", "getMessage",
+					"()Ljava/lang/String;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, 1);
 			mv.visitTypeInsn(Opcodes.NEW, "java/lang/NoClassDefFoundError");
 			mv.visitInsn(Opcodes.DUP);

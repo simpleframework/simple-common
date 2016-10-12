@@ -27,8 +27,8 @@ import net.simpleframework.lib.net.minidev.json.reader.JsonWriter;
  * @author FangYidong<fangyidong@yahoo.com.cn>
  * @author Uriel Chemouni <uchemouni@gmail.com>
  */
-public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAwareEx,
-		JSONStreamAwareEx {
+public class JSONArray extends ArrayList<Object>
+		implements List<Object>, JSONAwareEx, JSONStreamAwareEx {
 	private static final long serialVersionUID = 9106884089231309568L;
 
 	public static String toJSONString(final List<? extends Object> list) {
@@ -47,7 +47,8 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
 	 *        Indicate compression level
 	 * @return JSON text, or "null" if list is null.
 	 */
-	public static String toJSONString(final List<? extends Object> list, final JSONStyle compression) {
+	public static String toJSONString(final List<? extends Object> list,
+			final JSONStyle compression) {
 		final StringBuilder sb = new StringBuilder();
 		try {
 			writeJSONString(list, sb, compression);

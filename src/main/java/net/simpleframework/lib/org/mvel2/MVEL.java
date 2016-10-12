@@ -54,17 +54,23 @@ public class MVEL {
 	public static final String VERSION_SUB = "0";
 	public static final String CODENAME = "liberty";
 	static boolean DEBUG_FILE = getBoolean("mvel2.debug.fileoutput");
-	static String ADVANCED_DEBUGGING_FILE = System.getProperty("mvel2.debugging.file") == null ? "mvel_debug.txt"
-			: System.getProperty("mvel2.debugging.file");
+	static String ADVANCED_DEBUGGING_FILE = System.getProperty("mvel2.debugging.file") == null
+			? "mvel_debug.txt" : System.getProperty("mvel2.debugging.file");
 	static boolean ADVANCED_DEBUG = getBoolean("mvel2.advanced_debugging");
 	static boolean WEAK_CACHE = getBoolean("mvel2.weak_caching");
 	static boolean NO_JIT = getBoolean("mvel2.disable.jit");
-	public static boolean INVOKED_METHOD_EXCEPTIONS_BUBBLE = getBoolean("mvel2.invoked_meth_exceptions_bubble");
-	public static boolean COMPILER_OPT_ALLOW_NAKED_METH_CALL = getBoolean("mvel2.compiler.allow_naked_meth_calls");
-	public static boolean COMPILER_OPT_ALLOW_OVERRIDE_ALL_PROPHANDLING = getBoolean("mvel2.compiler.allow_override_all_prophandling");
-	public static boolean COMPILER_OPT_ALLOW_RESOLVE_INNERCLASSES_WITH_DOTNOTATION = getBoolean("mvel2.compiler.allow_resolve_inner_classes_with_dotnotation");
-	public static boolean COMPILER_OPT_SUPPORT_JAVA_STYLE_CLASS_LITERALS = getBoolean("mvel2.compiler.support_java_style_class_literals");
-	public static boolean COMPILER_OPT_ALLOCATE_TYPE_LITERALS_TO_SHARED_SYMBOL_TABLE = getBoolean("mvel2.compiler.allocate_type_literals_to_shared_symbol_table");
+	public static boolean INVOKED_METHOD_EXCEPTIONS_BUBBLE = getBoolean(
+			"mvel2.invoked_meth_exceptions_bubble");
+	public static boolean COMPILER_OPT_ALLOW_NAKED_METH_CALL = getBoolean(
+			"mvel2.compiler.allow_naked_meth_calls");
+	public static boolean COMPILER_OPT_ALLOW_OVERRIDE_ALL_PROPHANDLING = getBoolean(
+			"mvel2.compiler.allow_override_all_prophandling");
+	public static boolean COMPILER_OPT_ALLOW_RESOLVE_INNERCLASSES_WITH_DOTNOTATION = getBoolean(
+			"mvel2.compiler.allow_resolve_inner_classes_with_dotnotation");
+	public static boolean COMPILER_OPT_SUPPORT_JAVA_STYLE_CLASS_LITERALS = getBoolean(
+			"mvel2.compiler.support_java_style_class_literals");
+	public static boolean COMPILER_OPT_ALLOCATE_TYPE_LITERALS_TO_SHARED_SYMBOL_TABLE = getBoolean(
+			"mvel2.compiler.allocate_type_literals_to_shared_symbol_table");
 
 	static boolean OPTIMIZER = true;
 
@@ -157,7 +163,8 @@ public class MVEL {
 	 *        The instance of the VariableResolverFactory to be used.
 	 * @return The resultant value.
 	 */
-	public static Object eval(final String expression, final VariableResolverFactory resolverFactory) {
+	public static Object eval(final String expression,
+			final VariableResolverFactory resolverFactory) {
 		return new MVELInterpretedRuntime(expression, resolverFactory).parse();
 	}
 
@@ -818,7 +825,8 @@ public class MVEL {
 	 *        The variables to be injected
 	 * @return The resultant value as a Boolean
 	 */
-	public static Boolean evalToBoolean(final String expression, final VariableResolverFactory vars) {
+	public static Boolean evalToBoolean(final String expression,
+			final VariableResolverFactory vars) {
 		return eval(expression, vars, Boolean.class);
 	}
 
@@ -1079,7 +1087,8 @@ public class MVEL {
 		return new CompiledAccExpression(expression.toCharArray(), Object.class, new ParserContext());
 	}
 
-	public static Serializable compileGetExpression(final String expression, final ParserContext ctx) {
+	public static Serializable compileGetExpression(final String expression,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression.toCharArray(), Object.class, ctx);
 	}
 
@@ -1087,7 +1096,8 @@ public class MVEL {
 		return new CompiledAccExpression(expression, Object.class, new ParserContext());
 	}
 
-	public static Serializable compileGetExpression(final char[] expression, final ParserContext ctx) {
+	public static Serializable compileGetExpression(final char[] expression,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression, Object.class, ctx);
 	}
 
@@ -1095,12 +1105,13 @@ public class MVEL {
 		return new CompiledAccExpression(expression.toCharArray(), Object.class, new ParserContext());
 	}
 
-	public static Serializable compileSetExpression(final String expression, final ParserContext ctx) {
+	public static Serializable compileSetExpression(final String expression,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression.toCharArray(), Object.class, ctx);
 	}
 
-	public static Serializable compileSetExpression(final String expression,
-			final Class ingressType, final ParserContext ctx) {
+	public static Serializable compileSetExpression(final String expression, final Class ingressType,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression.toCharArray(), ingressType, ctx);
 	}
 
@@ -1108,7 +1119,8 @@ public class MVEL {
 		return new CompiledAccExpression(expression, Object.class, new ParserContext());
 	}
 
-	public static Serializable compileSetExpression(final char[] expression, final ParserContext ctx) {
+	public static Serializable compileSetExpression(final char[] expression,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression, Object.class, ctx);
 	}
 
@@ -1117,15 +1129,15 @@ public class MVEL {
 		return new CompiledAccExpression(expression, start, offset, Object.class, ctx);
 	}
 
-	public static Serializable compileSetExpression(final char[] expression,
-			final Class ingressType, final ParserContext ctx) {
+	public static Serializable compileSetExpression(final char[] expression, final Class ingressType,
+			final ParserContext ctx) {
 		return new CompiledAccExpression(expression, ingressType, ctx);
 	}
 
 	public static void executeSetExpression(final Serializable compiledSet, final Object ctx,
 			final Object value) {
-		((CompiledAccExpression) compiledSet)
-				.setValue(ctx, ctx, new ImmutableDefaultFactory(), value);
+		((CompiledAccExpression) compiledSet).setValue(ctx, ctx, new ImmutableDefaultFactory(),
+				value);
 	}
 
 	public static void executeSetExpression(final Serializable compiledSet, final Object ctx,
@@ -1153,8 +1165,8 @@ public class MVEL {
 	@SuppressWarnings({ "unchecked" })
 	public static Object executeExpression(final Object compiledExpression, final Object ctx,
 			final Map vars) {
-		final CachingMapVariableResolverFactory factory = vars != null ? new CachingMapVariableResolverFactory(
-				vars) : null;
+		final CachingMapVariableResolverFactory factory = vars != null
+				? new CachingMapVariableResolverFactory(vars) : null;
 		try {
 			return ((ExecutableStatement) compiledExpression).getValue(ctx, factory);
 		} finally {
@@ -1195,8 +1207,8 @@ public class MVEL {
 	 * @see #compileExpression(String)
 	 */
 	public static Object executeExpression(final Object compiledExpression, final Object ctx) {
-		return ((ExecutableStatement) compiledExpression)
-				.getValue(ctx, new ImmutableDefaultFactory());
+		return ((ExecutableStatement) compiledExpression).getValue(ctx,
+				new ImmutableDefaultFactory());
 	}
 
 	/**

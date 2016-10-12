@@ -65,8 +65,8 @@ public final class TraceFieldVisitor extends FieldVisitor {
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
 			final String desc, final boolean visible) {
 		final Printer p = this.p.visitFieldTypeAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = fv == null ? null : fv.visitTypeAnnotation(typeRef, typePath,
-				desc, visible);
+		final AnnotationVisitor av = fv == null ? null
+				: fv.visitTypeAnnotation(typeRef, typePath, desc, visible);
 		return new TraceAnnotationVisitor(av, p);
 	}
 

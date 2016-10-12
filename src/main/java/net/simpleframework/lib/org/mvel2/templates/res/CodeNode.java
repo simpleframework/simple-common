@@ -67,7 +67,7 @@ public class CodeNode extends Node {
 
 	@Override
 	public String toString() {
-		return "CodeNode:" + name + "{" + (contents == null ? "" : new String(contents))
-				+ "} (start=" + begin + ";end=" + end + ")";
+		return "CodeNode:" + name + "{" + (contents == null ? "" : new String(contents)) + "} (start="
+				+ begin + ";end=" + end + ")";
 	}
 }

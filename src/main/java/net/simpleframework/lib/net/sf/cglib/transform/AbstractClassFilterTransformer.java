@@ -39,8 +39,8 @@ abstract public class AbstractClassFilterTransformer extends AbstractClassTransf
 			String superName, String[] interfaces);
 
 	@Override
-	public void visit(final int version, final int access, final String name,
-			final String signature, final String superName, final String[] interfaces) {
+	public void visit(final int version, final int access, final String name, final String signature,
+			final String superName, final String[] interfaces) {
 		target = accept(version, access, name, signature, superName, interfaces) ? pass : cv;
 		target.visit(version, access, name, signature, superName, interfaces);
 	}

@@ -45,15 +45,15 @@ public class Encoder {
 	 * This regexp is used to parse the ffmpeg output about the included
 	 * encoders/decoders.
 	 */
-	private static final Pattern ENCODER_DECODER_PATTERN = Pattern.compile(
-			"^\\s*([D ])([E ])([AVS]).{3}\\s+(.+)$", Pattern.CASE_INSENSITIVE);
+	private static final Pattern ENCODER_DECODER_PATTERN = Pattern
+			.compile("^\\s*([D ])([E ])([AVS]).{3}\\s+(.+)$", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * This regexp is used to parse the ffmpeg output about the ongoing encoding
 	 * process.
 	 */
-	private static final Pattern PROGRESS_INFO_PATTERN = Pattern.compile(
-			"\\s*(\\w+)\\s*=\\s*(\\S+)\\s*", Pattern.CASE_INSENSITIVE);
+	private static final Pattern PROGRESS_INFO_PATTERN = Pattern
+			.compile("\\s*(\\w+)\\s*=\\s*(\\S+)\\s*", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * This regexp is used to parse the ffmpeg output about the size of a video
@@ -66,8 +66,8 @@ public class Encoder {
 	 * This regexp is used to parse the ffmpeg output about the frame rate value
 	 * of a video stream.
 	 */
-	private static final Pattern FRAME_RATE_PATTERN = Pattern.compile(
-			"([\\d.]+)\\s+(?:fps|tb\\(r\\))", Pattern.CASE_INSENSITIVE);
+	private static final Pattern FRAME_RATE_PATTERN = Pattern
+			.compile("([\\d.]+)\\s+(?:fps|tb\\(r\\))", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * This regexp is used to parse the ffmpeg output about the bit rate value
@@ -711,8 +711,8 @@ public class Encoder {
 	 *         If a problems occurs during the encoding process.
 	 */
 	public void encode(final File source, File target, final EncodingAttributes attributes,
-			final EncoderProgressListener listener) throws IllegalArgumentException,
-			InputFormatException, EncoderException {
+			final EncoderProgressListener listener)
+			throws IllegalArgumentException, InputFormatException, EncoderException {
 		final String formatAttribute = attributes.getFormat();
 		final Float offsetAttribute = attributes.getOffset();
 		final Float durationAttribute = attributes.getDuration();
@@ -760,8 +760,8 @@ public class Encoder {
 			final VideoSize size = videoAttributes.getSize();
 			if (size != null) {
 				ffmpeg.addArgument("-s");
-				ffmpeg.addArgument(String.valueOf(size.getWidth()) + "x"
-						+ String.valueOf(size.getHeight()));
+				ffmpeg.addArgument(
+						String.valueOf(size.getWidth()) + "x" + String.valueOf(size.getHeight()));
 			}
 		}
 		if (audioAttributes == null) {
@@ -870,8 +870,8 @@ public class Encoder {
 											final long i1 = Long.parseLong(p1);
 											final long i2 = Long.parseLong(p2);
 											progress = (i1 * 1000L) + (i2 * 100L);
-											int perm = (int) Math.round((double) (progress * 1000L)
-													/ (double) duration);
+											int perm = (int) Math
+													.round((double) (progress * 1000L) / (double) duration);
 											if (perm > 1000) {
 												perm = 1000;
 											}

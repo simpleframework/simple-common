@@ -28,8 +28,8 @@ import net.simpleframework.lib.net.minidev.json.reader.JsonWriter;
  * @author FangYidong<fangyidong@yahoo.com.cn>
  * @author Uriel Chemouni <uchemouni@gmail.com>
  */
-public class JSONObject extends HashMap<String, Object> implements JSONAware, JSONAwareEx,
-		JSONStreamAwareEx {
+public class JSONObject extends HashMap<String, Object>
+		implements JSONAware, JSONAwareEx, JSONStreamAwareEx {
 	private static final long serialVersionUID = -503443796854799292L;
 
 	public JSONObject() {
@@ -236,8 +236,8 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware, JS
 				continue;
 			}
 			if (value1.getClass().equals(value2.getClass())) {
-				throw new RuntimeException("JSON merge can not merge two "
-						+ value1.getClass().getName() + " Object together");
+				throw new RuntimeException("JSON merge can not merge two " + value1.getClass().getName()
+						+ " Object together");
 			}
 			throw new RuntimeException("JSON merge can not merge " + value1.getClass().getName()
 					+ " with " + value2.getClass().getName());

@@ -67,7 +67,7 @@ public class TryCatchBlockNode {
 	 * .
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label visible
 	 */
@@ -79,7 +79,7 @@ public class TryCatchBlockNode {
 	 * <tt>null</tt>.
 	 * 
 	 * @associates
-	 *             net.simpleframework.lib.org.objectweb.asm.tree.
+	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
 	 *             TypeAnnotationNode
 	 * @label invisible
 	 */

@@ -130,8 +130,8 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			final List<net.simpleframework.lib.org.jsoup.nodes.Attribute> values = element
-					.attributes().asList();
+			final List<net.simpleframework.lib.org.jsoup.nodes.Attribute> values = element.attributes()
+					.asList();
 			for (final net.simpleframework.lib.org.jsoup.nodes.Attribute attribute : values) {
 				if (attribute.getKey().startsWith(keyPrefix)) {
 					return true;
@@ -293,8 +293,8 @@ public abstract class Evaluator {
 			Validate.notEmpty(value);
 
 			this.key = key.trim().toLowerCase();
-			if (value.startsWith("\"") && value.endsWith("\"") || value.startsWith("'")
-					&& value.endsWith("'")) {
+			if (value.startsWith("\"") && value.endsWith("\"")
+					|| value.startsWith("'") && value.endsWith("'")) {
 				value = value.substring(1, value.length() - 1);
 			}
 			this.value = value.trim().toLowerCase();
@@ -634,7 +634,8 @@ public abstract class Evaluator {
 		public boolean matches(final Element root, final Element element) {
 			final List<Node> family = element.childNodes();
 			for (final Node n : family) {
-				if (!(n instanceof Comment || n instanceof XmlDeclaration || n instanceof DocumentType)) {
+				if (!(n instanceof Comment || n instanceof XmlDeclaration
+						|| n instanceof DocumentType)) {
 					return false;
 				}
 			}

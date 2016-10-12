@@ -28,8 +28,8 @@ public class ExpressionNode extends Node {
 	public ExpressionNode() {
 	}
 
-	public ExpressionNode(final int begin, final String name, final char[] template,
-			final int start, final int end) {
+	public ExpressionNode(final int begin, final String name, final char[] template, final int start,
+			final int end) {
 		this.begin = begin;
 		this.name = name;
 		this.contents = template;
@@ -40,8 +40,8 @@ public class ExpressionNode extends Node {
 		// this.cEnd = end) - start - 1);
 	}
 
-	public ExpressionNode(final int begin, final String name, final char[] template,
-			final int start, final int end, final Node next) {
+	public ExpressionNode(final int begin, final String name, final char[] template, final int start,
+			final int end, final Node next) {
 		this.name = name;
 		this.begin = begin;
 		this.contents = template;

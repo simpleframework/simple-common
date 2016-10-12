@@ -102,8 +102,8 @@ public class Enhancer extends AbstractClassGenerator {
 	};
 
 	private static final Source SOURCE = new Source(Enhancer.class.getName());
-	private static final EnhancerKey KEY_FACTORY = (EnhancerKey) KeyFactory.create(
-			EnhancerKey.class, KeyFactory.HASH_ASM_TYPE, null);
+	private static final EnhancerKey KEY_FACTORY = (EnhancerKey) KeyFactory.create(EnhancerKey.class,
+			KeyFactory.HASH_ASM_TYPE, null);
 	private static final EnhancerFactoryKey FACTORY_KEY_FACTORY = (EnhancerFactoryKey) KeyFactory
 			.create(EnhancerFactoryKey.class);
 
@@ -130,11 +130,11 @@ public class Enhancer extends AbstractClassGenerator {
 			Type.VOID_TYPE, new Type[] { CALLBACK_ARRAY });
 	private static final Signature SET_STATIC_CALLBACKS = new Signature(SET_STATIC_CALLBACKS_NAME,
 			Type.VOID_TYPE, new Type[] { CALLBACK_ARRAY });
-	private static final Signature NEW_INSTANCE = new Signature("newInstance",
-			Constants.TYPE_OBJECT, new Type[] { CALLBACK_ARRAY });
+	private static final Signature NEW_INSTANCE = new Signature("newInstance", Constants.TYPE_OBJECT,
+			new Type[] { CALLBACK_ARRAY });
 	private static final Signature MULTIARG_NEW_INSTANCE = new Signature("newInstance",
-			Constants.TYPE_OBJECT, new Type[] { Constants.TYPE_CLASS_ARRAY,
-					Constants.TYPE_OBJECT_ARRAY, CALLBACK_ARRAY, });
+			Constants.TYPE_OBJECT,
+			new Type[] { Constants.TYPE_CLASS_ARRAY, Constants.TYPE_OBJECT_ARRAY, CALLBACK_ARRAY, });
 	private static final Signature SINGLE_NEW_INSTANCE = new Signature("newInstance",
 			Constants.TYPE_OBJECT, new Type[] { CALLBACK });
 	private static final Signature SET_CALLBACK = new Signature("setCallback", Type.VOID_TYPE,
@@ -445,8 +445,8 @@ public class Enhancer extends AbstractClassGenerator {
 			final Type[] check = CallbackInfo.determineTypes(callbacks);
 			for (int i = 0; i < check.length; i++) {
 				if (!check[i].equals(callbackTypes[i])) {
-					throw new IllegalStateException("Callback " + check[i] + " is not assignable to "
-							+ callbackTypes[i]);
+					throw new IllegalStateException(
+							"Callback " + check[i] + " is not assignable to " + callbackTypes[i]);
 				}
 			}
 		} else if (callbacks != null) {
@@ -475,8 +475,8 @@ public class Enhancer extends AbstractClassGenerator {
 
 	private Object createHelper() {
 		preValidate();
-		final Object key = KEY_FACTORY.newInstance(
-				(superclass != null) ? superclass.getName() : null, ReflectUtils.getNames(interfaces),
+		final Object key = KEY_FACTORY.newInstance((superclass != null) ? superclass.getName() : null,
+				ReflectUtils.getNames(interfaces),
 				filter == ALL_ZERO ? null : new WeakCacheKey<CallbackFilter>(filter), callbackTypes,
 				useFactory, interceptDuringConstruction, serialVersionUID);
 		this.currentKey = key;
@@ -588,8 +588,8 @@ public class Enhancer extends AbstractClassGenerator {
 			@Override
 			public Object transform(final Object value) {
 				final Method method = (Method) value;
-				int modifiers = Opcodes.ACC_FINAL
-						| (method.getModifiers() & ~Opcodes.ACC_ABSTRACT & ~Opcodes.ACC_NATIVE & ~Opcodes.ACC_SYNCHRONIZED);
+				int modifiers = Opcodes.ACC_FINAL | (method.getModifiers() & ~Opcodes.ACC_ABSTRACT
+						& ~Opcodes.ACC_NATIVE & ~Opcodes.ACC_SYNCHRONIZED);
 				if (forcePublic.contains(MethodWrapper.create(method))) {
 					modifiers = (modifiers & ~Opcodes.ACC_PROTECTED) | Opcodes.ACC_PUBLIC;
 				}
@@ -599,13 +599,10 @@ public class Enhancer extends AbstractClassGenerator {
 
 		final ClassEmitter e = new ClassEmitter(v);
 		if (currentData == null) {
-			e.begin_class(
-					Opcodes.V1_2,
-					Opcodes.ACC_PUBLIC,
-					getClassName(),
-					Type.getType(sc),
-					(useFactory ? TypeUtils.add(TypeUtils.getTypes(interfaces), FACTORY) : TypeUtils
-							.getTypes(interfaces)), Constants.SOURCE_FILE);
+			e.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), Type.getType(sc),
+					(useFactory ? TypeUtils.add(TypeUtils.getTypes(interfaces), FACTORY)
+							: TypeUtils.getTypes(interfaces)),
+					Constants.SOURCE_FILE);
 		} else {
 			e.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), null,
 					new Type[] { FACTORY }, Constants.SOURCE_FILE);
@@ -782,7 +779,8 @@ public class Enhancer extends AbstractClassGenerator {
 	 *        the array of callbacks to use when instances of the generated
 	 *        class are created
 	 */
-	public static void registerStaticCallbacks(final Class generatedClass, final Callback[] callbacks) {
+	public static void registerStaticCallbacks(final Class generatedClass,
+			final Callback[] callbacks) {
 		setCallbacksHelper(generatedClass, callbacks, SET_STATIC_CALLBACKS_NAME);
 	}
 
@@ -922,8 +920,8 @@ public class Enhancer extends AbstractClassGenerator {
 		} catch (final NoSuchMethodException e) {
 			throw new IllegalStateException("Object should have default constructor ", e);
 		}
-		final MethodInfo constructor = (MethodInfo) MethodInfoTransformer.getInstance().transform(
-				declaredConstructor);
+		final MethodInfo constructor = (MethodInfo) MethodInfoTransformer.getInstance()
+				.transform(declaredConstructor);
 		final CodeEmitter e = EmitUtils.begin_method(ce, constructor, Opcodes.ACC_PUBLIC);
 		e.load_this();
 		e.dup();
@@ -1152,10 +1150,8 @@ public class Enhancer extends AbstractClassGenerator {
 				throw new IllegalArgumentException(
 						"Callback filter returned an index that is too large: " + index);
 			}
-			originalModifiers.put(
-					method,
-					new Integer((actualMethod != null) ? actualMethod.getModifiers() : method
-							.getModifiers()));
+			originalModifiers.put(method, new Integer(
+					(actualMethod != null) ? actualMethod.getModifiers() : method.getModifiers()));
 			indexes.put(method, new Integer(index));
 			List group = (List) groups.get(generators[index]);
 			if (group == null) {

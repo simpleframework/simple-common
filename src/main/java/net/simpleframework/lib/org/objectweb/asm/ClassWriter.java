@@ -1445,7 +1445,8 @@ public class ClassWriter extends ClassVisitor {
 	 *        <tt>true</tt> if <tt>owner</tt> is an interface.
 	 * @return the index of a new or already existing method reference item.
 	 */
-	public int newMethod(final String owner, final String name, final String desc, final boolean itf) {
+	public int newMethod(final String owner, final String name, final String desc,
+			final boolean itf) {
 		return newMethodItem(owner, name, desc, itf).index;
 	}
 

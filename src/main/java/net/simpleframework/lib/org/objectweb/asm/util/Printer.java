@@ -656,10 +656,12 @@ public abstract class Printer {
 	 * <li>{@link Opcodes#F_APPEND} representing frame with current locals are
 	 * the same as the locals in the previous frame, except that additional
 	 * locals are defined (<code>nLocal</code> is 1, 2 or 3 and
-	 * <code>local</code> elements contains values representing added types).</li>
+	 * <code>local</code> elements contains values representing added
+	 * types).</li>
 	 * <li>{@link Opcodes#F_CHOP} representing frame with current locals are the
 	 * same as the locals in the previous frame, except that the last 1-3 locals
-	 * are absent and with the empty stack (<code>nLocals</code> is 1, 2 or 3).</li>
+	 * are absent and with the empty stack (<code>nLocals</code> is 1, 2 or
+	 * 3).</li>
 	 * <li>{@link Opcodes#F_FULL} representing complete frame data.</li>
 	 * </ul>
 	 * </li>
@@ -1088,8 +1090,8 @@ public abstract class Printer {
 	 *        <tt>true</tt> if the annotation is visible at runtime.
 	 * @return the printer
 	 */
-	public Printer visitInsnAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
+	public Printer visitInsnAnnotation(final int typeRef, final TypePath typePath, final String desc,
+			final boolean visible) {
 		throw new RuntimeException("Must be overriden");
 	}
 

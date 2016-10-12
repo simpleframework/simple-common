@@ -43,9 +43,9 @@ public class IndexedPostFixDecNode extends ASTNode {
 			final VariableResolverFactory factory) {
 		final VariableResolver vResolver = factory.getIndexedVariableResolver(register);
 		// ctx = vResolver.getValue();
-		vResolver.setValue(MathProcessor.doOperations(
-				ParseTools.resolveType(ctx = vResolver.getValue()), ctx, Operator.SUB,
-				DataTypes.INTEGER, 1));
+		vResolver
+				.setValue(MathProcessor.doOperations(ParseTools.resolveType(ctx = vResolver.getValue()),
+						ctx, Operator.SUB, DataTypes.INTEGER, 1));
 		return ctx;
 	}
 

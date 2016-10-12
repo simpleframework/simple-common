@@ -205,13 +205,13 @@ class Constant {
 		case 'T':
 			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode());
 			return;
-			// case 'G':
-			// case 'M':
-			// case 'N':
-			// case 'h' ... 'r':
+		// case 'G':
+		// case 'M':
+		// case 'N':
+		// case 'h' ... 'r':
 		default:
-			hashCode = 0x7FFFFFFF & (type + strVal1.hashCode() * strVal2.hashCode()
-					* strVal3.hashCode());
+			hashCode = 0x7FFFFFFF
+					& (type + strVal1.hashCode() * strVal2.hashCode() * strVal3.hashCode());
 		}
 	}
 
@@ -314,10 +314,10 @@ class Constant {
 			case 'y':
 				return c.strVal1.equals(strVal1) && c.strVal2.equals(strVal2)
 						&& c.objVal3.equals(objVal3) && Arrays.equals(c.objVals, objVals);
-				// case 'G':
-				// case 'M':
-				// case 'N':
-				// case 'h' ... 'r':
+			// case 'G':
+			// case 'M':
+			// case 'N':
+			// case 'h' ... 'r':
 			default:
 				return c.strVal1.equals(strVal1) && c.strVal2.equals(strVal2)
 						&& c.objVal3.equals(objVal3);

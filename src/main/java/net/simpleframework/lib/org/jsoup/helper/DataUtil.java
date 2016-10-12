@@ -90,8 +90,8 @@ public final class DataUtil {
 	 * @throws IOException
 	 *         on IO error
 	 */
-	public static Document load(final InputStream in, final String charsetName,
-			final String baseUri, final Parser parser) throws IOException {
+	public static Document load(final InputStream in, final String charsetName, final String baseUri,
+			final Parser parser) throws IOException {
 		final ByteBuffer byteData = readToByteBuffer(in);
 		return parseByteData(byteData, charsetName, baseUri, parser);
 	}
@@ -163,10 +163,8 @@ public final class DataUtil {
 				doc = null;
 			}
 		} else { // specified by content type header (or by user on file load)
-			Validate
-					.notEmpty(
-							charsetName,
-							"Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML");
+			Validate.notEmpty(charsetName,
+					"Must set charset arg to character set of file to parse. Set to null to attempt to detect from HTML");
 			docData = Charset.forName(charsetName).decode(byteData).toString();
 		}
 		if (doc == null) {

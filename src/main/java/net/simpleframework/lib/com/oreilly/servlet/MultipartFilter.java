@@ -38,8 +38,8 @@ public class MultipartFilter implements Filter {
 		// init parameter. Then look for the context tempdir.
 		dir = config.getInitParameter("uploadDir");
 		if (dir == null) {
-			final File tempdir = (File) config.getServletContext().getAttribute(
-					"javax.servlet.context.tempdir");
+			final File tempdir = (File) config.getServletContext()
+					.getAttribute("javax.servlet.context.tempdir");
 			if (tempdir != null) {
 				dir = tempdir.toString();
 			} else {

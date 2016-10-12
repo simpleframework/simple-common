@@ -170,7 +170,8 @@ public class SimpleVerifier extends BasicVerifier {
 	}
 
 	@Override
-	protected BasicValue getElementValue(final BasicValue objectArrayValue) throws AnalyzerException {
+	protected BasicValue getElementValue(final BasicValue objectArrayValue)
+			throws AnalyzerException {
 		final Type arrayType = objectArrayValue.getType();
 		if (arrayType != null) {
 			if (arrayType.getSort() == Type.ARRAY) {

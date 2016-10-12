@@ -86,12 +86,13 @@ public class CheckFieldAdapter extends FieldVisitor {
 		checkEnd();
 		final int sort = typeRef >>> 24;
 		if (sort != TypeReference.FIELD) {
-			throw new IllegalArgumentException("Invalid type reference sort 0x"
-					+ Integer.toHexString(sort));
+			throw new IllegalArgumentException(
+					"Invalid type reference sort 0x" + Integer.toHexString(sort));
 		}
 		CheckClassAdapter.checkTypeRefAndPath(typeRef, typePath);
 		CheckMethodAdapter.checkDesc(desc, false);
-		return new CheckAnnotationAdapter(super.visitTypeAnnotation(typeRef, typePath, desc, visible));
+		return new CheckAnnotationAdapter(
+				super.visitTypeAnnotation(typeRef, typePath, desc, visible));
 	}
 
 	@Override

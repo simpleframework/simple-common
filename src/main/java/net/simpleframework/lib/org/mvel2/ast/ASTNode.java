@@ -160,8 +160,8 @@ public class ASTNode implements Cloneable, Serializable {
 			setAccessor(optimizer.optimizeAccessor(pCtx, expr, start, offset, ctx, thisValue, factory,
 					true, egressType));
 		} catch (final OptimizationNotSupported ne) {
-			setAccessor((optimizer = getAccessorCompiler(SAFE_REFLECTIVE)).optimizeAccessor(pCtx,
-					expr, start, offset, ctx, thisValue, factory, true, null));
+			setAccessor((optimizer = getAccessorCompiler(SAFE_REFLECTIVE)).optimizeAccessor(pCtx, expr,
+					start, offset, ctx, thisValue, factory, true, null));
 		}
 
 		if (accessor == null) {

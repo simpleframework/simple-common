@@ -1340,9 +1340,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	 * @param method
 	 *        the method to be invoked.
 	 */
-	private void invokeInsn(final int opcode, final Type type, final Method method, final boolean itf) {
-		final String owner = type.getSort() == Type.ARRAY ? type.getDescriptor() : type
-				.getInternalName();
+	private void invokeInsn(final int opcode, final Type type, final Method method,
+			final boolean itf) {
+		final String owner = type.getSort() == Type.ARRAY ? type.getDescriptor()
+				: type.getInternalName();
 		mv.visitMethodInsn(opcode, owner, method.getName(), method.getDescriptor(), itf);
 	}
 

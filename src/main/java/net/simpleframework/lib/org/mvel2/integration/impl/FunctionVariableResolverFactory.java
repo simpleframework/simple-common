@@ -24,8 +24,8 @@ import net.simpleframework.lib.org.mvel2.ast.Function;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolver;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
-public class FunctionVariableResolverFactory extends BaseVariableResolverFactory implements
-		LocalVariableResolverFactory {
+public class FunctionVariableResolverFactory extends BaseVariableResolverFactory
+		implements LocalVariableResolverFactory {
 	private final Function function;
 
 	public FunctionVariableResolverFactory(final Function function,
@@ -70,12 +70,13 @@ public class FunctionVariableResolverFactory extends BaseVariableResolverFactory
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		final VariableResolver vr = this.variableResolvers != null ? this.variableResolvers.get(name)
 				: null;
 		if (vr != null && vr.getType() != null) {
-			throw new RuntimeException("variable already defined within scope: " + vr.getType() + " "
-					+ name);
+			throw new RuntimeException(
+					"variable already defined within scope: " + vr.getType() + " " + name);
 		} else {
 			return createIndexedVariable(variableIndexOf(name), name, value);
 		}
@@ -115,8 +116,8 @@ public class FunctionVariableResolverFactory extends BaseVariableResolverFactory
 			 * variable onto the
 			 * register table.
 			 */
-			return indexedVariableResolvers[index] = super
-					.getVariableResolver(indexedVariableNames[index]);
+			return indexedVariableResolvers[index] = super.getVariableResolver(
+					indexedVariableNames[index]);
 		}
 		return indexedVariableResolvers[index];
 	}

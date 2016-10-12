@@ -36,7 +36,8 @@ public class ListAccessor implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		if (nextNode != null) {
 			return nextNode.getValue(((List) ctx).get(index), elCtx, vars);
 		} else {

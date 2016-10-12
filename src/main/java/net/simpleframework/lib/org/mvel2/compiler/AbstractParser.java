@@ -386,8 +386,8 @@ public class AbstractParser implements Parser, Serializable {
 						lastWasLineLabel = true;
 						pCtx.visitLine(pCtx.getSourceFile(), line);
 
-						return lastNode = pCtx.setLastLineLabel(new LineLabel(pCtx.getSourceFile(), line,
-								pCtx));
+						return lastNode = pCtx
+								.setLastLineLabel(new LineLabel(pCtx.getSourceFile(), line, pCtx));
 					}
 				} else {
 					lastWasComment = lastWasLineLabel = false;
@@ -429,8 +429,9 @@ public class AbstractParser implements Parser, Serializable {
 						switch (OPERATORS.get(t)) {
 						case NEW:
 							if (!isIdentifierPart(expr[st = cursor = trimRight(cursor)])) {
-								throw new CompileException("unexpected character (expected identifier): "
-										+ expr[cursor], expr, st);
+								throw new CompileException(
+										"unexpected character (expected identifier): " + expr[cursor], expr,
+										st);
 							}
 
 							/**
@@ -449,12 +450,12 @@ public class AbstractParser implements Parser, Serializable {
 								captureToEOT();
 							}
 
-							final TypeDescriptor descr = new TypeDescriptor(expr, st, trimLeft(cursor)
-									- st, fields);
+							final TypeDescriptor descr = new TypeDescriptor(expr, st,
+									trimLeft(cursor) - st, fields);
 
 							if (pCtx.getFunctions().containsKey(descr.getClassName())) {
-								return lastNode = new NewObjectPrototype(pCtx, pCtx.getFunction(descr
-										.getClassName()));
+								return lastNode = new NewObjectPrototype(pCtx,
+										pCtx.getFunction(descr.getClassName()));
 							}
 
 							if (pCtx.hasProtoImport(descr.getClassName())) {
@@ -478,7 +479,8 @@ public class AbstractParser implements Parser, Serializable {
 									try {
 										egressType = getClassReference(pCtx, descr);
 									} catch (final ClassNotFoundException e) {
-										throw new CompileException("could not instantiate class", expr, st, e);
+										throw new CompileException("could not instantiate class", expr, st,
+												e);
 									}
 								}
 
@@ -489,10 +491,11 @@ public class AbstractParser implements Parser, Serializable {
 											egressType, pCtx);
 									st = cursor;
 									captureToEOT();
-									return lastNode = new Union(expr, st + 1, cursor, fields, lastNode, pCtx);
+									return lastNode = new Union(expr, st + 1, cursor, fields, lastNode,
+											pCtx);
 								} else {
-									return lastNode = new InlineCollectionNode(expr, st, cursor - st,
-											fields, egressType, pCtx);
+									return lastNode = new InlineCollectionNode(expr, st, cursor - st, fields,
+											egressType, pCtx);
 								}
 							} else if (((NewObjectNode) lastNode).getTypeDescr().isUndimensionedArray()) {
 								throw new CompileException("array initializer expected", expr, st);
@@ -910,13 +913,12 @@ public class AbstractParser implements Parser, Serializable {
 								if (union) {
 									captureToEOS();
 
-									return lastNode = new DeepAssignmentNode(expr, st, cursor - st, fields
-											| ASTNode.ASSIGN, pCtx);
+									return lastNode = new DeepAssignmentNode(expr, st, cursor - st,
+											fields | ASTNode.ASSIGN, pCtx);
 								} else if (lastWasIdentifier) {
 									return procTypedNode(false);
-								} else if (pCtx != null
-										&& ((idx = pCtx.variableIndexOf(t)) != -1 && (pCtx
-												.isIndexAllocation()))) {
+								} else if (pCtx != null && ((idx = pCtx.variableIndexOf(t)) != -1
+										&& (pCtx.isIndexAllocation()))) {
 									captureToEOS();
 
 									final IndexedAssignmentNode ian = new IndexedAssignmentNode(expr,
@@ -931,8 +933,8 @@ public class AbstractParser implements Parser, Serializable {
 								} else {
 									captureToEOS();
 
-									return lastNode = new AssignmentNode(expr, st, cursor - st, fields
-											| ASTNode.ASSIGN, pCtx);
+									return lastNode = new AssignmentNode(expr, st, cursor - st,
+											fields | ASTNode.ASSIGN, pCtx);
 								}
 							}
 							break CaptureLoop;
@@ -974,12 +976,9 @@ public class AbstractParser implements Parser, Serializable {
 						}
 						expectNextChar_IW('{');
 
-						return lastNode = new ThisWithNode(
-								expr,
-								st,
-								cursor - st - 1,
-								cursor + 1,
-								(cursor = balancedCaptureWithLineAccounting(expr, cursor, end, '{', pCtx) + 1) - 3,
+						return lastNode = new ThisWithNode(expr, st, cursor - st - 1, cursor + 1,
+								(cursor = balancedCaptureWithLineAccounting(expr, cursor, end, '{', pCtx)
+										+ 1) - 3,
 								fields, pCtx);
 					}
 
@@ -987,9 +986,8 @@ public class AbstractParser implements Parser, Serializable {
 						st++;
 						captureToEOT();
 
-						if (pCtx == null
-								|| (pCtx.getInterceptors() == null || !pCtx.getInterceptors().containsKey(
-										name = new String(expr, st, cursor - st)))) {
+						if (pCtx == null || (pCtx.getInterceptors() == null || !pCtx.getInterceptors()
+								.containsKey(name = new String(expr, st, cursor - st)))) {
 							throw new CompileException("reference to undefined interceptor: "
 									+ new String(expr, st, cursor - st), expr, st);
 						}
@@ -1014,18 +1012,20 @@ public class AbstractParser implements Parser, Serializable {
 							} else {
 								return lastNode = new PreFixDecNode(name, pCtx);
 							}
-						} else if ((cursor == start || (lastNode != null && (lastNode instanceof BooleanNode || lastNode
-								.isOperator()))) && !isDigit(lookAhead())) {
+						} else if ((cursor == start || (lastNode != null
+								&& (lastNode instanceof BooleanNode || lastNode.isOperator())))
+								&& !isDigit(lookAhead())) {
 
 							cursor += 1;
 							captureToEOT();
 							return new Sign(expr, st, cursor - st, fields, pCtx);
-						} else if ((cursor != start && (lastNode != null && !(lastNode instanceof BooleanNode || lastNode
-								.isOperator()))) || !isDigit(lookAhead())) {
+						} else if ((cursor != start && (lastNode != null
+								&& !(lastNode instanceof BooleanNode || lastNode.isOperator())))
+								|| !isDigit(lookAhead())) {
 
 							return createOperator(expr, st, cursor++ + 1);
-						} else if ((cursor - 1) != start || (!isDigit(expr[cursor - 1]))
-								&& isDigit(lookAhead())) {
+						} else if ((cursor - 1) != start
+								|| (!isDigit(expr[cursor - 1])) && isDigit(lookAhead())) {
 							cursor++;
 							break;
 						} else {
@@ -1106,17 +1106,17 @@ public class AbstractParser implements Parser, Serializable {
 											if (--brace < level) {
 												cursor++;
 												if (tokenContinues()) {
-													lastNode = new Fold(expr, trimRight(st + 1),
-															cursor - st - 2, fields, pCtx);
+													lastNode = new Fold(expr, trimRight(st + 1), cursor - st - 2,
+															fields, pCtx);
 													if (expr[st = cursor] == '.') {
 														st++;
 													}
 													captureToEOT();
-													return lastNode = new Union(expr, st = trimRight(st), cursor
-															- st, fields, lastNode, pCtx);
+													return lastNode = new Union(expr, st = trimRight(st),
+															cursor - st, fields, lastNode, pCtx);
 												} else {
-													return lastNode = new Fold(expr, trimRight(st + 1), cursor
-															- st - 2, fields, pCtx);
+													return lastNode = new Fold(expr, trimRight(st + 1),
+															cursor - st - 2, fields, pCtx);
 												}
 											}
 											break;
@@ -1157,15 +1157,15 @@ public class AbstractParser implements Parser, Serializable {
 						}
 
 						if (brace != 0) {
-							throw new CompileException(
-									"unbalanced braces in expression: (" + brace + "):", expr, st);
+							throw new CompileException("unbalanced braces in expression: (" + brace + "):",
+									expr, st);
 						}
 
 						tmpStart = -1;
 						if (singleToken) {
 							int _st;
-							final TypeDescriptor tDescr = new TypeDescriptor(expr,
-									_st = trimRight(st + 1), trimLeft(cursor - 1) - _st, fields);
+							final TypeDescriptor tDescr = new TypeDescriptor(expr, _st = trimRight(st + 1),
+									trimLeft(cursor - 1) - _st, fields);
 
 							Class cls;
 							try {
@@ -1199,8 +1199,8 @@ public class AbstractParser implements Parser, Serializable {
 						}
 
 						if (tmpStart != -1) {
-							return handleUnion(handleSubstatement(new Substatement(expr, tmpStart, cursor
-									- tmpStart, fields, pCtx)));
+							return handleUnion(handleSubstatement(
+									new Substatement(expr, tmpStart, cursor - tmpStart, fields, pCtx)));
 						} else {
 							return handleUnion(handleSubstatement(new Substatement(expr,
 									st = trimRight(st + 1), trimLeft(cursor - 1) - st, fields, pCtx)));
@@ -1242,10 +1242,9 @@ public class AbstractParser implements Parser, Serializable {
 
 					case '\'':
 					case '"':
-						lastNode = new LiteralNode(
-								handleStringEscapes(subset(expr, st + 1,
-										(cursor = captureStringLiteral(expr[cursor], expr, cursor, end)) - st
-												- 1)), String.class, pCtx);
+						lastNode = new LiteralNode(handleStringEscapes(subset(expr, st + 1,
+								(cursor = captureStringLiteral(expr[cursor], expr, cursor, end)) - st - 1)),
+								String.class, pCtx);
 
 						cursor++;
 
@@ -1321,7 +1320,8 @@ public class AbstractParser implements Parser, Serializable {
 
 					case '[':
 					case '{':
-						cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor], pCtx) + 1;
+						cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor], pCtx)
+								+ 1;
 						if (tokenContinues()) {
 							lastNode = new InlineCollectionNode(expr, st, cursor - st, fields, pCtx);
 							st = cursor;
@@ -1332,7 +1332,8 @@ public class AbstractParser implements Parser, Serializable {
 
 							return lastNode = new Union(expr, st, cursor - st, fields, lastNode, pCtx);
 						} else {
-							return lastNode = new InlineCollectionNode(expr, st, cursor - st, fields, pCtx);
+							return lastNode = new InlineCollectionNode(expr, st, cursor - st, fields,
+									pCtx);
 						}
 
 					default:
@@ -1488,8 +1489,8 @@ public class AbstractParser implements Parser, Serializable {
 				try {
 					return lastNode = new LiteralNode(typeDescriptor.getClassReference(pCtx), pCtx);
 				} catch (final ClassNotFoundException e) {
-					throw new CompileException("could not resolve class: "
-							+ typeDescriptor.getClassName(), expr, st);
+					throw new CompileException(
+							"could not resolve class: " + typeDescriptor.getClassName(), expr, st);
 				}
 			}
 		}
@@ -1526,13 +1527,13 @@ public class AbstractParser implements Parser, Serializable {
 				captureToEOS();
 
 				if (decl) {
-					splitAccumulator.add(new DeclTypedVarNode(new String(expr, st, cursor - st), expr,
-							st, cursor - st, (Class) lastNode.getLiteralValue(), fields | ASTNode.ASSIGN,
-							pCtx));
+					splitAccumulator.add(
+							new DeclTypedVarNode(new String(expr, st, cursor - st), expr, st, cursor - st,
+									(Class) lastNode.getLiteralValue(), fields | ASTNode.ASSIGN, pCtx));
 				} else {
 					captureToEOS();
-					splitAccumulator.add(new TypedVarNode(expr, st, cursor - st - 1, fields
-							| ASTNode.ASSIGN, (Class) lastNode.getLiteralValue(), pCtx));
+					splitAccumulator.add(new TypedVarNode(expr, st, cursor - st - 1,
+							fields | ASTNode.ASSIGN, (Class) lastNode.getLiteralValue(), pCtx));
 				}
 			} else if (lastNode instanceof Proto) {
 				captureToEOS();
@@ -1540,8 +1541,8 @@ public class AbstractParser implements Parser, Serializable {
 					splitAccumulator.add(new DeclProtoVarNode(new String(expr, st, cursor - st),
 							(Proto) lastNode, fields | ASTNode.ASSIGN, pCtx));
 				} else {
-					splitAccumulator.add(new ProtoVarNode(expr, st, cursor - st,
-							fields | ASTNode.ASSIGN, (Proto) lastNode, pCtx));
+					splitAccumulator.add(new ProtoVarNode(expr, st, cursor - st, fields | ASTNode.ASSIGN,
+							(Proto) lastNode, pCtx));
 				}
 			}
 
@@ -1551,11 +1552,11 @@ public class AbstractParser implements Parser, Serializable {
 				if (stk.peek() instanceof Class) {
 					captureToEOS();
 					if (decl) {
-						splitAccumulator.add(new DeclTypedVarNode(new String(expr, st, cursor - st),
-								expr, st, cursor - st, (Class) stk.pop(), fields | ASTNode.ASSIGN, pCtx));
+						splitAccumulator.add(new DeclTypedVarNode(new String(expr, st, cursor - st), expr,
+								st, cursor - st, (Class) stk.pop(), fields | ASTNode.ASSIGN, pCtx));
 					} else {
-						splitAccumulator.add(new TypedVarNode(expr, st, cursor - st, fields
-								| ASTNode.ASSIGN, (Class) stk.pop(), pCtx));
+						splitAccumulator.add(new TypedVarNode(expr, st, cursor - st,
+								fields | ASTNode.ASSIGN, (Class) stk.pop(), pCtx));
 					}
 				} else if (stk.peek() instanceof Proto) {
 					captureToEOS();
@@ -1563,16 +1564,18 @@ public class AbstractParser implements Parser, Serializable {
 						splitAccumulator.add(new DeclProtoVarNode(new String(expr, st, cursor - st),
 								(Proto) stk.pop(), fields | ASTNode.ASSIGN, pCtx));
 					} else {
-						splitAccumulator.add(new ProtoVarNode(expr, st, cursor - st, fields
-								| ASTNode.ASSIGN, (Proto) stk.pop(), pCtx));
+						splitAccumulator.add(new ProtoVarNode(expr, st, cursor - st,
+								fields | ASTNode.ASSIGN, (Proto) stk.pop(), pCtx));
 					}
 				} else {
-					throw new CompileException("unknown class or illegal statement: "
-							+ lastNode.getLiteralValue(), expr, cursor);
+					throw new CompileException(
+							"unknown class or illegal statement: " + lastNode.getLiteralValue(), expr,
+							cursor);
 				}
 			} else {
-				throw new CompileException("unknown class or illegal statement: "
-						+ lastNode.getLiteralValue(), expr, cursor);
+				throw new CompileException(
+						"unknown class or illegal statement: " + lastNode.getLiteralValue(), expr,
+						cursor);
 			}
 
 			skipWhitespace();
@@ -1792,8 +1795,8 @@ public class AbstractParser implements Parser, Serializable {
 				 * This block is an: IF, FOREACH or WHILE node.
 				 */
 
-				endCond = cursor = balancedCaptureWithLineAccounting(expr, startCond = cursor, end,
-						'(', pCtx);
+				endCond = cursor = balancedCaptureWithLineAccounting(expr, startCond = cursor, end, '(',
+						pCtx);
 
 				startCond++;
 				cursor++;
@@ -1818,8 +1821,8 @@ public class AbstractParser implements Parser, Serializable {
 
 			if (node != null) {
 				if (!cond) {
-					return ifNode.setElseBlock(expr, st = trimRight(blockStart + 1), trimLeft(blockEnd)
-							- st, pCtx);
+					return ifNode.setElseBlock(expr, st = trimRight(blockStart + 1),
+							trimLeft(blockEnd) - st, pCtx);
 				} else {
 					return ifNode.setElseIf((IfNode) createBlockToken(startCond, endCond,
 							trimRight(blockStart + 1), trimLeft(blockEnd), type));
@@ -1846,8 +1849,8 @@ public class AbstractParser implements Parser, Serializable {
 				return createBlockToken(startCond, endCond, trimRight(blockStart + 1),
 						trimLeft(blockEnd), ASTNode.BLOCK_DO_UNTIL);
 			} else {
-				throw new CompileException("expected 'while' or 'until' but encountered: " + name,
-						expr, cursor);
+				throw new CompileException("expected 'while' or 'until' but encountered: " + name, expr,
+						cursor);
 			}
 		}
 		// DON"T REMOVE THIS COMMENT!
@@ -1979,7 +1982,8 @@ public class AbstractParser implements Parser, Serializable {
 			case '(':
 			case '[':
 			case '{':
-				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor], pCtx)) >= end) {
+				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor],
+						pCtx)) >= end) {
 					return;
 				}
 				break;
@@ -2003,7 +2007,8 @@ public class AbstractParser implements Parser, Serializable {
 	 * end of line, whichever comes first.
 	 */
 	protected void captureToEOSorEOL() {
-		while (cursor != end && (expr[cursor] != '\n' && expr[cursor] != '\r' && expr[cursor] != ';')) {
+		while (cursor != end
+				&& (expr[cursor] != '\n' && expr[cursor] != '\r' && expr[cursor] != ';')) {
 			cursor++;
 		}
 	}
@@ -2026,8 +2031,9 @@ public class AbstractParser implements Parser, Serializable {
 					if (captured) {
 						return;
 					}
-					throw new CompileException("unexpected symbol (was expecting an identifier): "
-							+ expr[cursor], expr, cursor);
+					throw new CompileException(
+							"unexpected symbol (was expecting an identifier): " + expr[cursor], expr,
+							cursor);
 				} else {
 					captured = true;
 				}
@@ -2047,7 +2053,8 @@ public class AbstractParser implements Parser, Serializable {
 			case '(':
 			case '[':
 			case '{':
-				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor], pCtx)) == -1) {
+				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor],
+						pCtx)) == -1) {
 					throw new CompileException("unbalanced braces", expr, cursor);
 				}
 				break;
@@ -2410,8 +2417,8 @@ public class AbstractParser implements Parser, Serializable {
 			throw new CompileException("unexpected end of statement", expr, st);
 		}
 		if (expr[cursor] != c) {
-			throw new CompileException("unexpected character ('" + expr[cursor]
-					+ "'); was expecting: " + c, expr, st);
+			throw new CompileException(
+					"unexpected character ('" + expr[cursor] + "'); was expecting: " + c, expr, st);
 		}
 	}
 
@@ -2776,8 +2783,8 @@ public class AbstractParser implements Parser, Serializable {
 				break;
 
 			case CONVERTABLE_TO:
-				stk.push(net.simpleframework.lib.org.mvel2.DataConversion.canConvert(stk.peek2()
-						.getClass(), (Class) stk.pop2()));
+				stk.push(net.simpleframework.lib.org.mvel2.DataConversion
+						.canConvert(stk.peek2().getClass(), (Class) stk.pop2()));
 				break;
 
 			case CONTAINS:
@@ -2785,8 +2792,8 @@ public class AbstractParser implements Parser, Serializable {
 				break;
 
 			case SOUNDEX:
-				stk.push(soundex(java.lang.String.valueOf(stk.pop())).equals(
-						soundex(java.lang.String.valueOf(stk.pop()))));
+				stk.push(soundex(java.lang.String.valueOf(stk.pop()))
+						.equals(soundex(java.lang.String.valueOf(stk.pop()))));
 				break;
 
 			case SIMILARITY:

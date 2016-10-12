@@ -72,13 +72,13 @@ public class CompiledIncludeNode extends Node {
 		}
 
 		if (next != null) {
-			return next.eval(
-					runtime,
-					appender.append(String.valueOf(TemplateRuntime.eval(
-							readFile(runtime, file, ctx, factory), ctx, factory))), ctx, factory);
+			return next.eval(runtime,
+					appender.append(String.valueOf(
+							TemplateRuntime.eval(readFile(runtime, file, ctx, factory), ctx, factory))),
+					ctx, factory);
 		} else {
-			return appender.append(String.valueOf(MVEL.eval(readFile(runtime, file, ctx, factory),
-					ctx, factory)));
+			return appender.append(
+					String.valueOf(MVEL.eval(readFile(runtime, file, ctx, factory), ctx, factory)));
 		}
 	}
 
@@ -124,11 +124,12 @@ public class CompiledIncludeNode extends Node {
 			return appender.toString();
 
 		} catch (final FileNotFoundException e) {
-			throw new TemplateError("cannot include template '" + file.getPath()
-					+ "': file not found.");
+			throw new TemplateError(
+					"cannot include template '" + file.getPath() + "': file not found.");
 		} catch (final IOException e) {
-			throw new TemplateError("unknown I/O exception while including '" + file.getPath()
-					+ "' (stacktrace nested)", e);
+			throw new TemplateError(
+					"unknown I/O exception while including '" + file.getPath() + "' (stacktrace nested)",
+					e);
 		}
 	}
 }

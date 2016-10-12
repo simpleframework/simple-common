@@ -14,8 +14,8 @@ public final class Version implements Serializable, Comparable<Version> {
 
 	private static final long serialVersionUID = -5739492907539237198L;
 
-	public static Version getVersion(final String version) throws NumberFormatException,
-			IllegalArgumentException {
+	public static Version getVersion(final String version)
+			throws NumberFormatException, IllegalArgumentException {
 		final StringTokenizer tokenizer = new StringTokenizer(version, ".");
 		final String[] levels = new String[tokenizer.countTokens()];
 		for (int i = 0; i < levels.length; i++) {

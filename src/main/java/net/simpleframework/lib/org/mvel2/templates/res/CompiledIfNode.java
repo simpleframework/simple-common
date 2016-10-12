@@ -31,8 +31,8 @@ public class CompiledIfNode extends IfNode {
 
 	private Serializable ce;
 
-	public CompiledIfNode(final int begin, final String name, final char[] template,
-			final int start, final int end, final ParserContext context) {
+	public CompiledIfNode(final int begin, final String name, final char[] template, final int start,
+			final int end, final ParserContext context) {
 		super(begin, name, template, start, end);
 		while (cEnd > cStart && ParseTools.isWhitespace(template[cEnd])) {
 			cEnd--;

@@ -108,8 +108,8 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
 
 	@Override
 	public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
-		final LookupSwitchInsnNode clone = new LookupSwitchInsnNode(clone(dflt, labels), null, clone(
-				this.labels, labels));
+		final LookupSwitchInsnNode clone = new LookupSwitchInsnNode(clone(dflt, labels), null,
+				clone(this.labels, labels));
 		clone.keys.addAll(keys);
 		return clone.cloneAnnotations(this);
 	}

@@ -47,7 +47,8 @@ public class ImmutableDefaultFactory implements VariableResolverFactory {
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		throwError();
 		return null;
 	}

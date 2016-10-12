@@ -20,11 +20,11 @@ public class Soundslike extends ASTNode {
 	@Override
 	public Object getReducedValueAccelerated(final Object ctx, final Object thisValue,
 			final VariableResolverFactory factory) {
-		final String str1 = String.valueOf(soundslike.getReducedValueAccelerated(ctx, thisValue,
-				factory));
+		final String str1 = String
+				.valueOf(soundslike.getReducedValueAccelerated(ctx, thisValue, factory));
 		final String str2 = (String) stmt.getReducedValueAccelerated(ctx, thisValue, factory);
-		return str1 == null ? str2 == null : (str2 == null ? false : soundex(str1).equals(
-				soundex(str2)));
+		return str1 == null ? str2 == null
+				: (str2 == null ? false : soundex(str1).equals(soundex(str2)));
 	}
 
 	@Override

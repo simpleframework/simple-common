@@ -68,7 +68,8 @@ public class W3CDom {
 	 *        w3c doc
 	 * @see net.simpleframework.lib.org.jsoup.helper.W3CDom#fromJsoup(net.simpleframework.lib.org.jsoup.nodes.Document)
 	 */
-	public void convert(final net.simpleframework.lib.org.jsoup.nodes.Document in, final Document out) {
+	public void convert(final net.simpleframework.lib.org.jsoup.nodes.Document in,
+			final Document out) {
 		if (!StringUtil.isBlank(in.location())) {
 			out.setDocumentURI(in.location());
 		}

@@ -131,7 +131,8 @@ public class TemplateRuntime {
 		execute(compileTemplate(template), ctx, vars, null, stream);
 	}
 
-	public static Object eval(final String template, final Map vars, final TemplateRegistry registry) {
+	public static Object eval(final String template, final Map vars,
+			final TemplateRegistry registry) {
 		return execute(compileTemplate(template), null, new MapVariableResolverFactory(vars),
 				registry);
 	}
@@ -150,7 +151,8 @@ public class TemplateRuntime {
 
 	public static Object eval(final String template, final Object ctx, final Map vars,
 			final TemplateRegistry registry) {
-		return execute(compileTemplate(template), ctx, new MapVariableResolverFactory(vars), registry);
+		return execute(compileTemplate(template), ctx, new MapVariableResolverFactory(vars),
+				registry);
 	}
 
 	public static void eval(final String template, final Object ctx, final Map vars,
@@ -193,8 +195,8 @@ public class TemplateRuntime {
 
 	public static void execute(final CompiledTemplate compiled, final Object context,
 			final OutputStream stream) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, new ImmutableDefaultFactory(), null);
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				new ImmutableDefaultFactory(), null);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Map vars) {
@@ -214,22 +216,22 @@ public class TemplateRuntime {
 				new MapVariableResolverFactory(vars), null);
 	}
 
-	public static void execute(final CompiledTemplate compiled, final Object context,
-			final Map vars, final OutputStream stream) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, new MapVariableResolverFactory(vars), null);
+	public static void execute(final CompiledTemplate compiled, final Object context, final Map vars,
+			final OutputStream stream) {
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				new MapVariableResolverFactory(vars), null);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Object context,
 			final TemplateRegistry registry) {
-		return execute(compiled.getRoot(), compiled.getTemplate(), new StringBuilder(), context,
-				null, registry);
+		return execute(compiled.getRoot(), compiled.getTemplate(), new StringBuilder(), context, null,
+				registry);
 	}
 
 	public static void execute(final CompiledTemplate compiled, final Object context,
 			final TemplateRegistry registry, final OutputStream stream) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, null, registry);
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				null, registry);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Object context,
@@ -238,10 +240,10 @@ public class TemplateRuntime {
 				new MapVariableResolverFactory(vars), registry);
 	}
 
-	public static void execute(final CompiledTemplate compiled, final Object context,
-			final Map vars, final TemplateRegistry registry, final OutputStream stream) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, new MapVariableResolverFactory(vars), registry);
+	public static void execute(final CompiledTemplate compiled, final Object context, final Map vars,
+			final TemplateRegistry registry, final OutputStream stream) {
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				new MapVariableResolverFactory(vars), registry);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Object context,
@@ -271,14 +273,14 @@ public class TemplateRuntime {
 
 	public static void execute(final CompiledTemplate compiled, final Object context,
 			final VariableResolverFactory factory, final OutputStream stream) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, factory, null);
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				factory, null);
 	}
 
 	public static void execute(final CompiledTemplate compiled, final Object context,
 			final VariableResolverFactory factory, final OutputStream stream, final String baseDir) {
-		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream),
-				context, factory, null, baseDir);
+		execute(compiled.getRoot(), compiled.getTemplate(), new StandardOutputStream(stream), context,
+				factory, null, baseDir);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Object context,
@@ -291,19 +293,20 @@ public class TemplateRuntime {
 	public static Object execute(final CompiledTemplate compiled, final Object context,
 			final VariableResolverFactory factory, final TemplateRegistry registry,
 			final TemplateOutputStream stream) {
-		return execute(compiled.getRoot(), compiled.getTemplate(), stream, context, factory, registry);
+		return execute(compiled.getRoot(), compiled.getTemplate(), stream, context, factory,
+				registry);
 	}
 
 	public static Object execute(final CompiledTemplate compiled, final Object context,
 			final VariableResolverFactory factory, final TemplateRegistry registry,
 			final TemplateOutputStream stream, final String basedir) {
-		return execute(compiled.getRoot(), compiled.getTemplate(), stream, context, factory,
-				registry, basedir);
+		return execute(compiled.getRoot(), compiled.getTemplate(), stream, context, factory, registry,
+				basedir);
 	}
 
 	public static Object execute(final Node root, final char[] template,
-			final StringAppender appender, final Object context,
-			final VariableResolverFactory factory, final TemplateRegistry registry) {
+			final StringAppender appender, final Object context, final VariableResolverFactory factory,
+			final TemplateRegistry registry) {
 
 		return new TemplateRuntime(template, registry, root, ".").execute(appender, context, factory);
 	}

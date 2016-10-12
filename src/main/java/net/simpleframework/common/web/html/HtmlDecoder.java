@@ -14,8 +14,8 @@ public class HtmlDecoder {
 	static {
 		final Properties entityReferences = new Properties();
 
-		final InputStream is = HtmlDecoder.class.getResourceAsStream(HtmlDecoder.class
-				.getSimpleName() + ".properties");
+		final InputStream is = HtmlDecoder.class
+				.getResourceAsStream(HtmlDecoder.class.getSimpleName() + ".properties");
 		if (is == null) {
 			throw new IllegalStateException("Entity reference file missing");
 		}

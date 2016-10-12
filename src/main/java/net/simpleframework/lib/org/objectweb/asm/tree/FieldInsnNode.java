@@ -75,7 +75,8 @@ public class FieldInsnNode extends AbstractInsnNode {
 	 *        the field's descriptor (see
 	 *        {@link net.simpleframework.lib.org.objectweb.asm.Type}).
 	 */
-	public FieldInsnNode(final int opcode, final String owner, final String name, final String desc) {
+	public FieldInsnNode(final int opcode, final String owner, final String name,
+			final String desc) {
 		super(opcode);
 		this.owner = owner;
 		this.name = name;

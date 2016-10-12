@@ -33,7 +33,8 @@ import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
  */
 class MixinEverythingEmitter extends MixinEmitter {
 
-	public MixinEverythingEmitter(final ClassVisitor v, final String className, final Class[] classes) {
+	public MixinEverythingEmitter(final ClassVisitor v, final String className,
+			final Class[] classes) {
 		super(v, className, classes, null);
 	}
 
@@ -49,8 +50,8 @@ class MixinEverythingEmitter extends MixinEmitter {
 	@Override
 	protected Method[] getMethods(final Class type) {
 		final List methods = new ArrayList(Arrays.asList(type.getMethods()));
-		CollectionUtils
-				.filter(methods, new RejectModifierPredicate(Modifier.FINAL | Modifier.STATIC));
+		CollectionUtils.filter(methods,
+				new RejectModifierPredicate(Modifier.FINAL | Modifier.STATIC));
 		return (Method[]) methods.toArray(new Method[methods.size()]);
 	}
 }

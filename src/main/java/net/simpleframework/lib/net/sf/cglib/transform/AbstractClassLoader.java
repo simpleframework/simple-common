@@ -55,7 +55,7 @@ abstract public class AbstractClassLoader extends ClassLoader {
 		if (loaded != null) {
 			if (loaded.getClassLoader() == this) {
 				return loaded;
-			}// else reload with this class loader
+			} // else reload with this class loader
 		}
 
 		if (!filter.accept(name)) {
@@ -64,8 +64,8 @@ abstract public class AbstractClassLoader extends ClassLoader {
 		ClassReader r;
 		try {
 
-			final java.io.InputStream is = classPath.getResourceAsStream(name.replace('.', '/')
-					+ ".class");
+			final java.io.InputStream is = classPath
+					.getResourceAsStream(name.replace('.', '/') + ".class");
 
 			if (is == null) {
 

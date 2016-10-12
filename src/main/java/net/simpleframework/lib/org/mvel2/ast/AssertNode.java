@@ -49,8 +49,8 @@ public class AssertNode extends ASTNode {
 			final VariableResolverFactory factory) {
 		try {
 			if (!((Boolean) assertion.getValue(ctx, thisValue, factory))) {
-				throw new AssertionError("assertion failed in expression: "
-						+ new String(this.expr, start, offset));
+				throw new AssertionError(
+						"assertion failed in expression: " + new String(this.expr, start, offset));
 			} else {
 				return true;
 			}
@@ -64,8 +64,8 @@ public class AssertNode extends ASTNode {
 			final VariableResolverFactory factory) {
 		try {
 			if (!((Boolean) MVEL.eval(this.expr, ctx, factory))) {
-				throw new AssertionError("assertion failed in expression: "
-						+ new String(this.expr, start, offset));
+				throw new AssertionError(
+						"assertion failed in expression: " + new String(this.expr, start, offset));
 			} else {
 				return true;
 			}

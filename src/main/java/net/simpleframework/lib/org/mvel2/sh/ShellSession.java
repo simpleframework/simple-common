@@ -237,8 +237,9 @@ public class ShellSession {
 										sysPrintStream.flush();
 
 										if (!multi) {
-											multiIndentSize = (prompt = String.valueOf(TemplateRuntime.eval(
-													env.get("$PROMPT"), variables))).length();
+											multiIndentSize = (prompt = String.valueOf(
+													TemplateRuntime.eval(env.get("$PROMPT"), variables)))
+															.length();
 											out.append(prompt);
 										} else {
 											out.append(">")
@@ -380,8 +381,8 @@ public class ShellSession {
 
 	public void printPrompt() {
 		if (!multi) {
-			multiIndentSize = (prompt = String.valueOf(TemplateRuntime.eval(env.get("$PROMPT"),
-					variables))).length();
+			multiIndentSize = (prompt = String
+					.valueOf(TemplateRuntime.eval(env.get("$PROMPT"), variables))).length();
 			out.append(prompt);
 		} else {
 			out.append(">").append(indent((multiIndentSize - 1) + (depth * 4)));

@@ -361,7 +361,8 @@ public class TagExportParser implements TagExportParserConstants {
 		throw new Error("Missing return statement in function");
 	}
 
-	final public void pageExportDeclaration(final PageTagExport pageTagExport) throws ParseException {
+	final public void pageExportDeclaration(final PageTagExport pageTagExport)
+			throws ParseException {
 		label_5: while (true) {
 			pageExportList(pageTagExport);
 			switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {

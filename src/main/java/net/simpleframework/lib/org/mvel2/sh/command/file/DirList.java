@@ -30,8 +30,8 @@ public class DirList implements Command {
 		final File current = new File(session.getEnv().get("$CWD"));
 
 		if (!current.isDirectory()) {
-			throw new CommandException("cannot list directory : " + session.getEnv().get("$CWD")
-					+ " is not a directory");
+			throw new CommandException(
+					"cannot list directory : " + session.getEnv().get("$CWD") + " is not a directory");
 		}
 
 		final File[] files = current.listFiles();

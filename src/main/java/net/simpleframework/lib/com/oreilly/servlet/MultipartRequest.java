@@ -54,13 +54,16 @@ import net.simpleframework.lib.com.oreilly.servlet.multipart.Part;
  *          Changshin Lee<br>
  * @version 1.8, 2002/04/30, added support for internationalization, thanks to
  *          Changshin Lee<br>
- * @version 1.7, 2001/02/07, made fields protected to increase user flexibility<br>
+ * @version 1.7, 2001/02/07, made fields protected to increase user
+ *          flexibility<br>
  * @version 1.6, 2000/07/21, redid internals to use MultipartParser, thanks to
  *          Geoff Soutter<br>
  * @version 1.5, 2000/02/04, added auto MacBinary decoding for IE on Mac<br>
  * @version 1.4, 2000/01/05, added getParameterValues(), WebSphere 2.x
- *          getContentType() workaround, stopped writing empty "unknown" file<br>
- * @version 1.3, 1999/12/28, IE4 on Win98 lastIndexOf("boundary=") workaround<br>
+ *          getContentType() workaround, stopped writing empty "unknown"
+ *          file<br>
+ * @version 1.3, 1999/12/28, IE4 on Win98 lastIndexOf("boundary=")
+ *          workaround<br>
  * @version 1.2, 1999/12/20, IE4 on Mac readNextPart() workaround<br>
  * @version 1.1, 1999/01/15, JSDK readLine() bug workaround<br>
  * @version 1.0, 1998/09/18<br>
@@ -249,15 +252,16 @@ public class MultipartRequest {
 
 		// Parse the incoming multipart, storing files in the dir provided,
 		// and populate the meta objects which describe what we found
-		final MultipartParser parser = new MultipartParser(request, maxPostSize, true, true, encoding);
+		final MultipartParser parser = new MultipartParser(request, maxPostSize, true, true,
+				encoding);
 
 		// Some people like to fetch query string parameters from
 		// MultipartRequest, so here we make that possible. Thanks to
 		// Ben Johnson, ben.johnson@merrillcorp.com, for the idea.
 		if (request.getQueryString() != null) {
 			// Let HttpUtils create a name->String[] structure
-			final Hashtable<?, ?> queryParameters = HttpUtils.parseQueryString(request
-					.getQueryString());
+			final Hashtable<?, ?> queryParameters = HttpUtils
+					.parseQueryString(request.getQueryString());
 			// For our own use, name it a name->Vector structure
 			final Enumeration<?> queryParameterNames = queryParameters.keys();
 			while (queryParameterNames.hasMoreElements()) {

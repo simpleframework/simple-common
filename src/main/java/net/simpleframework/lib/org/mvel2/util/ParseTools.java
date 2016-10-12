@@ -89,7 +89,8 @@ public class ParseTools {
 			}
 		}
 		if (start != -1) {
-			return parseParameterList(parm, --start + 1, balancedCapture(parm, start, '(') - start - 1);
+			return parseParameterList(parm, --start + 1,
+					balancedCapture(parm, start, '(') - start - 1);
 		}
 
 		return Collections.emptyList();
@@ -237,7 +238,8 @@ public class ParseTools {
 	}
 
 	public static Method getBestCandidate(final Class[] arguments, final String method,
-			final Class decl, Method[] methods, final boolean requireExact, final boolean classTarget) {
+			final Class decl, Method[] methods, final boolean requireExact,
+			final boolean classTarget) {
 
 		if (methods.length == 0) {
 			return null;
@@ -332,7 +334,8 @@ public class ParseTools {
 				}
 			} else if (actualParamType == arguments[i]) {
 				score += 7;
-			} else if (actualParamType.isPrimitive() && boxPrimitive(actualParamType) == arguments[i]) {
+			} else if (actualParamType.isPrimitive()
+					&& boxPrimitive(actualParamType) == arguments[i]) {
 				score += 6;
 			} else if (arguments[i].isPrimitive() && unboxPrimitive(arguments[i]) == actualParamType) {
 				score += 6;
@@ -380,8 +383,8 @@ public class ParseTools {
 		return 0;
 	}
 
-	public static Method getExactMatch(final String name, final Class[] args,
-			final Class returnType, final Class cls) {
+	public static Method getExactMatch(final String name, final Class[] args, final Class returnType,
+			final Class cls) {
 		outer: for (final Method meth : cls.getMethods()) {
 			if (name.equals(meth.getName()) && returnType == meth.getReturnType()) {
 				final Class[] parameterTypes = meth.getParameterTypes();
@@ -496,16 +499,14 @@ public class ParseTools {
 
 	public static Class createClass(final String className, final ParserContext pCtx)
 			throws ClassNotFoundException {
-		final ClassLoader classLoader = pCtx != null ? pCtx.getClassLoader() : currentThread()
-				.getContextClassLoader();
+		final ClassLoader classLoader = pCtx != null ? pCtx.getClassLoader()
+				: currentThread().getContextClassLoader();
 
 		Map<String, WeakReference<Class>> cache = CLASS_RESOLVER_CACHE.get(classLoader);
 
 		if (cache == null) {
-			CLASS_RESOLVER_CACHE.put(
-					classLoader,
-					cache = Collections
-							.synchronizedMap(new WeakHashMap<String, WeakReference<Class>>(10)));
+			CLASS_RESOLVER_CACHE.put(classLoader, cache = Collections
+					.synchronizedMap(new WeakHashMap<String, WeakReference<Class>>(10)));
 		}
 
 		WeakReference<Class> ref;
@@ -740,7 +741,8 @@ public class ParseTools {
 		return false;
 	}
 
-	private static boolean containsCheckOnDoubleArray(final double[] array, final Double compareTest) {
+	private static boolean containsCheckOnDoubleArray(final double[] array,
+			final Double compareTest) {
 		final double test = compareTest;
 		for (final double d : array) {
 			if (d == test) {
@@ -760,7 +762,8 @@ public class ParseTools {
 		return false;
 	}
 
-	private static boolean containsCheckOnCharArray(final char[] array, final Character compareTest) {
+	private static boolean containsCheckOnCharArray(final char[] array,
+			final Character compareTest) {
 		final char test = compareTest;
 		for (final char c : array) {
 			if (c == test) {
@@ -857,14 +860,14 @@ public class ParseTools {
 			s = pos;
 			while (escapeStr[pos] >= '0' && escapeStr[pos] < '8') {
 				if (pos != s && escapeStr[s] > '3') {
-					escapeStr[s - 1] = (char) Integer
-							.decode("0" + new String(escapeStr, s, pos - s + 1)).intValue();
+					escapeStr[s - 1] = (char) Integer.decode("0" + new String(escapeStr, s, pos - s + 1))
+							.intValue();
 					escapeStr[s] = 0;
 					escapeStr[s + 1] = 0;
 					return 2;
 				} else if ((pos - s) == 2) {
-					escapeStr[s - 1] = (char) Integer
-							.decode("0" + new String(escapeStr, s, pos - s + 1)).intValue();
+					escapeStr[s - 1] = (char) Integer.decode("0" + new String(escapeStr, s, pos - s + 1))
+							.intValue();
 					escapeStr[s] = 0;
 					escapeStr[s + 1] = 0;
 					escapeStr[s + 2] = 0;
@@ -872,8 +875,8 @@ public class ParseTools {
 				}
 
 				if (pos + 1 == escapeStr.length || (escapeStr[pos] < '0' || escapeStr[pos] > '7')) {
-					escapeStr[s - 1] = (char) Integer
-							.decode("0" + new String(escapeStr, s, pos - s + 1)).intValue();
+					escapeStr[s - 1] = (char) Integer.decode("0" + new String(escapeStr, s, pos - s + 1))
+							.intValue();
 					escapeStr[s] = 0;
 					return 1;
 				}
@@ -1138,8 +1141,8 @@ public class ParseTools {
 			}
 		}
 
-		return clazz.getSuperclass() != null ? determineActualTargetMethod(clazz.getSuperclass(),
-				method) : null;
+		return clazz.getSuperclass() != null
+				? determineActualTargetMethod(clazz.getSuperclass(), method) : null;
 	}
 
 	public static int captureToNextTokenJunction(final char[] expr, int cursor, final int end,
@@ -1239,7 +1242,8 @@ public class ParseTools {
 			case '(':
 			case '[':
 			case '{':
-				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor], pCtx)) >= expr.length) {
+				if ((cursor = balancedCaptureWithLineAccounting(expr, cursor, end, expr[cursor],
+						pCtx)) >= expr.length) {
 					return cursor;
 				}
 				break;
@@ -1340,7 +1344,8 @@ public class ParseTools {
 		return balancedCapture(chars, start, chars.length, type);
 	}
 
-	public static int balancedCapture(final char[] chars, int start, final int end, final char type) {
+	public static int balancedCapture(final char[] chars, int start, final int end,
+			final char type) {
 		int depth = 1;
 		char term = type;
 		switch (type) {
@@ -1414,8 +1419,8 @@ public class ParseTools {
 		}
 	}
 
-	public static int balancedCaptureWithLineAccounting(final char[] chars, int start,
-			final int end, final char type, final ParserContext pCtx) {
+	public static int balancedCaptureWithLineAccounting(final char[] chars, int start, final int end,
+			final char type, final ParserContext pCtx) {
 		int depth = 1;
 		final int st = start;
 		char term = type;
@@ -1546,7 +1551,8 @@ public class ParseTools {
 	}
 
 	public static void parseWithExpressions(final String nestParm, final char[] block,
-			final int start, final int offset, final Object ctx, final VariableResolverFactory factory) {
+			final int start, final int offset, final Object ctx,
+			final VariableResolverFactory factory) {
 		/**
 		 *
 		 * MAINTENANCE NOTE: A COMPILING VERSION OF THIS CODE IS DUPLICATED IN:
@@ -1619,9 +1625,8 @@ public class ParseTools {
 						if (nestParm == null) {
 							MVEL.eval(new String(block, _st, _end - _st), ctx, factory);
 						} else {
-							MVEL.eval(
-									new StringBuilder(nestParm).append('.').append(block, _st, _end - _st)
-											.toString(), ctx, factory);
+							MVEL.eval(new StringBuilder(nestParm).append('.')
+									.append(block, _st, _end - _st).toString(), ctx, factory);
 						}
 					} catch (final CompileException e) {
 						e.setCursor(_st + (e.getCursor() - (e.getExpr().length - offset)));
@@ -1678,9 +1683,9 @@ public class ParseTools {
 									start);
 						}
 
-						MVEL.setProperty(ctx, parm, MVEL.eval(
-								new String(createShortFormOperativeAssignment(nestParm + "." + parm, block,
-										_st, _end - _st, oper)), ctx, factory));
+						MVEL.setProperty(ctx, parm, MVEL
+								.eval(new String(createShortFormOperativeAssignment(nestParm + "." + parm,
+										block, _st, _end - _st, oper)), ctx, factory));
 					} else {
 						MVEL.setProperty(ctx, parm, MVEL.eval(block, _st, end - _st, ctx, factory));
 					}
@@ -1693,7 +1698,8 @@ public class ParseTools {
 		}
 	}
 
-	public static Object handleNumericConversion(final char[] val, final int start, final int offset) {
+	public static Object handleNumericConversion(final char[] val, final int start,
+			final int offset) {
 		if (offset != 1 && val[start] == '0' && val[start + 1] != '.') {
 			if (!isDigit(val[start + offset - 1])) {
 				switch (val[start + offset - 1]) {
@@ -1914,8 +1920,8 @@ public class ParseTools {
 					}
 				} else {
 					if (i != start) {
-						throw new CompileException("invalid number literal: "
-								+ new String(val, start, offset), val, start);
+						throw new CompileException(
+								"invalid number literal: " + new String(val, start, offset), val, start);
 					}
 					return false;
 				}
@@ -2164,7 +2170,8 @@ public class ParseTools {
 		return _optimizeTree(new ExpressionCompiler(expression)._compile());
 	}
 
-	public static Serializable subCompileExpression(final char[] expression, final ParserContext ctx) {
+	public static Serializable subCompileExpression(final char[] expression,
+			final ParserContext ctx) {
 		final ExpressionCompiler c = new ExpressionCompiler(expression, ctx);
 		return _optimizeTree(c._compile());
 	}
@@ -2175,7 +2182,8 @@ public class ParseTools {
 		return _optimizeTree(c._compile());
 	}
 
-	public static Serializable subCompileExpression(final String expression, final ParserContext ctx) {
+	public static Serializable subCompileExpression(final String expression,
+			final ParserContext ctx) {
 		final ExpressionCompiler c = new ExpressionCompiler(expression, ctx);
 		return _optimizeTree(c._compile());
 	}
@@ -2206,9 +2214,9 @@ public class ParseTools {
 			if (tk.isLiteral() && !tk.isThisVal()) {
 				return new ExecutableLiteral(tk.getLiteralValue());
 			}
-			return tk.canSerializeAccessor() ? new ExecutableAccessorSafe(tk,
-					compiled.getKnownEgressType()) : new ExecutableAccessor(tk,
-					compiled.getKnownEgressType());
+			return tk.canSerializeAccessor()
+					? new ExecutableAccessorSafe(tk, compiled.getKnownEgressType())
+					: new ExecutableAccessor(tk, compiled.getKnownEgressType());
 		}
 
 		return compiled;

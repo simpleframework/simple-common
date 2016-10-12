@@ -83,7 +83,8 @@ public class MethodInsnNode extends AbstractInsnNode {
 	 *        {@link net.simpleframework.lib.org.objectweb.asm.Type}).
 	 */
 	@Deprecated
-	public MethodInsnNode(final int opcode, final String owner, final String name, final String desc) {
+	public MethodInsnNode(final int opcode, final String owner, final String name,
+			final String desc) {
 		this(opcode, owner, name, desc, opcode == Opcodes.INVOKEINTERFACE);
 	}
 
@@ -106,8 +107,8 @@ public class MethodInsnNode extends AbstractInsnNode {
 	 * @param itf
 	 *        if the method's owner class is an interface.
 	 */
-	public MethodInsnNode(final int opcode, final String owner, final String name,
-			final String desc, final boolean itf) {
+	public MethodInsnNode(final int opcode, final String owner, final String name, final String desc,
+			final boolean itf) {
 		super(opcode);
 		this.owner = owner;
 		this.name = name;

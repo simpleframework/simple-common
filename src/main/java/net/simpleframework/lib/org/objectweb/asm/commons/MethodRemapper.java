@@ -78,8 +78,8 @@ public class MethodRemapper extends MethodVisitor {
 	@Override
 	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
 			final boolean visible) {
-		final AnnotationVisitor av = super.visitParameterAnnotation(parameter,
-				remapper.mapDesc(desc), visible);
+		final AnnotationVisitor av = super.visitParameterAnnotation(parameter, remapper.mapDesc(desc),
+				visible);
 		return av == null ? av : new AnnotationRemapper(av, remapper);
 	}
 
@@ -199,16 +199,16 @@ public class MethodRemapper extends MethodVisitor {
 	@Override
 	public void visitLocalVariable(final String name, final String desc, final String signature,
 			final Label start, final Label end, final int index) {
-		super.visitLocalVariable(name, remapper.mapDesc(desc),
-				remapper.mapSignature(signature, true), start, end, index);
+		super.visitLocalVariable(name, remapper.mapDesc(desc), remapper.mapSignature(signature, true),
+				start, end, index);
 	}
 
 	@Override
-	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef,
-			final TypePath typePath, final Label[] start, final Label[] end, final int[] index,
-			final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitLocalVariableAnnotation(typeRef, typePath, start,
-				end, index, remapper.mapDesc(desc), visible);
+	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
+			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final boolean visible) {
+		final AnnotationVisitor av = super.visitLocalVariableAnnotation(typeRef, typePath, start, end,
+				index, remapper.mapDesc(desc), visible);
 		return av == null ? av : new AnnotationRemapper(av, remapper);
 	}
 }

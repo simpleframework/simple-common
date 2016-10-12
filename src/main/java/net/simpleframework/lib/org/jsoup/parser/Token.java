@@ -113,9 +113,8 @@ abstract class Token {
 			if (pendingAttributeName != null) {
 				Attribute attribute;
 				if (hasPendingAttributeValue) {
-					attribute = new Attribute(pendingAttributeName,
-							pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString()
-									: pendingAttributeValueS);
+					attribute = new Attribute(pendingAttributeName, pendingAttributeValue.length() > 0
+							? pendingAttributeValue.toString() : pendingAttributeValueS);
 				} else if (hasEmptyAttributeValue) {
 					attribute = new Attribute(pendingAttributeName, "");
 				} else {
@@ -168,8 +167,8 @@ abstract class Token {
 		}
 
 		final void appendAttributeName(final String append) {
-			pendingAttributeName = pendingAttributeName == null ? append : pendingAttributeName
-					.concat(append);
+			pendingAttributeName = pendingAttributeName == null ? append
+					: pendingAttributeName.concat(append);
 		}
 
 		final void appendAttributeName(final char append) {

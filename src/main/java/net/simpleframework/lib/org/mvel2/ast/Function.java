@@ -79,7 +79,8 @@ public class Function extends ASTNode implements Safe {
 		 * Compile the expression so we can determine the input-output delta.
 		 */
 		ctx.setIndexAllocation(false);
-		final ExpressionCompiler compiler = new ExpressionCompiler(expr, blockStart, blockOffset, ctx);
+		final ExpressionCompiler compiler = new ExpressionCompiler(expr, blockStart, blockOffset,
+				ctx);
 		compiler.setVerifyOnly(true);
 		compiler.compile();
 
@@ -100,8 +101,8 @@ public class Function extends ASTNode implements Safe {
 		ctx.addIndexedInputs(ctx.getVariables().keySet());
 		ctx.getVariables().clear();
 
-		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart,
-				blockOffset, ctx);
+		this.compiledBlock = (ExecutableStatement) subCompileExpression(expr, blockStart, blockOffset,
+				ctx);
 
 		this.parameters = new String[ctx.getIndexedInputs().size()];
 
@@ -151,7 +152,8 @@ public class Function extends ASTNode implements Safe {
 		if (parms != null && parms.length != 0) {
 			// detect tail recursion
 			if (factory instanceof FunctionVariableResolverFactory
-					&& ((FunctionVariableResolverFactory) factory).getIndexedVariableResolvers().length == parms.length) {
+					&& ((FunctionVariableResolverFactory) factory)
+							.getIndexedVariableResolvers().length == parms.length) {
 				final FunctionVariableResolverFactory fvrf = (FunctionVariableResolverFactory) factory;
 				if (fvrf.getFunction().equals(this)) {
 					final VariableResolver[] swapVR = fvrf.getIndexedVariableResolvers();

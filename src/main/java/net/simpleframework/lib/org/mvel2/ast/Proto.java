@@ -94,8 +94,8 @@ public class Proto extends ASTNode {
 				final VariableResolverFactory factory, final Object[] parms) {
 			switch (type) {
 			case FUNCTION:
-				return ((Function) receiver).call(ctx, thisCtx, new InvokationContextFactory(factory,
-						instance.instanceStates), parms);
+				return ((Function) receiver).call(ctx, thisCtx,
+						new InvokationContextFactory(factory, instance.instanceStates), parms);
 			case PROPERTY:
 				return receiver;
 			case DEFERRED:
@@ -106,9 +106,8 @@ public class Proto extends ASTNode {
 
 		public Receiver init(final ProtoInstance instance, final Object ctx, final Object thisCtx,
 				final VariableResolverFactory factory) {
-			return new Receiver(instance, type,
-					type == ReceiverType.PROPERTY && initValue != null ? initValue.getValue(ctx,
-							thisCtx, factory) : receiver);
+			return new Receiver(instance, type, type == ReceiverType.PROPERTY && initValue != null
+					? initValue.getValue(ctx, thisCtx, factory) : receiver);
 		}
 
 		public void setType(final ReceiverType type) {
@@ -247,8 +246,9 @@ public class Proto extends ASTNode {
 			}
 
 			if (vr != null && vr.getType() != null) {
-				throw new CompileException("variable already defined within scope: " + vr.getType()
-						+ " " + name, expr, start);
+				throw new CompileException(
+						"variable already defined within scope: " + vr.getType() + " " + name, expr,
+						start);
 			} else {
 				addResolver(name, vr = new ProtoResolver(variables, name, type)).setValue(value);
 				return vr;
@@ -269,11 +269,12 @@ public class Proto extends ASTNode {
 		@Override
 		public VariableResolver createIndexedVariable(final int index, final String name,
 				final Object value, final Class<?> type) {
-			final VariableResolver vr = this.variableResolvers != null ? this.variableResolvers
-					.getByIndex(index) : null;
+			final VariableResolver vr = this.variableResolvers != null
+					? this.variableResolvers.getByIndex(index) : null;
 			if (vr != null && vr.getType() != null) {
-				throw new CompileException("variable already defined within scope: " + vr.getType()
-						+ " " + name, expr, start);
+				throw new CompileException(
+						"variable already defined within scope: " + vr.getType() + " " + name, expr,
+						start);
 			} else {
 				return createIndexedVariable(variableIndexOf(name), name, value);
 			}

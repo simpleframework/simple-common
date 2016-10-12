@@ -128,8 +128,8 @@ public class Processor {
 
 	private int n = 0;
 
-	public Processor(final int inRepresenation, final int outRepresentation,
-			final InputStream input, final OutputStream output, final Source xslt) {
+	public Processor(final int inRepresenation, final int outRepresentation, final InputStream input,
+			final OutputStream output, final Source xslt) {
 		this.inRepresentation = inRepresenation;
 		this.outRepresentation = outRepresentation;
 		this.input = input;
@@ -264,8 +264,8 @@ public class Processor {
 			} else { // read XML and process it with handler
 				final XMLReader reader = XMLReaderFactory.createXMLReader();
 				reader.setContentHandler(handler);
-				reader.parse(new InputSource(
-						singleInputDocument ? (InputStream) new ProtectedInputStream(zis)
+				reader.parse(
+						new InputSource(singleInputDocument ? (InputStream) new ProtectedInputStream(zis)
 								: new ByteArrayInputStream(readEntry(zis, ze))));
 
 			}
@@ -424,8 +424,8 @@ public class Processor {
 	}
 
 	private static void showUsage() {
-		System.err
-				.println("Usage: Main <in format> <out format> [-in <input jar>] [-out <output jar>] [-xslt <xslt fiel>]");
+		System.err.println(
+				"Usage: Main <in format> <out format> [-in <input jar>] [-out <output jar>] [-xslt <xslt fiel>]");
 		System.err.println("  when -in or -out is omitted sysin and sysout would be used");
 		System.err.println("  <in format> and <out format> - code | xml | singlexml");
 	}

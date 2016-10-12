@@ -26,7 +26,8 @@ public class ObjectFactory {
 		return get()._singleton(oClass, listeners);
 	}
 
-	public static Object singleton(final String className, final IObjectCreatorListener... listeners) {
+	public static Object singleton(final String className,
+			final IObjectCreatorListener... listeners) {
 		return get()._singleton(className, listeners);
 	}
 

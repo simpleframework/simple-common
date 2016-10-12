@@ -19,8 +19,8 @@ public class MimeTypes {
 	static {
 		final Properties mimes = new Properties();
 
-		final InputStream is = MimeTypes.class.getResourceAsStream(MimeTypes.class.getSimpleName()
-				+ ".properties");
+		final InputStream is = MimeTypes.class
+				.getResourceAsStream(MimeTypes.class.getSimpleName() + ".properties");
 		if (is == null) {
 			throw new IllegalStateException("Mime types file missing");
 		}

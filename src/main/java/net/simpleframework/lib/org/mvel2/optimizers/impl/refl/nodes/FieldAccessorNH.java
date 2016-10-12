@@ -39,7 +39,8 @@ public class FieldAccessorNH implements AccessorNode {
 	}
 
 	@Override
-	public Object getValue(final Object ctx, final Object elCtx, final VariableResolverFactory vars) {
+	public Object getValue(final Object ctx, final Object elCtx,
+			final VariableResolverFactory vars) {
 		try {
 			Object v = field.get(ctx);
 			if (v == null) {

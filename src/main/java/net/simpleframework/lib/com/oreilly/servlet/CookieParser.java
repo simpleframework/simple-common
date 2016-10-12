@@ -145,8 +145,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie value could not be converted to a byte
 	 */
-	public byte getByteCookie(final String name) throws CookieNotFoundException,
-			NumberFormatException {
+	public byte getByteCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return Byte.parseByte(getStringCookie(name));
 	}
 
@@ -215,8 +215,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie could not be converted to a double
 	 */
-	public double getDoubleCookie(final String name) throws CookieNotFoundException,
-			NumberFormatException {
+	public double getDoubleCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return new Double(getStringCookie(name)).doubleValue();
 	}
 
@@ -249,8 +249,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie could not be converted to a float
 	 */
-	public float getFloatCookie(final String name) throws CookieNotFoundException,
-			NumberFormatException {
+	public float getFloatCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return new Float(getStringCookie(name)).floatValue();
 	}
 
@@ -283,7 +283,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie could not be converted to a int
 	 */
-	public int getIntCookie(final String name) throws CookieNotFoundException, NumberFormatException {
+	public int getIntCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return Integer.parseInt(getStringCookie(name));
 	}
 
@@ -316,8 +317,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie could not be converted to a long
 	 */
-	public long getLongCookie(final String name) throws CookieNotFoundException,
-			NumberFormatException {
+	public long getLongCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return Long.parseLong(getStringCookie(name));
 	}
 
@@ -350,8 +351,8 @@ public class CookieParser {
 	 * @exception NumberFormatException
 	 *            if the cookie could not be converted to a short
 	 */
-	public short getShortCookie(final String name) throws CookieNotFoundException,
-			NumberFormatException {
+	public short getShortCookie(final String name)
+			throws CookieNotFoundException, NumberFormatException {
 		return Short.parseShort(getStringCookie(name));
 	}
 

@@ -92,11 +92,12 @@ public class TemplateTools {
 
 			return appender.toString();
 		} catch (final FileNotFoundException e) {
-			throw new TemplateError("cannot include template '" + file.getName()
-					+ "': file not found.");
+			throw new TemplateError(
+					"cannot include template '" + file.getName() + "': file not found.");
 		} catch (final IOException e) {
-			throw new TemplateError("unknown I/O exception while including '" + file.getName()
-					+ "' (stacktrace nested)", e);
+			throw new TemplateError(
+					"unknown I/O exception while including '" + file.getName() + "' (stacktrace nested)",
+					e);
 		}
 	}
 

@@ -21,7 +21,8 @@ public class CompatibilityStrategy {
 		return compatibilityEvaluator.areComparisonCompatible(c1, c2);
 	}
 
-	public static void setCompatibilityEvaluator(final CompatibilityEvaluator compatibilityEvaluator) {
+	public static void setCompatibilityEvaluator(
+			final CompatibilityEvaluator compatibilityEvaluator) {
 		CompatibilityStrategy.compatibilityEvaluator = compatibilityEvaluator;
 	}
 

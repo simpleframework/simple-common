@@ -34,7 +34,8 @@ public class Pop3Server implements ReceiveMailSessionProvider {
 		this(host, DEFAULT_POP3_PORT, authenticator);
 	}
 
-	public Pop3Server(final String host, final int port, final String username, final String password) {
+	public Pop3Server(final String host, final int port, final String username,
+			final String password) {
 		this(host, port, new SimpleAuthenticator(username, password));
 	}
 

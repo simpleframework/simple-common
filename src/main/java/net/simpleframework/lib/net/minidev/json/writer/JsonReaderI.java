@@ -45,8 +45,8 @@ public abstract class JsonReaderI<T> {
 	 * called when json-smart parser meet an object key
 	 */
 	public JsonReaderI<?> startObject(final String key) throws ParseException, IOException {
-		throw new RuntimeException(ERR_MSG + " startObject(String key) in " + this.getClass()
-				+ " key=" + key);
+		throw new RuntimeException(
+				ERR_MSG + " startObject(String key) in " + this.getClass() + " key=" + key);
 	}
 
 	/**
@@ -77,17 +77,17 @@ public abstract class JsonReaderI<T> {
 
 	// Object current,
 	public Type getType(final String key) {
-		throw new RuntimeException(ERR_MSG + " getType(String key) in " + this.getClass() + " key="
-				+ key);
+		throw new RuntimeException(
+				ERR_MSG + " getType(String key) in " + this.getClass() + " key=" + key);
 	}
 
 	/**
 	 * add a value in an array json object.
 	 */
-	public void addValue(final Object current, final Object value) throws ParseException,
-			IOException {
-		throw new RuntimeException(ERR_MSG + " addValue(Object current, Object value) in "
-				+ this.getClass());
+	public void addValue(final Object current, final Object value)
+			throws ParseException, IOException {
+		throw new RuntimeException(
+				ERR_MSG + " addValue(Object current, Object value) in " + this.getClass());
 	}
 
 	/**

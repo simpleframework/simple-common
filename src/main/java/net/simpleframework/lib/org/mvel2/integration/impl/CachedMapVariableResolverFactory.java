@@ -56,7 +56,8 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 	}
 
 	@Override
-	public VariableResolver createVariable(final String name, final Object value, final Class<?> type) {
+	public VariableResolver createVariable(final String name, final Object value,
+			final Class<?> type) {
 		VariableResolver vr;
 		try {
 			vr = getVariableResolver(name);
@@ -65,8 +66,8 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 		}
 
 		if (vr != null && vr.getType() != null) {
-			throw new RuntimeException("variable already defined within scope: " + vr.getType() + " "
-					+ name);
+			throw new RuntimeException(
+					"variable already defined within scope: " + vr.getType() + " " + name);
 		} else {
 			addResolver(name, vr = new MapVariableResolver(variables, name, type)).setValue(value);
 			return vr;

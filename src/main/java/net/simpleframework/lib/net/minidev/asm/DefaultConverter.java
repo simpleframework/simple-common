@@ -13,8 +13,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Integer.parseInt((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to int");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to int");
 	}
 
 	public static Integer convertToInt(final Object obj) {
@@ -28,8 +28,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Integer.valueOf(((Number) obj).intValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Integer");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Integer");
 	}
 
 	public static short convertToshort(final Object obj) {
@@ -42,8 +42,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Short.parseShort((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to short");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to short");
 	}
 
 	public static Short convertToShort(final Object obj) {
@@ -57,8 +57,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Short.valueOf(((Number) obj).shortValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Short");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Short");
 	}
 
 	public static long convertTolong(final Object obj) {
@@ -71,8 +71,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Long.parseLong((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to long");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to long");
 	}
 
 	public static Long convertToLong(final Object obj) {
@@ -100,8 +100,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Byte.parseByte((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to byte");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to byte");
 	}
 
 	public static Byte convertToByte(final Object obj) {
@@ -115,8 +115,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Byte.valueOf(((Number) obj).byteValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Byte");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Byte");
 	}
 
 	public static float convertTofloat(final Object obj) {
@@ -129,8 +129,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Float.parseFloat((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to float");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to float");
 	}
 
 	public static Float convertToFloat(final Object obj) {
@@ -144,8 +144,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Float.valueOf(((Number) obj).floatValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Float");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Float");
 	}
 
 	public static double convertTodouble(final Object obj) {
@@ -158,8 +158,8 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Double.parseDouble((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to float");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to float");
 	}
 
 	public static Double convertToDouble(final Object obj) {
@@ -173,8 +173,8 @@ public class DefaultConverter {
 		if (obj instanceof Number) {
 			return Double.valueOf(((Number) obj).doubleValue());
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Float");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Float");
 	}
 
 	public static char convertTochar(final Object obj) {
@@ -188,8 +188,8 @@ public class DefaultConverter {
 				return ' ';
 			}
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to char");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to char");
 	}
 
 	public static Character convertToChar(final Object obj) {
@@ -207,8 +207,8 @@ public class DefaultConverter {
 				return ' ';
 			}
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Character");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Character");
 	}
 
 	public static boolean convertTobool(final Object obj) {
@@ -228,8 +228,8 @@ public class DefaultConverter {
 				return true;
 			}
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to boolean");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to boolean");
 	}
 
 	public static Boolean convertToBool(final Object obj) {
@@ -243,7 +243,7 @@ public class DefaultConverter {
 		if (obj instanceof String) {
 			return Boolean.parseBoolean((String) obj);
 		}
-		throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName()
-				+ " to Boolean");
+		throw new ConvertException(
+				"Primitive: Can not convert " + obj.getClass().getName() + " to Boolean");
 	}
 }
