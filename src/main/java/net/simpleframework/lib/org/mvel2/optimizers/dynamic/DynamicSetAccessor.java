@@ -19,6 +19,7 @@
 package net.simpleframework.lib.org.mvel2.optimizers.dynamic;
 
 import static java.lang.System.currentTimeMillis;
+
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;

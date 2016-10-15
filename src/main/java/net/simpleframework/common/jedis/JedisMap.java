@@ -22,14 +22,18 @@ import redis.clients.jedis.JedisPool;
 public class JedisMap extends HashMap<String, Object> {
 	private final int expire;
 
+	private final boolean hash;
 	private final String mkey;
 
 	private JedisPool pool;
 
-	public JedisMap(final JedisPool _pool, final String _mkey, final int _expire) {
+	public JedisMap(final JedisPool _pool, final boolean _hash, final String _mkey,
+			final int _expire) {
 		pool = _pool;
-		mkey = getClass().getSimpleName() + ":" + _mkey;
+		hash = _hash;
+		mkey = hash ? getClass().getSimpleName() + ":" + _mkey : _mkey;
 		expire = _expire;
+
 		try {
 			if (pool != null) {
 				pool.getResource().close();
@@ -39,8 +43,16 @@ public class JedisMap extends HashMap<String, Object> {
 		}
 	}
 
+	public JedisMap(final JedisPool _pool, final String _mkey, final int _expire) {
+		this(_pool, true, _mkey, _expire);
+	}
+
 	public JedisMap(final JedisPool _pool, final String _key) {
 		this(_pool, _key, 0);
+	}
+
+	private String gkey(final String sk) {
+		return mkey + ":" + sk;
 	}
 
 	@Override
@@ -50,7 +62,11 @@ public class JedisMap extends HashMap<String, Object> {
 			try {
 				jedis = pool.getResource();
 				final String sk = Convert.toString(key);
-				return IoUtils.deserialize(jedis.hget(mkey.getBytes(), sk.getBytes()));
+				if (hash) {
+					return IoUtils.deserialize(jedis.hget(mkey.getBytes(), sk.getBytes()));
+				} else {
+					return IoUtils.deserialize(jedis.get(gkey(sk).getBytes()));
+				}
 			} catch (final Exception e) {
 				log.warn(e);
 				return null;
@@ -74,13 +90,21 @@ public class JedisMap extends HashMap<String, Object> {
 					remove(key);
 					return null;
 				} else {
-					final byte[] sbytes = mkey.getBytes();
-					final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
-					final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
-					if (set_expire) {
-						jedis.expire(sbytes, expire);
+					if (hash) {
+						final byte[] sbytes = mkey.getBytes();
+						final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
+						final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
+						if (set_expire) {
+							jedis.expire(sbytes, expire);
+						}
+						return ret;
+					} else {
+						if (expire > 0) {
+							return jedis.setex(gkey(key).getBytes(), expire, IoUtils.serialize(value));
+						} else {
+							return jedis.set(gkey(key).getBytes(), IoUtils.serialize(value));
+						}
 					}
-					return ret;
 				}
 			} catch (final IOException e) {
 				log.warn(e);
@@ -101,13 +125,17 @@ public class JedisMap extends HashMap<String, Object> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
-				final byte[] sbytes = mkey.getBytes();
 				final String sk = Convert.toString(key);
-				final Long ret = jedis.hdel(sbytes, sk.getBytes());
-				if (jedis.hlen(sbytes) == 0) {
-					jedis.del(sbytes);
+				if (hash) {
+					final byte[] sbytes = mkey.getBytes();
+					final Long ret = jedis.hdel(sbytes, sk.getBytes());
+					if (jedis.hlen(sbytes) == 0) {
+						jedis.del(sbytes);
+					}
+					return ret;
+				} else {
+					return jedis.del(gkey(sk).getBytes());
 				}
-				return ret;
 			} finally {
 				if (jedis != null) {
 					jedis.close();
@@ -125,7 +153,11 @@ public class JedisMap extends HashMap<String, Object> {
 			try {
 				jedis = pool.getResource();
 				final String sk = Convert.toString(key);
-				return jedis.hexists(mkey.getBytes(), sk.getBytes());
+				if (hash) {
+					return jedis.hexists(mkey.getBytes(), sk.getBytes());
+				} else {
+					return jedis.exists(gkey(sk).getBytes());
+				}
 			} finally {
 				if (jedis != null) {
 					jedis.close();
@@ -142,8 +174,14 @@ public class JedisMap extends HashMap<String, Object> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
+				Set<byte[]> _set;
+				if (hash) {
+					_set = jedis.hkeys(mkey.getBytes());
+				} else {
+					_set = jedis.keys((mkey + ":*").getBytes());
+				}
 				final Set<String> set = new HashSet<String>();
-				for (final byte[] k : jedis.hkeys(mkey.getBytes())) {
+				for (final byte[] k : _set) {
 					set.add(new String(k));
 				}
 				return set;

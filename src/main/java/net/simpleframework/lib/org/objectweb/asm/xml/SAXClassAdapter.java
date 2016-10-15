@@ -29,15 +29,15 @@
  */
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.AttributesImpl;
+
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor ClassVisitor}

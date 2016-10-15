@@ -19,6 +19,7 @@
 package net.simpleframework.lib.org.mvel2.templates.res;
 
 import static net.simpleframework.lib.org.mvel2.templates.util.TemplateTools.captureToEOS;
+
 import net.simpleframework.lib.org.mvel2.MVEL;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.templates.TemplateRuntime;

@@ -112,7 +112,8 @@ public class Element extends Node {
 	/**
 	 * Test if this element is a block-level element. (E.g. {@code <div> == true}
 	 * or an inline element {@code 
-	 * <p>
+	 * 
+	<p>
 	 *  == false}).
 	 * 
 	 * @return true if block, false if not (and thus inline)
@@ -1065,9 +1066,11 @@ public class Element extends Node {
 	 * normalized and trimmed.
 	 * <p>
 	 * For example, given HTML {@code 
-	 * <p>
+	 * 
+	<p>
 	 * Hello  <b>there</b> now! 
-	 * </p>
+	 * 
+	</p>
 	 * },
 	 * {@code p.text()} returns {@code "Hello there now!"}
 	 *
@@ -1104,9 +1107,11 @@ public class Element extends Node {
 	 * of all children.
 	 * <p>
 	 * For example, given HTML {@code 
-	 * <p>
+	 * 
+	<p>
 	 * Hello <b>there</b> now!
-	 * </p>
+	 * 
+	</p>
 	 * },
 	 * {@code p.ownText()} returns {@code "Hello now!"}, whereas {@code p.text()}
 	 * returns {@code "Hello there now!"}. Note that the text within the
@@ -1432,10 +1437,13 @@ public class Element extends Node {
 	/**
 	 * Retrieves the element's inner HTML. E.g. on a {@code <div>} with one empty
 	 * {@code 
-	 * <p>
+	 * 
+	<p>
 	 * }, would return {@code 
-	 * <p>
-	 * </p>
+	 * 
+	<p>
+	 * 
+	</p>
 	 * }. (Whereas {@link #outerHtml()}
 	 * would return {@code <div>
 	 * 

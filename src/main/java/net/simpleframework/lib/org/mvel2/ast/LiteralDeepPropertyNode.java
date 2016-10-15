@@ -19,6 +19,7 @@ package net.simpleframework.lib.org.mvel2.ast;
 
 import static net.simpleframework.lib.org.mvel2.PropertyAccessor.get;
 import static net.simpleframework.lib.org.mvel2.optimizers.OptimizerFactory.getThreadAccessorOptimizer;
+
 import net.simpleframework.lib.org.mvel2.ParserContext;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 import net.simpleframework.lib.org.mvel2.optimizers.AccessorOptimizer;

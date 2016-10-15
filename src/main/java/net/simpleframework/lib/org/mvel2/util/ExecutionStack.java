@@ -20,6 +20,7 @@ package net.simpleframework.lib.org.mvel2.util;
 
 import static java.lang.String.valueOf;
 import static net.simpleframework.lib.org.mvel2.math.MathProcessor.doOperations;
+
 import net.simpleframework.lib.org.mvel2.ScriptRuntimeException;
 
 public class ExecutionStack {

@@ -16,6 +16,7 @@ package net.simpleframework.lib.net.minidev.json.parser;
  * limitations under the License.
  */
 import static net.simpleframework.lib.net.minidev.json.parser.ParseException.ERROR_UNEXPECTED_EOF;
+
 import net.simpleframework.lib.net.minidev.json.JSONValue;
 import net.simpleframework.lib.net.minidev.json.writer.JsonReaderI;
 

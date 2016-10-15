@@ -20,6 +20,7 @@
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
 import static java.lang.reflect.Array.getLength;
+
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
 /**

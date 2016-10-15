@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.Scriptable;
+
 import net.simpleframework.common.ClassUtils;
 import net.simpleframework.common.IoUtils;
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
-
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.Scriptable;
 
 /**
  * Licensed under the Apache License, Version 2.0

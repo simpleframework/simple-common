@@ -31,13 +31,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.tools.ant.Project;
+
 import net.simpleframework.lib.net.sf.cglib.core.ClassNameReader;
 import net.simpleframework.lib.net.sf.cglib.core.DebuggingClassWriter;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
 import net.simpleframework.lib.org.objectweb.asm.ClassWriter;
-
-import org.apache.tools.ant.Project;
 
 abstract public class AbstractTransformTask extends AbstractProcessTask {
 	private static final int ZIP_MAGIC = 0x504B0304;

@@ -29,12 +29,12 @@
  */
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
+import org.xml.sax.helpers.AttributesImpl;
+
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
-
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * SAXAnnotationAdapter

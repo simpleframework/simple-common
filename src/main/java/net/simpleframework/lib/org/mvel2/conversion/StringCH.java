@@ -19,6 +19,7 @@
 package net.simpleframework.lib.org.mvel2.conversion;
 
 import static java.lang.String.valueOf;
+
 import net.simpleframework.lib.org.mvel2.ConversionHandler;
 import net.simpleframework.lib.org.mvel2.compiler.BlankLiteral;
 

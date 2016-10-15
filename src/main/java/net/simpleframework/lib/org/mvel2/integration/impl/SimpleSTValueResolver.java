@@ -20,6 +20,7 @@ package net.simpleframework.lib.org.mvel2.integration.impl;
 
 import static net.simpleframework.lib.org.mvel2.DataConversion.canConvert;
 import static net.simpleframework.lib.org.mvel2.DataConversion.convert;
+
 import net.simpleframework.lib.org.mvel2.integration.VariableResolver;
 
 public class SimpleSTValueResolver implements VariableResolver {

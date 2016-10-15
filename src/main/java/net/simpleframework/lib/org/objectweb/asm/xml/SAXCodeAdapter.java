@@ -32,6 +32,8 @@ package net.simpleframework.lib.org.objectweb.asm.xml;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.xml.sax.helpers.AttributesImpl;
+
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Handle;
 import net.simpleframework.lib.org.objectweb.asm.Label;
@@ -40,8 +42,6 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 import net.simpleframework.lib.org.objectweb.asm.util.Printer;
-
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * A {@link MethodVisitor} that generates SAX 2.0 events from the visited

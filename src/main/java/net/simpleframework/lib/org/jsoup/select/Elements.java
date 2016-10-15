@@ -387,15 +387,19 @@ public class Elements extends ArrayList<Element> {
 	/**
 	 * Wrap the supplied HTML around each matched elements. For example, with
 	 * HTML {@code 
-	 * <p>
+	 * 
+	<p>
 	 * <b>This</b> is <b>Jsoup</b>
-	 * </p>
+	 * 
+	</p>
 	 * },
 	 * <code>doc.select("b").wrap("&lt;i&gt;&lt;/i&gt;");</code> becomes
 	 * {@code 
-	 * <p>
+	 * 
+	<p>
 	 * <i><b>This</b></i> is <i><b>jsoup</b></i>
-	 * </p>
+	 * 
+	</p>
 	 * }
 	 * 
 	 * @param html
@@ -448,13 +452,17 @@ public class Elements extends ArrayList<Element> {
 	 * element to nothing.
 	 * <p>
 	 * E.g. HTML: {@code <div>
-	 * <p>
+	 * 
+	<p>
 	 * Hello <b>there</b>
-	 * </p>
+	 * 
+	</p>
 	 *  
-	 * <p>
+	 * 
+	<p>
 	 * now
-	 * </p>
+	 * 
+	</p>
 	 * </div>}<br>
 	 * <code>doc.select("p").empty();</code><br>
 	 * HTML = {@code <div>
@@ -482,13 +490,17 @@ public class Elements extends ArrayList<Element> {
 	 * outer HTML of each element to nothing.
 	 * <p>
 	 * E.g. HTML: {@code <div>
-	 * <p>
+	 * 
+	<p>
 	 * Hello
-	 * </p>
+	 * 
+	</p>
 	 *  
-	 * <p>
+	 * 
+	<p>
 	 * there
-	 * </p>
+	 * 
+	</p>
 	 *  <img /></div>}<br>
 	 * <code>doc.select("p").remove();</code><br>
 	 * HTML = {@code <div> <img /></div>}

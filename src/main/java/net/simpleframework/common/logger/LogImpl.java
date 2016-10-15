@@ -1,6 +1,7 @@
 package net.simpleframework.common.logger;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.common.StringUtils;
 
 /**
