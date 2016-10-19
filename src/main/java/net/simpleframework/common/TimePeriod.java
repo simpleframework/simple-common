@@ -50,6 +50,10 @@ public class TimePeriod implements Serializable {
 							to = t;
 						}
 					}
+
+					if (from == null && to == null) {
+						this.timePeriod = ETimePeriod.none;
+					}
 				}
 			}
 		}
