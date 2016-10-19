@@ -136,31 +136,12 @@ public abstract class StringUtils {
 		return object == null ? "" : Convert.toString(object);
 	}
 
-	private static final char[] DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
-			'B', 'C', 'D', 'E', 'F' };
-
 	public static String encodeHex(final byte[] binaryData) {
-		final int l = binaryData.length;
-		final char[] out = new char[l << 1];
-		for (int i = 0, j = 0; i < l; i++) {
-			out[j++] = DIGITS[(0xF0 & binaryData[i]) >>> 4];
-			out[j++] = DIGITS[0x0F & binaryData[i]];
-		}
-		return new String(out);
+		return Hex.encode(binaryData);
 	}
 
 	public static byte[] decodeHex(final String encoded) {
-		final char[] data = encoded.toCharArray();
-		final int len = data.length;
-		final byte[] out = new byte[len >> 1];
-		for (int i = 0, j = 0; j < len; i++) {
-			int f = Character.digit(data[j], 16) << 4;
-			j++;
-			f = f | Character.digit(data[j], 16);
-			j++;
-			out[i] = (byte) (f & 0xFF);
-		}
-		return out;
+		return Hex.decode(encoded);
 	}
 
 	public static String decodeHexString(final String s) {
