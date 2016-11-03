@@ -13,12 +13,13 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <h2>Selector syntax</h2>
  * <p>
  * A selector is a chain of simple selectors, separated by combinators.
- * Selectors are case insensitive (including against elements, attributes, and
- * attribute values).
+ * Selectors are <b>case insensitive</b> (including against
+ * elements, attributes, and attribute values).
  * </p>
  * <p>
  * The universal selector (*) is implicit when no element selector is supplied
- * (i.e. {@code *.header} and {@code .header} is equivalent).
+ * (i.e. {@code *.header} and {@code .header}
+ * is equivalent).
  * </p>
  * <table summary="">
  * <tr>
@@ -35,6 +36,11 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>tag</code></td>
  * <td>elements with the given tag name</td>
  * <td><code>div</code></td>
+ * </tr>
+ * <tr>
+ * <td><code>*|E</code></td>
+ * <td>elements of type E in any namespace <i>ns</i></td>
+ * <td><code>*|name</code> finds <code>&lt;fb:name&gt;</code> elements</td>
  * </tr>
  * <tr>
  * <td><code>ns|E</code></td>
@@ -190,8 +196,8 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td>elements that directly contain the specified text. The search is case
  * insensitive. The text must appear in the found element, not any of its
  * descendants.</td>
- * <td><code>p:containsOwn(jsoup)</code> finds p elements with own text "jsoup".
- * </td>
+ * <td><code>p:containsOwn(jsoup)</code> finds p elements with own text
+ * "jsoup".</td>
  * </tr>
  * <tr>
  * <td><code>:matchesOwn(<em>regex</em>)</code></td>

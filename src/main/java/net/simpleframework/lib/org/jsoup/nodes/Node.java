@@ -66,11 +66,11 @@ public abstract class Node implements Cloneable {
 	public abstract String nodeName();
 
 	/**
-	 * Get an attribute's value by its key.
+	 * Get an attribute's value by its key. <b>Case insensitive</b>
 	 * <p>
 	 * To get an absolute URL from an attribute that may be a relative URL,
-	 * prefix the key with <code><b>abs</b></code>, which is a shortcut to the
-	 * {@link #absUrl} method.
+	 * prefix the key with <code><b>abs</b></code>,
+	 * which is a shortcut to the {@link #absUrl} method.
 	 * </p>
 	 * E.g.:
 	 * <blockquote><code>String url = a.attr("abs:href");</code></blockquote>
@@ -85,8 +85,9 @@ public abstract class Node implements Cloneable {
 	public String attr(final String attributeKey) {
 		Validate.notNull(attributeKey);
 
-		if (attributes.hasKey(attributeKey)) {
-			return attributes.get(attributeKey);
+		final String val = attributes.getIgnoreCase(attributeKey);
+		if (val.length() > 0) {
+			return val;
 		} else if (attributeKey.toLowerCase().startsWith("abs:")) {
 			return absUrl(attributeKey.substring("abs:".length()));
 		} else {
@@ -120,7 +121,7 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Test if this element has an attribute.
+	 * Test if this element has an attribute. <b>Case insensitive</b>
 	 * 
 	 * @param attributeKey
 	 *        The attribute key to check.
@@ -131,11 +132,11 @@ public abstract class Node implements Cloneable {
 
 		if (attributeKey.startsWith("abs:")) {
 			final String key = attributeKey.substring("abs:".length());
-			if (attributes.hasKey(key) && !absUrl(key).equals("")) {
+			if (attributes.hasKeyIgnoreCase(key) && !absUrl(key).equals("")) {
 				return true;
 			}
 		}
-		return attributes.hasKey(attributeKey);
+		return attributes.hasKeyIgnoreCase(attributeKey);
 	}
 
 	/**
@@ -147,7 +148,7 @@ public abstract class Node implements Cloneable {
 	 */
 	public Node removeAttr(final String attributeKey) {
 		Validate.notNull(attributeKey);
-		attributes.remove(attributeKey);
+		attributes.removeIgnoreCase(attributeKey);
 		return this;
 	}
 
@@ -183,16 +184,19 @@ public abstract class Node implements Cloneable {
 
 	/**
 	 * Get an absolute URL from a URL attribute that may be relative (i.e. an
-	 * <code>&lt;a href&gt;</code> or <code>&lt;img src&gt;</code>).
+	 * <code>&lt;a href&gt;</code> or
+	 * <code>&lt;img src&gt;</code>).
 	 * <p>
 	 * E.g.: <code>String absUrl = linkEl.absUrl("href");</code>
 	 * </p>
 	 * <p>
 	 * If the attribute value is already absolute (i.e. it starts with a
-	 * protocol, like <code>http://</code> or <code>https://</code> etc), and it
-	 * successfully parses as a URL, the attribute is returned directly.
-	 * Otherwise, it is treated as a URL relative to the element's
-	 * {@link #baseUri}, and made absolute using that.
+	 * protocol, like
+	 * <code>http://</code> or <code>https://</code> etc), and it successfully
+	 * parses as a URL, the attribute is
+	 * returned directly. Otherwise, it is treated as a URL relative to the
+	 * element's {@link #baseUri}, and made
+	 * absolute using that.
 	 * </p>
 	 * <p>
 	 * As an alternate, you can use the {@link #attr} method with the
@@ -399,6 +403,7 @@ public abstract class Node implements Cloneable {
 		final List<Node> wrapChildren = Parser.parseFragment(html, context, baseUri());
 		final Node wrapNode = wrapChildren.get(0);
 		if (wrapNode == null || !(wrapNode instanceof Element)) {
+			// with; noop
 			return null;
 		}
 

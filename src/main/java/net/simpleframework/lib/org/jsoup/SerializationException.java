@@ -2,8 +2,9 @@ package net.simpleframework.lib.org.jsoup;
 
 /**
  * A SerializationException is raised whenever serialization of a DOM element
- * fails. This exception usually wraps an {@link java.io.IOException} that may
- * be thrown due to an inaccessible output stream.
+ * fails. This exception usually wraps an
+ * {@link java.io.IOException} that may be thrown due to an inaccessible output
+ * stream.
  */
 public final class SerializationException extends RuntimeException {
 	/**
@@ -30,7 +31,8 @@ public final class SerializationException extends RuntimeException {
 	 * Creates and initializes a new serialization exception with the specified
 	 * cause and an error message of
 	 * <code>(cause==null ? null : cause.toString())</code> (which typically
-	 * contains the class and error message of <code>cause</code>).
+	 * contains the class and error message of
+	 * <code>cause</code>).
 	 * 
 	 * @param cause
 	 *        the cause of the new serialization exception (may be

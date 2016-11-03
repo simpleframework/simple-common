@@ -98,14 +98,14 @@ final class CharacterReader {
 		for (int offset = pos; offset < length; offset++) {
 			// scan to first instance of startchar:
 			if (startChar != input[offset]) {
-				while (++offset < length && startChar != input[offset]) { /* empty */
-				}
+				while (++offset < length && startChar != input[offset]) {
+					/* empty */ }
 			}
 			int i = offset + 1;
 			final int last = i + seq.length() - 1;
 			if (offset < length && last <= length) {
-				for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++) { /* empty */
-				}
+				for (int j = 1; i < last && seq.charAt(j) == input[i]; i++, j++) {
+					/* empty */ }
 				if (i == last) {
 					return offset - pos;
 				}
@@ -376,9 +376,10 @@ final class CharacterReader {
 	 * this doc, to prevent leaks.
 	 * <p />
 	 * Simplistic, and on hash collisions just falls back to creating a new
-	 * string, vs a full HashMap with Entry list. That saves both having to
-	 * create objects as hash keys, and running through the entry list, at the
-	 * expense of some more duplicates.
+	 * string, vs a full HashMap with Entry list.
+	 * That saves both having to create objects as hash keys, and running through
+	 * the entry list, at the expense of
+	 * some more duplicates.
 	 */
 	private String cacheString(final int start, final int count) {
 		final char[] val = input;

@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.parser.ParseSettings;
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 import net.simpleframework.lib.org.jsoup.select.Elements;
 
@@ -30,7 +31,7 @@ public class Document extends Element {
 	 * @see #createShell
 	 */
 	public Document(final String baseUri) {
-		super(Tag.valueOf("#root"), baseUri);
+		super(Tag.valueOf("#root", ParseSettings.htmlDefault), baseUri);
 		this.location = baseUri;
 	}
 
@@ -121,7 +122,7 @@ public class Document extends Element {
 	 * @return new element
 	 */
 	public Element createElement(final String tagName) {
-		return new Element(Tag.valueOf(tagName), this.baseUri());
+		return new Element(Tag.valueOf(tagName, ParseSettings.preserveCase), this.baseUri());
 	}
 
 	/**
@@ -183,7 +184,8 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created above if not existent
+																// created
+		// above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<Node>();
 			for (int i = 1; i < elements.size(); i++) {
@@ -250,13 +252,13 @@ public class Document extends Element {
 	 * charset / encoding element within the document.
 	 * 
 	 * <p>
-	 * This enables {@link #updateMetaCharsetElement(boolean) meta charset
-	 * update}.
+	 * This enables
+	 * {@link #updateMetaCharsetElement(boolean) meta charset update}.
 	 * </p>
 	 * 
 	 * <p>
-	 * If there's no element with charset / encoding information yet it will be
-	 * created. Obsolete charset / encoding definitions are removed!
+	 * If there's no element with charset / encoding information yet it will
+	 * be created. Obsolete charset / encoding definitions are removed!
 	 * </p>
 	 * 
 	 * <p>
@@ -298,7 +300,8 @@ public class Document extends Element {
 	 * Document.charset(Charset)} or not.
 	 * 
 	 * <p>
-	 * If set to <tt>false</tt> <i>(default)</i> there are no elements modified.
+	 * If set to <tt>false</tt> <i>(default)</i> there are no elements
+	 * modified.
 	 * </p>
 	 * 
 	 * @param update
@@ -416,7 +419,6 @@ public class Document extends Element {
 
 		private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;
 		private Charset charset = Charset.forName("UTF-8");
-		private CharsetEncoder charsetEncoder = charset.newEncoder();
 		private boolean prettyPrint = true;
 		private boolean outline = false;
 		private int indentAmount = 1;
@@ -462,8 +464,8 @@ public class Document extends Element {
 		 * kept intact.
 		 * <p>
 		 * Where possible (when parsing from a URL or File), the document's output
-		 * charset is automatically set to the input charset. Otherwise, it
-		 * defaults to UTF-8.
+		 * charset is automatically set to the
+		 * input charset. Otherwise, it defaults to UTF-8.
 		 * 
 		 * @return the document's current charset.
 		 */
@@ -480,7 +482,6 @@ public class Document extends Element {
 		 */
 		public OutputSettings charset(final Charset charset) {
 			this.charset = charset;
-			charsetEncoder = charset.newEncoder();
 			return this;
 		}
 
@@ -497,7 +498,7 @@ public class Document extends Element {
 		}
 
 		CharsetEncoder encoder() {
-			return charsetEncoder;
+			return charset.newEncoder();
 		}
 
 		/**
@@ -511,7 +512,8 @@ public class Document extends Element {
 
 		/**
 		 * Set the document's output syntax. Either {@code html}, with empty tags
-		 * and boolean attributes (etc), or {@code xml}, with self-closing tags.
+		 * and boolean attributes (etc), or
+		 * {@code xml}, with self-closing tags.
 		 * 
 		 * @param syntax
 		 *        serialization syntax

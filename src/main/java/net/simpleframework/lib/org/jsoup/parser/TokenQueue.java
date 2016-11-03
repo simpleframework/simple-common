@@ -229,13 +229,13 @@ public class TokenQueue {
 		final int start = pos;
 		final String first = seq.substring(0, 1);
 		final boolean canScan = first.toLowerCase().equals(first.toUpperCase()); // if
-																											// first
-																											// is
-																											// not
-																											// cased,
-																											// use
-																											// index
-																											// of
+		// first
+		// is
+		// not
+		// cased,
+		// use
+		// index
+		// of
 		while (!isEmpty()) {
 			if (matches(seq)) {
 				break;
@@ -244,6 +244,7 @@ public class TokenQueue {
 			if (canScan) {
 				final int skip = queue.indexOf(first, pos) - pos;
 				if (skip == 0) {
+					// force advance of pos
 					pos++;
 				} else if (skip < 0) {
 					pos = queue.length();
@@ -283,7 +284,8 @@ public class TokenQueue {
 	 * matched string (but does not return it).
 	 * <p>
 	 * If the queue runs out of characters before finding the seq, will return as
-	 * much as it can (and queue will go isEmpty() == true).
+	 * much as it can (and queue will go
+	 * isEmpty() == true).
 	 * 
 	 * @param seq
 	 *        String to match up to, and not include in return, and to pull off
@@ -303,8 +305,8 @@ public class TokenQueue {
 	}
 
 	/**
-	 * Pulls a balanced string off the queue. E.g. if queue is
-	 * "(one (two) three) four", (,) will return "one (two) three",
+	 * Pulls a balanced string off the queue. E.g. if queue is "(one (two) three)
+	 * four", (,) will return "one (two) three",
 	 * and leave " four" on the queue. Unbalanced openers and closers can quoted
 	 * (with ' or ") or escaped (with \). Those escapes will be left
 	 * in the returned string, which is suitable for regexes (where we need to
@@ -420,13 +422,14 @@ public class TokenQueue {
 
 	/**
 	 * Consume a CSS element selector (tag name, but | instead of : for
-	 * namespaces, to not conflict with :pseudo selects).
+	 * namespaces (or *| for wildcard namespace), to not conflict with :pseudo
+	 * selects).
 	 * 
 	 * @return tag name
 	 */
 	public String consumeElementSelector() {
 		final int start = pos;
-		while (!isEmpty() && (matchesWord() || matchesAny('|', '_', '-'))) {
+		while (!isEmpty() && (matchesWord() || matchesAny("*|", "|", "_", "-"))) {
 			pos++;
 		}
 

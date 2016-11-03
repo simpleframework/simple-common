@@ -46,9 +46,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	private Element contextElement; // fragment parse context -- could be null
 												// even if fragment parsing
 	private final ArrayList<Element> formattingElements = new ArrayList<Element>(); // active
-																												// (open)
-																												// formatting
-																												// elements
+	// (open)
+	// formatting
+	// elements
 	private List<String> pendingTableCharacters = new ArrayList<String>(); // chars
 																									// in
 																									// table
@@ -67,17 +67,23 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	@Override
-	Document parse(final String input, final String baseUri, final ParseErrorList errors) {
+	ParseSettings defaultSettings() {
+		return ParseSettings.htmlDefault;
+	}
+
+	@Override
+	Document parse(final String input, final String baseUri, final ParseErrorList errors,
+			final ParseSettings settings) {
 		state = HtmlTreeBuilderState.Initial;
 		baseUriSetFromDoc = false;
-		return super.parse(input, baseUri, errors);
+		return super.parse(input, baseUri, errors, settings);
 	}
 
 	List<Node> parseFragment(final String inputFragment, final Element context, final String baseUri,
-			final ParseErrorList errors) {
+			final ParseErrorList errors, final ParseSettings settings) {
 		// context may be null
 		state = HtmlTreeBuilderState.Initial;
-		initialiseParse(inputFragment, baseUri, errors);
+		initialiseParse(inputFragment, baseUri, errors, settings);
 		contextElement = context;
 		fragmentParsing = true;
 		Element root = null;
@@ -97,14 +103,13 @@ public class HtmlTreeBuilder extends TreeBuilder {
 				tokeniser.transition(TokeniserState.ScriptData);
 			} else if (contextTag.equals(("noscript"))) {
 				tokeniser.transition(TokeniserState.Data); // if scripting enabled,
-																			// rawtext
 			} else if (contextTag.equals("plaintext")) {
 				tokeniser.transition(TokeniserState.Data);
 			} else {
 				tokeniser.transition(TokeniserState.Data); // default
 			}
 
-			root = new Element(Tag.valueOf("html"), baseUri);
+			root = new Element(Tag.valueOf("html", settings), baseUri);
 			doc.appendChild(root);
 			stack.add(root);
 			resetInsertionMode();
@@ -220,13 +225,14 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			return el;
 		}
 
-		final Element el = new Element(Tag.valueOf(startTag.name()), baseUri, startTag.attributes);
+		final Element el = new Element(Tag.valueOf(startTag.name(), settings), baseUri,
+				settings.normalizeAttributes(startTag.attributes));
 		insert(el);
 		return el;
 	}
 
 	Element insertStartTag(final String startTagName) {
-		final Element el = new Element(Tag.valueOf(startTagName), baseUri);
+		final Element el = new Element(Tag.valueOf(startTagName, settings), baseUri);
 		insert(el);
 		return el;
 	}
@@ -237,7 +243,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	Element insertEmpty(final Token.StartTag startTag) {
-		final Tag tag = Tag.valueOf(startTag.name());
+		final Tag tag = Tag.valueOf(startTag.name(), settings);
 		final Element el = new Element(tag, baseUri, startTag.attributes);
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
@@ -256,7 +262,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	FormElement insertForm(final Token.StartTag startTag, final boolean onStack) {
-		final Tag tag = Tag.valueOf(startTag.name());
+		final Tag tag = Tag.valueOf(startTag.name(), settings);
 		final FormElement el = new FormElement(tag, baseUri, startTag.attributes);
 		setFormElement(el);
 		insertNode(el);
@@ -545,6 +551,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 				return true;
 			}
 			if (!StringUtil.in(elName, TagSearchSelectScope)) {
+				// except
 				return false;
 			}
 		}
@@ -592,9 +599,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	 * 11.2.5.2 Closing elements that have implied end tags
 	 * <p/>
 	 * When the steps below require the UA to generate implied end tags, then,
-	 * while the current node is a dd element, a dt element, an li element, an
-	 * option element, an optgroup element, a p element, an rp element, or an rt
-	 * element, the UA must pop the current node off the stack of open elements.
+	 * while the current node is a dd element, a
+	 * dt element, an li element, an option element, an optgroup element, a p
+	 * element, an rp element, or an rt element,
+	 * the UA must pop the current node off the stack of open elements.
 	 * 
 	 * @param excludeTag
 	 *        If a step requires the UA to generate implied end tags but lists an
@@ -682,6 +690,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			entry = formattingElements.get(--pos); // step 5. one earlier than
 																// entry
 			if (entry == null || onStack(entry)) {
+				// stack
 				break; // jump to 8, else continue back to 4
 			}
 		}
@@ -696,8 +705,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			// stack
 			skip = false; // can only skip increment from 4.
 			final Element newEl = insertStartTag(entry.nodeName()); // todo: avoid
-																						// fostering
-																						// here?
+			// fostering here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
 

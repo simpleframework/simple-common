@@ -16,14 +16,16 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
  * <p>
  * To get a new Connection, use
  * {@link net.simpleframework.lib.org.jsoup.Jsoup#connect(String)}. Connections
- * contain {@link Connection.Request} and {@link Connection.Response} objects.
- * The request objects are reusable as prototype requests.
+ * contain {@link Connection.Request}
+ * and {@link Connection.Response} objects. The request objects are reusable as
+ * prototype requests.
  * </p>
  * <p>
  * Request configuration can be made using either the shortcut methods in
- * Connection (e.g. {@link #userAgent(String)}), or by methods in the
- * Connection.Request object directly. All request configuration must be made
- * before the request is executed.
+ * Connection (e.g. {@link #userAgent(String)}),
+ * or by methods in the Connection.Request object directly. All request
+ * configuration must be made before the request is
+ * executed.
  * </p>
  */
 public interface Connection {
@@ -186,8 +188,9 @@ public interface Connection {
 	/**
 	 * Disable/enable TSL certificates validation for HTTPS requests.
 	 * <p>
-	 * By default this is <b>true</b>; all connections over HTTPS perform normal
-	 * validation of certificates, and will abort requests if the provided
+	 * By default this is <b>true</b>; all
+	 * connections over HTTPS perform normal validation of certificates, and will
+	 * abort requests if the provided
 	 * certificate does not validate.
 	 * </p>
 	 * <p>
@@ -281,11 +284,12 @@ public interface Connection {
 	/**
 	 * Set a POST (or PUT) request body. Useful when a server expects a plain
 	 * request body, not a set for URL
-	 * encoded form key/value pairs. E.g.: <code><pre>Jsoup.connect(url)
+	 * encoded form key/value pairs. E.g.:
+	 * <code><pre>Jsoup.connect(url)
 	 * .requestBody(json)
 	 * .header("Content-Type", "application/json")
-	 * .post();</pre></code> If any data key/vals are supplied, they will be sent
-	 * as URL query params.
+	 * .post();</pre></code>
+	 * If any data key/vals are supplied, they will be sent as URL query params.
 	 * 
 	 * @return this Request, for chaining
 	 */
@@ -302,6 +306,16 @@ public interface Connection {
 	 * @see net.simpleframework.lib.org.jsoup.Connection.Request#headers()
 	 */
 	Connection header(String name, String value);
+
+	/**
+	 * Adds each of the supplied headers to the request.
+	 * 
+	 * @param headers
+	 *        map of headers name {@literal ->} value pairs
+	 * @return this Connection, for chaining
+	 * @see net.simpleframework.lib.org.jsoup.Connection.Request#headers()
+	 */
+	Connection headers(Map<String, String> headers);
 
 	/**
 	 * Set a cookie to be sent in the request.
@@ -541,8 +555,9 @@ public interface Connection {
 		 * Get a cookie value by name from this request/response.
 		 * <p>
 		 * Response objects have a simplified cookie model. Each cookie set in the
-		 * response is added to the response object's cookie key=value map. The
-		 * cookie's path, domain, and expiry date are ignored.
+		 * response is added to the response
+		 * object's cookie key=value map. The cookie's path, domain, and expiry
+		 * date are ignored.
 		 * </p>
 		 * 
 		 * @param name
@@ -738,11 +753,13 @@ public interface Connection {
 		/**
 		 * Set a POST (or PUT) request body. Useful when a server expects a plain
 		 * request body, not a set for URL
-		 * encoded form key/value pairs. E.g.: <code><pre>Jsoup.connect(url)
+		 * encoded form key/value pairs. E.g.:
+		 * <code><pre>Jsoup.connect(url)
 		 * .requestBody(json)
 		 * .header("Content-Type", "application/json")
-		 * .post();</pre></code> If any data key/vals are supplied, they will be
-		 * sent as URL query params.
+		 * .post();</pre></code>
+		 * If any data key/vals are supplied, they will be sent as URL query
+		 * params.
 		 * 
 		 * @return this Request, for chaining
 		 */
@@ -809,11 +826,22 @@ public interface Connection {
 		String statusMessage();
 
 		/**
-		 * Get the character set name of the response.
+		 * Get the character set name of the response, derived from the
+		 * content-type header.
 		 * 
 		 * @return character set name
 		 */
 		String charset();
+
+		/**
+		 * Set / override the response character set. When the document body is
+		 * parsed it will be with this charset.
+		 * 
+		 * @param charset
+		 *        to decode body as
+		 * @return this Response, for chaining
+		 */
+		Response charset(String charset);
 
 		/**
 		 * Get the response content type (e.g. "text/html");

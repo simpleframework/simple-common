@@ -43,7 +43,28 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return (element.tagName().equals(tagName));
+			return (element.tagName().equalsIgnoreCase(tagName));
+		}
+
+		@Override
+		public String toString() {
+			return String.format("%s", tagName);
+		}
+	}
+
+	/**
+	 * Evaluator for tag name that ends with
+	 */
+	public static final class TagEndsWith extends Evaluator {
+		private final String tagName;
+
+		public TagEndsWith(final String tagName) {
+			this.tagName = tagName;
+		}
+
+		@Override
+		public boolean matches(final Element root, final Element element) {
+			return (element.tagName().endsWith(tagName));
 		}
 
 		@Override
@@ -125,7 +146,8 @@ public abstract class Evaluator {
 		private final String keyPrefix;
 
 		public AttributeStarting(final String keyPrefix) {
-			this.keyPrefix = keyPrefix;
+			Validate.notEmpty(keyPrefix);
+			this.keyPrefix = keyPrefix.toLowerCase();
 		}
 
 		@Override
@@ -133,7 +155,7 @@ public abstract class Evaluator {
 			final List<net.simpleframework.lib.org.jsoup.nodes.Attribute> values = element.attributes()
 					.asList();
 			for (final net.simpleframework.lib.org.jsoup.nodes.Attribute attribute : values) {
-				if (attribute.getKey().startsWith(keyPrefix)) {
+				if (attribute.getKey().toLowerCase().startsWith(keyPrefix)) {
 					return true;
 				}
 			}

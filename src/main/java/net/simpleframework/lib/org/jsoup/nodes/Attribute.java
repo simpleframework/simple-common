@@ -27,7 +27,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * Create a new attribute from unencoded (raw) key and value.
 	 * 
 	 * @param key
-	 *        attribute key
+	 *        attribute key; case is preserved.
 	 * @param value
 	 *        attribute value
 	 * @see #createFromEncoded
@@ -35,7 +35,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	public Attribute(final String key, final String value) {
 		Validate.notEmpty(key);
 		Validate.notNull(value);
-		this.key = key.trim().toLowerCase();
+		this.key = key.trim();
 		this.value = value;
 	}
 
@@ -50,14 +50,14 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	}
 
 	/**
-	 * Set the attribute key. Gets normalised as per the constructor method.
+	 * Set the attribute key; case is preserved.
 	 * 
 	 * @param key
 	 *        the new key; must not be null
 	 */
 	public void setKey(final String key) {
 		Validate.notEmpty(key);
-		this.key = key.trim().toLowerCase();
+		this.key = key.trim();
 	}
 
 	/**

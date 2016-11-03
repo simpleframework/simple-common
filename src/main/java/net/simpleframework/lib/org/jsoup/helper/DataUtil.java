@@ -145,7 +145,8 @@ public final class DataUtil {
 				}
 			}
 			// look for <?xml encoding='ISO-8859-1'?>
-			if (foundCharset == null && doc.childNode(0) instanceof XmlDeclaration) {
+			if (foundCharset == null && doc.childNodeSize() > 0
+					&& doc.childNode(0) instanceof XmlDeclaration) {
 				final XmlDeclaration prolog = (XmlDeclaration) doc.childNode(0);
 				if (prolog.name().equals("xml")) {
 					foundCharset = prolog.attr("encoding");

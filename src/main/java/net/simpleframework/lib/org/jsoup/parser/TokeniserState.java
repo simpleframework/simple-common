@@ -40,7 +40,7 @@ enum TokeniserState {
 		}
 	},
 	Rcdata {
-		// / handles data in title, textarea etc
+		/// handles data in title, textarea etc
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
 			switch (r.current()) {
@@ -155,7 +155,7 @@ enum TokeniserState {
 			// previous TagOpen state did NOT consume, will have a letter char in
 			// current
 			// String tagName = r.consumeToAnySorted(tagCharsSorted).toLowerCase();
-			final String tagName = r.consumeTagName().toLowerCase();
+			final String tagName = r.consumeTagName();
 			t.tagPending.appendTagName(tagName);
 
 			switch (r.consume()) {
@@ -210,8 +210,8 @@ enum TokeniserState {
 		void read(final Tokeniser t, final CharacterReader r) {
 			if (r.matchesLetter()) {
 				t.createTagPending(false);
-				t.tagPending.appendTagName(Character.toLowerCase(r.current()));
-				t.dataBuffer.append(Character.toLowerCase(r.current()));
+				t.tagPending.appendTagName(r.current());
+				t.dataBuffer.append(r.current());
 				t.advanceTransition(RCDATAEndTagName);
 			} else {
 				t.emit("</");
@@ -224,7 +224,7 @@ enum TokeniserState {
 		void read(final Tokeniser t, final CharacterReader r) {
 			if (r.matchesLetter()) {
 				final String name = r.consumeLetterSequence();
-				t.tagPending.appendTagName(name.toLowerCase());
+				t.tagPending.appendTagName(name);
 				t.dataBuffer.append(name);
 				return;
 			}
@@ -439,7 +439,7 @@ enum TokeniserState {
 		void read(final Tokeniser t, final CharacterReader r) {
 			if (r.matchesLetter()) {
 				t.createTempBuffer();
-				t.dataBuffer.append(Character.toLowerCase(r.current()));
+				t.dataBuffer.append(r.current());
 				t.emit("<" + r.current());
 				t.advanceTransition(ScriptDataDoubleEscapeStart);
 			} else if (r.matches('/')) {
@@ -456,7 +456,7 @@ enum TokeniserState {
 		void read(final Tokeniser t, final CharacterReader r) {
 			if (r.matchesLetter()) {
 				t.createTagPending(false);
-				t.tagPending.appendTagName(Character.toLowerCase(r.current()));
+				t.tagPending.appendTagName(r.current());
 				t.dataBuffer.append(r.current());
 				t.advanceTransition(ScriptDataEscapedEndTagName);
 			} else {
@@ -632,7 +632,7 @@ enum TokeniserState {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
 			final String name = r.consumeToAnySorted(attributeNameCharsSorted);
-			t.tagPending.appendAttributeName(name.toLowerCase());
+			t.tagPending.appendAttributeName(name);
 
 			final char c = r.consume();
 			switch (c) {
@@ -782,7 +782,7 @@ enum TokeniserState {
 				t.transition(AfterAttributeValue_quoted);
 				break;
 			case '&':
-				final char[] ref = t.consumeCharacterReference('"', true);
+				final int[] ref = t.consumeCharacterReference('"', true);
 				if (ref != null) {
 					t.tagPending.appendAttributeValue(ref);
 				} else {
@@ -817,7 +817,7 @@ enum TokeniserState {
 				t.transition(AfterAttributeValue_quoted);
 				break;
 			case '&':
-				final char[] ref = t.consumeCharacterReference('\'', true);
+				final int[] ref = t.consumeCharacterReference('\'', true);
 				if (ref != null) {
 					t.tagPending.appendAttributeValue(ref);
 				} else {
@@ -854,7 +854,7 @@ enum TokeniserState {
 				t.transition(BeforeAttributeName);
 				break;
 			case '&':
-				final char[] ref = t.consumeCharacterReference('>', true);
+				final int[] ref = t.consumeCharacterReference('>', true);
 				if (ref != null) {
 					t.tagPending.appendAttributeValue(ref);
 				} else {
@@ -934,6 +934,7 @@ enum TokeniserState {
 				break;
 			default:
 				t.error(this);
+				r.unconsume();
 				t.transition(BeforeAttributeName);
 			}
 		}
@@ -1213,7 +1214,7 @@ enum TokeniserState {
 		void read(final Tokeniser t, final CharacterReader r) {
 			if (r.matchesLetter()) {
 				final String name = r.consumeLetterSequence();
-				t.doctypePending.name.append(name.toLowerCase());
+				t.doctypePending.name.append(name);
 				return;
 			}
 			final char c = r.consume();
@@ -1709,7 +1710,7 @@ enum TokeniserState {
 			final TokeniserState elseTransition) {
 		if (r.matchesLetter()) {
 			final String name = r.consumeLetterSequence();
-			t.tagPending.appendTagName(name.toLowerCase());
+			t.tagPending.appendTagName(name);
 			t.dataBuffer.append(name);
 			return;
 		}
@@ -1768,7 +1769,7 @@ enum TokeniserState {
 	}
 
 	private static void readCharRef(final Tokeniser t, final TokeniserState advance) {
-		final char[] c = t.consumeCharacterReference(null, false);
+		final int[] c = t.consumeCharacterReference(null, false);
 		if (c == null) {
 			t.emit('&');
 		} else {
@@ -1792,7 +1793,7 @@ enum TokeniserState {
 			final TokeniserState primary, final TokeniserState fallback) {
 		if (r.matchesLetter()) {
 			final String name = r.consumeLetterSequence();
-			t.dataBuffer.append(name.toLowerCase());
+			t.dataBuffer.append(name);
 			t.emit(name);
 			return;
 		}

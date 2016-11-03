@@ -33,7 +33,7 @@ public class Tag {
 													// form: input etc
 
 	private Tag(final String tagName) {
-		this.tagName = tagName.toLowerCase();
+		this.tagName = tagName;
 	}
 
 	/**
@@ -55,14 +55,16 @@ public class Tag {
 	 * 
 	 * @param tagName
 	 *        Name of tag, e.g. "p". Case insensitive.
+	 * @param settings
+	 *        used to control tag name sensitivity
 	 * @return The tag, either defined or new generic.
 	 */
-	public static Tag valueOf(String tagName) {
+	public static Tag valueOf(String tagName, final ParseSettings settings) {
 		Validate.notNull(tagName);
 		Tag tag = tags.get(tagName);
 
 		if (tag == null) {
-			tagName = tagName.trim().toLowerCase();
+			tagName = settings.normalizeTag(tagName);
 			Validate.notEmpty(tagName);
 			tag = tags.get(tagName);
 
@@ -75,6 +77,22 @@ public class Tag {
 			}
 		}
 		return tag;
+	}
+
+	/**
+	 * Get a Tag by name. If not previously defined (unknown), returns a new
+	 * generic tag, that can do anything.
+	 * <p>
+	 * Pre-defined tags (P, DIV etc) will be ==, but unknown tags are not
+	 * registered and will only .equals().
+	 * </p>
+	 *
+	 * @param tagName
+	 *        Name of tag, e.g. "p". <b>Case sensitive</b>.
+	 * @return The tag, either defined or new generic.
+	 */
+	public static Tag valueOf(final String tagName) {
+		return valueOf(tagName, ParseSettings.preserveCase);
 	}
 
 	/**

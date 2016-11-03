@@ -243,6 +243,15 @@ public class HttpConnection implements Connection {
 	}
 
 	@Override
+	public Connection headers(final Map<String, String> headers) {
+		Validate.notNull(headers, "Header map must not be null");
+		for (final Map.Entry<String, String> entry : headers.entrySet()) {
+			req.header(entry.getKey(), entry.getValue());
+		}
+		return this;
+	}
+
+	@Override
 	public Connection cookie(final String name, final String value) {
 		req.cookie(name, value);
 		return this;
@@ -382,8 +391,8 @@ public class HttpConnection implements Connection {
 			Validate.notEmpty(name, "Header name must not be empty");
 			final Map.Entry<String, String> entry = scanHeaders(name); // remove is
 																							// case
-																							// insensitive
-																							// too
+			// insensitive
+			// too
 			if (entry != null) {
 				headers.remove(entry.getKey()); // ensures correct case
 			}
@@ -702,19 +711,22 @@ public class HttpConnection implements Connection {
 
 					String location = res.header(LOCATION);
 					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
+						// broken
+						// Location:
+						// http:/temp/AAG_New/en/index.php
 						location = location.substring(6);
 					}
 					req.url(StringUtil.resolve(req.url(), encodeUrl(location)));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
-																													// response
-																													// cookies
-																													// to
-																													// request
-																													// (for
-																													// e.g.
-																													// login
-																													// posts)
+						// response
+						// cookies
+						// to
+						// request
+						// (for
+						// e.g.
+						// login
+						// posts)
 						req.cookie(cookie.getKey(), cookie.getValue());
 					}
 					return execute(req, res);
@@ -815,6 +827,12 @@ public class HttpConnection implements Connection {
 		}
 
 		@Override
+		public Response charset(final String charset) {
+			this.charset = charset;
+			return this;
+		}
+
+		@Override
 		public String contentType() {
 			return contentType;
 		}
@@ -908,7 +926,8 @@ public class HttpConnection implements Connection {
 		 * add it to current SSLContext.
 		 * <p/>
 		 * please not that this method will only perform action if
-		 * sslSocketFactory is not yet instantiated.
+		 * sslSocketFactory is not yet
+		 * instantiated.
 		 *
 		 * @throws IOException
 		 */
@@ -1044,7 +1063,12 @@ public class HttpConnection implements Connection {
 
 		private static String setOutputContentType(final Connection.Request req) {
 			String bound = null;
-			if (needsMultipart(req)) {
+			if (req.hasHeader(CONTENT_TYPE)) {
+				// no-op; don't add content type as already set (e.g. for
+				// requestBody())
+				// todo - if content type already set, we could add charset or
+				// boundary if those aren't included
+			} else if (needsMultipart(req)) {
 				bound = DataUtil.mimeBoundary();
 				req.header(CONTENT_TYPE, MULTIPART_FORM_DATA + "; boundary=" + bound);
 			} else {

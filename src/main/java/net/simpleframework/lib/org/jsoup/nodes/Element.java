@@ -14,6 +14,7 @@ import java.util.regex.PatternSyntaxException;
 
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.parser.ParseSettings;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 import net.simpleframework.lib.org.jsoup.select.Collector;
@@ -66,7 +67,7 @@ public class Element extends Node {
 	 *        the base URI of this element. It is acceptable for the base URI to
 	 *        be an empty
 	 *        string, but not null.
-	 * @see Tag#valueOf(String)
+	 * @see Tag#valueOf(String, ParseSettings)
 	 */
 	public Element(final Tag tag, final String baseUri) {
 		this(tag, baseUri, new Attributes());
@@ -88,7 +89,8 @@ public class Element extends Node {
 
 	/**
 	 * Change the tag of this element. For example, convert a {@code <span>} to a
-	 * {@code <div>} with {@code el.tagName("div");}.
+	 * {@code <div>} with
+	 * {@code el.tagName("div");}.
 	 *
 	 * @param tagName
 	 *        new tag name for this element
@@ -96,7 +98,9 @@ public class Element extends Node {
 	 */
 	public Element tagName(final String tagName) {
 		Validate.notEmpty(tagName, "Tag name must not be empty.");
-		tag = Tag.valueOf(tagName);
+		tag = Tag.valueOf(tagName, ParseSettings.preserveCase); // preserve the
+																					// requested tag
+																					// case
 		return this;
 	}
 
@@ -111,7 +115,8 @@ public class Element extends Node {
 
 	/**
 	 * Test if this element is a block-level element. (E.g. {@code <div> == true}
-	 * or an inline element {@code 
+	 * or an inline element
+	 * {@code 
 	 * 
 	<p>
 	 *  == false}).
@@ -128,7 +133,7 @@ public class Element extends Node {
 	 * @return The id attribute, if present, or an empty string if not.
 	 */
 	public String id() {
-		return attributes.get("id");
+		return attributes.getIgnoreCase("id");
 	}
 
 	/**
@@ -170,10 +175,12 @@ public class Element extends Node {
 	 * <p>
 	 * E.g., the element
 	 * {@code <div data-package="jsoup" data-language="Java" class="group">...}
-	 * has the dataset {@code package=jsoup, language=java}.
+	 * has the dataset
+	 * {@code package=jsoup, language=java}.
 	 * <p>
 	 * This map is a filtered view of the element's attribute map. Changes to one
-	 * map (add, remove, update) are reflected in the other map.
+	 * map (add, remove, update) are reflected
+	 * in the other map.
 	 * <p>
 	 * You can find elements that have data attributes using the {@code [^data-]}
 	 * attribute key prefix selector.
@@ -212,8 +219,9 @@ public class Element extends Node {
 	 * Get a child element of this element, by its 0-based index number.
 	 * <p>
 	 * Note that an element can have both mixed Nodes and Elements as children.
-	 * This method inspects a filtered list of children that are elements, and
-	 * the index is based on that filtered list.
+	 * This method inspects
+	 * a filtered list of children that are elements, and the index is based on
+	 * that filtered list.
 	 * </p>
 	 * 
 	 * @param index
@@ -264,12 +272,9 @@ public class Element extends Node {
 	 *         <ul>
 	 *         <li>{@code p.text()} = {@code "One Two Three Four"}</li>
 	 *         <li>{@code p.ownText()} = {@code "One Three Four"}</li>
-	 *         <li>{@code p.children()} = {@code Elements[<span>, <br>
-	 * ]}</li>
+	 *         <li>{@code p.children()} = {@code Elements[<span>, <br>]}</li>
 	 *         <li>{@code p.childNodes()} =
-	 *         {@code List<Node>["One ", <span>, " Three ",
-	 * <br>
-	 * , " Four"]}</li>
+	 *         {@code List<Node>["One ", <span>, " Three ", <br>, " Four"]}</li>
 	 *         <li>{@code p.textNodes()} =
 	 *         {@code List<TextNode>["One ", " Three ", " Four"]}</li>
 	 *         </ul>
@@ -311,8 +316,8 @@ public class Element extends Node {
 	 * may include this element, or any of its children.
 	 * <p>
 	 * This method is generally more powerful to use than the DOM-type
-	 * {@code getElementBy*} methods, because multiple filters can be combined,
-	 * e.g.:
+	 * {@code getElementBy*} methods, because
+	 * multiple filters can be combined, e.g.:
 	 * </p>
 	 * <ul>
 	 * <li>{@code el.select("a[href]")} - finds links ({@code a} tags with
@@ -569,9 +574,11 @@ public class Element extends Node {
 	/**
 	 * Get a CSS selector that will uniquely select this element.
 	 * <p>
-	 * If the element has an ID, returns #id; otherwise returns the parent (if
-	 * any) CSS selector, followed by {@literal '>'}, followed by a unique
-	 * selector for the element (tag.class.class:nth-child(n)).
+	 * If the element has an ID, returns #id;
+	 * otherwise returns the parent (if any) CSS selector, followed by
+	 * {@literal '>'},
+	 * followed by a unique selector for the element
+	 * (tag.class.class:nth-child(n)).
 	 * </p>
 	 *
 	 * @return the CSS Path that can be used to retrieve the element in a
@@ -591,6 +598,10 @@ public class Element extends Node {
 		}
 
 		if (parent() == null || parent() instanceof Document) {
+			// Document to
+			// selector, as will
+			// always have a
+			// html node
 			return selector.toString();
 		}
 
@@ -744,9 +755,10 @@ public class Element extends Node {
 	 * Find an element by ID, including or under this element.
 	 * <p>
 	 * Note that this finds the first matching ID, starting with this element. If
-	 * you search down from a different starting point, it is possible to find a
-	 * different element by ID. For unique element by ID within a Document, use
-	 * {@link Document#getElementById(String)}
+	 * you search down from a different
+	 * starting point, it is possible to find a different element by ID. For
+	 * unique element by ID within a Document,
+	 * use {@link Document#getElementById(String)}
 	 * 
 	 * @param id
 	 *        The ID to search for.
@@ -769,8 +781,9 @@ public class Element extends Node {
 	 * insensitive.
 	 * <p>
 	 * Elements can have multiple classes (e.g.
-	 * {@code <div class="header round first">}. This method checks each class,
-	 * so you can find the above with {@code el.getElementsByClass("header");}.
+	 * {@code <div class="header round first">}. This method
+	 * checks each class, so you can find the above with
+	 * {@code el.getElementsByClass("header");}.
 	 * 
 	 * @param className
 	 *        the name of the class to search for.
@@ -793,7 +806,7 @@ public class Element extends Node {
 	 */
 	public Elements getElementsByAttribute(String key) {
 		Validate.notEmpty(key);
-		key = key.trim().toLowerCase();
+		key = key.trim();
 
 		return Collector.collect(new Evaluator.Attribute(key), this);
 	}
@@ -810,7 +823,7 @@ public class Element extends Node {
 	 */
 	public Elements getElementsByAttributeStarting(String keyPrefix) {
 		Validate.notEmpty(keyPrefix);
-		keyPrefix = keyPrefix.trim().toLowerCase();
+		keyPrefix = keyPrefix.trim();
 
 		return Collector.collect(new Evaluator.AttributeStarting(keyPrefix), this);
 	}
@@ -909,9 +922,8 @@ public class Element extends Node {
 	 * @param regex
 	 *        regular expression to match against attribute values. You can use
 	 *        <a href=
-	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *        options.
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded
+	 *        flags</a> (such as (?i) and (?m) to control regex options.
 	 * @return elements that have attributes matching this regular expression
 	 */
 	public Elements getElementsByAttributeValueMatching(final String key, final String regex) {
@@ -1002,9 +1014,8 @@ public class Element extends Node {
 	 * 
 	 * @param regex
 	 *        regular expression to match text against. You can use <a href=
-	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *        options.
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded
+	 *        flags</a> (such as (?i) and (?m) to control regex options.
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#text()
 	 */
@@ -1035,9 +1046,8 @@ public class Element extends Node {
 	 * 
 	 * @param regex
 	 *        regular expression to match text against. You can use <a href=
-	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded"
-	 *        >embedded flags</a> (such as (?i) and (?m) to control regex
-	 *        options.
+	 *        "http://java.sun.com/docs/books/tutorial/essential/regex/pattern.html#embedded">embedded
+	 *        flags</a> (such as (?i) and (?m) to control regex options.
 	 * @return elements matching the supplied regular expression.
 	 * @see Element#ownText()
 	 */
@@ -1071,8 +1081,7 @@ public class Element extends Node {
 	 * Hello  <b>there</b> now! 
 	 * 
 	</p>
-	 * },
-	 * {@code p.text()} returns {@code "Hello there now!"}
+	 * }, {@code p.text()} returns {@code "Hello there now!"}
 	 *
 	 * @return unencoded text, or empty string if none.
 	 * @see #ownText()
@@ -1112,11 +1121,10 @@ public class Element extends Node {
 	 * Hello <b>there</b> now!
 	 * 
 	</p>
-	 * },
-	 * {@code p.ownText()} returns {@code "Hello now!"}, whereas {@code p.text()}
-	 * returns {@code "Hello there now!"}. Note that the text within the
-	 * {@code b} element is not returned, as it is not a direct child of the
-	 * {@code p} element.
+	 * }, {@code p.ownText()} returns {@code "Hello now!"},
+	 * whereas {@code p.text()} returns {@code "Hello there now!"}.
+	 * Note that the text within the {@code b} element is not returned, as it is
+	 * not a direct child of the {@code p} element.
 	 *
 	 * @return unencoded text, or empty string if none.
 	 * @see #text()
@@ -1282,26 +1290,49 @@ public class Element extends Node {
 	 *        name of class to check for
 	 * @return true if it does, false if not
 	 */
-	/*
-	 * Used by common .class selector, so perf tweaked to reduce object creation
-	 * vs hitting classnames().
-	 * 
-	 * Wiki: 71, 13 (5.4x)
-	 * CNN: 227, 91 (2.5x)
-	 * Alterslash: 59, 4 (14.8x)
-	 * Jsoup: 14, 1 (14x)
-	 */
+	// performance sensitive
 	public boolean hasClass(final String className) {
 		final String classAttr = attributes.get("class");
-		if (classAttr.equals("") || classAttr.length() < className.length()) {
+		final int len = classAttr.length();
+		final int wantLen = className.length();
+
+		if (len == 0 || len < wantLen) {
 			return false;
 		}
 
-		final String[] classes = classSplit.split(classAttr);
-		for (final String name : classes) {
-			if (className.equalsIgnoreCase(name)) {
-				return true;
+		// if both lengths are equal, only need compare the className with the
+		// attribute
+		if (len == wantLen) {
+			return className.equalsIgnoreCase(classAttr);
+		}
+
+		// otherwise, scan for whitespace and compare regions (with no string or
+		// arraylist allocations)
+		boolean inClass = false;
+		int start = 0;
+		for (int i = 0; i < len; i++) {
+			if (Character.isWhitespace(classAttr.charAt(i))) {
+				if (inClass) {
+					// white space ends a class name, compare it with the requested
+					// one, ignore case
+					if (i - start == wantLen
+							&& classAttr.regionMatches(true, start, className, 0, wantLen)) {
+						return true;
+					}
+					inClass = false;
+				}
+			} else {
+				if (!inClass) {
+					// we're in a class name : keep the start of the substring
+					inClass = true;
+					start = i;
+				}
 			}
+		}
+
+		// check the last entry
+		if (inClass && len - start == wantLen) {
+			return classAttr.regionMatches(true, start, className, 0, wantLen);
 		}
 
 		return false;
@@ -1439,15 +1470,16 @@ public class Element extends Node {
 	 * {@code 
 	 * 
 	<p>
-	 * }, would return {@code 
+	 * }, would return
+	 * {@code 
 	 * 
 	<p>
 	 * 
 	</p>
-	 * }. (Whereas {@link #outerHtml()}
-	 * would return {@code <div>
+	 * }. (Whereas {@link #outerHtml()} would return {@code <div>
 	 * 
 	<p>
+	 * 
 	</p>
 	 * </div>}.)
 	 * 

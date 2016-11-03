@@ -25,9 +25,18 @@ import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
  */
 public class XmlTreeBuilder extends TreeBuilder {
 	@Override
+	ParseSettings defaultSettings() {
+		return ParseSettings.preserveCase;
+	}
+
+	Document parse(final String input, final String baseUri) {
+		return parse(input, baseUri, ParseErrorList.noTracking(), ParseSettings.preserveCase);
+	}
+
+	@Override
 	protected void initialiseParse(final String input, final String baseUri,
-			final ParseErrorList errors) {
-		super.initialiseParse(input, baseUri, errors);
+			final ParseErrorList errors, final ParseSettings settings) {
+		super.initialiseParse(input, baseUri, errors, settings);
 		stack.add(doc); // place the document onto the stack. differs from
 								// HtmlTreeBuilder (not on stack)
 		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
@@ -65,14 +74,16 @@ public class XmlTreeBuilder extends TreeBuilder {
 	}
 
 	Element insert(final Token.StartTag startTag) {
-		final Tag tag = Tag.valueOf(startTag.name());
+		final Tag tag = Tag.valueOf(startTag.name(), settings);
 		// todo: wonder if for xml parsing, should treat all tags as unknown?
 		// because it's not html.
-		final Element el = new Element(tag, baseUri, startTag.attributes);
+		final Element el = new Element(tag, baseUri,
+				settings.normalizeAttributes(startTag.attributes));
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
 			tokeniser.acknowledgeSelfClosingFlag();
 			if (!tag.isKnownTag()) {
+				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {
@@ -94,7 +105,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 				final Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">",
 						baseUri, Parser.xmlParser());
 				final Element el = doc.child(0);
-				insert = new XmlDeclaration(el.tagName(), comment.baseUri(), data.startsWith("!"));
+				insert = new XmlDeclaration(settings.normalizeTag(el.tagName()), comment.baseUri(),
+						data.startsWith("!"));
 				insert.attributes().addAll(el.attributes());
 			}
 		}
@@ -107,8 +119,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 	}
 
 	void insert(final Token.Doctype d) {
-		final DocumentType doctypeNode = new DocumentType(d.getName(), d.getPublicIdentifier(),
-				d.getSystemIdentifier(), baseUri);
+		final DocumentType doctypeNode = new DocumentType(settings.normalizeTag(d.getName()),
+				d.getPublicIdentifier(), d.getSystemIdentifier(), baseUri);
 		insertNode(doctypeNode);
 	}
 
@@ -144,8 +156,8 @@ public class XmlTreeBuilder extends TreeBuilder {
 	}
 
 	List<Node> parseFragment(final String inputFragment, final String baseUri,
-			final ParseErrorList errors) {
-		initialiseParse(inputFragment, baseUri, errors);
+			final ParseErrorList errors, final ParseSettings settings) {
+		initialiseParse(inputFragment, baseUri, errors, settings);
 		runParser();
 		return doc.childNodes();
 	}

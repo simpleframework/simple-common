@@ -1,15 +1,15 @@
 package net.simpleframework.lib.org.jsoup.safety;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Thank you to Ryan Grove (wonko.com) for the Ruby HTML cleaner
  * http://github.com/rgrove/sanitize/, which inspired
  * this whitelist configuration, and the initial defaults.
  */
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
@@ -51,16 +51,18 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * 
  * <p>
  * The cleaner and these whitelists assume that you want to clean a
- * <code>body</code> fragment of HTML (to add user supplied HTML into a
- * templated page), and not to clean a full HTML document. If the latter is the
- * case, either wrap the document HTML around the cleaned body HTML, or create a
- * whitelist that allows <code>html</code> and <code>head</code> elements as
- * appropriate.
+ * <code>body</code> fragment of HTML (to add user
+ * supplied HTML into a templated page), and not to clean a full HTML document.
+ * If the latter is the case, either wrap the
+ * document HTML around the cleaned body HTML, or create a whitelist that allows
+ * <code>html</code> and <code>head</code>
+ * elements as appropriate.
  * </p>
  * <p>
  * If you are going to extend a whitelist, please be very careful. Make sure you
- * understand what attributes may lead to XSS attack vectors. URL attributes are
- * particularly vulnerable and require careful validation. See
+ * understand what attributes may lead to
+ * XSS attack vectors. URL attributes are particularly vulnerable and require
+ * careful validation. See
  * http://ha.ckers.org/xss.html for some XSS attack examples.
  * </p>
  * 
@@ -68,23 +70,22 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-														// br, span]
+														// br,
+	// span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
 																					// attribute[].
-																					// allowed
-																					// attributes
-																					// [href] for a
-																					// tag.
+	// allowed attributes
+	// [href] for a tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
-																													// set
-																													// these
-																													// attribute
-																													// values
+	// set
+	// these
+	// attribute
+	// values
 	private final Map<TagName, Map<AttributeKey, Set<Protocol>>> protocols; // allowed
-																									// URL
-																									// protocols
-																									// for
-																									// attributes
+	// URL
+	// protocols
+	// for
+	// attributes
 	private boolean preserveRelativeLinks; // option to preserve relative links
 
 	/**
@@ -111,7 +112,7 @@ public class Whitelist {
 	 * <p>
 	 * This whitelist allows a fuller range of text nodes:
 	 * <code>a, b, blockquote, br, cite, code, dd, dl, dt, em, i, li,
-	  ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
+	 ol, p, pre, q, small, span, strike, strong, sub, sup, u, ul</code>, and
 	 * appropriate attributes.
 	 * </p>
 	 * <p>
@@ -158,8 +159,8 @@ public class Whitelist {
 	/**
 	 * This whitelist allows a full range of text and structural body HTML:
 	 * <code>a, b, blockquote, br, caption, cite,
-	  code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
-	  sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
+	 code, col, colgroup, dd, div, dl, dt, em, h1, h2, h3, h4, h5, h6, i, img, li, ol, p, pre, q, small, span, strike, strong, sub,
+	 sup, table, tbody, td, tfoot, th, thead, tr, u, ul</code>
 	 * <p>
 	 * Links do not have an enforced <code>rel=nofollow</code> attribute, but you
 	 * can add that if desired.
@@ -253,12 +254,13 @@ public class Whitelist {
 	 * on an element, it will be removed.)
 	 * <p>
 	 * E.g.: <code>addAttributes("a", "href", "class")</code> allows
-	 * <code>href</code> and <code>class</code> attributes on <code>a</code>
-	 * tags.
+	 * <code>href</code> and <code>class</code> attributes
+	 * on <code>a</code> tags.
 	 * </p>
 	 * <p>
 	 * To make an attribute valid for <b>all tags</b>, use the pseudo tag
-	 * <code>:all</code>, e.g. <code>addAttributes(":all", "class")</code>.
+	 * <code>:all</code>, e.g.
+	 * <code>addAttributes(":all", "class")</code>.
 	 * </p>
 	 * 
 	 * @param tag
@@ -296,12 +298,13 @@ public class Whitelist {
 	 * allowed on an element, it will be removed.)
 	 * <p>
 	 * E.g.: <code>removeAttributes("a", "href", "class")</code> disallows
-	 * <code>href</code> and <code>class</code> attributes on <code>a</code>
-	 * tags.
+	 * <code>href</code> and <code>class</code>
+	 * attributes on <code>a</code> tags.
 	 * </p>
 	 * <p>
 	 * To make an attribute invalid for <b>all tags</b>, use the pseudo tag
-	 * <code>:all</code>, e.g. <code>removeAttributes(":all", "class")</code>.
+	 * <code>:all</code>, e.g.
+	 * <code>removeAttributes(":all", "class")</code>.
 	 * </p>
 	 * 
 	 * @param tag
@@ -333,15 +336,18 @@ public class Whitelist {
 			currentSet.removeAll(attributeSet);
 
 			if (currentSet.isEmpty()) {
+				// attributes are allowed for tag
 				attributes.remove(tagName);
 			}
 		}
 		if (tag.equals(":all")) {
+			// individually set tags
 			for (final TagName name : attributes.keySet()) {
 				final Set<AttributeKey> currentSet = attributes.get(name);
 				currentSet.removeAll(attributeSet);
 
 				if (currentSet.isEmpty()) {
+					// attributes are allowed for tag
 					attributes.remove(name);
 				}
 			}
@@ -410,6 +416,7 @@ public class Whitelist {
 			attrMap.remove(attrKey);
 
 			if (attrMap.isEmpty()) {
+				// enforced attributes are present
 				enforcedAttributes.remove(tagName);
 			}
 		}
@@ -424,11 +431,12 @@ public class Whitelist {
 	 * e.g. {@code http://}.
 	 * <p>
 	 * Note that when handling relative links, the input document must have an
-	 * appropriate {@code base URI} set when parsing, so that the link's protocol
-	 * can be confirmed. Regardless of the setting of the
-	 * {@code preserve relative
+	 * appropriate {@code base URI} set when
+	 * parsing, so that the link's protocol can be confirmed. Regardless of the
+	 * setting of the {@code preserve relative
 	 * links} option, the link must be resolvable against the base URI to an
-	 * allowed protocol; otherwise the attribute will be removed.
+	 * allowed protocol; otherwise the attribute
+	 * will be removed.
 	 * </p>
 	 *
 	 * @param preserve
@@ -586,8 +594,8 @@ public class Whitelist {
 		String value = el.absUrl(attr.getKey());
 		if (value.length() == 0) {
 			value = attr.getValue(); // if it could not be made abs, run as-is to
-												// allow custom unknown protocols
 		}
+		// allow custom unknown protocols
 		if (!preserveRelativeLinks) {
 			attr.setValue(value);
 		}

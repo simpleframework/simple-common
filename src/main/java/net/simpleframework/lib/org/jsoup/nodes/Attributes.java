@@ -5,6 +5,7 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,20 +19,22 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
  * The attributes of an Element.
  * <p>
  * Attributes are treated as a map: there can be only one value associated with
- * an attribute key.
+ * an attribute key/name.
  * </p>
  * <p>
- * Attribute key and value comparisons are done case insensitively, and keys are
- * normalised to lower-case.
+ * Attribute name and value comparisons are <b>case sensitive</b>. By default
+ * for HTML, attribute names are
+ * normalized to lower-case on parsing. That means you should use lower-case
+ * strings when referring to attributes by
+ * name.
  * </p>
- * 
+ *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public class Attributes implements Iterable<Attribute>, Cloneable {
 	protected static final String dataPrefix = "data-";
 
 	private LinkedHashMap<String, Attribute> attributes = null;
-
 	// linked hash map to preserve insertion order.
 	// null be default as so many elements have no attributes -- saves a good
 	// chunk of memory
@@ -40,7 +43,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 * Get an attribute value by key.
 	 * 
 	 * @param key
-	 *        the attribute key
+	 *        the (case-sensitive) attribute key
 	 * @return the attribute value if set; or empty string if not set.
 	 * @see #hasKey(String)
 	 */
@@ -51,8 +54,30 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 			return "";
 		}
 
-		final Attribute attr = attributes.get(key.toLowerCase());
+		final Attribute attr = attributes.get(key);
 		return attr != null ? attr.getValue() : "";
+	}
+
+	/**
+	 * Get an attribute's value by case-insensitive key
+	 * 
+	 * @param key
+	 *        the attribute name
+	 * @return the first matching attribute value if set; or empty string if not
+	 *         set.
+	 */
+	public String getIgnoreCase(final String key) {
+		Validate.notEmpty(key);
+		if (attributes == null) {
+			return "";
+		}
+
+		for (final String attrKey : attributes.keySet()) {
+			if (attrKey.equalsIgnoreCase(key)) {
+				return attributes.get(attrKey).getValue();
+			}
+		}
+		return "";
 	}
 
 	/**
@@ -99,7 +124,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	}
 
 	/**
-	 * Remove an attribute by key.
+	 * Remove an attribute by key. <b>Case sensitive.</b>
 	 * 
 	 * @param key
 	 *        attribute key to remove
@@ -109,7 +134,38 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 		if (attributes == null) {
 			return;
 		}
-		attributes.remove(key.toLowerCase());
+		attributes.remove(key);
+	}
+
+	/**
+	 * Remove an attribute by key. <b>Case insensitive.</b>
+	 * 
+	 * @param key
+	 *        attribute key to remove
+	 */
+	public void removeIgnoreCase(final String key) {
+		Validate.notEmpty(key);
+		if (attributes == null) {
+			return;
+		}
+		// ckan77
+		// for (final String attrKey : attributes.keySet()) {
+		for (final String attrKey : new HashSet<String>(attributes.keySet())) {
+			if (attrKey.equalsIgnoreCase(key)) {
+				attributes.remove(attrKey);
+			}
+		}
+	}
+
+	/**
+	 * Tests if these attributes contain an attribute with this key.
+	 * 
+	 * @param key
+	 *        case-sensitive key to check for
+	 * @return true if key exists, false otherwise
+	 */
+	public boolean hasKey(final String key) {
+		return attributes != null && attributes.containsKey(key);
 	}
 
 	/**
@@ -119,8 +175,16 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 *        key to check for
 	 * @return true if key exists, false otherwise
 	 */
-	public boolean hasKey(final String key) {
-		return attributes != null && attributes.containsKey(key.toLowerCase());
+	public boolean hasKeyIgnoreCase(final String key) {
+		if (attributes == null) {
+			return false;
+		}
+		for (final String attrKey : attributes.keySet()) {
+			if (attrKey.equalsIgnoreCase(key)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -153,7 +217,11 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 
 	@Override
 	public Iterator<Attribute> iterator() {
-		return asList().iterator();
+		if (attributes == null || attributes.isEmpty()) {
+			return Collections.<Attribute> emptyList().iterator();
+		}
+
+		return attributes.values().iterator();
 	}
 
 	/**

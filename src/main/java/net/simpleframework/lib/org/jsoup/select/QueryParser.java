@@ -88,7 +88,8 @@ class QueryParser {
 		Evaluator currentEval; // the evaluator the new eval will be combined to.
 										// could be root, or rightmost or.
 		final Evaluator newEval = parse(subQuery); // the evaluator to add into
-																	// target evaluator
+																	// target
+		// evaluator
 		boolean replaceRightMost = false;
 
 		if (evals.size() == 1) {
@@ -161,7 +162,7 @@ class QueryParser {
 			byId();
 		} else if (tq.matchChomp(".")) {
 			byClass();
-		} else if (tq.matchesWord()) {
+		} else if (tq.matchesWord() || tq.matches("*|")) {
 			byTag();
 		} else if (tq.matches("[")) {
 			byAttribute();
@@ -225,28 +226,36 @@ class QueryParser {
 	private void byClass() {
 		final String className = tq.consumeCssIdentifier();
 		Validate.notEmpty(className);
-		evals.add(new Evaluator.Class(className.trim().toLowerCase()));
+		evals.add(new Evaluator.Class(className.trim()));
 	}
 
 	private void byTag() {
 		String tagName = tq.consumeElementSelector();
+
 		Validate.notEmpty(tagName);
 
-		// namespaces: if element name is "abc:def", selector must be "abc|def",
-		// so flip:
-		if (tagName.contains("|")) {
-			tagName = tagName.replace("|", ":");
-		}
+		// namespaces: wildcard match equals(tagName) or ending in ":"+tagName
+		if (tagName.startsWith("*|")) {
+			evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(tagName.trim().toLowerCase()),
+					new Evaluator.TagEndsWith(tagName.replace("*|", ":").trim().toLowerCase())));
+		} else {
+			// namespaces: if element name is "abc:def", selector must be
+			// "abc|def", so flip:
+			if (tagName.contains("|")) {
+				tagName = tagName.replace("|", ":");
+			}
 
-		evals.add(new Evaluator.Tag(tagName.trim().toLowerCase()));
+			evals.add(new Evaluator.Tag(tagName.trim()));
+		}
 	}
 
 	private void byAttribute() {
 		final TokenQueue cq = new TokenQueue(tq.chompBalanced('[', ']')); // content
-																								// queue
+		// queue
 		final String key = cq.consumeToAny(AttributeEvals); // eq, not, start,
-																				// end, contain,
-																				// match, (no val)
+																				// end,
+		// contain, match, (no
+		// val)
 		Validate.notEmpty(key);
 		cq.consumeWhitespace();
 
@@ -366,8 +375,8 @@ class QueryParser {
 	private void matches(final boolean own) {
 		tq.consume(own ? ":matchesOwn" : ":matches");
 		final String regex = tq.chompBalanced('(', ')'); // don't unescape, as
-																			// regex bits will be
-																			// escaped
+																			// regex
+		// bits will be escaped
 		Validate.notEmpty(regex, ":matches(regex) query must not be empty");
 
 		if (own) {

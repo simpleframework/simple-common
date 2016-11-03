@@ -218,8 +218,9 @@ public class Elements extends ArrayList<Element> {
 	 * Get the combined text of all the matched elements.
 	 * <p>
 	 * Note that it is possible to get repeats if the matched elements contain
-	 * both parent elements and their own children, as the Element.text() method
-	 * returns the combined text of a parent and all its children.
+	 * both parent elements and their own
+	 * children, as the Element.text() method returns the combined text of a
+	 * parent and all its children.
 	 * 
 	 * @return string of all text: unescaped and no HTML.
 	 * @see Element#text()
@@ -295,7 +296,8 @@ public class Elements extends ArrayList<Element> {
 
 	/**
 	 * Update the tag name of each matched element. For example, to change each
-	 * {@code <i>} to a {@code <em>}, do {@code doc.select("i").tagName("em");}
+	 * {@code <i>} to a {@code <em>}, do
+	 * {@code doc.select("i").tagName("em");}
 	 * 
 	 * @param tagName
 	 *        the new tag name
@@ -386,15 +388,16 @@ public class Elements extends ArrayList<Element> {
 
 	/**
 	 * Wrap the supplied HTML around each matched elements. For example, with
-	 * HTML {@code 
+	 * HTML
+	 * {@code 
 	 * 
 	<p>
 	 * <b>This</b> is <b>Jsoup</b>
 	 * 
 	</p>
 	 * },
-	 * <code>doc.select("b").wrap("&lt;i&gt;&lt;/i&gt;");</code> becomes
-	 * {@code 
+	 * <code>doc.select("b").wrap("&lt;i&gt;&lt;/i&gt;");</code>
+	 * becomes {@code 
 	 * 
 	<p>
 	 * <i><b>This</b></i> is <i><b>jsoup</b></i>
@@ -468,9 +471,12 @@ public class Elements extends ArrayList<Element> {
 	 * HTML = {@code <div>
 	 * 
 	<p>
+	 * 
 	</p>
+	 *  
 	 * 
 	<p>
+	 * 
 	</p>
 	 * </div>}
 	 * 

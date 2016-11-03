@@ -82,6 +82,10 @@ abstract class CombiningEvaluator extends Evaluator {
 			updateNumEvaluators();
 		}
 
+		Or(final Evaluator... evaluators) {
+			this(Arrays.asList(evaluators));
+		}
+
 		Or() {
 			super();
 		}

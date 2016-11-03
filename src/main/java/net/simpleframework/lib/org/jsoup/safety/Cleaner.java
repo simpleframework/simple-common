@@ -18,13 +18,13 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
  * that you are expecting; no junk, and no cross-site scripting attacks!
  * <p>
  * The HTML cleaner parses the input as HTML and then runs it through a
- * white-list, so the output HTML can only contain HTML that is allowed by the
- * whitelist.
+ * white-list, so the output HTML can only contain
+ * HTML that is allowed by the whitelist.
  * </p>
  * <p>
  * It is assumed that the input HTML is a body fragment; the clean methods only
- * pull from the source's body, and the canned white-lists only allow body
- * contained tags.
+ * pull from the source's body, and the
+ * canned white-lists only allow body contained tags.
  * </p>
  * <p>
  * Rather than interacting directly with a Cleaner object, generally see the
@@ -61,6 +61,7 @@ public class Cleaner {
 
 		final Document clean = Document.createShell(dirtyDocument.baseUri());
 		if (dirtyDocument.body() != null) {
+			// the clean doc will have empty body.
 			copySafeNodes(dirtyDocument.body(), clean.body());
 		}
 
@@ -73,10 +74,11 @@ public class Cleaner {
 	 * in the input HTML are allowed by the whitelist.
 	 * <p>
 	 * This method can be used as a validator for user input forms. An invalid
-	 * document will still be cleaned successfully using the
-	 * {@link #clean(Document)} document. If using as a validator, it is
-	 * recommended to still clean the document to ensure enforced attributes are
-	 * set correctly, and that the output is tidied.
+	 * document will still be cleaned successfully
+	 * using the {@link #clean(Document)} document. If using as a validator, it
+	 * is recommended to still clean the document
+	 * to ensure enforced attributes are set correctly, and that the output is
+	 * tidied.
 	 * </p>
 	 * 
 	 * @param dirtyDocument

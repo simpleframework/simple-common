@@ -58,11 +58,13 @@ public class Jsoup {
 
 	/**
 	 * Parse HTML into a Document. As no base URI is specified, absolute URL
-	 * detection relies on the HTML including a {@code <base href>} tag.
+	 * detection relies on the HTML including a
+	 * {@code <base href>} tag.
 	 * 
 	 * @param html
 	 *        HTML to parse
 	 * @return sane HTML
+	 * 
 	 * @see #parse(String, String)
 	 */
 	public static Document parse(final String html) {
@@ -75,12 +77,8 @@ public class Jsoup {
 	 * <p>
 	 * Use examples:
 	 * <ul>
-	 * <li>
-	 * <code>Document doc = Jsoup.connect("http://example.com").userAgent("Mozilla").data("name", "jsoup").get();</code>
-	 * </li>
-	 * <li>
-	 * <code>Document doc = Jsoup.connect("http://example.com").cookie("auth", "token").post();</code>
-	 * </li>
+	 * <li><code>Document doc = Jsoup.connect("http://example.com").userAgent("Mozilla").data("name", "jsoup").get();</code></li>
+	 * <li><code>Document doc = Jsoup.connect("http://example.com").cookie("auth", "token").post();</code></li>
 	 * </ul>
 	 * 
 	 * @param url
@@ -106,6 +104,7 @@ public class Jsoup {
 	 *        The URL where the HTML was retrieved from, to resolve relative
 	 *        links against.
 	 * @return sane HTML
+	 * 
 	 * @throws IOException
 	 *         if the file could not be found, or read, or if the charsetName is
 	 *         invalid.
@@ -126,6 +125,7 @@ public class Jsoup {
 	 *        determine from {@code http-equiv} meta tag, if
 	 *        present, or fall back to {@code UTF-8} (which is often safe to do).
 	 * @return sane HTML
+	 * 
 	 * @throws IOException
 	 *         if the file could not be found, or read, or if the charsetName is
 	 *         invalid.
@@ -148,6 +148,7 @@ public class Jsoup {
 	 *        The URL where the HTML was retrieved from, to resolve relative
 	 *        links against.
 	 * @return sane HTML
+	 * 
 	 * @throws IOException
 	 *         if the file could not be found, or read, or if the charsetName is
 	 *         invalid.
@@ -174,6 +175,7 @@ public class Jsoup {
 	 * @param parser
 	 *        alternate {@link Parser#xmlParser() parser} to use.
 	 * @return sane HTML
+	 * 
 	 * @throws IOException
 	 *         if the file could not be found, or read, or if the charsetName is
 	 *         invalid.
@@ -192,6 +194,7 @@ public class Jsoup {
 	 * @param baseUri
 	 *        URL to resolve relative URLs against.
 	 * @return sane HTML document
+	 * 
 	 * @see Document#body()
 	 */
 	public static Document parseBodyFragment(final String bodyHtml, final String baseUri) {
@@ -205,6 +208,7 @@ public class Jsoup {
 	 * @param bodyHtml
 	 *        body HTML fragment
 	 * @return sane HTML document
+	 * 
 	 * @see Document#body()
 	 */
 	public static Document parseBodyFragment(final String bodyHtml) {
@@ -225,6 +229,7 @@ public class Jsoup {
 	 *        Connection and read timeout, in milliseconds. If exceeded,
 	 *        IOException is thrown.
 	 * @return The parsed HTML.
+	 * 
 	 * @throws java.net.MalformedURLException
 	 *         if the request URL is not a HTTP or HTTPS URL, or is otherwise
 	 *         malformed
@@ -237,6 +242,7 @@ public class Jsoup {
 	 *         if the connection times out
 	 * @throws IOException
 	 *         if a connection or read error occurs
+	 * 
 	 * @see #connect(String)
 	 */
 	public static Document parse(final URL url, final int timeoutMillis) throws IOException {
@@ -257,6 +263,7 @@ public class Jsoup {
 	 * @param whitelist
 	 *        white-list of permitted HTML elements
 	 * @return safe HTML (body fragment)
+	 * 
 	 * @see Cleaner#clean(Document)
 	 */
 	public static String clean(final String bodyHtml, final String baseUri,
@@ -277,6 +284,7 @@ public class Jsoup {
 	 * @param whitelist
 	 *        white-list of permitted HTML elements
 	 * @return safe HTML (body fragment)
+	 * 
 	 * @see Cleaner#clean(Document)
 	 */
 	public static String clean(final String bodyHtml, final Whitelist whitelist) {

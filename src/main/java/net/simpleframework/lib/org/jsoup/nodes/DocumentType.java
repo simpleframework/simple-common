@@ -12,7 +12,6 @@ public class DocumentType extends Node {
 	private static final String NAME = "name";
 	private static final String PUBLIC_ID = "publicId";
 	private static final String SYSTEM_ID = "systemId";
-
 	// todo: quirk mode from publicId and systemId
 
 	/**
