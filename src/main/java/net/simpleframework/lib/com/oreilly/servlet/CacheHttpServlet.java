@@ -22,41 +22,44 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * A superclass for HTTP servlets that wish to have their output cached and
- * automatically resent as appropriate according to the servlet's
- * getLastModified() method. To take advantage of this class, a servlet must:
+ * A superclass for HTTP servlets that wish to have their output
+ * cached and automatically resent as appropriate according to the
+ * servlet's getLastModified() method. To take advantage of this class,
+ * a servlet must:
  * <ul>
  * <li>Extend <tt>CacheHttpServlet</tt> instead of <tt>HttpServlet</tt>
  * <li>Implement a <tt>getLastModified(HttpServletRequest)</tt> method as usual
  * </ul>
- * This class uses the value returned by <tt>getLastModified()</tt> to manage an
- * internal cache of the servlet's output. Before handling a request, this class
- * checks the value of <tt>getLastModified()</tt>, and if the output cache is at
- * least as current as the servlet's last modified time, the cached output is
- * sent without calling the servlet's <tt>doGet()</tt> method.
+ * This class uses the value returned by <tt>getLastModified()</tt> to manage
+ * an internal cache of the servlet's output. Before handling a request,
+ * this class checks the value of <tt>getLastModified()</tt>, and if the
+ * output cache is at least as current as the servlet's last modified time,
+ * the cached output is sent without calling the servlet's <tt>doGet()</tt>
+ * method.
  * <p>
- * In order to be safe, if this class detects that the servlet's query string,
- * extra path info, or servlet path has changed, the cache is invalidated and
- * recreated. However, this class does not invalidate the cache based on
- * differing request headers or cookies; for servlets that vary their output
- * based on these values (i.e. a session tracking servlet) this class should
- * probably not be used.
+ * In order to be safe, if this class detects that the servlet's query
+ * string, extra path info, or servlet path has changed, the cache is
+ * invalidated and recreated. However, this class does not invalidate
+ * the cache based on differing request headers or cookies; for
+ * servlets that vary their output based on these values (i.e. a session
+ * tracking servlet) this class should probably not be used.
  * <p>
  * No caching is performed for POST requests.
  * <p>
- * <tt>CacheHttpServletResponse</tt> and <tt>CacheServletOutputStream</tt> are
- * helper classes to this class and should not be used directly.
+ * <tt>CacheHttpServletResponse</tt> and <tt>CacheServletOutputStream</tt>
+ * are helper classes to this class and should not be used directly.
  * <p>
  * This class has been built against Servlet API 2.2. Using it with previous
  * Servlet API versions should work; using it with future API versions likely
  * won't work.
- * 
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1999
- * @version 0.92, 00/03/16, added synchronization blocks to make thread safe
- * @version 0.91, 99/12/28, made support classes package protected
- * @version 0.90, 99/12/19
+ * @version 0.93, 2004/06/25, added setCharacterEncoding() for servlets 2.4
+ * @version 0.92, 2000/03/16, added synchronization blocks to make thread safe
+ * @version 0.91, 1999/12/28, made support classes package protected
+ * @version 0.90, 1999/12/19
  */
-@SuppressWarnings("serial")
+
 public abstract class CacheHttpServlet extends HttpServlet {
 
 	CacheHttpServletResponse cacheResponse;
@@ -134,11 +137,12 @@ public abstract class CacheHttpServlet extends HttpServlet {
 class CacheHttpServletResponse implements HttpServletResponse {
 	// Store key response variables so they can be set later
 	private int status;
-	private Hashtable<String, Object> headers;
+	private Hashtable headers;
 	private int contentLength;
 	private String contentType;
+	private String encoding;
 	private Locale locale;
-	private Vector<Cookie> cookies;
+	private Vector cookies;
 	private boolean didError;
 	private boolean didRedirect;
 	private boolean gotStream;
@@ -160,11 +164,12 @@ class CacheHttpServletResponse implements HttpServletResponse {
 
 	private void internalReset() {
 		status = 200;
-		headers = new Hashtable<String, Object>();
+		headers = new Hashtable();
 		contentLength = -1;
 		contentType = null;
+		encoding = null;
 		locale = null;
-		cookies = new Vector<Cookie>();
+		cookies = new Vector();
 		didError = false;
 		didRedirect = false;
 		gotStream = false;
@@ -178,12 +183,11 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	}
 
 	private void internalSetHeader(final String name, final Object value) {
-		final Vector<Object> v = new Vector<Object>();
+		final Vector v = new Vector();
 		v.addElement(value);
 		headers.put(name, v);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void internalAddHeader(final String name, final Object value) {
 		Vector v = (Vector) headers.get(name);
 		if (v == null) {
@@ -200,25 +204,27 @@ class CacheHttpServletResponse implements HttpServletResponse {
 		if (contentType != null) {
 			res.setContentType(contentType);
 		}
+		if (encoding != null) {
+			res.setCharacterEncoding(encoding);
+		}
 		if (locale != null) {
 			res.setLocale(locale);
 		}
 		// Write cookies
-		Enumeration<?> e = cookies.elements();
-		while (e.hasMoreElements()) {
-			final Cookie c = (Cookie) e.nextElement();
+		Enumeration enu = cookies.elements();
+		while (enu.hasMoreElements()) {
+			final Cookie c = (Cookie) enu.nextElement();
 			res.addCookie(c);
 		}
 		// Write standard headers
-		e = headers.keys();
-		while (e.hasMoreElements()) {
-			final String name = (String) e.nextElement();
-			final Vector<?> values = (Vector<?>) headers.get(name); // may have
-			// multiple
-			// values
-			final Enumeration<?> enum2 = values.elements();
-			while (enum2.hasMoreElements()) {
-				final Object value = enum2.nextElement();
+		enu = headers.keys();
+		while (enu.hasMoreElements()) {
+			final String name = (String) enu.nextElement();
+			final Vector values = (Vector) headers.get(name); // may have multiple
+																				// values
+			final Enumeration enu2 = values.elements();
+			while (enu2.hasMoreElements()) {
+				final Object value = enu2.nextElement();
 				if (value instanceof String) {
 					res.setHeader(name, (String) value);
 				}
@@ -235,8 +241,8 @@ class CacheHttpServletResponse implements HttpServletResponse {
 		// Write body
 		try {
 			out.getBuffer().writeTo(res.getOutputStream());
-		} catch (final IOException ex) {
-			System.out.println("Got IOException writing cached response: " + ex.getMessage());
+		} catch (final IOException e) {
+			System.out.println("Got IOException writing cached response: " + e.getMessage());
 		}
 	}
 
@@ -272,6 +278,12 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	public void setContentType(final String type) {
 		delegate.setContentType(type);
 		contentType = type;
+	}
+
+	@Override
+	public void setCharacterEncoding(String encoding) {
+		delegate.setCharacterEncoding(encoding);
+		encoding = encoding;
 	}
 
 	@Override
@@ -332,6 +344,11 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	@Override
 	public boolean containsHeader(final String name) {
 		return delegate.containsHeader(name);
+	}
+
+	@Override
+	public String getContentType() {
+		return delegate.getContentType();
 	}
 
 	/** @deprecated */
@@ -421,16 +438,6 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	@Override
 	public String encodeRedirectUrl(final String url) {
 		return this.encodeRedirectURL(url);
-	}
-
-	@Override
-	public String getContentType() {
-		return delegate.getContentType();
-	}
-
-	@Override
-	public void setCharacterEncoding(final String charset) {
-		delegate.setCharacterEncoding(charset);
 	}
 }
 

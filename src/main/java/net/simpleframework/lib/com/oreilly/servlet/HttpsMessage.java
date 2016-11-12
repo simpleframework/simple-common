@@ -56,26 +56,31 @@ import java.security.Provider;
 import java.security.Security;
 
 /**
- * A class to simplify HTTP/HTTPS client-server communication. It abstracts the
- * communication into messages, which can be either GET or POST.
+ * A class to simplify HTTP/HTTPS client-server communication. It abstracts
+ * the communication into messages, which can be either GET or POST.
  * <p>
- * It can be used like this: <blockquote>
+ * It can be used like this:
+ * <blockquote>
  * 
  * <pre>
- * HttpsMessage msg = new HttpsMessage(&quot;https://[some server]&quot;);
+ * 
+ * HttpsMessage msg = new HttpsMessage("https://[some server]");
  * 
  * Properties props = new Properties();
- * props.put(&quot;name&quot;, &quot;value&quot;);
+ * props.put("name", "value");
  * 
  * InputStream in = msg.sendGetMessage(props);
  * </pre>
  * 
- * </blockquote> This class extends the HttpMessage class written by Jason
- * Hunter at servlets.com. The HttpMessage class can be found in the
- * com.oreilly.servlet package found at www.servlets.com
+ * </blockquote>
+ * This class extends the HttpMessage class
+ * written by Jason Hunter at servlets.com.
+ * The HttpMessage class can be found in the
+ * net.simpleframework.lib.com.oreilly.servlet
+ * package found at www.servlets.com
  * <p>
- * For information see http://www.javaworld.com/javatips/jw-javatip96.html Note
- * this class works with JDK 1.2 or later only.
+ * For information see http://www.javaworld.com/javatips/jw-javatip96.html
+ * Note this class works with JDK 1.2 or later only.
  * <p>
  * 
  * @author <b>Matt Towers</b>
@@ -90,10 +95,10 @@ public class HttpsMessage extends net.simpleframework.lib.com.oreilly.servlet.Ht
 	/**
 	 * Constructs a new HttpsMessage that can be used to communicate with the
 	 * servlet at the specified URL using HTTPS.
-	 * 
+	 *
 	 * @param szURL
-	 *        the server resource (typically a servlet) with which to
-	 *        communicate
+	 *        the server resource (typically a servlet) with which
+	 *        to communicate
 	 */
 	public HttpsMessage(final String szURL) throws Exception {
 		super(null);
@@ -110,7 +115,7 @@ public class HttpsMessage extends net.simpleframework.lib.com.oreilly.servlet.Ht
 			// handler.
 			if (-1 < szVendor.indexOf("Microsoft")) {
 				try {
-					final Class<?> clsFactory = Class
+					final Class clsFactory = Class
 							.forName("com.ms.net.wininet.WininetStreamHandlerFactory");
 					if (null != clsFactory) {
 						URL.setURLStreamHandlerFactory(
@@ -135,7 +140,7 @@ public class HttpsMessage extends net.simpleframework.lib.com.oreilly.servlet.Ht
 					// if we have the JSSE provider available, and it has not already
 					// been
 					// set, add it as a new provide to the Security class.
-					final Class<?> clsFactory = Class.forName("com.sun.net.ssl.internal.ssl.Provider");
+					final Class clsFactory = Class.forName("com.sun.net.ssl.internal.ssl.Provider");
 					if ((null != clsFactory) && (null == Security.getProvider("SunJSSE"))) {
 						Security.addProvider((Provider) clsFactory.newInstance());
 					}

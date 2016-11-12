@@ -19,53 +19,54 @@ import java.util.Properties;
 import net.simpleframework.common.Base64;
 
 /**
- * A class to simplify HTTP applet-server communication. It abstracts the
- * communication into messages, which can be either GET or POST.
+ * A class to simplify HTTP applet-server communication. It abstracts
+ * the communication into messages, which can be either GET or POST.
  * <p>
- * It can be used like this: <blockquote>
+ * It can be used like this:
+ * <blockquote>
  * 
  * <pre>
- * URL url = new URL(getCodeBase(), &quot;/servlet/ServletName&quot;);
+ * URL url = new URL(getCodeBase(), "/servlet/ServletName");
  * 
  * HttpMessage msg = new HttpMessage(url);
  * 
  * // Parameters may optionally be set using java.util.Properties
  * Properties props = new Properties();
- * props.put(&quot;name&quot;, &quot;value&quot;);
+ * props.put("name", "value");
  * 
  * // Headers, cookies, and authorization may be set as well
- * msg.setHeader(&quot;Accept&quot;, &quot;image/png&quot;); // optional
- * msg.setCookie(&quot;JSESSIONID&quot;, &quot;9585155923883872&quot;); // optional
- * msg.setAuthorization(&quot;guest&quot;, &quot;try2gueSS&quot;); // optional
+ * msg.setHeader("Accept", "image/png"); // optional
+ * msg.setCookie("JSESSIONID", "9585155923883872"); // optional
+ * msg.setAuthorization("guest", "try2gueSS"); // optional
  * 
  * InputStream in = msg.sendGetMessage(props);
  * </pre>
  * 
  * </blockquote>
  * <p>
- * This class is loosely modeled after the ServletMessage class written by Rod
- * McChesney of JavaSoft.
- * 
+ * This class is loosely modeled after the ServletMessage class written
+ * by Rod McChesney of JavaSoft.
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998
  * @version 1.3, 2000/10/24, fixed headers NPE bug
  * @version 1.2, 2000/10/15, changed uploaded object MIME type to
  *          application/x-java-serialized-object
- * @version 1.1, 2000/06/11, added ability to set headers, cookies, and
- *          authorization
+ * @version 1.1, 2000/06/11, added ability to set headers, cookies,
+ *          and authorization
  * @version 1.0, 1998/09/18
  */
 public class HttpMessage {
 
 	URL servlet = null;
-	Hashtable<String, String> headers = null;
+	Hashtable headers = null;
 
 	/**
 	 * Constructs a new HttpMessage that can be used to communicate with the
 	 * servlet at the specified URL.
-	 * 
+	 *
 	 * @param servlet
-	 *        the server resource (typically a servlet) with which to
-	 *        communicate
+	 *        the server resource (typically a servlet) with which
+	 *        to communicate
 	 */
 	public HttpMessage(final URL servlet) {
 		this.servlet = servlet;
@@ -73,7 +74,7 @@ public class HttpMessage {
 
 	/**
 	 * Performs a GET request to the servlet, with no query string.
-	 * 
+	 *
 	 * @return an InputStream to read the response
 	 * @exception IOException
 	 *            if an I/O error occurs
@@ -83,9 +84,9 @@ public class HttpMessage {
 	}
 
 	/**
-	 * Performs a GET request to the servlet, building a query string from the
-	 * supplied properties list.
-	 * 
+	 * Performs a GET request to the servlet, building
+	 * a query string from the supplied properties list.
+	 *
 	 * @param args
 	 *        the properties list from which to build a query string
 	 * @return an InputStream to read the response
@@ -112,7 +113,7 @@ public class HttpMessage {
 
 	/**
 	 * Performs a POST request to the servlet, with no query string.
-	 * 
+	 *
 	 * @return an InputStream to read the response
 	 * @exception IOException
 	 *            if an I/O error occurs
@@ -122,9 +123,9 @@ public class HttpMessage {
 	}
 
 	/**
-	 * Performs a POST request to the servlet, building post data from the
-	 * supplied properties list.
-	 * 
+	 * Performs a POST request to the servlet, building
+	 * post data from the supplied properties list.
+	 *
 	 * @param args
 	 *        the properties list from which to build the post data
 	 * @return an InputStream to read the response
@@ -164,8 +165,8 @@ public class HttpMessage {
 	/**
 	 * Performs a POST request to the servlet, uploading a serialized object.
 	 * <p>
-	 * The servlet can receive the object in its <tt>doPost()</tt> method like
-	 * this:
+	 * The servlet can receive the object in its <tt>doPost()</tt> method
+	 * like this:
 	 * 
 	 * <pre>
 	 * ObjectInputStream objin = new ObjectInputStream(req.getInputStream());
@@ -173,7 +174,7 @@ public class HttpMessage {
 	 * </pre>
 	 * 
 	 * The type of the uploaded object can be determined through introspection.
-	 * 
+	 *
 	 * @param obj
 	 *        the serializable object to upload
 	 * @return an InputStream to read the response
@@ -206,10 +207,10 @@ public class HttpMessage {
 	}
 
 	/**
-	 * Sets a request header with the given name and value. The header persists
-	 * across multiple requests. The caller is responsible for ensuring there are
-	 * no illegal characters in the name and value.
-	 * 
+	 * Sets a request header with the given name and value. The header
+	 * persists across multiple requests. The caller is responsible for
+	 * ensuring there are no illegal characters in the name and value.
+	 *
 	 * @param name
 	 *        the header name
 	 * @param value
@@ -217,7 +218,7 @@ public class HttpMessage {
 	 */
 	public void setHeader(final String name, final String value) {
 		if (headers == null) {
-			headers = new Hashtable<String, String>();
+			headers = new Hashtable();
 		}
 		headers.put(name, value);
 	}
@@ -225,20 +226,20 @@ public class HttpMessage {
 	// Send the contents of the headers hashtable to the server
 	private void sendHeaders(final URLConnection con) {
 		if (headers != null) {
-			final Enumeration<?> e = headers.keys();
-			while (e.hasMoreElements()) {
-				final String name = (String) e.nextElement();
-				final String value = headers.get(name);
+			final Enumeration enumm = headers.keys();
+			while (enumm.hasMoreElements()) {
+				final String name = (String) enumm.nextElement();
+				final String value = (String) headers.get(name);
 				con.setRequestProperty(name, value);
 			}
 		}
 	}
 
 	/**
-	 * Sets a request cookie with the given name and value. The cookie persists
-	 * across multiple requests. The caller is responsible for ensuring there are
-	 * no illegal characters in the name and value.
-	 * 
+	 * Sets a request cookie with the given name and value. The cookie
+	 * persists across multiple requests. The caller is responsible for
+	 * ensuring there are no illegal characters in the name and value.
+	 *
 	 * @param name
 	 *        the header name
 	 * @param value
@@ -246,9 +247,9 @@ public class HttpMessage {
 	 */
 	public void setCookie(final String name, final String value) {
 		if (headers == null) {
-			headers = new Hashtable<String, String>();
+			headers = new Hashtable();
 		}
-		final String existingCookies = headers.get("Cookie");
+		final String existingCookies = (String) headers.get("Cookie");
 		if (existingCookies == null) {
 			setHeader("Cookie", name + "=" + value);
 		} else {
@@ -260,10 +261,10 @@ public class HttpMessage {
 	 * Sets the authorization information for the request (using BASIC
 	 * authentication via the HTTP Authorization header). The authorization
 	 * persists across multiple requests.
-	 * 
+	 *
 	 * @param name
 	 *        the user name
-	 * @param name
+	 * @param password
 	 *        the user password
 	 */
 	public void setAuthorization(final String name, final String password) {
@@ -276,7 +277,7 @@ public class HttpMessage {
 	 */
 	private String toEncodedString(final Properties args) {
 		final StringBuffer buf = new StringBuffer();
-		final Enumeration<?> names = args.propertyNames();
+		final Enumeration names = args.propertyNames();
 		while (names.hasMoreElements()) {
 			final String name = (String) names.nextElement();
 			final String value = args.getProperty(name);

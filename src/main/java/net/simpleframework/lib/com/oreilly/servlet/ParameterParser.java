@@ -10,21 +10,22 @@ import java.util.Vector;
 import javax.servlet.ServletRequest;
 
 /**
- * A class to simplify parameter handling. It can return parameters of any
- * primitive type (no casting or parsing required), can throw an exception when
- * a parameter is not found (simplifying error handling), and can accept default
- * values (eliminating error handling).
+ * A class to simplify parameter handling. It can return parameters of
+ * any primitive type (no casting or parsing required), can throw an
+ * exception when a parameter is not found (simplifying error handling),
+ * and can accept default values (eliminating error handling).
  * <p>
- * It is used like this: <blockquote>
+ * It is used like this:
+ * <blockquote>
  * 
  * <pre>
  * ParameterParser parser = new ParameterParser(req);
  * 
- * float ratio = parser.getFloatParameter(&quot;ratio&quot;, 1.0);
+ * float ratio = parser.getFloatParameter("ratio", 1.0);
  * 
  * int count = 0;
  * try {
- * 	count = parser.getIntParameter(&quot;count&quot;);
+ * 	count = parser.getIntParameter("count");
  * } catch (NumberFormatException e) {
  * 	handleMalformedCount();
  * } catch (ParameterNotFoundException e) {
@@ -33,33 +34,35 @@ import javax.servlet.ServletRequest;
  * </pre>
  * 
  * </blockquote>
- * 
- * There's also a capability to find out if any required parameters are missing
- * from a request: <blockquote>
+ *
+ * There's also a capability to find out if any required parameters are
+ * missing from a request:
+ * <blockquote>
  * 
  * <pre>
  * ParameterParser parser = new ParameterParser(req);
- * String[] required = { &quot;fname&quot;, &quot;lname&quot;, &quot;account&quot; };
+ * String[] required = { "fname", "lname", "account" };
  * String[] missing = parser.getMissingParameters(required);
  * </pre>
  * 
  * </blockquote>
- * 
- * The default charset for input parameters is ISO-8859-1 (Latin-1). If the
- * parameter values are encoded in another format, specify that using
- * setCharacterEncoding() before parsing. The parameter names currently have to
- * be in the Latin-1 character set: <blockquote>
+ *
+ * The default charset for input parameters is ISO-8859-1 (Latin-1).
+ * If the parameter values are encoded in another format, specify that using
+ * setCharacterEncoding() before parsing. The parameter names currently
+ * have to be in the Latin-1 character set:
+ * <blockquote>
  * 
  * <pre>
  * ParameterParser parser = new ParameterParser(req);
- * parser.setCharacterEncoding(&quot;Shift_JIS&quot;);
- * String japaneseValue = parser.getStringParameter(&quot;latinName&quot;);
+ * parser.setCharacterEncoding("Shift_JIS");
+ * String japaneseValue = parser.getStringParameter("latinName");
  * </pre>
  * 
  * </blockquote>
- * 
- * @see com.oreilly.servlet.ParameterNotFoundException
- * 
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.ParameterNotFoundException
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998, 1999
  * @version 1.4, 2000/12/14, better checking the selected encoding is valid in
  *          setCharacterEncoding() thanks to Dewayne McNair
@@ -74,9 +77,9 @@ public class ParameterParser {
 	private String encoding;
 
 	/**
-	 * Constructs a new ParameterParser to handle the parameters of the given
-	 * request.
-	 * 
+	 * Constructs a new ParameterParser to handle the parameters of the
+	 * given request.
+	 *
 	 * @param req
 	 *        the servlet request
 	 */
@@ -87,12 +90,14 @@ public class ParameterParser {
 	/**
 	 * Sets the character encoding (charset) of the request to help the parser
 	 * properly decode parameter values. The default is to return undecoded
-	 * values, the same as would be returned by getParameter().
-	 * 
+	 * values,
+	 * the same as would be returned by getParameter().
+	 *
 	 * @param encoding
 	 *        the charset of the request
 	 * @exception UnsupportedEncodingException
-	 *            if the charset is not supported on this sytem
+	 *            if the charset is not supported
+	 *            on this sytem
 	 */
 	public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException {
 		// Test the encoding is valid
@@ -103,12 +108,13 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a String
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a String
 	 * @exception ParameterNotFoundException
-	 *            if the parameter was not found or was the empty string
+	 *            if the parameter was not found
+	 *            or was the empty string
 	 */
 	public String getStringParameter(final String name) throws ParameterNotFoundException {
 		final String[] values = req.getParameterValues(name);
@@ -130,8 +136,9 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a String, with a default. Returns the
-	 * default value if the parameter is not found or is the empty string.
+	 * Gets the named parameter value as a String, with a default.
+	 * Returns the default value if the parameter is not found or
+	 * is the empty string.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -151,14 +158,15 @@ public class ParameterParser {
 	 * Gets the named parameter value as a boolean, with true indicated by
 	 * "true", "on", or "yes" in any letter case, false indicated by "false",
 	 * "off", or "no" in any letter case.
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a boolean
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a boolean
+	 *            if the parameter could not be converted
+	 *            to a boolean
 	 */
 	public boolean getBooleanParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -176,8 +184,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a boolean, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a boolean, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -195,14 +203,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a byte
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a byte
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter value could not be converted to a byte
+	 *            if the parameter value could not
+	 *            be converted to a byte
 	 */
 	public byte getByteParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -210,9 +219,9 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a byte, with a default. Returns the
-	 * default value if the parameter is not found or cannot be converted to a
-	 * byte.
+	 * Gets the named parameter value as a byte, with a default.
+	 * Returns the default value if the parameter is not found or cannot
+	 * be converted to a byte.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -230,12 +239,13 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a char
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a char
 	 * @exception ParameterNotFoundException
-	 *            if the parameter was not found or was the empty string
+	 *            if the parameter was not found
+	 *            or was the empty string
 	 */
 	public char getCharParameter(final String name) throws ParameterNotFoundException {
 		final String param = getStringParameter(name);
@@ -247,8 +257,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a char, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a char, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -266,14 +276,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a double
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a double
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a double
+	 *            if the parameter could not be converted
+	 *            to a double
 	 */
 	public double getDoubleParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -281,8 +292,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a double, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a double, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -300,14 +311,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a float
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a float
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a float
+	 *            if the parameter could not be converted
+	 *            to a float
 	 */
 	public float getFloatParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -315,8 +327,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a float, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a float, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -334,14 +346,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a int
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a int
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a int
+	 *            if the parameter could not be converted
+	 *            to a int
 	 */
 	public int getIntParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -349,8 +362,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a int, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a int, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -368,14 +381,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a long
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a long
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a long
+	 *            if the parameter could not be converted
+	 *            to a long
 	 */
 	public long getLongParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -383,8 +397,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a long, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a long, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -402,14 +416,15 @@ public class ParameterParser {
 
 	/**
 	 * Gets the named parameter value as a short
-	 * 
+	 *
 	 * @param name
 	 *        the parameter name
 	 * @return the parameter value as a short
 	 * @exception ParameterNotFoundException
 	 *            if the parameter was not found
 	 * @exception NumberFormatException
-	 *            if the parameter could not be converted to a short
+	 *            if the parameter could not be converted
+	 *            to a short
 	 */
 	public short getShortParameter(final String name)
 			throws ParameterNotFoundException, NumberFormatException {
@@ -417,8 +432,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Gets the named parameter value as a short, with a default. Returns the
-	 * default value if the parameter is not found.
+	 * Gets the named parameter value as a short, with a default.
+	 * Returns the default value if the parameter is not found.
 	 * 
 	 * @param name
 	 *        the parameter name
@@ -435,15 +450,15 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Determines which of the required parameters were missing from the request.
-	 * Returns null if all the parameters are present.
+	 * Determines which of the required parameters were missing from the
+	 * request. Returns null if all the parameters are present.
 	 * 
-	 * @param an
+	 * @param required
 	 *        array of required parameters
 	 * @return an array of missing parameters, or null if none are missing
 	 */
 	public String[] getMissingParameters(final String[] required) {
-		final Vector<String> missing = new Vector<String>();
+		final Vector missing = new Vector();
 		for (int i = 0; i < required.length; i++) {
 			final String val = getStringParameter(required[i], null);
 			if (val == null) {

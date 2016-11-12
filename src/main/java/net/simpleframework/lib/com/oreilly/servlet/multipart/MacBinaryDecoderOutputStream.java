@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * A <code>MacBinaryDecoderOutput</code> filters MacBinary files to normal files
- * on the fly; optimized for speed more than readability.
+ * A <code>MacBinaryDecoderOutput</code> filters MacBinary files to normal
+ * files on the fly; optimized for speed more than readability.
  * 
  * @author Jason Hunter
  */

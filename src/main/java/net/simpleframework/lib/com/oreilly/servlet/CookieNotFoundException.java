@@ -6,13 +6,14 @@ package net.simpleframework.lib.com.oreilly.servlet;
 
 /**
  * Thrown to indicate a cookie does not exist.
- * 
- * @see com.oreilly.servlet.CookieParser
- * 
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.CookieParser
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 2000
  * @version 1.0, 2000/03/19
  */
 public class CookieNotFoundException extends Exception {
+
 	/**
 	 * Constructs a new CookieNotFoundException with no detail message.
 	 */
@@ -21,15 +22,13 @@ public class CookieNotFoundException extends Exception {
 	}
 
 	/**
-	 * Constructs a new CookieNotFoundException with the specified detail
-	 * message.
-	 * 
+	 * Constructs a new CookieNotFoundException with the specified
+	 * detail message.
+	 *
 	 * @param s
 	 *        the detail message
 	 */
 	public CookieNotFoundException(final String s) {
 		super(s);
 	}
-
-	private static final long serialVersionUID = -3828968652094092606L;
 }

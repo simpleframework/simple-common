@@ -11,19 +11,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 
 /**
- * A collection of static utility methods useful to servlets. Some methods
- * require Servlet API 2.2.
- * 
+ * A collection of static utility methods useful to servlets.
+ * Some methods require Servlet API 2.2.
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998-2000
  * @version 1.5, 2001/02/11, added getResource() ".." check
  * @version 1.4, 2000/09/27, finalized getResource() behavior
@@ -36,7 +42,7 @@ public class ServletUtils {
 
 	/**
 	 * Sends the contents of the specified file to the output stream
-	 * 
+	 *
 	 * @param filename
 	 *        the file to send
 	 * @param out
@@ -66,8 +72,8 @@ public class ServletUtils {
 
 	/**
 	 * Sends the contents of the specified URL to the output stream
-	 * 
-	 * @param URL
+	 *
+	 * @param url
 	 *        whose contents are to be sent
 	 * @param out
 	 *        the output stream to write the contents
@@ -86,8 +92,8 @@ public class ServletUtils {
 	/**
 	 * Sends the contents of the specified URL to the Writer (commonly either a
 	 * PrintWriter or JspWriter)
-	 * 
-	 * @param URL
+	 *
+	 * @param url
 	 *        whose contents are to be sent
 	 * @param out
 	 *        the Writer to write the contents
@@ -116,9 +122,9 @@ public class ServletUtils {
 
 	/**
 	 * Gets an exception's stack trace as a String
-	 * 
-	 * @param e
-	 *        the exception
+	 *
+	 * @param t
+	 *        the exception or throwable item
 	 * @return the stack trace of the exception
 	 */
 	public static String getStackTraceAsString(final Throwable t) {
@@ -129,10 +135,85 @@ public class ServletUtils {
 	}
 
 	/**
-	 * Gets a reference to the given resource within the given context, making
-	 * sure not to serve the contents of WEB-INF, META-INF, or to display .jsp
-	 * file source. Throws an IOException if the resource can't be read.
-	 * 
+	 * Gets a reference to the named servlet, attempting to load it
+	 * through an HTTP request if necessary. Returns null if there's a problem.
+	 * This method behaves similarly to <tt>ServletContext.getServlet()</tt>
+	 * except, while that method may return null if the
+	 * named servlet wasn't already loaded, this method tries to load
+	 * the servlet using a dummy HTTP request. Only loads HTTP servlets.
+	 *
+	 * @param name
+	 *        the name of the servlet
+	 * @param req
+	 *        the servlet request
+	 * @param context
+	 *        the servlet context
+	 * @return the named servlet, or null if there was a problem
+	 */
+	public static Servlet getServlet(final String name, final ServletRequest req,
+			final ServletContext context) {
+		try {
+			// Try getting the servlet the old fashioned way
+			final Servlet servlet = context.getServlet(name);
+			if (servlet != null) {
+				return servlet;
+			}
+
+			// If getServlet() returned null, we have to load it ourselves.
+			// Do this by making an HTTP GET request to the servlet.
+			// Use a raw socket connection so we can set a timeout.
+			final Socket socket = new Socket(req.getServerName(), req.getServerPort());
+			socket.setSoTimeout(4000); // wait up to 4 secs for a response
+			final PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			out.println("GET /servlet/" + name + " HTTP/1.0"); // the request
+			out.println();
+			try {
+				socket.getInputStream().read(); // Even one byte means its loaded
+			} catch (final InterruptedIOException e) {
+				/* timeout: ignore, hope for best */ }
+			out.close();
+
+			// Try getting the servlet again.
+			return context.getServlet(name);
+		} catch (final Exception e) {
+			// If there's any problem, return null.
+			return null;
+		}
+	}
+
+	/**
+	 * Splits a String into pieces according to a delimiter.
+	 *
+	 * @param str
+	 *        the string to split
+	 * @param delim
+	 *        the delimiter
+	 * @return an array of strings containing the pieces
+	 */
+	public static String[] split(final String str, final String delim) {
+		// Use a Vector to hold the splittee strings
+		final Vector v = new Vector();
+
+		// Use a StringTokenizer to do the splitting
+		final StringTokenizer tokenizer = new StringTokenizer(str, delim);
+		while (tokenizer.hasMoreTokens()) {
+			v.addElement(tokenizer.nextToken());
+		}
+
+		final String[] ret = new String[v.size()];
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = (String) v.elementAt(i);
+		}
+
+		return ret;
+	}
+
+	/**
+	 * Gets a reference to the given resource within the given context,
+	 * making sure not to serve the contents of WEB-INF, META-INF, or to
+	 * display .jsp file source.
+	 * Throws an IOException if the resource can't be read.
+	 *
 	 * @param context
 	 *        the context containing the resource
 	 * @param resource

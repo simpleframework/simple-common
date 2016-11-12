@@ -14,18 +14,17 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 /**
- * A superclass for any HTTP servlet that wishes to act as an RMI server and,
- * additionally, accept raw socket connections. Includes the functionality from
- * both RemoteHttpServlet and DaemonHttpServlet, by extending DaemonHttpServlet
- * and re-implementing RemoteHttpServlet.
- * 
- * @see com.oreilly.servlet.RemoteHttpServlet
- * @see com.oreilly.servlet.DaemonHttpServlet
- * 
+ * A superclass for any HTTP servlet that wishes to act as an RMI server
+ * and, additionally, accept raw socket connections. Includes the
+ * functionality from both RemoteHttpServlet and DaemonHttpServlet, by
+ * extending DaemonHttpServlet and re-implementing RemoteHttpServlet.
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.RemoteHttpServlet
+ * @see net.simpleframework.lib.com.oreilly.servlet.DaemonHttpServlet
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998
  * @version 1.0, 98/09/18
  */
-@SuppressWarnings("serial")
 public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implements Remote {
 	/**
 	 * The registry for the servlet
@@ -34,8 +33,9 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 
 	/**
 	 * Begins the servlet's RMI operations and begins a thread listening for
-	 * socket connections. Subclasses that override this method must be sure to
-	 * first call <tt>super.init(config)</tt>.
+	 * socket connections.
+	 * Subclasses that override this method must be sure to first call
+	 * <tt>super.init(config)</tt>.
 	 * 
 	 * @param config
 	 *        the servlet config
@@ -55,8 +55,8 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 
 	/**
 	 * Halts the servlet's RMI operations and halts the thread listening for
-	 * socket connections. Subclasses that override this method must be sure to
-	 * first call <tt>super.destroy()</tt>.
+	 * socket connections. Subclasses that
+	 * override this method must be sure to first call <tt>super.destroy()</tt>.
 	 */
 	@Override
 	public void destroy() {
@@ -65,10 +65,10 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 	}
 
 	/**
-	 * Returns the name under which the servlet should be bound in the registry.
-	 * By default the name is the servlet's class name. This can be overridden
-	 * with the <tt>registryName</tt> init parameter.
-	 * 
+	 * Returns the name under which the servlet should be bound in the
+	 * registry. By default the name is the servlet's class name. This
+	 * can be overridden with the <tt>registryName</tt> init parameter.
+	 *
 	 * @return the name under which the servlet should be bound in the registry
 	 */
 	protected String getRegistryName() {
@@ -83,10 +83,10 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 	}
 
 	/**
-	 * Returns the port where the registry should be running. By default the port
-	 * is the default registry port (1099). This can be overridden with the
-	 * <tt>registryPort</tt> init parameter.
-	 * 
+	 * Returns the port where the registry should be running. By default
+	 * the port is the default registry port (1099). This can be
+	 * overridden with the <tt>registryPort</tt> init parameter.
+	 *
 	 * @return the port for the registry
 	 */
 	protected int getRegistryPort() {
@@ -102,8 +102,8 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 	}
 
 	/**
-	 * Binds the servlet to the registry. Creates the registry if necessary. Logs
-	 * any errors.
+	 * Binds the servlet to the registry. Creates the registry if necessary.
+	 * Logs any errors.
 	 */
 	protected void bind() {
 		// Try to find the appropriate registry already running
@@ -138,7 +138,8 @@ public abstract class RemoteDaemonHttpServlet extends DaemonHttpServlet implemen
 	}
 
 	/**
-	 * Unbinds the servlet from the registry. Logs any errors.
+	 * Unbinds the servlet from the registry.
+	 * Logs any errors.
 	 */
 	protected void unbind() {
 		try {

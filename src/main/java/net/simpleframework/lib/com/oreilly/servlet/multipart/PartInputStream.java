@@ -11,19 +11,19 @@ import javax.servlet.ServletInputStream;
 
 /**
  * A <code>PartInputStream</code> filters a <code>ServletInputStream</code>,
- * providing access to a single MIME part contained with in which ends with the
- * boundary specified. It uses buffering to provide maximum performance.
+ * providing access to a single MIME part contained with in which ends with
+ * the boundary specified. It uses buffering to provide maximum performance.
  * <p>
- * Note the <code>readLine</code> method of <code>ServletInputStream</code> has
- * the annoying habit of adding a \r\n to the end of the last line. Since we
- * want a byte-for-byte transfer, we have to cut those chars. This means that we
- * must always maintain at least 2 characters in our buffer to allow us to trim
- * when necessary.
+ * Note the <code>readLine</code> method of <code>ServletInputStream</code>
+ * has the annoying habit of adding a \r\n to the end of the last line. Since
+ * we want a byte-for-byte transfer, we have to cut those chars. This means
+ * that we must always maintain at least 2 characters in our buffer to allow
+ * us to trim when necessary.
  * 
  * @author Geoff Soutter
  * @author Jason Hunter
- * @version 1.4, 2002/11/01, fix for "unexpected end of part" caused by boundary
- *          newlines split across buffers
+ * @version 1.4, 2002/11/01, fix for "unexpected end of part" caused by
+ *          boundary newlines split across buffers
  * @version 1.3, 2001/05/21, fix to handle boundaries crossing 64K mark
  * @version 1.2, 2001/02/07, added read(byte[]) implementation for safety
  * @version 1.1, 2000/11/26, fixed available() to never return negative
@@ -61,10 +61,10 @@ public class PartInputStream extends FilterInputStream {
 
 	/**
 	 * Fill up our buffer from the underlying input stream, and check for the
-	 * boundary that signifies end-of-file. Users of this method must ensure that
-	 * they leave exactly 2 characters in the buffer before calling this method
-	 * (except the first time), so that we may only use these characters if a
-	 * boundary is not found in the first line read.
+	 * boundary that signifies end-of-file. Users of this method must ensure
+	 * that they leave exactly 2 characters in the buffer before calling this
+	 * method (except the first time), so that we may only use these characters
+	 * if a boundary is not found in the first line read.
 	 * 
 	 * @exception IOException
 	 *            if an I/O error occurs.
@@ -121,14 +121,14 @@ public class PartInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * See the general contract of the <code>read</code> method of
-	 * <code>InputStream</code>.
+	 * See the general contract of the <code>read</code>
+	 * method of <code>InputStream</code>.
 	 * <p>
-	 * Returns <code>-1</code> (end of file) when the MIME boundary of this part
-	 * is encountered.
-	 * 
-	 * @return the next byte of data, or <code>-1</code> if the end of the stream
-	 *         is reached.
+	 * Returns <code>-1</code> (end of file) when the MIME
+	 * boundary of this part is encountered.
+	 *
+	 * @return the next byte of data, or <code>-1</code> if the end of the
+	 *         stream is reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -144,17 +144,17 @@ public class PartInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * See the general contract of the <code>read</code> method of
-	 * <code>InputStream</code>.
+	 * See the general contract of the <code>read</code>
+	 * method of <code>InputStream</code>.
 	 * <p>
-	 * Returns <code>-1</code> (end of file) when the MIME boundary of this part
-	 * is encountered.
-	 * 
+	 * Returns <code>-1</code> (end of file) when the MIME
+	 * boundary of this part is encountered.
+	 *
 	 * @param b
 	 *        the buffer into which the data is read.
-	 * @return the total number of bytes read into the buffer, or <code>-1</code>
-	 *         if there is no more data because the end of the stream has been
-	 *         reached.
+	 * @return the total number of bytes read into the buffer, or
+	 *         <code>-1</code> if there is no more data because the end
+	 *         of the stream has been reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -164,21 +164,21 @@ public class PartInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * See the general contract of the <code>read</code> method of
-	 * <code>InputStream</code>.
+	 * See the general contract of the <code>read</code>
+	 * method of <code>InputStream</code>.
 	 * <p>
-	 * Returns <code>-1</code> (end of file) when the MIME boundary of this part
-	 * is encountered.
-	 * 
+	 * Returns <code>-1</code> (end of file) when the MIME
+	 * boundary of this part is encountered.
+	 *
 	 * @param b
 	 *        the buffer into which the data is read.
 	 * @param off
 	 *        the start offset of the data.
 	 * @param len
 	 *        the maximum number of bytes read.
-	 * @return the total number of bytes read into the buffer, or <code>-1</code>
-	 *         if there is no more data because the end of the stream has been
-	 *         reached.
+	 * @return the total number of bytes read into the buffer, or
+	 *         <code>-1</code> if there is no more data because the end
+	 *         of the stream has been reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -218,12 +218,12 @@ public class PartInputStream extends FilterInputStream {
 
 	/**
 	 * Returns the number of bytes that can be read from this input stream
-	 * without blocking. This is a standard <code>InputStream</code> idiom to
-	 * deal with buffering gracefully, and is not same as the length of the part
-	 * arriving in this stream.
-	 * 
-	 * @return the number of bytes that can be read from the input stream without
-	 *         blocking.
+	 * without blocking. This is a standard <code>InputStream</code> idiom
+	 * to deal with buffering gracefully, and is not same as the length of the
+	 * part arriving in this stream.
+	 *
+	 * @return the number of bytes that can be read from the input stream
+	 *         without blocking.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -235,15 +235,15 @@ public class PartInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Closes this input stream and releases any system resources associated with
-	 * the stream.
+	 * Closes this input stream and releases any system resources
+	 * associated with the stream.
 	 * <p>
 	 * This method will read any unread data in the MIME part so that the next
 	 * part starts an an expected place in the parent <code>InputStream</code>.
 	 * Note that if the client code forgets to call this method on error,
 	 * <code>MultipartParser</code> will call it automatically if you call
 	 * <code>readNextPart()</code>.
-	 * 
+	 *
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Enumeration;
@@ -17,20 +18,22 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 /**
- * A class to help send SMTP email. It can be used by any Java program, not just
- * servlets. Servlets are likely to use this class to:
+ * A class to help send SMTP email. It can be used by any Java program, not
+ * just servlets. Servlets are likely to use this class to:
  * <ul>
  * <li>Send submitted form data to interested parties
  * <li>Send an email page to an administrator in case of error
  * <li>Send the client an order confirmation
  * </ul>
  * <p>
- * This class is an improvement on the sun.net.smtp.SmtpClient class found in
- * the JDK. This version has extra functionality, and can be used with JVMs that
- * did not extend from the JDK. It's not as robust as the JavaMail Standard
- * Extension classes, but it's easier to use and easier to install.
+ * This class is an improvement on the sun.net.smtp.SmtpClient class
+ * found in the JDK. This version has extra functionality, and can be used
+ * with JVMs that did not extend from the JDK. It's not as robust as
+ * the JavaMail Standard Extension classes, but it's easier to use and
+ * easier to install.
  * <p>
- * It can be used like this: <blockquote>
+ * It can be used like this:
+ * <blockquote>
  * 
  * <pre>
  * String mailhost = "localhost";  // or another mail host
@@ -61,22 +64,25 @@ import java.util.Vector;
  * 
  * </blockquote>
  * <p>
- * Be sure to set the from address, then set the recepient addresses, then set
- * the subject and other headers, then get the PrintStream, then write the
- * message, and finally send and close. The class does minimal error checking
- * internally; it counts on the mail host to complain if there's any
- * malformatted input or out of order execution.
+ * Be sure to set the from address, then set the recepient
+ * addresses, then set the subject and other headers, then get the
+ * PrintStream, then write the message, and finally send and close.
+ * The class does minimal error checking internally; it counts on the mail
+ * host to complain if there's any malformatted input or out of order
+ * execution.
  * <p>
- * An attachment mechanism based on RFC 1521 could be implemented on top of this
- * class. In the meanwhile, JavaMail is the best solution for sending email with
- * attachments.
+ * An attachment mechanism based on RFC 1521 could be implemented on top of
+ * this class. In the meanwhile, JavaMail is the best solution for sending
+ * email with attachments.
  * <p>
  * Still to do:
  * <ul>
  * <li>Figure out how to close the connection in case of error
  * </ul>
- * 
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1999
+ * @version 1.4, 2003/01/06, made isResponseOK() better handle null responses
+ * @version 1.3, 2002/12/13, added support for EBCDIC machines (needs J2SE 1.4)
  * @version 1.2, 2002/11/01, added logic to suppress CC: header if no CC addrs
  * @version 1.1, 2000/03/19, added angle brackets to address, helps some servers
  * @version 1.0, 1999/12/29
@@ -85,16 +91,16 @@ public class MailMessage {
 
 	String host;
 	String from;
-	Vector<String> to, cc;
-	Hashtable<String, String> headers;
+	Vector to, cc;
+	Hashtable headers;
 	MailPrintStream out;
 	BufferedReader in;
 	Socket socket;
 
 	/**
-	 * Constructs a new MailMessage to send an email. Use localhost as the mail
-	 * server.
-	 * 
+	 * Constructs a new MailMessage to send an email.
+	 * Use localhost as the mail server.
+	 *
 	 * @exception IOException
 	 *            if there's any problem contacting the mail server
 	 */
@@ -103,9 +109,9 @@ public class MailMessage {
 	}
 
 	/**
-	 * Constructs a new MailMessage to send an email. Use the given host as the
-	 * mail server.
-	 * 
+	 * Constructs a new MailMessage to send an email.
+	 * Use the given host as the mail server.
+	 *
 	 * @param host
 	 *        the mail server to use
 	 * @exception IOException
@@ -113,18 +119,19 @@ public class MailMessage {
 	 */
 	public MailMessage(final String host) throws IOException {
 		this.host = host;
-		to = new Vector<String>();
-		cc = new Vector<String>();
-		headers = new Hashtable<String, String>();
-		setHeader("X-Mailer", "com.oreilly.servlet.MailMessage (www.servlets.com)");
+		to = new Vector();
+		cc = new Vector();
+		headers = new Hashtable();
+		setHeader("X-Mailer",
+				"net.simpleframework.lib.com.oreilly.servlet.MailMessage (www.servlets.com)");
 		connect();
 		sendHelo();
 	}
 
 	/**
-	 * Sets the from address. Also sets the "From" header. This method should be
-	 * called only once.
-	 * 
+	 * Sets the from address. Also sets the "From" header. This method should
+	 * be called only once.
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -134,9 +141,9 @@ public class MailMessage {
 	}
 
 	/**
-	 * Sets the to address. Also sets the "To" header. This method may be called
-	 * multiple times.
-	 * 
+	 * Sets the to address. Also sets the "To" header. This method may be
+	 * called multiple times.
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -146,9 +153,9 @@ public class MailMessage {
 	}
 
 	/**
-	 * Sets the cc address. Also sets the "Cc" header. This method may be called
-	 * multiple times.
-	 * 
+	 * Sets the cc address. Also sets the "Cc" header. This method may be
+	 * called multiple times.
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -160,7 +167,7 @@ public class MailMessage {
 	/**
 	 * Sets the bcc address. Does NOT set any header since it's a *blind* copy.
 	 * This method may be called multiple times.
-	 * 
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -170,7 +177,8 @@ public class MailMessage {
 	}
 
 	/**
-	 * Sets the subject of the mail message. Actually sets the "Subject" header.
+	 * Sets the subject of the mail message. Actually sets the "Subject"
+	 * header.
 	 */
 	public void setSubject(final String subj) {
 		headers.put("Subject", subj);
@@ -186,10 +194,10 @@ public class MailMessage {
 	}
 
 	/**
-	 * Returns a PrintStream that can be used to write the body of the message. A
-	 * stream is used since email bodies are byte-oriented. A writer could be
-	 * wrapped on top if necessary for internationalization.
-	 * 
+	 * Returns a PrintStream that can be used to write the body of the message.
+	 * A stream is used since email bodies are byte-oriented. A writer could
+	 * be wrapped on top if necessary for internationalization.
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -216,9 +224,9 @@ public class MailMessage {
 		}
 	}
 
-	String vectorToList(final Vector<String> v) {
+	String vectorToList(final Vector v) {
 		final StringBuffer buf = new StringBuffer();
-		final Enumeration<?> e = v.elements();
+		final Enumeration e = v.elements();
 		while (e.hasMoreElements()) {
 			buf.append(e.nextElement());
 			if (e.hasMoreElements()) {
@@ -230,10 +238,10 @@ public class MailMessage {
 
 	void flushHeaders() throws IOException {
 		// XXX Should I care about order here?
-		final Enumeration<?> e = headers.keys();
+		final Enumeration e = headers.keys();
 		while (e.hasMoreElements()) {
 			final String name = (String) e.nextElement();
-			final String value = headers.get(name);
+			final String value = (String) headers.get(name);
 			out.println(name + ": " + value);
 		}
 		out.println();
@@ -241,9 +249,9 @@ public class MailMessage {
 	}
 
 	/**
-	 * Sends the message and closes the connection to the server. The MailMessage
-	 * object cannot be reused.
-	 * 
+	 * Sends the message and closes the connection to the server.
+	 * The MailMessage object cannot be reused.
+	 *
 	 * @exception IOException
 	 *            if there's any problem reported by the mail server
 	 */
@@ -291,7 +299,7 @@ public class MailMessage {
 	void connect() throws IOException {
 		socket = new Socket(host, 25);
 		out = new MailPrintStream(new BufferedOutputStream(socket.getOutputStream()));
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"));
 		getReady();
 	}
 
@@ -346,6 +354,9 @@ public class MailMessage {
 
 	boolean isResponseOK(final String response, final int[] ok) {
 		// Check that the response is one of the valid codes
+		if (response == null) {
+			return false;
+		}
 		for (int i = 0; i < ok.length; i++) {
 			if (response.startsWith("" + ok[i])) {
 				return true;
@@ -374,8 +385,8 @@ class MailPrintStream extends PrintStream {
 
 	int lastChar;
 
-	public MailPrintStream(final OutputStream out) {
-		super(out, true); // deprecated, but email is byte-oriented
+	public MailPrintStream(final OutputStream out) throws UnsupportedEncodingException {
+		super(out, true, "ISO-8859-1"); // deprecated, but email is byte-oriented
 	}
 
 	// Mac OS 9 does \r, but that's tough to distinguish from Windows \r\n.

@@ -8,21 +8,21 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 /**
- * A mapping to determine the (somewhat arbitrarily) preferred charset for a
- * given locale. Supports all locales recognized in JDK 1.1. This class is used
- * by the LocaleNegotiator.
- * 
- * @see com.oreilly.servlet.LocaleNegotiator
- * 
+ * A mapping to determine the (somewhat arbitrarily) preferred charset for
+ * a given locale. Supports all locales recognized in JDK 1.1. This
+ * class is used by the LocaleNegotiator.
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.LocaleNegotiator
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998
  * @version 1.0, 98/09/18
  */
 public class LocaleToCharsetMap {
 
-	private static Hashtable<String, String> map;
+	private static Hashtable map;
 
 	static {
-		map = new Hashtable<String, String>();
+		map = new Hashtable();
 
 		map.put("ar", "ISO-8859-6");
 		map.put("be", "ISO-8859-5");
@@ -67,9 +67,9 @@ public class LocaleToCharsetMap {
 	}
 
 	/**
-	 * Gets the preferred charset for the given locale, or null if the locale is
-	 * not recognized.
-	 * 
+	 * Gets the preferred charset for the given locale, or null if the locale
+	 * is not recognized.
+	 *
 	 * @param loc
 	 *        the locale
 	 * @return the preferred charset
@@ -78,13 +78,13 @@ public class LocaleToCharsetMap {
 		String charset;
 
 		// Try for an full name match (may include country)
-		charset = map.get(loc.toString());
+		charset = (String) map.get(loc.toString());
 		if (charset != null) {
 			return charset;
 		}
 
 		// If a full name didn't match, try just the language
-		charset = map.get(loc.getLanguage());
+		charset = (String) map.get(loc.getLanguage());
 		return charset; // may be null
 	}
 }

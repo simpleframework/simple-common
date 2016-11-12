@@ -22,8 +22,8 @@ import javax.servlet.ServletInputStream;
  * <p>
  * Also, it may be used to work around a bug in the Servlet API 2.0
  * implementation of <code>readLine</code> which contains a bug that causes
- * <code>ArrayIndexOutOfBoundsExceptions</code> under certain conditions. Apache
- * JServ is known to suffer from this bug.
+ * <code>ArrayIndexOutOfBoundsExceptions</code> under certain conditions.
+ * Apache JServ is known to suffer from this bug.
  * 
  * @author Geoff Soutter
  * @version 1.1, 2001/05/21, removed block of commented out code
@@ -55,9 +55,9 @@ public class BufferedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Fill up our buffer from the underlying input stream. Users of this method
-	 * must ensure that they use all characters in the buffer before calling this
-	 * method.
+	 * Fill up our buffer from the underlying input stream. Users of this
+	 * method must ensure that they use all characters in the buffer before
+	 * calling this method.
 	 * 
 	 * @exception IOException
 	 *            if an I/O error occurs.
@@ -71,18 +71,19 @@ public class BufferedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Implement buffering on top of the <code>readLine</code> method of the
-	 * wrapped <code>ServletInputStream</code>.
-	 * 
+	 * Implement buffering on top of the <code>readLine</code> method of
+	 * the wrapped <code>ServletInputStream</code>.
+	 *
 	 * @param b
 	 *        an array of bytes into which data is read.
 	 * @param off
-	 *        an integer specifying the character at which this method begins
-	 *        reading.
+	 *        an integer specifying the character at which
+	 *        this method begins reading.
 	 * @param len
-	 *        an integer specifying the maximum number of bytes to read.
-	 * @return an integer specifying the actual number of bytes read, or -1 if
-	 *         the end of the stream is reached.
+	 *        an integer specifying the maximum number of
+	 *        bytes to read.
+	 * @return an integer specifying the actual number of bytes
+	 *         read, or -1 if the end of the stream is reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -153,11 +154,11 @@ public class BufferedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Implement buffering on top of the <code>read</code> method of the wrapped
-	 * <code>ServletInputStream</code>.
-	 * 
-	 * @return the next byte of data, or <code>-1</code> if the end of the stream
-	 *         is reached.
+	 * Implement buffering on top of the <code>read</code> method of
+	 * the wrapped <code>ServletInputStream</code>.
+	 *
+	 * @return the next byte of data, or <code>-1</code> if the end of the
+	 *         stream is reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -173,18 +174,18 @@ public class BufferedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Implement buffering on top of the <code>read</code> method of the wrapped
-	 * <code>ServletInputStream</code>.
-	 * 
+	 * Implement buffering on top of the <code>read</code> method of
+	 * the wrapped <code>ServletInputStream</code>.
+	 *
 	 * @param b
 	 *        the buffer into which the data is read.
 	 * @param off
 	 *        the start offset of the data.
 	 * @param len
 	 *        the maximum number of bytes read.
-	 * @return the total number of bytes read into the buffer, or <code>-1</code>
-	 *         if there is no more data because the end of the stream has been
-	 *         reached.
+	 * @return the total number of bytes read into the buffer, or
+	 *         <code>-1</code> if there is no more data because the end
+	 *         of the stream has been reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */

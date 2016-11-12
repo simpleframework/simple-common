@@ -10,21 +10,23 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * A class to simplify cookie retrieval. It can retrieve cookie values by name
- * and return the value as any primitive type (no casting or parsing required).
- * It can also throw an exception when a cookie is not found (simplifying error
- * handling), and can accept default values (eliminating error handling).
+ * A class to simplify cookie retrieval. It can retrieve cookie values by
+ * name and return the value as any primitive type (no casting or parsing
+ * required). It can also throw an exception when a cookie is not found
+ * (simplifying error handling), and can accept default values (eliminating
+ * error handling).
  * <p>
- * It is used like this: <blockquote>
+ * It is used like this:
+ * <blockquote>
  * 
  * <pre>
  * CookieParser parser = new CookieParser(req);
  * 
- * float ratio = parser.getFloatCookie(&quot;ratio&quot;, 1.0);
+ * float ratio = parser.getFloatCookie("ratio", 1.0);
  * 
  * int count = 0;
  * try {
- * 	count = parser.getIntCookie(&quot;count&quot;);
+ * 	count = parser.getIntCookie("count");
  * } catch (NumberFormatException e) {
  * 	handleMalformedCount();
  * } catch (CookieNotFoundException e) {
@@ -33,20 +35,21 @@ import javax.servlet.http.HttpServletRequest;
  * </pre>
  * 
  * </blockquote>
- * 
- * @see com.oreilly.servlet.CookieNotFoundException
- * 
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.CookieNotFoundException
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 2000
  * @version 1.0, 2000/03/19
  */
 public class CookieParser {
 
 	private final HttpServletRequest req;
-	private final Hashtable<String, String> cookieJar = new Hashtable<String, String>();
+	private final Hashtable cookieJar = new Hashtable();
 
 	/**
-	 * Constructs a new CookieParser to handle the cookies of the given request.
-	 * 
+	 * Constructs a new CookieParser to handle the cookies of the
+	 * given request.
+	 *
 	 * @param req
 	 *        the servlet request
 	 */
@@ -69,7 +72,7 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a String
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a String
@@ -77,7 +80,7 @@ public class CookieParser {
 	 *            if the cookie was not found
 	 */
 	public String getStringCookie(final String name) throws CookieNotFoundException {
-		final String value = cookieJar.get(name);
+		final String value = (String) cookieJar.get(name);
 		if (value == null) {
 			throw new CookieNotFoundException(name + " not found");
 		} else {
@@ -86,8 +89,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a String, with a default. Returns the
-	 * default value if the cookie is not found
+	 * Gets the named cookie value as a String, with a default.
+	 * Returns the default value if the cookie is not found
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -105,7 +108,7 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a boolean
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a boolean
@@ -117,8 +120,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a boolean, with a default. Returns the
-	 * default value if the cookie is not found.
+	 * Gets the named cookie value as a boolean, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -136,14 +139,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a byte
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a byte
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie value could not be converted to a byte
+	 *            if the cookie value could not
+	 *            be converted to a byte
 	 */
 	public byte getByteCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -151,8 +155,9 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a byte, with a default. Returns the default
-	 * value if the cookie is not found or cannot be converted to a byte.
+	 * Gets the named cookie value as a byte, with a default.
+	 * Returns the default value if the cookie is not found or cannot
+	 * be converted to a byte.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -170,7 +175,7 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a char
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a char
@@ -187,8 +192,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a char, with a default. Returns the default
-	 * value if the cookie is not found.
+	 * Gets the named cookie value as a char, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -206,14 +211,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a double
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a double
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie could not be converted to a double
+	 *            if the cookie could not be converted
+	 *            to a double
 	 */
 	public double getDoubleCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -221,8 +227,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a double, with a default. Returns the
-	 * default value if the cookie is not found.
+	 * Gets the named cookie value as a double, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -240,14 +246,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a float
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a float
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie could not be converted to a float
+	 *            if the cookie could not be converted
+	 *            to a float
 	 */
 	public float getFloatCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -255,8 +262,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a float, with a default. Returns the
-	 * default value if the cookie is not found.
+	 * Gets the named cookie value as a float, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -274,14 +281,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a int
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a int
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie could not be converted to a int
+	 *            if the cookie could not be converted
+	 *            to a int
 	 */
 	public int getIntCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -289,8 +297,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a int, with a default. Returns the default
-	 * value if the cookie is not found.
+	 * Gets the named cookie value as a int, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -308,14 +316,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a long
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a long
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie could not be converted to a long
+	 *            if the cookie could not be converted
+	 *            to a long
 	 */
 	public long getLongCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -323,8 +332,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a long, with a default. Returns the default
-	 * value if the cookie is not found.
+	 * Gets the named cookie value as a long, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name
@@ -342,14 +351,15 @@ public class CookieParser {
 
 	/**
 	 * Gets the named cookie value as a short
-	 * 
+	 *
 	 * @param name
 	 *        the cookie name
 	 * @return the cookie value as a short
 	 * @exception CookieNotFoundException
 	 *            if the cookie was not found
 	 * @exception NumberFormatException
-	 *            if the cookie could not be converted to a short
+	 *            if the cookie could not be converted
+	 *            to a short
 	 */
 	public short getShortCookie(final String name)
 			throws CookieNotFoundException, NumberFormatException {
@@ -357,8 +367,8 @@ public class CookieParser {
 	}
 
 	/**
-	 * Gets the named cookie value as a short, with a default. Returns the
-	 * default value if the cookie is not found.
+	 * Gets the named cookie value as a short, with a default.
+	 * Returns the default value if the cookie is not found.
 	 * 
 	 * @param name
 	 *        the cookie name

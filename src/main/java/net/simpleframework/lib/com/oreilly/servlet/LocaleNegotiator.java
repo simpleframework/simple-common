@@ -10,24 +10,26 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 /**
- * A class to aid in servlet internationalization. It determines, from a client
- * request, the best charset, locale, and resource bundle to use with the
- * response.
+ * A class to aid in servlet internationalization. It determines, from a
+ * client request, the best charset, locale, and resource bundle to use
+ * with the response.
  * <p>
- * LocaleNegotiator works by scanning through the client's language preferences
- * (sent by browsers in the <tt>Accept-Language</tt> header) looking for any
- * language for which there exists is a corresponding resource bundle. When it
- * finds a correspondence, it uses the LocaleToCharsetMap class to determine the
- * charset. If there's any problem, it tries to fall back to US English. The
- * logic currently ignores the client's charset preferences (sent in the
- * <tt>Accept-Charset</tt> header).
+ * LocaleNegotiator works by scanning through the client's language
+ * preferences (sent by browsers in the <tt>Accept-Language</tt> header)
+ * looking for any
+ * language for which there exists is a corresponding resource bundle.
+ * When it finds a correspondence, it uses the LocaleToCharsetMap class
+ * to determine the charset. If there's any problem, it tries to fall
+ * back to US English. The logic currently ignores the client's charset
+ * preferences (sent in the <tt>Accept-Charset</tt> header).
  * <p>
- * It can be used like this: <blockquote>
+ * It can be used like this:
+ * <blockquote>
  * 
  * <pre>
- * String bundleName = &quot;BundleName&quot;;
- * String acceptLanguage = req.getHeader(&quot;Accept-Language&quot;);
- * String acceptCharset = req.getHeader(&quot;Accept-Charset&quot;);
+ * String bundleName = "BundleName";
+ * String acceptLanguage = req.getHeader("Accept-Language");
+ * String acceptCharset = req.getHeader("Accept-Charset");
  * 
  * LocaleNegotiator negotiator = new LocaleNegotiator(bundleName, acceptLanguage, acceptCharset);
  * 
@@ -35,19 +37,19 @@ import java.util.StringTokenizer;
  * String charset = negotiator.getCharset();
  * ResourceBundle bundle = negotiator.getBundle(); // may be null
  * 
- * res.setContentType(&quot;text/plain; charset=&quot; + charset);
- * res.setHeader(&quot;Content-Language&quot;, locale.getLanguage());
- * res.setHeader(&quot;Vary&quot;, &quot;Accept-Language&quot;);
+ * res.setContentType("text/plain; charset=" + charset);
+ * res.setHeader("Content-Language", locale.getLanguage());
+ * res.setHeader("Vary", "Accept-Language");
  * 
  * PrintWriter out = res.getWriter();
  * 
- * out.println(bundle.getString(&quot;resource&quot;));
+ * out.println(bundle.getString("resource"));
  * </pre>
  * 
  * </blockquote>
- * 
- * @see com.oreilly.servlet.LocaleToCharsetMap
- * 
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.LocaleToCharsetMap
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998
  * @version 1.0, 98/09/18
  */
@@ -60,7 +62,7 @@ public class LocaleNegotiator {
 	/**
 	 * Constructs a new LocaleNegotiator for the given bundle name, language
 	 * list, and charset list.
-	 * 
+	 *
 	 * @param bundleName
 	 *        the resource bundle name
 	 * @param languages
@@ -135,7 +137,7 @@ public class LocaleNegotiator {
 
 	/**
 	 * Gets the chosen bundle.
-	 * 
+	 *
 	 * @return the chosen bundle
 	 */
 	public ResourceBundle getBundle() {
@@ -144,7 +146,7 @@ public class LocaleNegotiator {
 
 	/**
 	 * Gets the chosen locale.
-	 * 
+	 *
 	 * @return the chosen locale
 	 */
 	public Locale getLocale() {
@@ -153,7 +155,7 @@ public class LocaleNegotiator {
 
 	/**
 	 * Gets the chosen charset.
-	 * 
+	 *
 	 * @return the chosen charset
 	 */
 	public String getCharset() {
@@ -187,9 +189,9 @@ public class LocaleNegotiator {
 	}
 
 	/*
-	 * Gets a ResourceBundle object for the given bundle name and locale, or null
-	 * if the bundle can't be found. The resource bundle must match the locale
-	 * exactly. Fallback matches are not permitted.
+	 * Gets a ResourceBundle object for the given bundle name and locale,
+	 * or null if the bundle can't be found. The resource bundle must match
+	 * the locale exactly. Fallback matches are not permitted.
 	 */
 	private ResourceBundle getBundleNoFallback(final String bundleName, final Locale loc) {
 
@@ -232,9 +234,9 @@ public class LocaleNegotiator {
 
 	/**
 	 * Gets the best charset for a given locale, selecting from a charset list.
-	 * Currently ignores the charset list. Subclasses can override this method to
-	 * take the list into account.
-	 * 
+	 * Currently ignores the charset list. Subclasses can override this
+	 * method to take the list into account.
+	 *
 	 * @param loc
 	 *        the locale
 	 * @param charsets

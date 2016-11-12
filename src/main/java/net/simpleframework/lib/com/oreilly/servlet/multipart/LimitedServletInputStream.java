@@ -10,10 +10,10 @@ import javax.servlet.ServletInputStream;
 
 /**
  * A <code>LimitedServletInputStream</code> wraps another
- * <code>ServletInputStream</code> in order to keep track of how many bytes have
- * been read and detect when the Content-Length limit has been reached. This is
- * necessary since some servlet containers are slow to notice the end of stream
- * and cause the client code to hang if it tries to read past it.
+ * <code>ServletInputStream</code> in order to keep track of how many bytes
+ * have been read and detect when the Content-Length limit has been reached.
+ * This is necessary since some servlet containers are slow to notice the end
+ * of stream and cause the client code to hang if it tries to read past it.
  * 
  * @author Jason Hunter
  * @author Geoff Soutter
@@ -31,8 +31,8 @@ public class LimitedServletInputStream extends ServletInputStream {
 	private int totalRead = 0;
 
 	/**
-	 * Creates a <code>LimitedServletInputStream</code> with the specified length
-	 * limit that wraps the provided <code>ServletInputStream</code>.
+	 * Creates a <code>LimitedServletInputStream</code> with the specified
+	 * length limit that wraps the provided <code>ServletInputStream</code>.
 	 */
 	public LimitedServletInputStream(final ServletInputStream in, final int totalExpected) {
 		this.in = in;
@@ -42,16 +42,17 @@ public class LimitedServletInputStream extends ServletInputStream {
 	/**
 	 * Implement length limitation on top of the <code>readLine</code> method of
 	 * the wrapped <code>ServletInputStream</code>.
-	 * 
+	 *
 	 * @param b
 	 *        an array of bytes into which data is read.
 	 * @param off
-	 *        an integer specifying the character at which this method begins
-	 *        reading.
+	 *        an integer specifying the character at which
+	 *        this method begins reading.
 	 * @param len
-	 *        an integer specifying the maximum number of bytes to read.
-	 * @return an integer specifying the actual number of bytes read, or -1 if
-	 *         the end of the stream is reached.
+	 *        an integer specifying the maximum number of
+	 *        bytes to read.
+	 * @return an integer specifying the actual number of bytes
+	 *         read, or -1 if the end of the stream is reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -71,11 +72,11 @@ public class LimitedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Implement length limitation on top of the <code>read</code> method of the
-	 * wrapped <code>ServletInputStream</code>.
-	 * 
-	 * @return the next byte of data, or <code>-1</code> if the end of the stream
-	 *         is reached.
+	 * Implement length limitation on top of the <code>read</code> method of
+	 * the wrapped <code>ServletInputStream</code>.
+	 *
+	 * @return the next byte of data, or <code>-1</code> if the end of the
+	 *         stream is reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */
@@ -93,17 +94,17 @@ public class LimitedServletInputStream extends ServletInputStream {
 	}
 
 	/**
-	 * Implement length limitation on top of the <code>read</code> method of the
-	 * wrapped <code>ServletInputStream</code>.
-	 * 
+	 * Implement length limitation on top of the <code>read</code> method of
+	 * the wrapped <code>ServletInputStream</code>.
+	 *
 	 * @param b
 	 *        destination buffer.
 	 * @param off
 	 *        offset at which to start storing bytes.
 	 * @param len
 	 *        maximum number of bytes to read.
-	 * @return the number of bytes read, or <code>-1</code> if the end of the
-	 *         stream has been reached.
+	 * @return the number of bytes read, or <code>-1</code> if the end of
+	 *         the stream has been reached.
 	 * @exception IOException
 	 *            if an I/O error occurs.
 	 */

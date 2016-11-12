@@ -8,18 +8,18 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Implements a renaming policy that adds increasing integers to the body of any
- * file that collides. For example, if foo.gif is being uploaded and a file by
- * the same name already exists, this logic will rename the upload foo1.gif. A
- * second upload by the same name would be foo2.gif. Note that for safety the
- * rename() method creates a zero-length file with the chosen name to act as a
- * marker that the name is taken even before the upload starts writing the
- * bytes.
+ * Implements a renaming policy that adds increasing integers to the body of
+ * any file that collides. For example, if foo.gif is being uploaded and a
+ * file by the same name already exists, this logic will rename the upload
+ * foo1.gif. A second upload by the same name would be foo2.gif.
+ * Note that for safety the rename() method creates a zero-length file with
+ * the chosen name to act as a marker that the name is taken even before the
+ * upload starts writing the bytes.
  * 
  * @author Jason Hunter
  * @version 1.1, 2002/11/05, making thread safe with createNewFile()
- * @version 1.0, 2002/04/30, initial revision, thanks to Yoonjung Lee for this
- *          idea
+ * @version 1.0, 2002/04/30, initial revision, thanks to Yoonjung Lee
+ *          for this idea
  */
 public class DefaultFileRenamePolicy implements FileRenamePolicy {
 

@@ -15,10 +15,11 @@ import javax.servlet.ServletInputStream;
 
 /**
  * A <code>FilePart</code> is an upload part which represents a
- * <code>INPUT TYPE="file"</code> form parameter. Note that because file upload
- * data arrives via a single InputStream, each FilePart's contents must be read
- * before moving onto the next part. Don't try to store a FilePart object for
- * later processing because by then their content will have been passed by.
+ * <code>INPUT TYPE="file"</code> form parameter. Note that because file
+ * upload data arrives via a single InputStream, each FilePart's contents
+ * must be read before moving onto the next part. Don't try to store a
+ * FilePart object for later processing because by then their content will
+ * have been passed by.
  * 
  * @author Geoff Soutter
  * @version 1.2, 2001/01/22, getFilePath() addition thanks to Stefan Eissing
@@ -52,12 +53,14 @@ public class FilePart extends Part {
 	 * @param boundary
 	 *        the MIME boundary that delimits the end of file.
 	 * @param contentType
-	 *        the content type of the file provided in the MIME header.
+	 *        the content type of the file provided in the
+	 *        MIME header.
 	 * @param fileName
-	 *        the file system name of the file provided in the MIME header.
+	 *        the file system name of the file provided in the
+	 *        MIME header.
 	 * @param filePath
-	 *        the file system path of the file provided in the MIME header (as
-	 *        specified in disposition info).
+	 *        the file system path of the file provided in the
+	 *        MIME header (as specified in disposition info).
 	 * 
 	 * @exception IOException
 	 *            if an input or output exception has occurred.
@@ -80,14 +83,14 @@ public class FilePart extends Part {
 	}
 
 	/**
-	 * Returns the name that the file was stored with on the remote system, or
-	 * <code>null</code> if the user didn't enter a file to be uploaded. Note:
-	 * this is not the same as the name of the form parameter used to transmit
-	 * the file; that is available from the <code>getName</code> method. Further
-	 * note: if file rename logic is in effect, the file name can change during
-	 * the writeTo() method when there's a collision with another file of the
-	 * same name in the same directory. If this matters to you, be sure to pay
-	 * attention to when you call the method.
+	 * Returns the name that the file was stored with on the remote system,
+	 * or <code>null</code> if the user didn't enter a file to be uploaded.
+	 * Note: this is not the same as the name of the form parameter used to
+	 * transmit the file; that is available from the <code>getName</code>
+	 * method. Further note: if file rename logic is in effect, the file
+	 * name can change during the writeTo() method when there's a collision
+	 * with another file of the same name in the same directory. If this
+	 * matters to you, be sure to pay attention to when you call the method.
 	 * 
 	 * @return name of file uploaded or <code>null</code>.
 	 * 
@@ -98,13 +101,13 @@ public class FilePart extends Part {
 	}
 
 	/**
-	 * Returns the full path and name of the file on the remote system, or
-	 * <code>null</code> if the user didn't enter a file to be uploaded. If path
-	 * information was not supplied by the remote system, this method will return
-	 * the same as <code>getFileName()</code>.
-	 * 
+	 * Returns the full path and name of the file on the remote system,
+	 * or <code>null</code> if the user didn't enter a file to be uploaded.
+	 * If path information was not supplied by the remote system, this method
+	 * will return the same as <code>getFileName()</code>.
+	 *
 	 * @return path of file uploaded or <code>null</code>.
-	 * 
+	 *
 	 * @see Part#getName()
 	 */
 	public String getFilePath() {
@@ -121,11 +124,13 @@ public class FilePart extends Part {
 	}
 
 	/**
-	 * Returns an input stream which contains the contents of the file supplied.
-	 * If the user didn't enter a file to upload there will be <code>0</code>
-	 * bytes in the input stream. It's important to read the contents of the
-	 * InputStream immediately and in full before proceeding to process the next
-	 * part. The contents will otherwise be lost on moving to the next part.
+	 * Returns an input stream which contains the contents of the
+	 * file supplied. If the user didn't enter a file to upload
+	 * there will be <code>0</code> bytes in the input stream.
+	 * It's important to read the contents of the InputStream
+	 * immediately and in full before proceeding to process the
+	 * next part. The contents will otherwise be lost on moving
+	 * to the next part.
 	 * 
 	 * @return an input stream containing contents of file.
 	 */
@@ -134,11 +139,12 @@ public class FilePart extends Part {
 	}
 
 	/**
-	 * Write this file part to a file or directory. If the user supplied a file,
-	 * we write it to that file, and if they supplied a directory, we write it to
-	 * that directory with the filename that accompanied it. If this part doesn't
-	 * contain a file this method does nothing.
-	 * 
+	 * Write this file part to a file or directory. If the user
+	 * supplied a file, we write it to that file, and if they supplied
+	 * a directory, we write it to that directory with the filename
+	 * that accompanied it. If this part doesn't contain a file this
+	 * method does nothing.
+	 *
 	 * @return number of bytes written
 	 * @exception IOException
 	 *            if an input or output exception has occurred.
@@ -179,7 +185,7 @@ public class FilePart extends Part {
 	/**
 	 * Write this file part to the given output stream. If this part doesn't
 	 * contain a file this method does nothing.
-	 * 
+	 *
 	 * @return number of bytes written.
 	 * @exception IOException
 	 *            if an input or output exception has occurred.
@@ -195,9 +201,9 @@ public class FilePart extends Part {
 	}
 
 	/**
-	 * Internal method to write this file part; doesn't check to see if it has
-	 * contents first.
-	 * 
+	 * Internal method to write this file part; doesn't check to see
+	 * if it has contents first.
+	 *
 	 * @return number of bytes written.
 	 * @exception IOException
 	 *            if an input or output exception has occurred.

@@ -21,21 +21,23 @@ import net.simpleframework.lib.com.oreilly.servlet.multipart.ParamPart;
 import net.simpleframework.lib.com.oreilly.servlet.multipart.Part;
 
 /**
- * A utility class to handle <code>multipart/form-data</code> requests, the kind
- * of requests that support file uploads. This class emulates the interface of
- * <code>HttpServletRequest</code>, making it familiar to use. It uses a "push"
- * model where any incoming files are read and saved directly to disk in the
- * constructor. If you wish to have more flexibility, e.g. write the files to a
- * database, use the "pull" model <code>MultipartParser</code> instead.
+ * A utility class to handle <code>multipart/form-data</code> requests,
+ * the kind of requests that support file uploads. This class emulates the
+ * interface of <code>HttpServletRequest</code>, making it familiar to use.
+ * It uses a "push" model where any incoming files are read and saved directly
+ * to disk in the constructor. If you wish to have more flexibility, e.g.
+ * write the files to a database, use the "pull" model
+ * <code>MultipartParser</code> instead.
  * <p>
- * This class can receive arbitrarily large files (up to an artificial limit you
- * can set), and fairly efficiently too. It cannot handle nested data (multipart
- * content within multipart content). It <b>can</b> now with the latest release
- * handle internationalized content (such as non Latin-1 filenames).
+ * This class can receive arbitrarily large files (up to an artificial limit
+ * you can set), and fairly efficiently too.
+ * It cannot handle nested data (multipart content within multipart content).
+ * It <b>can</b> now with the latest release handle internationalized content
+ * (such as non Latin-1 filenames).
  * <p>
  * To avoid collisions and have fine control over file placement, there's a
- * constructor variety that takes a pluggable FileRenamePolicy implementation. A
- * particular policy can choose to rename or change the location of the file
+ * constructor variety that takes a pluggable FileRenamePolicy implementation.
+ * A particular policy can choose to rename or change the location of the file
  * before it's written.
  * <p>
  * See the included upload.war for an example of how to use this class.
@@ -43,11 +45,12 @@ import net.simpleframework.lib.com.oreilly.servlet.multipart.Part;
  * The full file upload specification is contained in experimental RFC 1867,
  * available at <a href="http://www.ietf.org/rfc/rfc1867.txt">
  * http://www.ietf.org/rfc/rfc1867.txt</a>.
- * 
+ *
  * @see MultipartParser
  * 
  * @author Jason Hunter
  * @author Geoff Soutter
+ * @version 1.12, 2004/04/11, added null check for Opera malformed bug<br>
  * @version 1.11, 2002/11/01, combine query string params in param list<br>
  * @version 1.10, 2002/05/27, added access to the original file names<br>
  * @version 1.9, 2002/04/30, added support for file renaming, thanks to
@@ -56,12 +59,12 @@ import net.simpleframework.lib.com.oreilly.servlet.multipart.Part;
  *          Changshin Lee<br>
  * @version 1.7, 2001/02/07, made fields protected to increase user
  *          flexibility<br>
- * @version 1.6, 2000/07/21, redid internals to use MultipartParser, thanks to
- *          Geoff Soutter<br>
+ * @version 1.6, 2000/07/21, redid internals to use MultipartParser,
+ *          thanks to Geoff Soutter<br>
  * @version 1.5, 2000/02/04, added auto MacBinary decoding for IE on Mac<br>
- * @version 1.4, 2000/01/05, added getParameterValues(), WebSphere 2.x
- *          getContentType() workaround, stopped writing empty "unknown"
- *          file<br>
+ * @version 1.4, 2000/01/05, added getParameterValues(),
+ *          WebSphere 2.x getContentType() workaround,
+ *          stopped writing empty "unknown" file<br>
  * @version 1.3, 1999/12/28, IE4 on Win98 lastIndexOf("boundary=")
  *          workaround<br>
  * @version 1.2, 1999/12/20, IE4 on Mac readNextPart() workaround<br>
@@ -72,30 +75,24 @@ public class MultipartRequest {
 
 	private static final int DEFAULT_MAX_POST_SIZE = 1024 * 1024; // 1 Meg
 
-	protected Hashtable<String, Vector<String>> parameters = new Hashtable<String, Vector<String>>(); // name
-	// -
-	// Vector
-	// of
-	// values
-	protected Hashtable<String, UploadedFile> files = new Hashtable<String, UploadedFile>(); // name
-
-	// -
-	// UploadedFile
+	protected Hashtable parameters = new Hashtable(); // name - Vector of values
+	protected Hashtable files = new Hashtable(); // name - UploadedFile
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * 1 Megabyte. If the content is too large, an IOException is thrown. This
-	 * constructor actually parses the <tt>multipart/form-data</tt> and throws an
-	 * IOException if there's any problem reading or parsing the request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to 1 Megabyte. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
 	 *        the directory in which to save any uploaded files.
 	 * @exception IOException
-	 *            if the uploaded content is larger than 1 Megabyte or there's
-	 *            a problem reading or parsing the request.
+	 *            if the uploaded content is larger than 1 Megabyte
+	 *            or there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory)
 			throws IOException {
@@ -103,13 +100,13 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * the specified length. If the content is too large, an IOException is
-	 * thrown. This constructor actually parses the <tt>multipart/form-data</tt>
-	 * and throws an IOException if there's any problem reading or parsing the
-	 * request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to the specified length. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
@@ -117,8 +114,9 @@ public class MultipartRequest {
 	 * @param maxPostSize
 	 *        the maximum size of the POST content.
 	 * @exception IOException
-	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
-	 *            there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than
+	 *            <tt>maxPostSize</tt> or there's a problem reading or parsing
+	 *            the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize) throws IOException {
@@ -126,13 +124,13 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * the specified length. If the content is too large, an IOException is
-	 * thrown. This constructor actually parses the <tt>multipart/form-data</tt>
-	 * and throws an IOException if there's any problem reading or parsing the
-	 * request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to the specified length. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
@@ -140,8 +138,8 @@ public class MultipartRequest {
 	 * @param encoding
 	 *        the encoding of the response, such as ISO-8859-1
 	 * @exception IOException
-	 *            if the uploaded content is larger than 1 Megabyte or there's
-	 *            a problem reading or parsing the request.
+	 *            if the uploaded content is larger than
+	 *            1 Megabyte or there's a problem reading or parsing the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final String encoding) throws IOException {
@@ -149,24 +147,25 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * the specified length. If the content is too large, an IOException is
-	 * thrown. This constructor actually parses the <tt>multipart/form-data</tt>
-	 * and throws an IOException if there's any problem reading or parsing the
-	 * request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to the specified length. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
 	 *        the directory in which to save any uploaded files.
 	 * @param maxPostSize
 	 *        the maximum size of the POST content.
-	 * @param encoding
-	 *        the encoding of the response, such as ISO-8859-1
+	 * @param policy
+	 *        the rules for renaming in case of file name collisions
 	 * @exception IOException
-	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
-	 *            there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than
+	 *            <tt>maxPostSize</tt> or there's a problem reading or parsing
+	 *            the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final FileRenamePolicy policy) throws IOException {
@@ -174,13 +173,13 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * the specified length. If the content is too large, an IOException is
-	 * thrown. This constructor actually parses the <tt>multipart/form-data</tt>
-	 * and throws an IOException if there's any problem reading or parsing the
-	 * request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to the specified length. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
@@ -190,8 +189,9 @@ public class MultipartRequest {
 	 * @param encoding
 	 *        the encoding of the response, such as ISO-8859-1
 	 * @exception IOException
-	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
-	 *            there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than
+	 *            <tt>maxPostSize</tt> or there's a problem reading or parsing
+	 *            the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final String encoding) throws IOException {
@@ -199,16 +199,16 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Constructs a new MultipartRequest to handle the specified request, saving
-	 * any uploaded files to the given directory, and limiting the upload size to
-	 * the specified length. If the content is too large, an IOException is
-	 * thrown. This constructor actually parses the <tt>multipart/form-data</tt>
-	 * and throws an IOException if there's any problem reading or parsing the
-	 * request.
-	 * 
+	 * Constructs a new MultipartRequest to handle the specified request,
+	 * saving any uploaded files to the given directory, and limiting the
+	 * upload size to the specified length. If the content is too large, an
+	 * IOException is thrown. This constructor actually parses the
+	 * <tt>multipart/form-data</tt> and throws an IOException if there's any
+	 * problem reading or parsing the request.
+	 *
 	 * To avoid file collisions, this constructor takes an implementation of the
 	 * FileRenamePolicy interface to allow a pluggable rename policy.
-	 * 
+	 *
 	 * @param request
 	 *        the servlet request.
 	 * @param saveDirectory
@@ -220,8 +220,9 @@ public class MultipartRequest {
 	 * @param policy
 	 *        a pluggable file rename policy
 	 * @exception IOException
-	 *            if the uploaded content is larger than <tt>maxPostSize</tt> or
-	 *            there's a problem reading or parsing the request.
+	 *            if the uploaded content is larger than
+	 *            <tt>maxPostSize</tt> or there's a problem reading or parsing
+	 *            the request.
 	 */
 	public MultipartRequest(final HttpServletRequest request, final String saveDirectory,
 			final int maxPostSize, final String encoding, final FileRenamePolicy policy)
@@ -260,14 +261,13 @@ public class MultipartRequest {
 		// Ben Johnson, ben.johnson@merrillcorp.com, for the idea.
 		if (request.getQueryString() != null) {
 			// Let HttpUtils create a name->String[] structure
-			final Hashtable<?, ?> queryParameters = HttpUtils
-					.parseQueryString(request.getQueryString());
+			final Hashtable queryParameters = HttpUtils.parseQueryString(request.getQueryString());
 			// For our own use, name it a name->Vector structure
-			final Enumeration<?> queryParameterNames = queryParameters.keys();
+			final Enumeration queryParameterNames = queryParameters.keys();
 			while (queryParameterNames.hasMoreElements()) {
-				final String paramName = (String) queryParameterNames.nextElement();
+				final Object paramName = queryParameterNames.nextElement();
 				final String[] values = (String[]) queryParameters.get(paramName);
-				final Vector<String> newValues = new Vector<String>();
+				final Vector newValues = new Vector();
 				for (int i = 0; i < values.length; i++) {
 					newValues.add(values[i]);
 				}
@@ -278,13 +278,16 @@ public class MultipartRequest {
 		Part part;
 		while ((part = parser.readNextPart()) != null) {
 			final String name = part.getName();
+			if (name == null) {
+				throw new IOException("Malformed input: parameter name missing (known Opera 7 bug)");
+			}
 			if (part.isParam()) {
 				// It's a parameter part, add it to the vector of values
 				final ParamPart paramPart = (ParamPart) part;
 				final String value = paramPart.getStringValue();
-				Vector<String> existingValues = parameters.get(name);
+				Vector existingValues = (Vector) parameters.get(name);
 				if (existingValues == null) {
-					existingValues = new Vector<String>();
+					existingValues = new Vector();
 					parameters.put(name, existingValues);
 				}
 				existingValues.addElement(value);
@@ -308,8 +311,8 @@ public class MultipartRequest {
 
 	/**
 	 * Constructor with an old signature, kept for backward compatibility.
-	 * Without this constructor, a servlet compiled against a previous version of
-	 * this class (pre 1.4) would have to be recompiled to link with this
+	 * Without this constructor, a servlet compiled against a previous version
+	 * of this class (pre 1.4) would have to be recompiled to link with this
 	 * version. This constructor supports the linking via the old signature.
 	 * Callers must simply be careful to pass in an HttpServletRequest.
 	 * 
@@ -321,8 +324,8 @@ public class MultipartRequest {
 
 	/**
 	 * Constructor with an old signature, kept for backward compatibility.
-	 * Without this constructor, a servlet compiled against a previous version of
-	 * this class (pre 1.4) would have to be recompiled to link with this
+	 * Without this constructor, a servlet compiled against a previous version
+	 * of this class (pre 1.4) would have to be recompiled to link with this
 	 * version. This constructor supports the linking via the old signature.
 	 * Callers must simply be careful to pass in an HttpServletRequest.
 	 * 
@@ -333,45 +336,47 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Returns the names of all the parameters as an Enumeration of Strings. It
-	 * returns an empty Enumeration if there are no parameters.
-	 * 
+	 * Returns the names of all the parameters as an Enumeration of
+	 * Strings. It returns an empty Enumeration if there are no parameters.
+	 *
 	 * @return the names of all the parameters as an Enumeration of Strings.
 	 */
-	public Enumeration<?> getParameterNames() {
+	public Enumeration getParameterNames() {
 		return parameters.keys();
 	}
 
 	/**
-	 * Returns the names of all the uploaded files as an Enumeration of Strings.
-	 * It returns an empty Enumeration if there are no uploaded files. Each file
-	 * name is the name specified by the form, not by the user.
-	 * 
+	 * Returns the names of all the uploaded files as an Enumeration of
+	 * Strings. It returns an empty Enumeration if there are no file input
+	 * fields on the form. Any file input field that's left empty will result
+	 * in a FilePart with null contents. Each file name is the name specified
+	 * by the form, not by the user.
+	 *
 	 * @return the names of all the uploaded files as an Enumeration of Strings.
 	 */
-	public Enumeration<?> getFileNames() {
+	public Enumeration getFileNames() {
 		return files.keys();
 	}
 
 	/**
-	 * Returns the value of the named parameter as a String, or null if the
-	 * parameter was not sent or was sent without a value. The value is
-	 * guaranteed to be in its normal, decoded form. If the parameter has
-	 * multiple values, only the last one is returned (for backward
-	 * compatibility). For parameters with multiple values, it's possible the
-	 * last "value" may be null.
-	 * 
+	 * Returns the value of the named parameter as a String, or null if
+	 * the parameter was not sent or was sent without a value. The value
+	 * is guaranteed to be in its normal, decoded form. If the parameter
+	 * has multiple values, only the last one is returned (for backward
+	 * compatibility). For parameters with multiple values, it's possible
+	 * the last "value" may be null.
+	 *
 	 * @param name
 	 *        the parameter name.
 	 * @return the parameter value.
 	 */
 	public String getParameter(final String name) {
 		try {
-			final Vector<String> values = parameters.get(name);
+			final Vector values = (Vector) parameters.get(name);
 			if (values == null || values.size() == 0) {
 				return null;
 			}
-			final String value = values.elementAt(values.size() - 1);
+			final String value = (String) values.elementAt(values.size() - 1);
 			return value;
 		} catch (final Exception e) {
 			return null;
@@ -381,17 +386,17 @@ public class MultipartRequest {
 	/**
 	 * Returns the values of the named parameter as a String array, or null if
 	 * the parameter was not sent. The array has one entry for each parameter
-	 * field sent. If any field was sent without a value that entry is stored in
-	 * the array as a null. The values are guaranteed to be in their normal,
-	 * decoded form. A single value is returned as a one-element array.
-	 * 
+	 * field sent. If any field was sent without a value that entry is stored
+	 * in the array as a null. The values are guaranteed to be in their
+	 * normal, decoded form. A single value is returned as a one-element array.
+	 *
 	 * @param name
 	 *        the parameter name.
 	 * @return the parameter values.
 	 */
 	public String[] getParameterValues(final String name) {
 		try {
-			final Vector<String> values = parameters.get(name);
+			final Vector values = (Vector) parameters.get(name);
 			if (values == null || values.size() == 0) {
 				return null;
 			}
@@ -404,17 +409,18 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Returns the filesystem name of the specified file, or null if the file was
-	 * not included in the upload. A filesystem name is the name specified by the
-	 * user. It is also the name under which the file is actually saved.
-	 * 
+	 * Returns the filesystem name of the specified file, or null if the
+	 * file was not included in the upload. A filesystem name is the name
+	 * specified by the user. It is also the name under which the file is
+	 * actually saved.
+	 *
 	 * @param name
-	 *        the file name.
+	 *        the html page's file parameter name.
 	 * @return the filesystem name of the file.
 	 */
 	public String getFilesystemName(final String name) {
 		try {
-			final UploadedFile file = files.get(name);
+			final UploadedFile file = (UploadedFile) files.get(name);
 			return file.getFilesystemName(); // may be null
 		} catch (final Exception e) {
 			return null;
@@ -423,16 +429,16 @@ public class MultipartRequest {
 
 	/**
 	 * Returns the original filesystem name of the specified file (before any
-	 * renaming policy was applied), or null if the file was not included in the
-	 * upload. A filesystem name is the name specified by the user.
-	 * 
+	 * renaming policy was applied), or null if the file was not included in
+	 * the upload. A filesystem name is the name specified by the user.
+	 *
 	 * @param name
-	 *        the file name.
+	 *        the html page's file parameter name.
 	 * @return the original file name of the file.
 	 */
 	public String getOriginalFileName(final String name) {
 		try {
-			final UploadedFile file = files.get(name);
+			final UploadedFile file = (UploadedFile) files.get(name);
 			return file.getOriginalFileName(); // may be null
 		} catch (final Exception e) {
 			return null;
@@ -440,16 +446,16 @@ public class MultipartRequest {
 	}
 
 	/**
-	 * Returns the content type of the specified file (as supplied by the client
-	 * browser), or null if the file was not included in the upload.
-	 * 
+	 * Returns the content type of the specified file (as supplied by the
+	 * client browser), or null if the file was not included in the upload.
+	 *
 	 * @param name
-	 *        the file name.
+	 *        the html page's file parameter name.
 	 * @return the content type of the file.
 	 */
 	public String getContentType(final String name) {
 		try {
-			final UploadedFile file = files.get(name);
+			final UploadedFile file = (UploadedFile) files.get(name);
 			return file.getContentType(); // may be null
 		} catch (final Exception e) {
 			return null;
@@ -459,14 +465,14 @@ public class MultipartRequest {
 	/**
 	 * Returns a File object for the specified file saved on the server's
 	 * filesystem, or null if the file was not included in the upload.
-	 * 
+	 *
 	 * @param name
-	 *        the file name.
+	 *        the html page's file parameter name.
 	 * @return a File object for the named file.
 	 */
 	public File getFile(final String name) {
 		try {
-			final UploadedFile file = files.get(name);
+			final UploadedFile file = (UploadedFile) files.get(name);
 			return file.getFile(); // may be null
 		} catch (final Exception e) {
 			return null;

@@ -12,28 +12,30 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * A utility class to handle <code>multipart/form-data</code> requests, the kind
- * of requests that support file uploads. This class uses a "pull" model where
- * the reading of incoming files and parameters is controlled by the client
- * code, which allows incoming files to be stored into any
- * <code>OutputStream</code>. If you wish to use an API which resembles
- * <code>HttpServletRequest</code>, use the "push" model
- * <code>MultipartRequest</code> instead. It's an easy-to-use wrapper around
- * this class.
+ * A utility class to handle <code>multipart/form-data</code> requests,
+ * the kind of requests that support file uploads. This class uses a
+ * "pull" model where the reading of incoming files and parameters is
+ * controlled by the client code, which allows incoming files to be stored
+ * into any <code>OutputStream</code>. If you wish to use an API which
+ * resembles <code>HttpServletRequest</code>, use the "push" model
+ * <code>MultipartRequest</code> instead. It's an easy-to-use wrapper
+ * around this class.
  * <p>
- * This class can receive arbitrarily large files (up to an artificial limit you
- * can set), and fairly efficiently too. It cannot handle nested data (multipart
- * content within multipart content). It <b>can</b> now with the latest release
- * handle internationalized content (such as non Latin-1 filenames).
+ * This class can receive arbitrarily large files (up to an artificial limit
+ * you can set), and fairly efficiently too.
+ * It cannot handle nested data (multipart content within multipart content).
+ * It <b>can</b> now with the latest release handle internationalized content
+ * (such as non Latin-1 filenames).
  * <p>
- * It also optionally includes enhanced buffering and Content-Length limitation.
- * Buffering is only required if your servlet container is poorly implemented
- * (many are, including Tomcat 3.2), but it is generally recommended because it
- * will make a slow servlet container a lot faster, and will only make a fast
- * servlet container a little slower. Content-Length limiting is usually only
- * required if you find that your servlet is hanging trying to read the input
- * stram from the POST, and it is similarly recommended because it only has a
- * minimal impact on performance.
+ * It also optionally includes enhanced buffering and Content-Length
+ * limitation. Buffering is only required if your servlet container is
+ * poorly implemented (many are, including Tomcat 3.2),
+ * but it is generally recommended because it will make a slow servlet
+ * container a lot faster, and will only make a fast servlet container a
+ * little slower. Content-Length limiting is usually only required if you find
+ * that your servlet is hanging trying to read the input stram from the POST,
+ * and it is similarly recommended because it only has a minimal impact on
+ * performance.
  * <p>
  * See the included upload.war for an example of how to use this class.
  * <p>
@@ -41,12 +43,14 @@ import javax.servlet.http.HttpServletRequest;
  * available at <a href="http://www.ietf.org/rfc/rfc1867.txt">
  * http://www.ietf.org/rfc/rfc1867.txt</a>.
  * 
- * @see com.oreilly.servlet.MultipartRequest
+ * @see net.simpleframework.lib.com.oreilly.servlet.MultipartRequest
  * 
  * @author Jason Hunter
  * @author Geoff Soutter
- * @version 1.11, 2002/11/01, added constructor that takes an encoding, to make
- *          sure chars are always read correctly
+ * @version 1.13, 2004/09/01, added workaround if content-length is -1
+ * @version 1.12, 2004/05/17, added trim on disposition
+ * @version 1.11, 2002/11/01, added constructor that takes an encoding, to
+ *          make sure chars are always read correctly
  * @version 1.10, 2002/11/01, added support for a preamble before the first
  *          boundary marker
  * @version 1.9, 2002/11/01, added support to parse odd Opera Content-Type
@@ -58,7 +62,8 @@ import javax.servlet.http.HttpServletRequest;
  * @version 1.4, 2001/03/23, added IE5 bug workaround supporting \n as line
  *          ending, thanks to Michael Alyn Miller
  * @version 1.3, 2001/01/22, added support for boundaries surrounded by quotes
- *          and content-disposition after content-type, thanks to Scott Stark
+ *          and content-disposition after content-type,
+ *          thanks to Scott Stark
  * @version 1.2, 2001/01/22, getFilePath() support thanks to Stefan Eissing
  * @version 1.1, 2000/10/29, integrating old WebSphere fix
  * @version 1.0, 2000/10/27, initial revision
@@ -84,10 +89,10 @@ public class MultipartParser {
 	private String encoding = DEFAULT_ENCODING;
 
 	/**
-	 * Creates a <code>MultipartParser</code> from the specified request, which
-	 * limits the upload size to the specified length, buffers for performance
-	 * and prevent attempts to read past the amount specified by the
-	 * Content-Length.
+	 * Creates a <code>MultipartParser</code> from the specified request,
+	 * which limits the upload size to the specified length, buffers for
+	 * performance and prevent attempts to read past the amount specified
+	 * by the Content-Length.
 	 * 
 	 * @param req
 	 *        the servlet request.
@@ -99,10 +104,10 @@ public class MultipartParser {
 	}
 
 	/**
-	 * Creates a <code>MultipartParser</code> from the specified request, which
-	 * limits the upload size to the specified length, and optionally buffers for
-	 * performance and prevents attempts to read past the amount specified by the
-	 * Content-Length.
+	 * Creates a <code>MultipartParser</code> from the specified request,
+	 * which limits the upload size to the specified length, and optionally
+	 * buffers for performance and prevents attempts to read past the amount
+	 * specified by the Content-Length.
 	 * 
 	 * @param req
 	 *        the servlet request.
@@ -112,9 +117,9 @@ public class MultipartParser {
 	 *        whether to do internal buffering or let the server buffer,
 	 *        useful for servers that don't buffer
 	 * @param limitLength
-	 *        boolean flag to indicate if we need to filter the request's
-	 *        input stream to prevent trying to read past the end of the
-	 *        stream.
+	 *        boolean flag to indicate if we need to filter
+	 *        the request's input stream to prevent trying to
+	 *        read past the end of the stream.
 	 */
 	public MultipartParser(final HttpServletRequest req, final int maxSize, final boolean buffer,
 			final boolean limitLength) throws IOException {
@@ -122,10 +127,10 @@ public class MultipartParser {
 	}
 
 	/**
-	 * Creates a <code>MultipartParser</code> from the specified request, which
-	 * limits the upload size to the specified length, and optionally buffers for
-	 * performance and prevents attempts to read past the amount specified by the
-	 * Content-Length, and with a specified encoding.
+	 * Creates a <code>MultipartParser</code> from the specified request,
+	 * which limits the upload size to the specified length, and optionally
+	 * buffers for performance and prevents attempts to read past the amount
+	 * specified by the Content-Length, and with a specified encoding.
 	 * 
 	 * @param req
 	 *        the servlet request.
@@ -135,9 +140,9 @@ public class MultipartParser {
 	 *        whether to do internal buffering or let the server buffer,
 	 *        useful for servers that don't buffer
 	 * @param limitLength
-	 *        boolean flag to indicate if we need to filter the request's
-	 *        input stream to prevent trying to read past the end of the
-	 *        stream.
+	 *        boolean flag to indicate if we need to filter
+	 *        the request's input stream to prevent trying to
+	 *        read past the end of the stream.
 	 * @param encoding
 	 *        the encoding to use for parsing, default is ISO-8859-1.
 	 */
@@ -191,7 +196,7 @@ public class MultipartParser {
 		if (buffer) {
 			in = new BufferedServletInputStream(in);
 		}
-		if (limitLength) {
+		if (limitLength && length > 0) {
 			in = new LimitedServletInputStream(in, length);
 		}
 
@@ -217,9 +222,9 @@ public class MultipartParser {
 
 	/**
 	 * Sets the encoding used to parse from here onward. The default is
-	 * ISO-8859-1. Encodings are actually best passed into the contructor, so
-	 * even the initial line reads are correct.
-	 * 
+	 * ISO-8859-1. Encodings are actually best passed into the contructor,
+	 * so even the initial line reads are correct.
+	 *
 	 * @param encoding
 	 *        The encoding to use for parsing
 	 */
@@ -229,9 +234,9 @@ public class MultipartParser {
 
 	/**
 	 * Read the next part arriving in the stream. Will be either a
-	 * <code>FilePart</code> or a <code>ParamPart</code>, or <code>null</code> to
-	 * indicate there are no more parts to read. The order of arrival corresponds
-	 * to the order of the form elements in the submitted form.
+	 * <code>FilePart</code> or a <code>ParamPart</code>, or <code>null</code>
+	 * to indicate there are no more parts to read. The order of arrival
+	 * corresponds to the order of the form elements in the submitted form.
 	 * 
 	 * @return either a <code>FilePart</code>, a <code>ParamPart</code> or
 	 *         <code>null</code> if there are no more parts to read.
@@ -252,7 +257,7 @@ public class MultipartParser {
 		// Content-Disposition: form-data; name="field1"; filename="file1.txt"
 		// Content-Type: type/subtype
 		// Content-Transfer-Encoding: binary
-		final Vector<String> headers = new Vector<String>();
+		final Vector headers = new Vector();
 
 		String line = readLine();
 		if (line == null) {
@@ -294,9 +299,9 @@ public class MultipartParser {
 		String origname = null;
 		String contentType = "text/plain"; // rfc1867 says this is the default
 
-		final Enumeration<?> e = headers.elements();
-		while (e.hasMoreElements()) {
-			final String headerline = (String) e.nextElement();
+		final Enumeration enu = headers.elements();
+		while (enu.hasMoreElements()) {
+			final String headerline = (String) enu.nextElement();
 			if (headerline.toLowerCase().startsWith("content-disposition:")) {
 				// Parse the content-disposition line
 				final String[] dispInfo = extractDispositionInfo(headerline);
@@ -376,7 +381,7 @@ public class MultipartParser {
 		if (start == -1 || end == -1) {
 			throw new IOException("Content disposition corrupt: " + origline);
 		}
-		final String disposition = line.substring(start + 21, end);
+		final String disposition = line.substring(start + 21, end).trim();
 		if (!disposition.equals("form-data")) {
 			throw new IOException("Invalid content disposition: " + disposition);
 		}
@@ -424,8 +429,8 @@ public class MultipartParser {
 	}
 
 	/**
-	 * Extracts and returns the content type from a line, or null if the line was
-	 * empty.
+	 * Extracts and returns the content type from a line, or null if the
+	 * line was empty.
 	 * 
 	 * @return content type, or null if line was empty.
 	 * @exception IOException
@@ -450,14 +455,15 @@ public class MultipartParser {
 	/**
 	 * Read the next line of input.
 	 * 
-	 * @return a String containing the next line of input from the stream, or
-	 *         null to indicate the end of the stream.
+	 * @return a String containing the next line of input from the stream,
+	 *         or null to indicate the end of the stream.
 	 * @exception IOException
 	 *            if an input or output exception has occurred.
 	 */
 	private String readLine() throws IOException {
 		final StringBuffer sbuf = new StringBuffer();
 		int result;
+		final String line;
 
 		do {
 			result = in.readLine(buf, 0, buf.length); // does +=

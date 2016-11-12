@@ -16,18 +16,17 @@ import javax.servlet.http.HttpServlet;
 
 /**
  * A superclass for any HTTP servlet that wishes to act as an RMI server.
- * RemoteHttpServlet begins listening for RMI calls in its <tt>init()</tt>
- * method and stops listening in its <tt>destroy()</tt> method. To register
- * itself it uses the registry on the local machine on the port determined by
- * <tt>getRegistryPort()</tt>. It registers under the name determined by
- * <tt>getRegistryName()</tt>.
- * 
- * @see com.oreilly.servlet.RemoteDaemonHttpServlet
- * 
+ * RemoteHttpServlet begins listening for RMI calls in its
+ * <tt>init()</tt> method and stops listening in its <tt>destroy()</tt>
+ * method. To register itself it uses the registry on the local machine
+ * on the port determined by <tt>getRegistryPort()</tt>. It registers
+ * under the name determined by <tt>getRegistryName()</tt>.
+ *
+ * @see net.simpleframework.lib.com.oreilly.servlet.RemoteDaemonHttpServlet
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 1998
  * @version 1.0, 98/09/18
  */
-@SuppressWarnings("serial")
 public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	/**
 	 * The registry for the servlet
@@ -35,9 +34,9 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	protected Registry registry;
 
 	/**
-	 * Begins the servlet's RMI operations. Causes the servlet to export itself
-	 * and then bind itself to the registry. Logs any errors. Subclasses that
-	 * override this method must be sure to first call
+	 * Begins the servlet's RMI operations. Causes the servlet to export
+	 * itself and then bind itself to the registry. Logs any errors.
+	 * Subclasses that override this method must be sure to first call
 	 * <tt>super.init(config)</tt>.
 	 * 
 	 * @param config
@@ -57,9 +56,9 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	}
 
 	/**
-	 * Halts the servlet's RMI operations. Causes the servlet to unbind itself
-	 * from the registry. Logs any errors. Subclasses that override this method
-	 * must be sure to first call <tt>super.destroy()</tt>.
+	 * Halts the servlet's RMI operations. Causes the servlet to
+	 * unbind itself from the registry. Logs any errors. Subclasses that
+	 * override this method must be sure to first call <tt>super.destroy()</tt>.
 	 */
 	@Override
 	public void destroy() {
@@ -67,10 +66,10 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	}
 
 	/**
-	 * Returns the name under which the servlet should be bound in the registry.
-	 * By default the name is the servlet's class name. This can be overridden
-	 * with the <tt>registryName</tt> init parameter.
-	 * 
+	 * Returns the name under which the servlet should be bound in the
+	 * registry. By default the name is the servlet's class name. This
+	 * can be overridden with the <tt>registryName</tt> init parameter.
+	 *
 	 * @return the name under which the servlet should be bound in the registry
 	 */
 	protected String getRegistryName() {
@@ -85,10 +84,10 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	}
 
 	/**
-	 * Returns the port where the registry should be running. By default the port
-	 * is the default registry port (1099). This can be overridden with the
-	 * <tt>registryPort</tt> init parameter.
-	 * 
+	 * Returns the port where the registry should be running. By default
+	 * the port is the default registry port (1099). This can be
+	 * overridden with the <tt>registryPort</tt> init parameter.
+	 *
 	 * @return the port for the registry
 	 */
 	protected int getRegistryPort() {
@@ -104,8 +103,8 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	}
 
 	/**
-	 * Binds the servlet to the registry. Creates the registry if necessary. Logs
-	 * any errors.
+	 * Binds the servlet to the registry. Creates the registry if necessary.
+	 * Logs any errors.
 	 */
 	protected void bind() {
 		// Try to find the appropriate registry already running
@@ -140,7 +139,8 @@ public abstract class RemoteHttpServlet extends HttpServlet implements Remote {
 	}
 
 	/**
-	 * Unbinds the servlet from the registry. Logs any errors.
+	 * Unbinds the servlet from the registry.
+	 * Logs any errors.
 	 */
 	protected void unbind() {
 		try {

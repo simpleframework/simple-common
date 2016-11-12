@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletRequest;
  * <p>
  * See Jason Hunter's June 2001 article in JavaWorld for a full explanation of
  * the class usage.
- * 
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 2001
  * @version 1.0, 2001/06/19
  */
 public class MultipartFilter implements Filter {
 
-	FilterConfig config = null;
+	private FilterConfig config = null;
 	private String dir = null;
 
 	@Override

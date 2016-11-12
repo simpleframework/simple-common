@@ -14,13 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * A request wrapper to support MultipartFilter. The filter capability requires
- * Servlet API 2.3.
+ * A request wrapper to support MultipartFilter.
+ * The filter capability requires Servlet API 2.3.
  * <p>
  * See Jason Hunter's June 2001 article in JavaWorld for a full explanation of
  * the class usage.
- * 
+ *
  * @author <b>Jason Hunter</b>, Copyright &#169; 2001
+ * @version 1.1, 2002/11/15, added getOriginalFileName() to match
+ *          MultipartRequest
  * @version 1.0, 2001/06/19
  */
 public class MultipartWrapper extends HttpServletRequestWrapper {
@@ -34,7 +36,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
 
 	// Methods to replace HSR methods
 	@Override
-	public Enumeration<?> getParameterNames() {
+	public Enumeration getParameterNames() {
 		return mreq.getParameterNames();
 	}
 
@@ -49,23 +51,27 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
 	}
 
 	@Override
-	public Map<?, ?> getParameterMap() {
-		final Map<String, String[]> map = new HashMap<String, String[]>();
-		final Enumeration<?> e = getParameterNames();
-		while (e.hasMoreElements()) {
-			final String name = (String) e.nextElement();
+	public Map getParameterMap() {
+		final Map map = new HashMap();
+		final Enumeration enumm = getParameterNames();
+		while (enumm.hasMoreElements()) {
+			final String name = (String) enumm.nextElement();
 			map.put(name, mreq.getParameterValues(name));
 		}
 		return map;
 	}
 
 	// Methods only in MultipartRequest
-	public Enumeration<?> getFileNames() {
+	public Enumeration getFileNames() {
 		return mreq.getFileNames();
 	}
 
 	public String getFilesystemName(final String name) {
 		return mreq.getFilesystemName(name);
+	}
+
+	public String getOriginalFileName(final String name) {
+		return mreq.getOriginalFileName(name);
 	}
 
 	public String getContentType(final String name) {
