@@ -9,7 +9,8 @@ import java.util.Date;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class DateUtils {
@@ -102,21 +103,21 @@ public abstract class DateUtils {
 			final long ii = dur / 60;
 			final long jj = dur % 60;
 			sb.append(ii).append(m);
-			if (!_short) {
+			if (!_short && jj > 0) {
 				sb.append(jj).append(s);
 			}
 		} else if (dur < DAY_PERIOD) {
 			final long ii = dur / HOUR_PERIOD;
 			final long jj = dur % HOUR_PERIOD / 60;
 			sb.append(ii).append(h);
-			if (!_short) {
+			if (!_short && jj > 0) {
 				sb.append(jj).append(m);
 			}
 		} else {
 			final long ii = dur / DAY_PERIOD;
 			final long jj = dur % DAY_PERIOD / HOUR_PERIOD;
 			sb.append(ii).append(d);
-			if (!_short) {
+			if (!_short && jj > 0) {
 				sb.append(jj).append(h);
 			}
 		}
