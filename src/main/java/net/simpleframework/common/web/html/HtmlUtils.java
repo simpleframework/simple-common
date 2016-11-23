@@ -82,7 +82,7 @@ public abstract class HtmlUtils implements HtmlConst {
 		}
 		doc.removeAttr("length");
 		doc.removeAttr("br");
-		return StringUtils.trimLeadingWhitespace(html);
+		return html != null ? html.trim() : null;
 	}
 
 	// 0x3000 全角空格
