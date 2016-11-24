@@ -55,8 +55,7 @@ public abstract class HtmlUtils implements HtmlConst {
 		return truncateHtml(htmlString, length, DEFAULT_NEW_LINE);
 	}
 
-	public static String truncateHtml(final String htmlString, final int length,
-			final String newLine) {
+	public static String truncateHtml(final String htmlString, final int length, final String newLine) {
 		return truncateHtml(createHtmlDocument(htmlString), length, newLine);
 	}
 
@@ -84,7 +83,7 @@ public abstract class HtmlUtils implements HtmlConst {
 		doc.removeAttr("br");
 		if (html != null) {
 			while ((html = StringUtils.trimLeadingWhitespace(html)).startsWith("&nbsp;")) {
-				html = html.substring(7);
+				html = html.substring(6);
 			}
 		}
 		return html;
@@ -133,8 +132,7 @@ public abstract class HtmlUtils implements HtmlConst {
 					if (StringUtils.hasText(txt)) {
 						sb.append(txt);
 						if (StringUtils.hasText(newLine) && element.isBlock()
-								&& Convert.toInt(doc.attr("length")) > 0
-								&& !doc.attr("br").equals("true")) {
+								&& Convert.toInt(doc.attr("length")) > 0 && !doc.attr("br").equals("true")) {
 							sb.append(newLine);
 							doc.attr("br", "true");
 						}
@@ -161,9 +159,8 @@ public abstract class HtmlUtils implements HtmlConst {
 	}
 
 	public static final String convertHtmlLines(final String input) {
-		return StringUtils
-				.replace(StringUtils.replace(StringUtils.blank(input), "\n", "<br/>"), "\r", "")
-				.replace("\t", NBSP + NBSP);
+		return StringUtils.replace(StringUtils.replace(StringUtils.blank(input), "\n", "<br/>"),
+				"\r", "").replace("\t", NBSP + NBSP);
 	}
 
 	public static boolean hasTag(final String input) {
