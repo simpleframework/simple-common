@@ -218,10 +218,13 @@ public abstract class HttpUtils implements HtmlConst {
 	}
 
 	public static OutputStream getBinaryOutputStream(final HttpServletRequest httpRequest,
-			final HttpServletResponse httpResponse, String filename, final long filesize)
-			throws IOException {
+			final HttpServletResponse httpResponse, String filename, final long filesize,
+			final boolean inline) throws IOException {
 		httpResponse.reset();
-		httpResponse.setContentType("bin");
+		if (!inline) {
+			httpResponse.setContentType("bin");
+		}
+
 		if (filesize > 0) {
 			httpResponse.setHeader("Content-Length", String.valueOf(filesize));
 		}
@@ -233,7 +236,8 @@ public abstract class HttpUtils implements HtmlConst {
 				filename = encodeUrl(filename);
 				filename = StringUtils.replace(filename, "+", "%20");
 			}
-			httpResponse.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			httpResponse.setHeader("Content-Disposition",
+					(inline ? "inline" : "attachment") + "; filename=\"" + filename + "\"");
 		} catch (final UnsupportedEncodingException e) {
 		}
 		return httpResponse.getOutputStream();
