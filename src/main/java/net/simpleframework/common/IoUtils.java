@@ -101,68 +101,23 @@ public abstract class IoUtils {
 
 	/********************************* Serializable **********************************/
 
-	static Object kryo;
-	static boolean hessianEnabled = false;
-	static {
-		try {
-			kryo = Class.forName("com.esotericsoftware.kryo.Kryo").newInstance();
-			BeanUtils.setProperty(kryo, "references", false);
-			log.info("Kryo serialize enabled!");
-		} catch (final Throwable ex) {
-		}
-		if (kryo == null) {
-			try {
-				Class.forName("com.caucho.hessian.io.HessianInput");
-				hessianEnabled = true;
-				log.info("Hessian serialize enabled!");
-			} catch (final Throwable ex) {
-			}
-		}
-	}
-
 	public static byte[] serialize(final Object obj) throws IOException {
-		return serialize(obj, null);
-	}
-
-	public static byte[] serialize(final Object obj, final Class<?> typeClass) throws IOException {
 		if (obj == null) {
 			return null;
 		}
-
-		if (kryo != null) {
-			return IoUtils_kryo.serialize(kryo, obj, typeClass);
-		} else {
-			if (hessianEnabled) {
-				return IoUtils_hessian.serialize(obj);
-			} else {
-				final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				final ObjectOutputStream oos = new ObjectOutputStream(bos);
-				oos.writeObject(obj);
-				return bos.toByteArray();
-			}
-		}
+		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		final ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(obj);
+		return bos.toByteArray();
 	}
 
 	public static Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
-		return deserialize(bytes, null);
-	}
-
-	public static Object deserialize(final byte[] bytes, final Class<?> typeClass)
-			throws IOException, ClassNotFoundException {
 		if (bytes == null || bytes.length == 0) {
 			return null;
 		}
-		if (kryo != null) {
-			return IoUtils_kryo.deserialize(kryo, bytes, typeClass);
-		} else {
-			if (hessianEnabled) {
-				return IoUtils_hessian.deserialize(bytes);
-			} else {
-				final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-				final ObjectInputStream ois = new ObjectInputStream(bis);
-				return ois.readObject();
-			}
-		}
+		final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		final ObjectInputStream ois = new ObjectInputStream(bis);
+		return ois.readObject();
 	}
 
 	/********************************* MacAddress **********************************/

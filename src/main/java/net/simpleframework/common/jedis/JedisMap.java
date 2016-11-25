@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.simpleframework.common.Convert;
-import net.simpleframework.common.IoUtils;
+import net.simpleframework.common.IoUtils_hessian;
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
 import redis.clients.jedis.Jedis;
@@ -63,9 +63,9 @@ public class JedisMap extends HashMap<String, Object> {
 				jedis = pool.getResource();
 				final String sk = Convert.toString(key);
 				if (hash) {
-					return IoUtils.deserialize(jedis.hget(mkey.getBytes(), sk.getBytes()));
+					return deserialize(jedis.hget(mkey.getBytes(), sk.getBytes()));
 				} else {
-					return IoUtils.deserialize(jedis.get(gkey(sk).getBytes()));
+					return deserialize(jedis.get(gkey(sk).getBytes()));
 				}
 			} catch (final Exception e) {
 				log.warn(e);
@@ -93,16 +93,16 @@ public class JedisMap extends HashMap<String, Object> {
 					if (hash) {
 						final byte[] sbytes = mkey.getBytes();
 						final boolean set_expire = expire > 0 && !jedis.exists(sbytes);
-						final Long ret = jedis.hset(sbytes, key.getBytes(), IoUtils.serialize(value));
+						final Long ret = jedis.hset(sbytes, key.getBytes(), serialize(value));
 						if (set_expire) {
 							jedis.expire(sbytes, expire);
 						}
 						return ret;
 					} else {
 						if (expire > 0) {
-							return jedis.setex(gkey(key).getBytes(), expire, IoUtils.serialize(value));
+							return jedis.setex(gkey(key).getBytes(), expire, serialize(value));
 						} else {
-							return jedis.set(gkey(key).getBytes(), IoUtils.serialize(value));
+							return jedis.set(gkey(key).getBytes(), serialize(value));
 						}
 					}
 				}
@@ -193,6 +193,14 @@ public class JedisMap extends HashMap<String, Object> {
 		} else {
 			return super.keySet();
 		}
+	}
+
+	private byte[] serialize(final Object obj) throws IOException {
+		return IoUtils_hessian.serialize(obj);
+	}
+
+	private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
+		return IoUtils_hessian.deserialize(bytes);
 	}
 
 	private static Log log = LogFactory.getLogger(JedisMap.class);
