@@ -13,16 +13,21 @@ import com.esotericsoftware.kryo.io.ByteBufferOutput;
  */
 public abstract class IoUtils_kryo {
 
-	static byte[] serialize(final Object kryo, final Object obj) {
+	static byte[] serialize(final Object kryo, final Object obj, final Class<?> typeClass) {
+		final Kryo _kryo = (Kryo) kryo;
 		final ByteBufferOutput buffer = new ByteBufferOutput(1024, -1);
-		((Kryo) kryo).writeClassAndObject(buffer, obj);
+		if (typeClass != null) {
+			_kryo.register(typeClass);
+			_kryo.writeObject(buffer, obj);
+		} else {
+			_kryo.writeClassAndObject(buffer, obj);
+		}
 		return buffer.toBytes();
 	}
 
 	static Object deserialize(final Object kryo, final byte[] bytes, final Class<?> typeClass) {
 		final Kryo _kryo = (Kryo) kryo;
 		if (typeClass != null) {
-			_kryo.register(typeClass);
 			return _kryo.readObject(new ByteBufferInput(bytes), typeClass);
 		} else {
 			return _kryo.readClassAndObject(new ByteBufferInput(bytes));

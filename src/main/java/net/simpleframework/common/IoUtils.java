@@ -121,12 +121,16 @@ public abstract class IoUtils {
 	}
 
 	public static byte[] serialize(final Object obj) throws IOException {
+		return serialize(obj, null);
+	}
+
+	public static byte[] serialize(final Object obj, final Class<?> typeClass) throws IOException {
 		if (obj == null) {
 			return null;
 		}
 
 		if (kryo != null) {
-			return IoUtils_kryo.serialize(kryo, obj);
+			return IoUtils_kryo.serialize(kryo, obj, typeClass);
 		} else {
 			if (hessianEnabled) {
 				return IoUtils_hessian.serialize(obj);

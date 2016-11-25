@@ -37,7 +37,7 @@
     </dependency>
     
     <dependency>
-      <groupId>com.esotericsoftware.kryo</groupId>
+      <groupId>com.esotericsoftware</groupId>
       <artifactId>kryo</artifactId>
       <optional>true</optional>
     </dependency>
