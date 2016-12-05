@@ -1,10 +1,5 @@
 package net.simpleframework.common.web.html;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.simpleframework.common.StringUtils;
-
 public class HtmlEncoder implements HtmlConst {
 
 	protected static final char[][] TEXT = new char[64][];
@@ -99,27 +94,5 @@ public class HtmlEncoder implements HtmlConst {
 			}
 		}
 		return buffer.toString();
-	}
-
-	static final Pattern SCRIPT_PATTERN = Pattern.compile("<script[^>]*?>.*?<\\/script>");
-
-	public static String script(final String str) {
-		if (!StringUtils.hasText(str)) {
-			return str;
-		}
-		final Matcher m = SCRIPT_PATTERN.matcher(str);
-		int i = 0;
-		final StringBuilder sb = new StringBuilder();
-		while (m.find()) {
-			final int s = m.start();
-			final int e = m.end();
-			sb.append(str.substring(i, s));
-			sb.append(HtmlEncoder.text(str.substring(s, e)));
-			i = e;
-		}
-		if (i == 0) {
-			return str;
-		}
-		return sb.append(str.substring(i)).toString();
 	}
 }

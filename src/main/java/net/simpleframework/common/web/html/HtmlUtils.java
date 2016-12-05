@@ -23,7 +23,8 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class HtmlUtils implements HtmlConst {
@@ -354,5 +355,35 @@ public abstract class HtmlUtils implements HtmlConst {
 	public static interface IElementVisitor {
 
 		void doElement(Element ele);
+	}
+
+	static final Pattern SCRIPT_PATTERN = Pattern.compile("<script[^>]*?>.*?<\\/script>");
+
+	public static String trimScript(final String str) {
+		if (!StringUtils.hasText(str)) {
+			return str;
+		}
+		final Matcher m = SCRIPT_PATTERN.matcher(str);
+		return m.replaceAll("");
+	}
+
+	public static String escapeScript(final String str) {
+		if (!StringUtils.hasText(str)) {
+			return str;
+		}
+		final Matcher m = SCRIPT_PATTERN.matcher(str);
+		int i = 0;
+		final StringBuilder sb = new StringBuilder();
+		while (m.find()) {
+			final int s = m.start();
+			final int e = m.end();
+			sb.append(str.substring(i, s));
+			sb.append(HtmlEncoder.text(str.substring(s, e)));
+			i = e;
+		}
+		if (i == 0) {
+			return str;
+		}
+		return sb.append(str.substring(i)).toString();
 	}
 }
