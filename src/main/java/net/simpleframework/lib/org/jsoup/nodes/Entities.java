@@ -240,7 +240,11 @@ public class Entities {
 					}
 					break;
 				default:
-					if (canEncode(coreCharset, c, encoder)) {
+					// ckan77
+					final String name = base.nameForCodepoint(c);
+					if (!emptyName.equals(name)) {
+						accum.append('&').append(name).append(';');
+					} else if (canEncode(coreCharset, c, encoder)) {
 						accum.append(c);
 					} else {
 						appendEncoded(accum, escapeMode, codePoint);
