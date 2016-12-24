@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +22,8 @@ import net.simpleframework.common.logger.LogFactory;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class ImageUtils {
@@ -200,5 +202,25 @@ public abstract class ImageUtils {
 				}
 			}
 		}
+	}
+
+	public static BufferedImage clip(final InputStream istream, int width, int height,
+			final int srcX, final int srcY) throws IOException {
+		final BufferedImage sbi = ImageIO.read(istream);
+
+		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = bi.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, width, height);
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+		width = Math.min(width, sbi.getWidth());
+		height = Math.min(height, sbi.getHeight());
+		g.drawImage(sbi, 0, 0, width, height, srcX, srcY, srcX + width, srcY + height, null);
+		g.dispose();
+		return bi;
 	}
 }
