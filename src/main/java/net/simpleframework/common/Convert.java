@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
@@ -228,6 +229,12 @@ public abstract class Convert {
 		return date == null ? null : sdf.format(date);
 	}
 
+	public static final String toUTCDateString(final Date date, final String pattern) {
+		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return date == null ? null : sdf.format(date);
+	}
+
 	public static final String toDateTimeString(final Date date) {
 		return toDateString(date, defaultDatePattern);
 	}
@@ -238,6 +245,16 @@ public abstract class Convert {
 
 	public static final Date toDate(final String dateString, final String pattern) {
 		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		try {
+			return sdf.parse(dateString);
+		} catch (final Exception e) {
+			return null;
+		}
+	}
+
+	public static final Date toUTCDate(final String dateString, final String pattern) {
+		final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			return sdf.parse(dateString);
 		} catch (final Exception e) {
