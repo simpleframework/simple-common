@@ -104,7 +104,8 @@ public abstract class HtmlUtils implements HtmlConst {
 					for (final char c : BLANK_CHARs) {
 						txt = txt.replace(c, ' ');
 					}
-					txt = StringUtils.substring(txt.trim(), length);
+					txt = StringUtils.replace(txt, "&nbsp;", " ").trim();
+					txt = StringUtils.substring(txt, length);
 					sb.append(HtmlEncoder.text(txt));
 					doc.attr("length", String.valueOf(length - txt.length()));
 					doc.removeAttr("br");
