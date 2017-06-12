@@ -98,14 +98,24 @@ public interface Connection {
 	 * @param userAgent
 	 *        user-agent to use
 	 * @return this Connection, for chaining
+	 * @see net.simpleframework.lib.org.jsoup.helper.HttpConnection#DEFAULT_UA
 	 */
 	Connection userAgent(String userAgent);
 
 	/**
 	 * Set the request timeouts (connect and read). If a timeout occurs, an
 	 * IOException will be thrown. The default
-	 * timeout is 3 seconds (3000 millis). A timeout of zero is treated as an
-	 * infinite timeout.
+	 * timeout is <b>30 seconds</b> (30,000 millis). A timeout of zero is treated
+	 * as an infinite timeout.
+	 * <p>
+	 * Note that a read timeout is not the same as a maximum timeout. As long as
+	 * the connection is sending bytes at
+	 * least every <i>timeout</i> seconds (e.g. in the case of an infinite stream
+	 * of data, or a slow large download), the
+	 * read timeout will not fire. This can be mitigated by using a maximum
+	 * download size (see {@link #maxBodySize(int)}),
+	 * or interrupting the connecting thread after a max timeout.
+	 * </p>
 	 * 
 	 * @param millis
 	 *        number of milliseconds (thousandths of a second) before timing out
@@ -186,7 +196,7 @@ public interface Connection {
 	Connection ignoreContentType(boolean ignoreContentType);
 
 	/**
-	 * Disable/enable TSL certificates validation for HTTPS requests.
+	 * Disable/enable TLS certificates validation for HTTPS requests.
 	 * <p>
 	 * By default this is <b>true</b>; all
 	 * connections over HTTPS perform normal validation of certificates, and will
@@ -203,7 +213,7 @@ public interface Connection {
 	 * </p>
 	 * 
 	 * @param value
-	 *        if should validate TSL (SSL) certificates. <b>true</b> by default.
+	 *        if should validate TLS (SSL) certificates. <b>true</b> by default.
 	 * @return this Connection, for chaining
 	 */
 	Connection validateTLSCertificates(boolean value);
@@ -223,7 +233,7 @@ public interface Connection {
 	Connection data(String key, String value);
 
 	/**
-	 * Add an input stream as a request data paramater. For GETs, has no effect,
+	 * Add an input stream as a request data parameter. For GETs, has no effect,
 	 * but for POSTS this will upload the
 	 * input stream.
 	 * 

@@ -1,16 +1,19 @@
 package net.simpleframework.lib.org.jsoup.helper;
 
 import static net.simpleframework.lib.org.jsoup.Connection.Method.HEAD;
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -49,6 +52,14 @@ import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
  */
 public class HttpConnection implements Connection {
 	public static final String CONTENT_ENCODING = "Content-Encoding";
+	/**
+	 * Many users would get caught by not setting a user-agent and therefore
+	 * getting different responses on their desktop
+	 * vs in jsoup, which would otherwise default to {@code Java}. So by default,
+	 * use a desktop UA.
+	 */
+	public static final String DEFAULT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36";
+	private static final String USER_AGENT = "User-Agent";
 	private static final String CONTENT_TYPE = "Content-Type";
 	private static final String MULTIPART_FORM_DATA = "multipart/form-data";
 	private static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded";
@@ -68,11 +79,30 @@ public class HttpConnection implements Connection {
 		return con;
 	}
 
+	/**
+	 * Encodes the input URL into a safe ASCII URL string
+	 * 
+	 * @param url
+	 *        unescaped URL
+	 * @return escaped URL
+	 */
 	private static String encodeUrl(final String url) {
-		if (url == null) {
-			return null;
+		try {
+			final URL u = new URL(url);
+			return encodeUrl(u).toExternalForm();
+		} catch (final Exception e) {
+			return url;
 		}
-		return url.replaceAll(" ", "%20");
+	}
+
+	private static URL encodeUrl(final URL u) {
+		try {
+			// odd way to encode urls, but it works!
+			final URI uri = new URI(u.toExternalForm());
+			return new URL(uri.toASCIIString());
+		} catch (final Exception e) {
+			return u;
+		}
 	}
 
 	private static String encodeMimeName(final String val) {
@@ -122,7 +152,7 @@ public class HttpConnection implements Connection {
 	@Override
 	public Connection userAgent(final String userAgent) {
 		Validate.notNull(userAgent, "User agent must not be null");
-		req.header("User-Agent", userAgent);
+		req.header(USER_AGENT, userAgent);
 		return this;
 	}
 
@@ -359,7 +389,63 @@ public class HttpConnection implements Connection {
 		@Override
 		public String header(final String name) {
 			Validate.notNull(name, "Header name must not be null");
-			return getHeaderCaseInsensitive(name);
+			String val = getHeaderCaseInsensitive(name);
+			if (val != null) {
+				// headers should be ISO8859 - but values are often actually UTF-8.
+				// Test if it looks like UTF8 and convert if so
+				val = fixHeaderEncoding(val);
+			}
+			return val;
+		}
+
+		private static String fixHeaderEncoding(final String val) {
+			try {
+				final byte[] bytes = val.getBytes("ISO-8859-1");
+				if (!looksLikeUtf8(bytes)) {
+					return val;
+				}
+				return new String(bytes, "UTF-8");
+			} catch (final UnsupportedEncodingException e) {
+				// shouldn't happen as these both always exist
+				return val;
+			}
+		}
+
+		private static boolean looksLikeUtf8(final byte[] input) {
+			int i = 0;
+			// BOM:
+			if (input.length >= 3 && (input[0] & 0xFF) == 0xEF
+					&& (input[1] & 0xFF) == 0xBB & (input[2] & 0xFF) == 0xBF) {
+				i = 3;
+			}
+
+			int end;
+			for (final int j = input.length; i < j; ++i) {
+				int o = input[i];
+				if ((o & 0x80) == 0) {
+					continue; // ASCII
+				}
+
+				// UTF-8 leading:
+				if ((o & 0xE0) == 0xC0) {
+					end = i + 1;
+				} else if ((o & 0xF0) == 0xE0) {
+					end = i + 2;
+				} else if ((o & 0xF8) == 0xF0) {
+					end = i + 3;
+				} else {
+					return false;
+				}
+
+				while (i < end) {
+					i++;
+					o = input[i];
+					if ((o & 0xC0) != 0x80) {
+						return false;
+					}
+				}
+			}
+			return true;
 		}
 
 		@Override
@@ -410,7 +496,7 @@ public class HttpConnection implements Connection {
 			// mixed
 			String value = headers.get(name);
 			if (value == null) {
-				value = headers.get(name.toLowerCase());
+				value = headers.get(lowerCase(name));
 			}
 			if (value == null) {
 				final Map.Entry<String, String> entry = scanHeaders(name);
@@ -422,9 +508,9 @@ public class HttpConnection implements Connection {
 		}
 
 		private Map.Entry<String, String> scanHeaders(final String name) {
-			final String lc = name.toLowerCase();
+			final String lc = lowerCase(name);
 			for (final Map.Entry<String, String> entry : headers.entrySet()) {
-				if (entry.getKey().toLowerCase().equals(lc)) {
+				if (lowerCase(entry.getKey()).equals(lc)) {
 					return entry;
 				}
 			}
@@ -481,12 +567,13 @@ public class HttpConnection implements Connection {
 		private String postDataCharset = DataUtil.defaultCharset;
 
 		private Request() {
-			timeoutMilliseconds = 3000;
+			timeoutMilliseconds = 30000; // 30 seconds
 			maxBodySizeBytes = 1024 * 1024; // 1MB
 			followRedirects = true;
 			data = new ArrayList<Connection.KeyVal>();
 			method = Method.GET;
 			headers.put("Accept-Encoding", "gzip");
+			headers.put(USER_AGENT, DEFAULT_UA);
 			parser = Parser.htmlParser();
 		}
 
@@ -707,6 +794,8 @@ public class HttpConnection implements Connection {
 														// data param from original req are
 														// dropped.
 						req.data().clear();
+						req.requestBody(null);
+						req.removeHeader(CONTENT_TYPE);
 					}
 
 					String location = res.header(LOCATION);
@@ -716,7 +805,8 @@ public class HttpConnection implements Connection {
 						// http:/temp/AAG_New/en/index.php
 						location = location.substring(6);
 					}
-					req.url(StringUtil.resolve(req.url(), encodeUrl(location)));
+					final URL redir = StringUtil.resolve(req.url(), location);
+					req.url(encodeUrl(redir));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
 						// response

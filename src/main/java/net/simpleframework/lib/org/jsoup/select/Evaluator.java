@@ -1,5 +1,8 @@
 package net.simpleframework.lib.org.jsoup.select;
 
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.normalize;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -147,7 +150,7 @@ public abstract class Evaluator {
 
 		public AttributeStarting(final String keyPrefix) {
 			Validate.notEmpty(keyPrefix);
-			this.keyPrefix = keyPrefix.toLowerCase();
+			this.keyPrefix = lowerCase(keyPrefix);
 		}
 
 		@Override
@@ -155,7 +158,7 @@ public abstract class Evaluator {
 			final List<net.simpleframework.lib.org.jsoup.nodes.Attribute> values = element.attributes()
 					.asList();
 			for (final net.simpleframework.lib.org.jsoup.nodes.Attribute attribute : values) {
-				if (attribute.getKey().toLowerCase().startsWith(keyPrefix)) {
+				if (lowerCase(attribute.getKey()).startsWith(keyPrefix)) {
 					return true;
 				}
 			}
@@ -219,11 +222,11 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return element.hasAttr(key) && element.attr(key).toLowerCase().startsWith(value); // value
-																															// is
-																															// lower
-																															// case
-																															// already
+			return element.hasAttr(key) && lowerCase(element.attr(key)).startsWith(value); // value
+																														// is
+																														// lower
+																														// case
+																														// already
 		}
 
 		@Override
@@ -243,10 +246,10 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return element.hasAttr(key) && element.attr(key).toLowerCase().endsWith(value); // value
-																														// is
-																														// lower
-																														// case
+			return element.hasAttr(key) && lowerCase(element.attr(key)).endsWith(value); // value
+																													// is
+																													// lower
+																													// case
 		}
 
 		@Override
@@ -266,10 +269,10 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return element.hasAttr(key) && element.attr(key).toLowerCase().contains(value); // value
-																														// is
-																														// lower
-																														// case
+			return element.hasAttr(key) && lowerCase(element.attr(key)).contains(value); // value
+																													// is
+																													// lower
+																													// case
 		}
 
 		@Override
@@ -287,7 +290,7 @@ public abstract class Evaluator {
 		Pattern pattern;
 
 		public AttributeWithValueMatching(final String key, final Pattern pattern) {
-			this.key = key.trim().toLowerCase();
+			this.key = normalize(key);
 			this.pattern = pattern;
 		}
 
@@ -314,12 +317,12 @@ public abstract class Evaluator {
 			Validate.notEmpty(key);
 			Validate.notEmpty(value);
 
-			this.key = key.trim().toLowerCase();
+			this.key = normalize(key);
 			if (value.startsWith("\"") && value.endsWith("\"")
 					|| value.startsWith("'") && value.endsWith("'")) {
 				value = value.substring(1, value.length() - 1);
 			}
-			this.value = value.trim().toLowerCase();
+			this.value = normalize(value);
 		}
 	}
 
@@ -690,17 +693,38 @@ public abstract class Evaluator {
 		private final String searchText;
 
 		public ContainsText(final String searchText) {
-			this.searchText = searchText.toLowerCase();
+			this.searchText = lowerCase(searchText);
 		}
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return (element.text().toLowerCase().contains(searchText));
+			return lowerCase(element.text()).contains(searchText);
 		}
 
 		@Override
 		public String toString() {
-			return String.format(":contains(%s", searchText);
+			return String.format(":contains(%s)", searchText);
+		}
+	}
+
+	/**
+	 * Evaluator for matching Element (and its descendants) data
+	 */
+	public static final class ContainsData extends Evaluator {
+		private final String searchText;
+
+		public ContainsData(final String searchText) {
+			this.searchText = lowerCase(searchText);
+		}
+
+		@Override
+		public boolean matches(final Element root, final Element element) {
+			return lowerCase(element.data()).contains(searchText);
+		}
+
+		@Override
+		public String toString() {
+			return String.format(":containsData(%s)", searchText);
 		}
 	}
 
@@ -711,17 +735,17 @@ public abstract class Evaluator {
 		private final String searchText;
 
 		public ContainsOwnText(final String searchText) {
-			this.searchText = searchText.toLowerCase();
+			this.searchText = lowerCase(searchText);
 		}
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return (element.ownText().toLowerCase().contains(searchText));
+			return lowerCase(element.ownText()).contains(searchText);
 		}
 
 		@Override
 		public String toString() {
-			return String.format(":containsOwn(%s", searchText);
+			return String.format(":containsOwn(%s)", searchText);
 		}
 	}
 
@@ -743,7 +767,7 @@ public abstract class Evaluator {
 
 		@Override
 		public String toString() {
-			return String.format(":matches(%s", pattern);
+			return String.format(":matches(%s)", pattern);
 		}
 	}
 
@@ -765,7 +789,7 @@ public abstract class Evaluator {
 
 		@Override
 		public String toString() {
-			return String.format(":matchesOwn(%s", pattern);
+			return String.format(":matchesOwn(%s)", pattern);
 		}
 	}
 }

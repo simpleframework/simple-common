@@ -15,7 +15,7 @@ public final class StringUtil {
 			"       ", "        ", "         ", "          " };
 
 	/**
-	 * Join a collection of strings by a seperator
+	 * Join a collection of strings by a separator
 	 * 
 	 * @param strings
 	 *        collection of string objects
@@ -28,7 +28,7 @@ public final class StringUtil {
 	}
 
 	/**
-	 * Join a collection of strings by a seperator
+	 * Join a collection of strings by a separator
 	 * 
 	 * @param strings
 	 *        iterator of string objects
@@ -78,7 +78,7 @@ public final class StringUtil {
 	}
 
 	/**
-	 * Tests if a string is blank: null, emtpy, or only whitespace (" ", \r\n,
+	 * Tests if a string is blank: null, empty, or only whitespace (" ", \r\n,
 	 * \t, etc)
 	 * 
 	 * @param string
@@ -105,7 +105,7 @@ public final class StringUtil {
 	 * @param string
 	 *        string to test
 	 * @return true if only digit chars, false if empty or null or contains
-	 *         non-digit chrs
+	 *         non-digit chars
 	 */
 	public static boolean isNumeric(final String string) {
 		if (string == null || string.length() == 0) {
@@ -199,7 +199,7 @@ public final class StringUtil {
 	 * relative URL component.
 	 * 
 	 * @param base
-	 *        the existing absolulte base URL
+	 *        the existing absolute base URL
 	 * @param relUrl
 	 *        the relative URL to resolve. (If it's already absolute, it will be
 	 *        returned)

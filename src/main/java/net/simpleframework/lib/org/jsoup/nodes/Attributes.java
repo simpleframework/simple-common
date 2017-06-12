@@ -5,7 +5,6 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,6 +69,11 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 		Validate.notEmpty(key);
 		if (attributes == null) {
 			return "";
+		}
+
+		final Attribute attr = attributes.get(key);
+		if (attr != null) {
+			return attr.getValue();
 		}
 
 		for (final String attrKey : attributes.keySet()) {
@@ -148,11 +152,10 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 		if (attributes == null) {
 			return;
 		}
-		// ckan77
-		// for (final String attrKey : attributes.keySet()) {
-		for (final String attrKey : new HashSet<String>(attributes.keySet())) {
+		for (final Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
+			final String attrKey = it.next();
 			if (attrKey.equalsIgnoreCase(key)) {
-				attributes.remove(attrKey);
+				it.remove();
 			}
 		}
 	}

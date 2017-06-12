@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
+
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
@@ -33,6 +35,7 @@ abstract class Token {
 
 	static final class Doctype extends Token {
 		final StringBuilder name = new StringBuilder();
+		String pubSysKey = null;
 		final StringBuilder publicIdentifier = new StringBuilder();
 		final StringBuilder systemIdentifier = new StringBuilder();
 		boolean forceQuirks = false;
@@ -44,6 +47,7 @@ abstract class Token {
 		@Override
 		Token reset() {
 			reset(name);
+			pubSysKey = null;
 			reset(publicIdentifier);
 			reset(systemIdentifier);
 			forceQuirks = false;
@@ -52,6 +56,10 @@ abstract class Token {
 
 		String getName() {
 			return name.toString();
+		}
+
+		String getPubSysKey() {
+			return pubSysKey;
 		}
 
 		String getPublicIdentifier() {
@@ -114,16 +122,21 @@ abstract class Token {
 			}
 
 			if (pendingAttributeName != null) {
-				Attribute attribute;
-				if (hasPendingAttributeValue) {
-					attribute = new Attribute(pendingAttributeName, pendingAttributeValue.length() > 0
-							? pendingAttributeValue.toString() : pendingAttributeValueS);
-				} else if (hasEmptyAttributeValue) {
-					attribute = new Attribute(pendingAttributeName, "");
-				} else {
-					attribute = new BooleanAttribute(pendingAttributeName);
+				// the tokeniser has skipped whitespace control chars, but trimming
+				// could collapse to empty for other control codes, so verify here
+				pendingAttributeName = pendingAttributeName.trim();
+				if (pendingAttributeName.length() > 0) {
+					Attribute attribute;
+					if (hasPendingAttributeValue) {
+						attribute = new Attribute(pendingAttributeName, pendingAttributeValue.length() > 0
+								? pendingAttributeValue.toString() : pendingAttributeValueS);
+					} else if (hasEmptyAttributeValue) {
+						attribute = new Attribute(pendingAttributeName, "");
+					} else {
+						attribute = new BooleanAttribute(pendingAttributeName);
+					}
+					attributes.put(attribute);
 				}
-				attributes.put(attribute);
 			}
 			pendingAttributeName = null;
 			hasEmptyAttributeValue = false;
@@ -153,7 +166,7 @@ abstract class Token {
 
 		final Tag name(final String name) {
 			tagName = name;
-			normalName = name.toLowerCase();
+			normalName = lowerCase(name);
 			return this;
 		}
 
@@ -170,7 +183,7 @@ abstract class Token {
 		// chars.
 		final void appendTagName(final String append) {
 			tagName = tagName == null ? append : tagName.concat(append);
-			normalName = tagName.toLowerCase();
+			normalName = lowerCase(tagName);
 		}
 
 		final void appendTagName(final char append) {
@@ -245,7 +258,7 @@ abstract class Token {
 		StartTag nameAttr(final String name, final Attributes attributes) {
 			this.tagName = name;
 			this.attributes = attributes;
-			normalName = tagName.toLowerCase();
+			normalName = lowerCase(tagName);
 			return this;
 		}
 

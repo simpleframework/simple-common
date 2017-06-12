@@ -27,7 +27,8 @@ enum HtmlTreeBuilderState {
 				// todo: quirk state check on doctype ids
 				final Token.Doctype d = t.asDoctype();
 				final DocumentType doctype = new DocumentType(tb.settings.normalizeTag(d.getName()),
-						d.getPublicIdentifier(), d.getSystemIdentifier(), tb.getBaseUri());
+						d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(),
+						tb.getBaseUri());
 				tb.getDocument().appendChild(doctype);
 				if (d.isForceQuirks()) {
 					tb.getDocument().quirksMode(Document.QuirksMode.quirks);
@@ -848,7 +849,9 @@ enum HtmlTreeBuilderState {
 		}
 
 		boolean anyOtherEndTag(final Token t, final HtmlTreeBuilder tb) {
-			final String name = t.asEndTag().normalName();
+			final String name = t.asEndTag().name(); // matches with case
+																	// sensitivity if
+			// enabled
 			final ArrayList<Element> stack = tb.getStack();
 			for (int pos = stack.size() - 1; pos >= 0; pos--) {
 				final Element node = stack.get(pos);
@@ -1349,7 +1352,9 @@ enum HtmlTreeBuilderState {
 				if (name.equals("html")) {
 					return tb.process(start, InBody);
 				} else if (name.equals("option")) {
-					tb.processEndTag("option");
+					if (tb.currentElement().nodeName().equals("option")) {
+						tb.processEndTag("option");
+					}
 					tb.insert(start);
 				} else if (name.equals("optgroup")) {
 					if (tb.currentElement().nodeName().equals("option")) {

@@ -208,6 +208,15 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * text, case insensitively.</td>
  * </tr>
  * <tr>
+ * <td><code>:containsData(<em>data</em>)</code></td>
+ * <td>elements that contains the specified <em>data</em>. The contents of
+ * {@code script} and {@code style} elements, and {@code comment} nodes (etc)
+ * are considered data nodes, not text nodes. The search is case insensitive.
+ * The data may appear in the found element, or any of its descendants.</td>
+ * <td><code>script:contains(jsoup)</code> finds script elements containing the
+ * data "jsoup".</td>
+ * </tr>
+ * <tr>
  * <td></td>
  * <td>The above may be combined in any order and with other selectors</td>
  * <td><code>.light:contains(name):eq(0)</code></td>

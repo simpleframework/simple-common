@@ -33,9 +33,11 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * @see #createFromEncoded
 	 */
 	public Attribute(final String key, final String value) {
-		Validate.notEmpty(key);
+		Validate.notNull(key);
 		Validate.notNull(value);
 		this.key = key.trim();
+		Validate.notEmpty(key); // trimming could potentially make empty, so
+										// validate here
 		this.value = value;
 	}
 
@@ -146,7 +148,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * Collapsible if it's a boolean attribute and value is empty or same as name
 	 * 
 	 * @param out
-	 *        Outputsettings
+	 *        output settings
 	 * @return Returns whether collapsible or not
 	 */
 	protected final boolean shouldCollapseAttribute(final Document.OutputSettings out) {

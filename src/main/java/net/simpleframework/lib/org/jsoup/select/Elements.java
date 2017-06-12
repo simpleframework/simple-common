@@ -80,7 +80,7 @@ public class Elements extends ArrayList<Element> {
 	}
 
 	/**
-	 * Checks if any of the matched elements have this attribute set.
+	 * Checks if any of the matched elements have this attribute defined.
 	 * 
 	 * @param attributeKey
 	 *        attribute key
@@ -93,6 +93,28 @@ public class Elements extends ArrayList<Element> {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Get the attribute value for each of the matched elements. If an element
+	 * does not have this attribute, no value is
+	 * included in the result set for that element.
+	 * 
+	 * @param attributeKey
+	 *        the attribute name to return values for. You can add the
+	 *        {@code abs:} prefix to the key to
+	 *        get absolute URLs from relative URLs, e.g.:
+	 *        {@code doc.select("a").eachAttr("abs:href")} .
+	 * @return a list of each element's attribute value for the attribute
+	 */
+	public List<String> eachAttr(final String attributeKey) {
+		final List<String> attrs = new ArrayList<String>(size());
+		for (final Element element : this) {
+			if (element.hasAttr(attributeKey)) {
+				attrs.add(element.attr(attributeKey));
+			}
+		}
+		return attrs;
 	}
 
 	/**
@@ -224,6 +246,7 @@ public class Elements extends ArrayList<Element> {
 	 * 
 	 * @return string of all text: unescaped and no HTML.
 	 * @see Element#text()
+	 * @see #eachText()
 	 */
 	public String text() {
 		final StringBuilder sb = new StringBuilder();
@@ -236,6 +259,13 @@ public class Elements extends ArrayList<Element> {
 		return sb.toString();
 	}
 
+	/**
+	 * Test if any matched Element has any text content, that is not just
+	 * whitespace.
+	 * 
+	 * @return true if any element has non-blank text content.
+	 * @see Element#hasText()
+	 */
 	public boolean hasText() {
 		for (final Element element : this) {
 			if (element.hasText()) {
@@ -243,6 +273,26 @@ public class Elements extends ArrayList<Element> {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Get the text content of each of the matched elements. If an element has no
+	 * text, then it is not included in the
+	 * result.
+	 * 
+	 * @return A list of each matched element's text content.
+	 * @see Element#text()
+	 * @see Element#hasText()
+	 * @see #text()
+	 */
+	public List<String> eachText() {
+		final ArrayList<String> texts = new ArrayList<String>(size());
+		for (final Element el : this) {
+			if (el.hasText()) {
+				texts.add(el.text());
+			}
+		}
+		return texts;
 	}
 
 	/**
@@ -579,8 +629,117 @@ public class Elements extends ArrayList<Element> {
 	 * @return true if at least one element in the list matches the query.
 	 */
 	public boolean is(final String query) {
-		final Elements children = select(query);
-		return !children.isEmpty();
+		final Evaluator eval = QueryParser.parse(query);
+		for (final Element e : this) {
+			if (e.is(eval)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Get the immediate next element sibling of each element in this list.
+	 * 
+	 * @return next element siblings.
+	 */
+	public Elements next() {
+		return siblings(null, true, false);
+	}
+
+	/**
+	 * Get the immediate next element sibling of each element in this list,
+	 * filtered by the query.
+	 * 
+	 * @param query
+	 *        CSS query to match siblings against
+	 * @return next element siblings.
+	 */
+	public Elements next(final String query) {
+		return siblings(query, true, false);
+	}
+
+	/**
+	 * Get all of the following element siblings of each element in this list.
+	 * 
+	 * @return all following element siblings.
+	 */
+	public Elements nextAll() {
+		return siblings(null, true, true);
+	}
+
+	/**
+	 * Get all of the following element siblings of each element in this list,
+	 * filtered by the query.
+	 * 
+	 * @param query
+	 *        CSS query to match siblings against
+	 * @return all following element siblings.
+	 */
+	public Elements nextAll(final String query) {
+		return siblings(query, true, true);
+	}
+
+	/**
+	 * Get the immediate previous element sibling of each element in this list.
+	 * 
+	 * @return previous element siblings.
+	 */
+	public Elements prev() {
+		return siblings(null, false, false);
+	}
+
+	/**
+	 * Get the immediate previous element sibling of each element in this list,
+	 * filtered by the query.
+	 * 
+	 * @param query
+	 *        CSS query to match siblings against
+	 * @return previous element siblings.
+	 */
+	public Elements prev(final String query) {
+		return siblings(query, false, false);
+	}
+
+	/**
+	 * Get all of the previous element siblings of each element in this list.
+	 * 
+	 * @return all previous element siblings.
+	 */
+	public Elements prevAll() {
+		return siblings(null, false, true);
+	}
+
+	/**
+	 * Get all of the previous element siblings of each element in this list,
+	 * filtered by the query.
+	 * 
+	 * @param query
+	 *        CSS query to match siblings against
+	 * @return all previous element siblings.
+	 */
+	public Elements prevAll(final String query) {
+		return siblings(query, false, true);
+	}
+
+	private Elements siblings(final String query, final boolean next, final boolean all) {
+		final Elements els = new Elements();
+		final Evaluator eval = query != null ? QueryParser.parse(query) : null;
+		for (Element e : this) {
+			do {
+				final Element sib = next ? e.nextElementSibling() : e.previousElementSibling();
+				if (sib == null) {
+					break;
+				}
+				if (eval == null) {
+					els.add(sib);
+				} else if (sib.is(eval)) {
+					els.add(sib);
+				}
+				e = sib;
+			} while (all);
+		}
+		return els;
 	}
 
 	/**

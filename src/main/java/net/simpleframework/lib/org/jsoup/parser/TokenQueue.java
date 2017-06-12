@@ -307,8 +307,8 @@ public class TokenQueue {
 	/**
 	 * Pulls a balanced string off the queue. E.g. if queue is "(one (two) three)
 	 * four", (,) will return "one (two) three",
-	 * and leave " four" on the queue. Unbalanced openers and closers can quoted
-	 * (with ' or ") or escaped (with \). Those escapes will be left
+	 * and leave " four" on the queue. Unbalanced openers and closers can be
+	 * quoted (with ' or ") or escaped (with \). Those escapes will be left
 	 * in the returned string, which is suitable for regexes (where we need to
 	 * preserve the escape), but unsuitable for
 	 * contains text strings; use unescape for that.
@@ -353,7 +353,11 @@ public class TokenQueue {
 			}
 			last = c;
 		} while (depth > 0);
-		return (end >= 0) ? queue.substring(start, end) : "";
+		final String out = (end >= 0) ? queue.substring(start, end) : "";
+		if (depth > 0) {// ran out of queue before seeing enough )
+			Validate.fail("Did not find balanced maker at " + out);
+		}
+		return out;
 	}
 
 	/**

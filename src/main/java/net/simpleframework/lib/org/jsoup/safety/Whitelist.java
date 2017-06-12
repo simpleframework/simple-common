@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.safety;
 
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -266,29 +268,29 @@ public class Whitelist {
 	 * @param tag
 	 *        The tag the attributes are for. The tag will be added to the
 	 *        allowed tag list if necessary.
-	 * @param keys
+	 * @param attributes
 	 *        List of valid attributes for the tag
 	 * @return this (for chaining)
 	 */
-	public Whitelist addAttributes(final String tag, final String... keys) {
+	public Whitelist addAttributes(final String tag, final String... attributes) {
 		Validate.notEmpty(tag);
-		Validate.notNull(keys);
-		Validate.isTrue(keys.length > 0, "No attributes supplied.");
+		Validate.notNull(attributes);
+		Validate.isTrue(attributes.length > 0, "No attribute names supplied.");
 
 		final TagName tagName = TagName.valueOf(tag);
 		if (!tagNames.contains(tagName)) {
 			tagNames.add(tagName);
 		}
 		final Set<AttributeKey> attributeSet = new HashSet<AttributeKey>();
-		for (final String key : keys) {
+		for (final String key : attributes) {
 			Validate.notEmpty(key);
 			attributeSet.add(AttributeKey.valueOf(key));
 		}
-		if (attributes.containsKey(tagName)) {
-			final Set<AttributeKey> currentSet = attributes.get(tagName);
+		if (this.attributes.containsKey(tagName)) {
+			final Set<AttributeKey> currentSet = this.attributes.get(tagName);
 			currentSet.addAll(attributeSet);
 		} else {
-			attributes.put(tagName, attributeSet);
+			this.attributes.put(tagName, attributeSet);
 		}
 		return this;
 	}
@@ -309,46 +311,46 @@ public class Whitelist {
 	 * 
 	 * @param tag
 	 *        The tag the attributes are for.
-	 * @param keys
+	 * @param attributes
 	 *        List of invalid attributes for the tag
 	 * @return this (for chaining)
 	 */
-	public Whitelist removeAttributes(final String tag, final String... keys) {
+	public Whitelist removeAttributes(final String tag, final String... attributes) {
 		Validate.notEmpty(tag);
-		Validate.notNull(keys);
-		Validate.isTrue(keys.length > 0, "No attributes supplied.");
+		Validate.notNull(attributes);
+		Validate.isTrue(attributes.length > 0, "No attribute names supplied.");
 
 		final TagName tagName = TagName.valueOf(tag);
 		final Set<AttributeKey> attributeSet = new HashSet<AttributeKey>();
-		for (final String key : keys) {
+		for (final String key : attributes) {
 			Validate.notEmpty(key);
 			attributeSet.add(AttributeKey.valueOf(key));
 		}
-		if (tagNames.contains(tagName) && attributes.containsKey(tagName)) { // Only
-																									// look
-																									// in
-																									// sub-maps
-																									// if
-																									// tag
-																									// was
-																									// allowed
-			final Set<AttributeKey> currentSet = attributes.get(tagName);
+		if (tagNames.contains(tagName) && this.attributes.containsKey(tagName)) { // Only
+																											// look
+																											// in
+																											// sub-maps
+																											// if
+																											// tag
+																											// was
+																											// allowed
+			final Set<AttributeKey> currentSet = this.attributes.get(tagName);
 			currentSet.removeAll(attributeSet);
 
 			if (currentSet.isEmpty()) {
 				// attributes are allowed for tag
-				attributes.remove(tagName);
+				this.attributes.remove(tagName);
 			}
 		}
 		if (tag.equals(":all")) {
 			// individually set tags
-			for (final TagName name : attributes.keySet()) {
-				final Set<AttributeKey> currentSet = attributes.get(name);
+			for (final TagName name : this.attributes.keySet()) {
+				final Set<AttributeKey> currentSet = this.attributes.get(name);
 				currentSet.removeAll(attributeSet);
 
 				if (currentSet.isEmpty()) {
 					// attributes are allowed for tag
-					attributes.remove(name);
+					this.attributes.remove(name);
 				}
 			}
 		}
@@ -358,7 +360,7 @@ public class Whitelist {
 	/**
 	 * Add an enforced attribute to a tag. An enforced attribute will always be
 	 * added to the element. If the element
-	 * already has the attribute set, it will be overridden.
+	 * already has the attribute set, it will be overridden with this value.
 	 * <p>
 	 * E.g.: <code>addEnforcedAttribute("a", "rel", "nofollow")</code> will make
 	 * all <code>a</code> tags output as
@@ -368,22 +370,23 @@ public class Whitelist {
 	 * @param tag
 	 *        The tag the enforced attribute is for. The tag will be added to the
 	 *        allowed tag list if necessary.
-	 * @param key
-	 *        The attribute key
+	 * @param attribute
+	 *        The attribute name
 	 * @param value
 	 *        The enforced attribute value
 	 * @return this (for chaining)
 	 */
-	public Whitelist addEnforcedAttribute(final String tag, final String key, final String value) {
+	public Whitelist addEnforcedAttribute(final String tag, final String attribute,
+			final String value) {
 		Validate.notEmpty(tag);
-		Validate.notEmpty(key);
+		Validate.notEmpty(attribute);
 		Validate.notEmpty(value);
 
 		final TagName tagName = TagName.valueOf(tag);
 		if (!tagNames.contains(tagName)) {
 			tagNames.add(tagName);
 		}
-		final AttributeKey attrKey = AttributeKey.valueOf(key);
+		final AttributeKey attrKey = AttributeKey.valueOf(attribute);
 		final AttributeValue attrVal = AttributeValue.valueOf(value);
 
 		if (enforcedAttributes.containsKey(tagName)) {
@@ -401,17 +404,17 @@ public class Whitelist {
 	 * 
 	 * @param tag
 	 *        The tag the enforced attribute is for.
-	 * @param key
-	 *        The attribute key
+	 * @param attribute
+	 *        The attribute name
 	 * @return this (for chaining)
 	 */
-	public Whitelist removeEnforcedAttribute(final String tag, final String key) {
+	public Whitelist removeEnforcedAttribute(final String tag, final String attribute) {
 		Validate.notEmpty(tag);
-		Validate.notEmpty(key);
+		Validate.notEmpty(attribute);
 
 		final TagName tagName = TagName.valueOf(tag);
 		if (tagNames.contains(tagName) && enforcedAttributes.containsKey(tagName)) {
-			final AttributeKey attrKey = AttributeKey.valueOf(key);
+			final AttributeKey attrKey = AttributeKey.valueOf(attribute);
 			final Map<AttributeKey, AttributeValue> attrMap = enforcedAttributes.get(tagName);
 			attrMap.remove(attrKey);
 
@@ -465,19 +468,20 @@ public class Whitelist {
 	 * 
 	 * @param tag
 	 *        Tag the URL protocol is for
-	 * @param key
-	 *        Attribute key
+	 * @param attribute
+	 *        Attribute name
 	 * @param protocols
 	 *        List of valid protocols
 	 * @return this, for chaining
 	 */
-	public Whitelist addProtocols(final String tag, final String key, final String... protocols) {
+	public Whitelist addProtocols(final String tag, final String attribute,
+			final String... protocols) {
 		Validate.notEmpty(tag);
-		Validate.notEmpty(key);
+		Validate.notEmpty(attribute);
 		Validate.notNull(protocols);
 
 		final TagName tagName = TagName.valueOf(tag);
-		final AttributeKey attrKey = AttributeKey.valueOf(key);
+		final AttributeKey attrKey = AttributeKey.valueOf(attribute);
 		Map<AttributeKey, Set<Protocol>> attrMap;
 		Set<Protocol> protSet;
 
@@ -502,43 +506,47 @@ public class Whitelist {
 	}
 
 	/**
-	 * Remove allowed URL protocols for an element's URL attribute.
+	 * Remove allowed URL protocols for an element's URL attribute. If you remove
+	 * all protocols for an attribute, that
+	 * attribute will allow any protocol.
 	 * <p>
 	 * E.g.: <code>removeProtocols("a", "href", "ftp")</code>
 	 * </p>
 	 * 
 	 * @param tag
 	 *        Tag the URL protocol is for
-	 * @param key
-	 *        Attribute key
-	 * @param protocols
+	 * @param attribute
+	 *        Attribute name
+	 * @param removeProtocols
 	 *        List of invalid protocols
 	 * @return this, for chaining
 	 */
-	public Whitelist removeProtocols(final String tag, final String key, final String... protocols) {
+	public Whitelist removeProtocols(final String tag, final String attribute,
+			final String... removeProtocols) {
 		Validate.notEmpty(tag);
-		Validate.notEmpty(key);
-		Validate.notNull(protocols);
+		Validate.notEmpty(attribute);
+		Validate.notNull(removeProtocols);
 
 		final TagName tagName = TagName.valueOf(tag);
-		final AttributeKey attrKey = AttributeKey.valueOf(key);
+		final AttributeKey attr = AttributeKey.valueOf(attribute);
 
-		if (this.protocols.containsKey(tagName)) {
-			final Map<AttributeKey, Set<Protocol>> attrMap = this.protocols.get(tagName);
-			if (attrMap.containsKey(attrKey)) {
-				final Set<Protocol> protSet = attrMap.get(attrKey);
-				for (final String protocol : protocols) {
-					Validate.notEmpty(protocol);
-					final Protocol prot = Protocol.valueOf(protocol);
-					protSet.remove(prot);
-				}
+		// make sure that what we're removing actually exists; otherwise can open
+		// the tag to any data and that can
+		// be surprising
+		Validate.isTrue(protocols.containsKey(tagName), "Cannot remove a protocol that is not set.");
+		final Map<AttributeKey, Set<Protocol>> tagProtocols = protocols.get(tagName);
+		Validate.isTrue(tagProtocols.containsKey(attr), "Cannot remove a protocol that is not set.");
 
-				if (protSet.isEmpty()) { // Remove protocol set if empty
-					attrMap.remove(attrKey);
-					if (attrMap.isEmpty()) {
-						this.protocols.remove(tagName);
-					}
-				}
+		final Set<Protocol> attrProtocols = tagProtocols.get(attr);
+		for (final String protocol : removeProtocols) {
+			Validate.notEmpty(protocol);
+			attrProtocols.remove(Protocol.valueOf(protocol));
+		}
+
+		if (attrProtocols.isEmpty()) { // Remove protocol set if empty
+			tagProtocols.remove(attr);
+			if (tagProtocols.isEmpty()) {
+				protocols.remove(tagName);
 			}
 		}
 		return this;
@@ -570,16 +578,23 @@ public class Whitelist {
 		final TagName tag = TagName.valueOf(tagName);
 		final AttributeKey key = AttributeKey.valueOf(attr.getKey());
 
-		if (attributes.containsKey(tag)) {
-			if (attributes.get(tag).contains(key)) {
-				if (protocols.containsKey(tag)) {
-					final Map<AttributeKey, Set<Protocol>> attrProts = protocols.get(tag);
-					// ok if not defined protocol; otherwise test
-					return !attrProts.containsKey(key)
-							|| testValidProtocol(el, attr, attrProts.get(key));
-				} else { // attribute found, no protocols defined, so OK
-					return true;
-				}
+		final Set<AttributeKey> okSet = attributes.get(tag);
+		if (okSet != null && okSet.contains(key)) {
+			if (protocols.containsKey(tag)) {
+				final Map<AttributeKey, Set<Protocol>> attrProts = protocols.get(tag);
+				// ok if not defined protocol; otherwise test
+				return !attrProts.containsKey(key) || testValidProtocol(el, attr, attrProts.get(key));
+			} else { // attribute found, no protocols defined, so OK
+				return true;
+			}
+		}
+		// might be an enforced attribute?
+		final Map<AttributeKey, AttributeValue> enforcedSet = enforcedAttributes.get(tag);
+		if (enforcedSet != null) {
+			final Attributes expect = getEnforcedAttributes(tagName);
+			final String attrKey = attr.getKey();
+			if (expect.hasKeyIgnoreCase(attrKey)) {
+				return expect.getIgnoreCase(attrKey).equals(attr.getValue());
 			}
 		}
 		// no attributes defined for tag, try :all tag
@@ -613,7 +628,7 @@ public class Whitelist {
 
 			prot += ":";
 
-			if (value.toLowerCase().startsWith(prot)) {
+			if (lowerCase(value).startsWith(prot)) {
 				return true;
 			}
 		}

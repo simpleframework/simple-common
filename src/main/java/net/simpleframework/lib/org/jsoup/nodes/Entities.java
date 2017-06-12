@@ -3,18 +3,18 @@ package net.simpleframework.lib.org.jsoup.nodes;
 import static net.simpleframework.lib.org.jsoup.nodes.Entities.EscapeMode.base;
 import static net.simpleframework.lib.org.jsoup.nodes.Entities.EscapeMode.extended;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
+import net.simpleframework.lib.org.jsoup.helper.DataUtil;
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
+import net.simpleframework.lib.org.jsoup.parser.CharacterReader;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 
 /**
@@ -25,9 +25,8 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
  * named character references</a>.
  */
 public class Entities {
-	private static Pattern entityPattern = Pattern.compile("^(\\w+)=(\\w+)(?:,(\\w+))?;(\\w+)$");
-	static final int empty = -1;
-	static final String emptyName = "";
+	private static final int empty = -1;
+	private static final String emptyName = "";
 	static final int codepointRadix = 36;
 
 	public enum EscapeMode {
@@ -36,9 +35,13 @@ public class Entities {
 		 * only.
 		 */
 		xhtml("entities-xhtml.properties", 4),
-		/** Default HTML output entities. */
+		/**
+		 * Default HTML output entities.
+		 */
 		base("entities-base.properties", 106),
-		/** Complete HTML entities. */
+		/**
+		 * Complete HTML entities.
+		 */
 		extended("entities-full.properties", 2125);
 
 		// table of named references to their codepoints. sorted so we can binary
@@ -89,7 +92,7 @@ public class Entities {
 
 	/**
 	 * Check if the input is a known named entity
-	 * 
+	 *
 	 * @param name
 	 *        the possible entity name (e.g. "lt" or "amp")
 	 * @return true if a known named entity
@@ -100,7 +103,7 @@ public class Entities {
 
 	/**
 	 * Check if the input is a known named entity in the base entity set.
-	 * 
+	 *
 	 * @param name
 	 *        the possible entity name (e.g. "lt" or "amp")
 	 * @return true if a known named entity in the base set
@@ -112,7 +115,7 @@ public class Entities {
 
 	/**
 	 * Get the Character value of the named entity
-	 * 
+	 *
 	 * @param name
 	 *        named entity (e.g. "lt" or "amp")
 	 * @return the Character value of the named entity (e.g. '{@literal <}' or
@@ -126,8 +129,8 @@ public class Entities {
 	}
 
 	/**
-	 * Get the character(s) represented by the named entitiy
-	 * 
+	 * Get the character(s) represented by the named entity
+	 *
 	 * @param name
 	 *        entity (e.g. "lt" or "amp")
 	 * @return the string value of the character(s) represented by this entity,
@@ -277,7 +280,7 @@ public class Entities {
 
 	/**
 	 * Unescape the input string.
-	 * 
+	 *
 	 * @param string
 	 *        to un-HTML-escape
 	 * @param strict
@@ -335,6 +338,8 @@ public class Entities {
 		}
 	}
 
+	private static final char[] codeDelims = { ',', ';' };
+
 	private static void load(final EscapeMode e, final String file, final int size) {
 		e.nameKeys = new String[size];
 		e.codeVals = new int[size];
@@ -346,33 +351,47 @@ public class Entities {
 			throw new IllegalStateException("Could not read resource " + file
 					+ ". Make sure you copy resources for " + Entities.class.getCanonicalName());
 		}
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		String entry;
+
 		int i = 0;
 		try {
-			while ((entry = reader.readLine()) != null) {
+			final ByteBuffer bytes = DataUtil.readToByteBuffer(stream, 0);
+			final String contents = Charset.forName("ascii").decode(bytes).toString();
+			final CharacterReader reader = new CharacterReader(contents);
+
+			while (!reader.isEmpty()) {
 				// NotNestedLessLess=10913,824;1887
-				final Matcher match = entityPattern.matcher(entry);
-				if (match.find()) {
-					final String name = match.group(1);
-					final int cp1 = Integer.parseInt(match.group(2), codepointRadix);
-					final int cp2 = match.group(3) != null
-							? Integer.parseInt(match.group(3), codepointRadix) : empty;
-					final int index = Integer.parseInt(match.group(4), codepointRadix);
 
-					e.nameKeys[i] = name;
-					e.codeVals[i] = cp1;
-					e.codeKeys[index] = cp1;
-					e.nameVals[index] = name;
-
-					if (cp2 != empty) {
-						multipoints.put(name, new String(new int[] { cp1, cp2 }, 0, 2));
-					}
-					i++;
+				final String name = reader.consumeTo('=');
+				reader.advance();
+				final int cp1 = Integer.parseInt(reader.consumeToAny(codeDelims), codepointRadix);
+				final char codeDelim = reader.current();
+				reader.advance();
+				final int cp2;
+				if (codeDelim == ',') {
+					cp2 = Integer.parseInt(reader.consumeTo(';'), codepointRadix);
+					reader.advance();
+				} else {
+					cp2 = empty;
 				}
+				String indexS = reader.consumeTo('\n');
+				// default git checkout on windows will add a \r there, so remove
+				if (indexS.charAt(indexS.length() - 1) == '\r') {
+					indexS = indexS.substring(0, indexS.length() - 1);
+				}
+				final int index = Integer.parseInt(indexS, codepointRadix);
+				reader.advance();
+
+				e.nameKeys[i] = name;
+				e.codeVals[i] = cp1;
+				e.codeKeys[index] = cp1;
+				e.nameVals[index] = name;
+
+				if (cp2 != empty) {
+					multipoints.put(name, new String(new int[] { cp1, cp2 }, 0, 2));
+				}
+				i++;
 
 			}
-			reader.close();
 		} catch (final IOException err) {
 			throw new IllegalStateException("Error reading resource " + file);
 		}

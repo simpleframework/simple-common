@@ -294,8 +294,13 @@ public class Jsoup {
 	/**
 	 * Get safe HTML from untrusted input HTML, by parsing input HTML and
 	 * filtering it through a white-list of
-	 * permitted
-	 * tags and attributes.
+	 * permitted tags and attributes.
+	 * <p>
+	 * The HTML is treated as a body fragment; it's expected the cleaned HTML
+	 * will be used within the body of an
+	 * existing document. If you want to clean full documents, use
+	 * {@link Cleaner#clean(Document)} instead, and add
+	 * structural tags (<code>html, head, body</code> etc) to the whitelist.
 	 *
 	 * @param bodyHtml
 	 *        input untrusted HTML (body fragment)
@@ -319,10 +324,14 @@ public class Jsoup {
 	}
 
 	/**
-	 * Test if the input HTML has only tags and attributes allowed by the
-	 * Whitelist. Useful for form validation. The input HTML should
-	 * still be run through the cleaner to set up enforced attributes, and to
-	 * tidy the output.
+	 * Test if the input body HTML has only tags and attributes allowed by the
+	 * Whitelist. Useful for form validation.
+	 * <p>
+	 * The input HTML should still be run through the cleaner to set up enforced
+	 * attributes, and to tidy the output.
+	 * <p>
+	 * Assumes the HTML is a body fragment (i.e. will be used in an existing HTML
+	 * document body.)
 	 * 
 	 * @param bodyHtml
 	 *        HTML to test
@@ -332,9 +341,7 @@ public class Jsoup {
 	 * @see #clean(String, net.simpleframework.lib.org.jsoup.safety.Whitelist)
 	 */
 	public static boolean isValid(final String bodyHtml, final Whitelist whitelist) {
-		final Document dirty = parseBodyFragment(bodyHtml, "");
-		final Cleaner cleaner = new Cleaner(whitelist);
-		return cleaner.isValid(dirty);
+		return new Cleaner(whitelist).isValidBodyHtml(bodyHtml);
 	}
 
 }

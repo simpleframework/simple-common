@@ -1,12 +1,16 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
+import net.simpleframework.lib.org.jsoup.helper.ChangeNotifyingArrayList;
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
@@ -88,7 +92,7 @@ public abstract class Node implements Cloneable {
 		final String val = attributes.getIgnoreCase(attributeKey);
 		if (val.length() > 0) {
 			return val;
-		} else if (attributeKey.toLowerCase().startsWith("abs:")) {
+		} else if (lowerCase(attributeKey).startsWith("abs:")) {
 			return absUrl(attributeKey.substring("abs:".length()));
 		} else {
 			return "";
@@ -149,6 +153,20 @@ public abstract class Node implements Cloneable {
 	public Node removeAttr(final String attributeKey) {
 		Validate.notNull(attributeKey);
 		attributes.removeIgnoreCase(attributeKey);
+		return this;
+	}
+
+	/**
+	 * Clear (remove) all of the attributes in this node.
+	 * 
+	 * @return this, for chaining
+	 */
+	public Node clearAttributes() {
+		final Iterator<Attribute> it = attributes.iterator();
+		while (it.hasNext()) {
+			it.next();
+			it.remove();
+		}
 		return this;
 	}
 
@@ -283,7 +301,7 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Gets this node's parent node. Node overridable by extending classes, so
+	 * Gets this node's parent node. Not overridable by extending classes, so
 	 * useful if you really just need the Node type.
 	 * 
 	 * @return parent node; or null if no parent.
@@ -293,19 +311,28 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
+	 * Get this node's root node; that is, its topmost ancestor. If this node is
+	 * the top ancestor, returns {@code this}.
+	 * 
+	 * @return topmost ancestor.
+	 */
+	public Node root() {
+		Node node = this;
+		while (node.parentNode != null) {
+			node = node.parentNode;
+		}
+		return node;
+	}
+
+	/**
 	 * Gets the Document associated with this Node.
 	 * 
 	 * @return the Document associated with this Node, or null if there is no
 	 *         such Document.
 	 */
 	public Document ownerDocument() {
-		if (this instanceof Document) {
-			return (Document) this;
-		} else if (parentNode == null) {
-			return null;
-		} else {
-			return parentNode.ownerDocument();
-		}
+		final Node root = root();
+		return (root instanceof Document) ? (Document) root : null;
 	}
 
 	/**
@@ -465,6 +492,10 @@ public abstract class Node implements Cloneable {
 		}
 	}
 
+	void nodelistChanged() {
+		// Element overrides this to clear its shadow children elements
+	}
+
 	/**
 	 * Replace this node in the DOM with the supplied node.
 	 * 
@@ -478,6 +509,7 @@ public abstract class Node implements Cloneable {
 	}
 
 	protected void setParentNode(final Node parentNode) {
+		Validate.notNull(parentNode);
 		if (this.parentNode != null) {
 			this.parentNode.removeChild(this);
 		}
@@ -530,7 +562,7 @@ public abstract class Node implements Cloneable {
 
 	protected void ensureChildNodes() {
 		if (childNodes == EMPTY_NODES) {
-			childNodes = new ArrayList<Node>(4);
+			childNodes = new NodeList(4);
 		}
 	}
 
@@ -653,8 +685,8 @@ public abstract class Node implements Cloneable {
 	// if this node has no document (or parent), retrieve the default output
 	// settings
 	Document.OutputSettings getOutputSettings() {
-		return ownerDocument() != null ? ownerDocument().outputSettings()
-				: (new Document("")).outputSettings();
+		final Document owner = ownerDocument();
+		return owner != null ? owner.outputSettings() : (new Document("")).outputSettings();
 	}
 
 	/**
@@ -779,7 +811,7 @@ public abstract class Node implements Cloneable {
 		clone.siblingIndex = parent == null ? 0 : siblingIndex;
 		clone.attributes = attributes != null ? attributes.clone() : null;
 		clone.baseUri = baseUri;
-		clone.childNodes = new ArrayList<Node>(childNodes.size());
+		clone.childNodes = new NodeList(childNodes.size());
 
 		for (final Node child : childNodes) {
 			clone.childNodes.add(child);
@@ -815,6 +847,17 @@ public abstract class Node implements Cloneable {
 					throw new SerializationException(exception);
 				}
 			}
+		}
+	}
+
+	private final class NodeList extends ChangeNotifyingArrayList<Node> {
+		NodeList(final int initialCapacity) {
+			super(initialCapacity);
+		}
+
+		@Override
+		public void onContentsChanged() {
+			nodelistChanged();
 		}
 	}
 }

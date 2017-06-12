@@ -18,6 +18,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
+import net.simpleframework.lib.org.jsoup.select.Elements;
 
 /**
  * Internal static utilities for handling data.
@@ -28,8 +29,7 @@ public final class DataUtil {
 			.compile("(?i)\\bcharset=\\s*(?:\"|')?([^\\s,;\"']*)");
 	static final String defaultCharset = "UTF-8"; // used if not found in header
 																	// or meta charset
-	private static final int bufferSize = 0x20000; // ~130K.
-	private static final int UNICODE_BOM = 0xFEFF;
+	private static final int bufferSize = 60000;
 	private static final char[] mimeBoundaryChars = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 			.toCharArray();
 	static final int boundaryLength = 32;
@@ -133,17 +133,21 @@ public final class DataUtil {
 			// content="text/html;charset=gb2312"> or HTML5 <meta charset="gb2312">
 			docData = Charset.forName(defaultCharset).decode(byteData).toString();
 			doc = parser.parseInput(docData, baseUri);
-			final Element meta = doc.select("meta[http-equiv=content-type], meta[charset]").first();
+			final Elements metaElements = doc.select("meta[http-equiv=content-type], meta[charset]");
 			String foundCharset = null; // if not found, will keep utf-8 as best
 													// attempt
-			if (meta != null) {
+			for (final Element meta : metaElements) {
 				if (meta.hasAttr("http-equiv")) {
 					foundCharset = getCharsetFromContentType(meta.attr("content"));
 				}
 				if (foundCharset == null && meta.hasAttr("charset")) {
 					foundCharset = meta.attr("charset");
 				}
+				if (foundCharset != null) {
+					break;
+				}
 			}
+
 			// look for <?xml encoding='ISO-8859-1'?>
 			if (foundCharset == null && doc.childNodeSize() > 0
 					&& doc.childNode(0) instanceof XmlDeclaration) {
@@ -176,7 +180,10 @@ public final class DataUtil {
 	}
 
 	/**
-	 * Read the input stream into a byte buffer.
+	 * Read the input stream into a byte buffer. To deal with slow input streams,
+	 * you may interrupt the thread this
+	 * method is executing on. The data read until being interrupted will be
+	 * available.
 	 * 
 	 * @param inStream
 	 *        the input stream to read from
@@ -187,16 +194,17 @@ public final class DataUtil {
 	 * @throws IOException
 	 *         if an exception occurs whilst reading from the input stream.
 	 */
-	static ByteBuffer readToByteBuffer(final InputStream inStream, final int maxSize)
+	public static ByteBuffer readToByteBuffer(final InputStream inStream, final int maxSize)
 			throws IOException {
 		Validate.isTrue(maxSize >= 0, "maxSize must be 0 (unlimited) or larger");
 		final boolean capped = maxSize > 0;
-		final byte[] buffer = new byte[bufferSize];
-		final ByteArrayOutputStream outStream = new ByteArrayOutputStream(bufferSize);
+		final byte[] buffer = new byte[capped && maxSize < bufferSize ? maxSize : bufferSize];
+		final ByteArrayOutputStream outStream = new ByteArrayOutputStream(
+				capped ? maxSize : bufferSize);
 		int read;
 		int remaining = maxSize;
 
-		while (true) {
+		while (!Thread.interrupted()) {
 			read = inStream.read(buffer);
 			if (read == -1) {
 				break;
@@ -210,6 +218,7 @@ public final class DataUtil {
 			}
 			outStream.write(buffer, 0, read);
 		}
+
 		return ByteBuffer.wrap(outStream.toByteArray());
 	}
 

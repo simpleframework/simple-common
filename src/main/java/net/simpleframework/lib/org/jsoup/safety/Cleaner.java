@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.safety;
 
+import java.util.List;
+
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
@@ -8,6 +10,8 @@ import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
 import net.simpleframework.lib.org.jsoup.nodes.TextNode;
+import net.simpleframework.lib.org.jsoup.parser.ParseErrorList;
+import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 import net.simpleframework.lib.org.jsoup.select.NodeTraversor;
 import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
@@ -69,12 +73,13 @@ public class Cleaner {
 	}
 
 	/**
-	 * Determines if the input document is valid, against the whitelist. It is
-	 * considered valid if all the tags and attributes
-	 * in the input HTML are allowed by the whitelist.
+	 * Determines if the input document <b>body</b>is valid, against the
+	 * whitelist. It is considered valid if all the tags and attributes
+	 * in the input HTML are allowed by the whitelist, and that there is no
+	 * content in the <code>head</code>.
 	 * <p>
-	 * This method can be used as a validator for user input forms. An invalid
-	 * document will still be cleaned successfully
+	 * This method can be used as a validator for user input. An invalid document
+	 * will still be cleaned successfully
 	 * using the {@link #clean(Document)} document. If using as a validator, it
 	 * is recommended to still clean the document
 	 * to ensure enforced attributes are set correctly, and that the output is
@@ -90,7 +95,36 @@ public class Cleaner {
 
 		final Document clean = Document.createShell(dirtyDocument.baseUri());
 		final int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
-		return numDiscarded == 0;
+		return numDiscarded == 0 && dirtyDocument.head().childNodes().size() == 0; // because
+																											// we
+																											// only
+																											// look
+																											// at
+																											// the
+																											// body,
+																											// but
+																											// we
+																											// start
+																											// from
+																											// a
+																											// shell,
+																											// make
+																											// sure
+																											// there's
+																											// nothing
+																											// in
+																											// the
+																											// head
+	}
+
+	public boolean isValidBodyHtml(final String bodyHtml) {
+		final Document clean = Document.createShell("");
+		final Document dirty = Document.createShell("");
+		final ParseErrorList errorList = ParseErrorList.tracking(1);
+		final List<Node> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
+		dirty.body().insertChildren(0, nodes);
+		final int numDiscarded = copySafeNodes(dirty.body(), clean.body());
+		return numDiscarded == 0 && errorList.size() == 0;
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.select;
 
+import static net.simpleframework.lib.org.jsoup.internal.Normalizer.normalize;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,7 +14,7 @@ import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
 /**
  * Parses a CSS selector into an Evaluator tree.
  */
-class QueryParser {
+public class QueryParser {
 	private final static String[] combinators = { ",", ">", "+", "~", " " };
 	private static final String[] AttributeEvals = new String[] { "=", "!=", "^=", "$=", "*=",
 			"~=" };
@@ -40,8 +42,12 @@ class QueryParser {
 	 * @return Evaluator
 	 */
 	public static Evaluator parse(final String query) {
-		final QueryParser p = new QueryParser(query);
-		return p.parse();
+		try {
+			final QueryParser p = new QueryParser(query);
+			return p.parse();
+		} catch (final IllegalArgumentException e) {
+			throw new Selector.SelectorParseException(e.getMessage());
+		}
 	}
 
 	/**
@@ -180,6 +186,8 @@ class QueryParser {
 			contains(false);
 		} else if (tq.matches(":containsOwn(")) {
 			contains(true);
+		} else if (tq.matches(":containsData(")) {
+			containsData();
 		} else if (tq.matches(":matches(")) {
 			matches(false);
 		} else if (tq.matches(":matchesOwn(")) {
@@ -236,8 +244,8 @@ class QueryParser {
 
 		// namespaces: wildcard match equals(tagName) or ending in ":"+tagName
 		if (tagName.startsWith("*|")) {
-			evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(tagName.trim().toLowerCase()),
-					new Evaluator.TagEndsWith(tagName.replace("*|", ":").trim().toLowerCase())));
+			evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(normalize(tagName)),
+					new Evaluator.TagEndsWith(normalize(tagName.replace("*|", ":")))));
 		} else {
 			// namespaces: if element name is "abc:def", selector must be
 			// "abc|def", so flip:
@@ -310,7 +318,7 @@ class QueryParser {
 	private static final Pattern NTH_B = Pattern.compile("(\\+|-)?(\\d+)");
 
 	private void cssNthChild(final boolean backwards, final boolean ofType) {
-		final String argS = tq.chompTo(")").trim().toLowerCase();
+		final String argS = normalize(tq.chompTo(")"));
 		final Matcher mAB = NTH_AB.matcher(argS);
 		final Matcher mB = NTH_B.matcher(argS);
 		final int a, b;
@@ -369,6 +377,14 @@ class QueryParser {
 		} else {
 			evals.add(new Evaluator.ContainsText(searchText));
 		}
+	}
+
+	// pseudo selector :containsData(data)
+	private void containsData() {
+		tq.consume(":containsData");
+		final String searchText = TokenQueue.unescape(tq.chompBalanced('(', ')'));
+		Validate.notEmpty(searchText, ":containsData(text) query must not be empty");
+		evals.add(new Evaluator.ContainsData(searchText));
 	}
 
 	// :matches(regex), matchesOwn(regex)

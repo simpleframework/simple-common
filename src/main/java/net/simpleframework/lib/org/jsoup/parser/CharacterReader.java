@@ -6,9 +6,10 @@ import java.util.Locale;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 /**
- * CharacterReader consumes tokens off a string. To replace the old TokenQueue.
+ * CharacterReader consumes tokens off a string. Used internally by jsoup. API
+ * subject to changes.
  */
-final class CharacterReader {
+public final class CharacterReader {
 	static final char EOF = (char) -1;
 	private static final int maxCacheLen = 12;
 
@@ -20,21 +21,36 @@ final class CharacterReader {
 																			// in this doc, to
 																			// lessen garbage
 
-	CharacterReader(final String input) {
+	public CharacterReader(final String input) {
 		Validate.notNull(input);
 		this.input = input.toCharArray();
 		this.length = this.input.length;
 	}
 
-	int pos() {
+	/**
+	 * Gets the current cursor position in the content.
+	 * 
+	 * @return current position
+	 */
+	public int pos() {
 		return pos;
 	}
 
-	boolean isEmpty() {
+	/**
+	 * Tests if all the content has been read.
+	 * 
+	 * @return true if nothing left to read.
+	 */
+	public boolean isEmpty() {
 		return pos >= length;
 	}
 
-	char current() {
+	/**
+	 * Get the char at the current position.
+	 * 
+	 * @return char
+	 */
+	public char current() {
 		return pos >= length ? EOF : input[pos];
 	}
 
@@ -48,7 +64,10 @@ final class CharacterReader {
 		pos--;
 	}
 
-	void advance() {
+	/**
+	 * Moves the current position by one.
+	 */
+	public void advance() {
 		pos++;
 	}
 
@@ -114,7 +133,14 @@ final class CharacterReader {
 		return -1;
 	}
 
-	String consumeTo(final char c) {
+	/**
+	 * Reads characters up to the specific char.
+	 * 
+	 * @param c
+	 *        the delimiter
+	 * @return the chars read
+	 */
+	public String consumeTo(final char c) {
 		final int offset = nextIndexOf(c);
 		if (offset != -1) {
 			final String consumed = cacheString(pos, offset);
@@ -136,7 +162,14 @@ final class CharacterReader {
 		}
 	}
 
-	String consumeToAny(final char... chars) {
+	/**
+	 * Read characters until the first of any delimiters is found.
+	 * 
+	 * @param chars
+	 *        delimiters to scan for
+	 * @return characters read up to the matched delimiter.
+	 */
+	public String consumeToAny(final char... chars) {
 		final int start = pos;
 		final int remaining = length;
 		final char[] val = input;

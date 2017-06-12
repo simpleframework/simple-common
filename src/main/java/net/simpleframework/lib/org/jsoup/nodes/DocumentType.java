@@ -9,7 +9,10 @@ import net.simpleframework.lib.org.jsoup.nodes.Document.OutputSettings.Syntax;
  * A {@code <!DOCTYPE>} node.
  */
 public class DocumentType extends Node {
+	public static final String PUBLIC_KEY = "PUBLIC";
+	public static final String SYSTEM_KEY = "SYSTEM";
 	private static final String NAME = "name";
+	private static final String PUB_SYS_KEY = "pubSysKey"; // PUBLIC or SYSTEM
 	private static final String PUBLIC_ID = "publicId";
 	private static final String SYSTEM_ID = "systemId";
 	// todo: quirk mode from publicId and systemId
@@ -32,6 +35,33 @@ public class DocumentType extends Node {
 
 		attr(NAME, name);
 		attr(PUBLIC_ID, publicId);
+		if (has(PUBLIC_ID)) {
+			attr(PUB_SYS_KEY, PUBLIC_KEY);
+		}
+		attr(SYSTEM_ID, systemId);
+	}
+
+	/**
+	 * Create a new doctype element.
+	 * 
+	 * @param name
+	 *        the doctype's name
+	 * @param publicId
+	 *        the doctype's public ID
+	 * @param systemId
+	 *        the doctype's system ID
+	 * @param baseUri
+	 *        the doctype's base URI
+	 */
+	public DocumentType(final String name, final String pubSysKey, final String publicId,
+			final String systemId, final String baseUri) {
+		super(baseUri);
+
+		attr(NAME, name);
+		if (pubSysKey != null) {
+			attr(PUB_SYS_KEY, pubSysKey);
+		}
+		attr(PUBLIC_ID, publicId);
 		attr(SYSTEM_ID, systemId);
 	}
 
@@ -52,8 +82,11 @@ public class DocumentType extends Node {
 		if (has(NAME)) {
 			accum.append(" ").append(attr(NAME));
 		}
+		if (has(PUB_SYS_KEY)) {
+			accum.append(" ").append(attr(PUB_SYS_KEY));
+		}
 		if (has(PUBLIC_ID)) {
-			accum.append(" PUBLIC \"").append(attr(PUBLIC_ID)).append('"');
+			accum.append(" \"").append(attr(PUBLIC_ID)).append('"');
 		}
 		if (has(SYSTEM_ID)) {
 			accum.append(" \"").append(attr(SYSTEM_ID)).append('"');

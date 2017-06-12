@@ -2,6 +2,8 @@ package net.simpleframework.lib.org.jsoup.parser;
 
 import java.util.Arrays;
 
+import net.simpleframework.lib.org.jsoup.nodes.DocumentType;
+
 /**
  * States and transition activations for the Tokeniser.
  */
@@ -1260,9 +1262,11 @@ enum TokeniserState {
 			} else if (r.matches('>')) {
 				t.emitDoctypePending();
 				t.advanceTransition(Data);
-			} else if (r.matchConsumeIgnoreCase("PUBLIC")) {
+			} else if (r.matchConsumeIgnoreCase(DocumentType.PUBLIC_KEY)) {
+				t.doctypePending.pubSysKey = DocumentType.PUBLIC_KEY;
 				t.transition(AfterDoctypePublicKeyword);
-			} else if (r.matchConsumeIgnoreCase("SYSTEM")) {
+			} else if (r.matchConsumeIgnoreCase(DocumentType.SYSTEM_KEY)) {
+				t.doctypePending.pubSysKey = DocumentType.SYSTEM_KEY;
 				t.transition(AfterDoctypeSystemKeyword);
 			} else {
 				t.error(this);
