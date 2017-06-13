@@ -88,7 +88,7 @@ public abstract class HtmlUtils implements HtmlConst {
 
 	// 0x3000 全角空格
 	// 0xA0 Unicode编码后的non-breaking space
-	private static final char[] BLANK_CHARs = { (char) 0x3000, (char) 0xA0 };
+	private static final char[] BLANK_CHARs = { (char) 0x3000, (char) 0xC2, (char) 0xA0 };
 
 	private static String elementText(final Document doc, final List<Node> nodes,
 			final String newLine, final boolean showLink) {
