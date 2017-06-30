@@ -142,8 +142,12 @@ public abstract class HtmlUtils implements HtmlConst {
 		return sb.toString();
 	}
 
+	public static String htmlToText(final String htmlString, final boolean showLink) {
+		return truncateHtml(createHtmlDocument(htmlString), Integer.MAX_VALUE, "\n", showLink, false);
+	}
+
 	public static String htmlToText(final String htmlString) {
-		return truncateHtml(htmlString, Integer.MAX_VALUE, "\n");
+		return htmlToText(htmlString, true);
 	}
 
 	private static final Pattern EXPR_PATTERN = Pattern
