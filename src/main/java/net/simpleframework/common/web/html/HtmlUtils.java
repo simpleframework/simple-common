@@ -90,6 +90,15 @@ public abstract class HtmlUtils implements HtmlConst {
 	// 0xA0 Unicode编码后的non-breaking space
 	private static final char[] BLANK_CHARs = { (char) 0x3000, (char) 0xC2, (char) 0xA0 };
 
+	public static String trim(final String str) {
+		String txt = str;
+		for (final char c : BLANK_CHARs) {
+			txt = txt.replace(c, ' ');
+		}
+		txt = StringUtils.replace(txt, "&nbsp;", " ").trim();
+		return txt;
+	}
+
 	private static String elementText(final Document doc, final List<Node> nodes,
 			final String newLine, final boolean showLink) {
 		final StringBuilder sb = new StringBuilder();
@@ -101,10 +110,7 @@ public abstract class HtmlUtils implements HtmlConst {
 			if (child instanceof TextNode) {
 				String txt = ((TextNode) child).text();
 				if (StringUtils.hasText(txt)) {
-					for (final char c : BLANK_CHARs) {
-						txt = txt.replace(c, ' ');
-					}
-					txt = StringUtils.replace(txt, "&nbsp;", " ").trim();
+					txt = trim(txt);
 					txt = StringUtils.substring(txt, length);
 					sb.append(HtmlEncoder.text(txt));
 					doc.attr("length", String.valueOf(length - txt.length()));
