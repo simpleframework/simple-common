@@ -509,6 +509,7 @@ public class Encoder {
 				if (line == null) {
 					break;
 				}
+
 				if (step == 0) {
 					final String token = source.getAbsolutePath() + ": ";
 					if (line.startsWith(token)) {
@@ -522,7 +523,7 @@ public class Encoder {
 						info.setFormat(format);
 						step++;
 					}
-				} else if (step == 1) {
+				} else if (step == 1 && line.indexOf("Duration:") > -1) {
 					final Matcher m = p2.matcher(line);
 					if (m.matches()) {
 						final long hours = Integer.parseInt(m.group(1));
@@ -532,11 +533,9 @@ public class Encoder {
 						final long duration = (dec * 100L) + (seconds * 1000L) + (minutes * 60L * 1000L)
 								+ (hours * 60L * 60L * 1000L);
 						info.setDuration(duration);
-						step++;
-					} else {
-						step = 3;
 					}
-				} else if (step == 2) {
+					step++;
+				} else if (step == 2 && line.indexOf("Stream #") > -1) {
 					final Matcher m = p3.matcher(line);
 					if (m.matches()) {
 						final String type = m.group(1);
@@ -618,11 +617,8 @@ public class Encoder {
 							info.setAudio(audio);
 						}
 					} else {
-						step = 3;
+						reader.reinsertLine(line);
 					}
-				}
-				if (step == 3) {
-					reader.reinsertLine(line);
 					break;
 				}
 			}
@@ -898,5 +894,4 @@ public class Encoder {
 			ffmpeg.destroy();
 		}
 	}
-
 }
