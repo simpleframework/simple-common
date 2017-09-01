@@ -166,6 +166,22 @@ public abstract class HttpUtils implements HtmlConst {
 		return url.toLowerCase().startsWith(cp.toLowerCase() + "/") ? url : cp + url;
 	}
 
+	public static String getProto(final HttpServletRequest httpRequest) {
+		String proto = httpRequest.getHeader("X-Forwarded-Proto");
+		if (!StringUtils.hasText(proto)) {
+			proto = httpRequest.getScheme();
+		}
+		return proto;
+	}
+
+	public static String getHost(final HttpServletRequest httpRequest, final String defaultHost) {
+		String host = httpRequest.getHeader("Host");
+		if (!StringUtils.hasText(host)) {
+			host = StringUtils.hasText(defaultHost) ? defaultHost : httpRequest.getServerName();
+		}
+		return host;
+	}
+
 	public static boolean loc(final HttpServletRequest httpRequest,
 			final HttpServletResponse httpResponse, final String url) throws IOException {
 		if (!httpResponse.isCommitted()) {
