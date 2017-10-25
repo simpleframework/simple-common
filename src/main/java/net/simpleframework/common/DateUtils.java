@@ -40,6 +40,7 @@ public abstract class DateUtils {
 		final Calendar cal2 = Calendar.getInstance();
 		cal2.setTime(cal1.getTime());
 		cal2.add(Calendar.DAY_OF_MONTH, 1);
+		cal2.add(Calendar.MILLISECOND, -1);
 		return new Calendar[] { cal1, cal2 };
 	}
 
