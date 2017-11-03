@@ -14,7 +14,8 @@ import java.util.zip.ZipInputStream;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class FileUtils {
@@ -102,13 +103,13 @@ public abstract class FileUtils {
 			return "";
 		} else if (size > GB) {
 			final double d = (double) size / (double) GB;
-			return Convert.toString(NumberUtils.format(d)) + " GB";
+			return Convert.toString(NumberUtils.format(d, ".#")) + " GB";
 		} else if (size > MB) {
 			final double d = (double) size / (double) MB;
-			return Convert.toString(NumberUtils.format(d)) + " MB";
+			return Convert.toString(NumberUtils.format(d, ".#")) + " MB";
 		} else if (size > KB) {
 			final double d = (double) size / (double) KB;
-			return Convert.toString(NumberUtils.format(d)) + " KB";
+			return Convert.toString(NumberUtils.format(d, ".#")) + " KB";
 		} else {
 			return Convert.toString(size) + " B";
 		}
