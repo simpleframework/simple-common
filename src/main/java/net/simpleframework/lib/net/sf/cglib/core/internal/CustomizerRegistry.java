@@ -11,7 +11,7 @@ import net.simpleframework.lib.net.sf.cglib.core.KeyFactoryCustomizer;
 
 public class CustomizerRegistry {
 	private final Class[] customizerTypes;
-	private final Map<Class, List<KeyFactoryCustomizer>> customizers = new HashMap<Class, List<KeyFactoryCustomizer>>();
+	private final Map<Class, List<KeyFactoryCustomizer>> customizers = new HashMap<>();
 
 	public CustomizerRegistry(final Class[] customizerTypes) {
 		this.customizerTypes = customizerTypes;
@@ -23,7 +23,7 @@ public class CustomizerRegistry {
 			if (type.isAssignableFrom(klass)) {
 				List<KeyFactoryCustomizer> list = customizers.get(type);
 				if (list == null) {
-					customizers.put(type, list = new ArrayList<KeyFactoryCustomizer>());
+					customizers.put(type, list = new ArrayList<>());
 				}
 				list.add(customizer);
 			}

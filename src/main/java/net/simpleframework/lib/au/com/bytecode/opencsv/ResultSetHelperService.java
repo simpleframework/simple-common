@@ -48,7 +48,7 @@ public class ResultSetHelperService implements ResultSetHelper {
 
 	@Override
 	public String[] getColumnNames(final ResultSet rs) throws SQLException {
-		final List<String> names = new ArrayList<String>();
+		final List<String> names = new ArrayList<>();
 		final ResultSetMetaData metadata = rs.getMetaData();
 
 		for (int i = 0; i < metadata.getColumnCount(); i++) {
@@ -62,7 +62,7 @@ public class ResultSetHelperService implements ResultSetHelper {
 	@Override
 	public String[] getColumnValues(final ResultSet rs) throws SQLException, IOException {
 
-		final List<String> values = new ArrayList<String>();
+		final List<String> values = new ArrayList<>();
 		final ResultSetMetaData metadata = rs.getMetaData();
 
 		for (int i = 0; i < metadata.getColumnCount(); i++) {

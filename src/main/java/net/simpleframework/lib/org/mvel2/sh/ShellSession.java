@@ -58,7 +58,7 @@ public class ShellSession {
 	public static final String PROMPT_VAR = "$PROMPT";
 	private static final String[] EMPTY = new String[0];
 
-	private final Map<String, Command> commands = new HashMap<String, Command>();
+	private final Map<String, Command> commands = new HashMap<>();
 	private final Map<String, Object> variables;
 	private final Map<String, String> env;
 	private Object ctxObject;
@@ -81,8 +81,8 @@ public class ShellSession {
 	public ShellSession() {
 		System.out.println("Starting session...");
 
-		variables = new HashMap<String, Object>();
-		env = new HashMap<String, String>();
+		variables = new HashMap<>();
+		env = new HashMap<>();
 
 		commands.putAll(new BasicCommandSet().load());
 		commands.putAll(new FileCommandSet().load());
@@ -130,9 +130,6 @@ public class ShellSession {
 		Object outputBuffer;
 
 		final PrintStream sysPrintStream = System.out;
-		final PrintStream sysErrorStream = System.err;
-		final InputStream sysInputStream = System.in;
-
 		File execFile;
 
 		if ("true".equals(env.get("$ECHO"))) {
@@ -207,7 +204,7 @@ public class ShellSession {
 								final OutputStream outStream = p.getOutputStream();
 
 								final InputStream inStream = p.getInputStream();
-								final InputStream errStream = p.getErrorStream();
+								p.getErrorStream();
 
 								final RunState runState = new RunState(this);
 

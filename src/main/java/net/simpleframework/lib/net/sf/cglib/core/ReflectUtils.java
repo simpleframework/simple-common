@@ -51,7 +51,7 @@ public class ReflectUtils {
 	private static Method DEFINE_CLASS;
 	private static final ProtectionDomain PROTECTION_DOMAIN;
 
-	private static final List<Method> OBJECT_METHODS = new ArrayList<Method>();
+	private static final List<Method> OBJECT_METHODS = new ArrayList<>();
 
 	static {
 		PROTECTION_DOMAIN = getProtectionDomain(ReflectUtils.class);

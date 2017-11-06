@@ -20,8 +20,8 @@ public class JsonWriter {
 	private final LinkedList<WriterByInterface> writerInterfaces;
 
 	public JsonWriter() {
-		data = new ConcurrentHashMap<Class<?>, JsonWriterI<?>>();
-		writerInterfaces = new LinkedList<WriterByInterface>();
+		data = new ConcurrentHashMap<>();
+		writerInterfaces = new LinkedList<>();
 		init();
 	}
 

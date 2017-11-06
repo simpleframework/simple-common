@@ -25,7 +25,7 @@ import net.simpleframework.lib.org.mvel2.util.MVELClassLoader;
 public class DynamicClassLoader extends ClassLoader implements MVELClassLoader {
 	private int totalClasses;
 	private final int tenureLimit;
-	private final LinkedList<DynamicAccessor> allAccessors = new LinkedList<DynamicAccessor>();
+	private final LinkedList<DynamicAccessor> allAccessors = new LinkedList<>();
 
 	public DynamicClassLoader(final ClassLoader classLoader, final int tenureLimit) {
 		super(classLoader);

@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.Jsoup;
@@ -29,12 +31,17 @@ public class XmlTreeBuilder extends TreeBuilder {
 		return ParseSettings.preserveCase;
 	}
 
-	Document parse(final String input, final String baseUri) {
+	Document parse(final Reader input, final String baseUri) {
 		return parse(input, baseUri, ParseErrorList.noTracking(), ParseSettings.preserveCase);
 	}
 
+	Document parse(final String input, final String baseUri) {
+		return parse(new StringReader(input), baseUri, ParseErrorList.noTracking(),
+				ParseSettings.preserveCase);
+	}
+
 	@Override
-	protected void initialiseParse(final String input, final String baseUri,
+	protected void initialiseParse(final Reader input, final String baseUri,
 			final ParseErrorList errors, final ParseSettings settings) {
 		super.initialiseParse(input, baseUri, errors, settings);
 		stack.add(doc); // place the document onto the stack. differs from
@@ -81,9 +88,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 				settings.normalizeAttributes(startTag.attributes));
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
-			tokeniser.acknowledgeSelfClosingFlag();
 			if (!tag.isKnownTag()) {
-				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {
@@ -93,7 +98,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 	}
 
 	void insert(final Token.Comment commentToken) {
-		final Comment comment = new Comment(commentToken.getData(), baseUri);
+		final Comment comment = new Comment(commentToken.getData());
 		Node insert = comment;
 		if (commentToken.bogus) { // xml declarations are emitted as bogus
 											// comments (which is right for html, but not
@@ -105,8 +110,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 				final Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">",
 						baseUri, Parser.xmlParser());
 				final Element el = doc.child(0);
-				insert = new XmlDeclaration(settings.normalizeTag(el.tagName()), comment.baseUri(),
-						data.startsWith("!"));
+				insert = new XmlDeclaration(settings.normalizeTag(el.tagName()), data.startsWith("!"));
 				insert.attributes().addAll(el.attributes());
 			}
 		}
@@ -114,13 +118,14 @@ public class XmlTreeBuilder extends TreeBuilder {
 	}
 
 	void insert(final Token.Character characterToken) {
-		final Node node = new TextNode(characterToken.getData(), baseUri);
+		final Node node = new TextNode(characterToken.getData());
 		insertNode(node);
 	}
 
 	void insert(final Token.Doctype d) {
 		final DocumentType doctypeNode = new DocumentType(settings.normalizeTag(d.getName()),
-				d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(), baseUri);
+				d.getPublicIdentifier(), d.getSystemIdentifier());
+		doctypeNode.setPubSysKey(d.getPubSysKey());
 		insertNode(doctypeNode);
 	}
 
@@ -130,6 +135,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 	 * found, skips.
 	 *
 	 * @param endTag
+	 *        tag to close
 	 */
 	private void popStackToClose(final Token.EndTag endTag) {
 		final String elName = endTag.name();
@@ -157,7 +163,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 
 	List<Node> parseFragment(final String inputFragment, final String baseUri,
 			final ParseErrorList errors, final ParseSettings settings) {
-		initialiseParse(inputFragment, baseUri, errors, settings);
+		initialiseParse(new StringReader(inputFragment), baseUri, errors, settings);
 		runParser();
 		return doc.childNodes();
 	}

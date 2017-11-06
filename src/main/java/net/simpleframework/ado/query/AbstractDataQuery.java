@@ -53,7 +53,7 @@ public abstract class AbstractDataQuery<T> extends ObjectEx implements IDataQuer
 	@Override
 	public Collection<IDataQueryListener<T>> getListeners() {
 		if (listeners == null) {
-			listeners = new LinkedHashSet<IDataQueryListener<T>>();
+			listeners = new LinkedHashSet<>();
 		}
 		return listeners;
 	}

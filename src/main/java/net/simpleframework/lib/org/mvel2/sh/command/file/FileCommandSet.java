@@ -28,7 +28,7 @@ public class FileCommandSet implements CommandSet {
 
 	@Override
 	public Map<String, Command> load() {
-		final Map<String, Command> cmd = new HashMap<String, Command>();
+		final Map<String, Command> cmd = new HashMap<>();
 
 		cmd.put("ls", new DirList());
 		cmd.put("cd", new ChangeWorkingDir());

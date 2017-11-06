@@ -33,7 +33,7 @@ public class FunctionVariableResolverFactory extends BaseVariableResolverFactory
 			final Object[] parameters) {
 		this.function = function;
 
-		this.variableResolvers = new HashMap<String, VariableResolver>();
+		this.variableResolvers = new HashMap<>();
 		this.nextFactory = nextFactory;
 		this.indexedVariableResolvers = new VariableResolver[(this.indexedVariableNames = indexedVariables).length];
 		for (int i = 0; i < parameters.length; i++) {

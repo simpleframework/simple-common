@@ -3,9 +3,7 @@ package net.simpleframework.lib.org.jsoup.parser;
 import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
-import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
-import net.simpleframework.lib.org.jsoup.nodes.BooleanAttribute;
 
 /**
  * Parse tokens for the Tokeniser.
@@ -83,14 +81,14 @@ abstract class Token {
 															// caught in one hop, not
 															// accumulated
 		private final StringBuilder pendingAttributeValue = new StringBuilder(); // but
-		// values
-		// are
-		// accumulated,
-		// from
-		// e.g.
-		// &
-		// in
-		// hrefs
+																											// values
+																											// are
+																											// accumulated,
+																											// from
+																											// e.g.
+																											// &
+																											// in
+																											// hrefs
 		private String pendingAttributeValueS; // try to get attr vals in one
 															// shot, vs Builder
 		private boolean hasEmptyAttributeValue = false; // distinguish boolean
@@ -126,16 +124,16 @@ abstract class Token {
 				// could collapse to empty for other control codes, so verify here
 				pendingAttributeName = pendingAttributeName.trim();
 				if (pendingAttributeName.length() > 0) {
-					Attribute attribute;
+					String value;
 					if (hasPendingAttributeValue) {
-						attribute = new Attribute(pendingAttributeName, pendingAttributeValue.length() > 0
-								? pendingAttributeValue.toString() : pendingAttributeValueS);
+						value = pendingAttributeValue.length() > 0 ? pendingAttributeValue.toString()
+								: pendingAttributeValueS;
 					} else if (hasEmptyAttributeValue) {
-						attribute = new Attribute(pendingAttributeName, "");
+						value = "";
 					} else {
-						attribute = new BooleanAttribute(pendingAttributeName);
+						value = null;
 					}
-					attributes.put(attribute);
+					attributes.put(pendingAttributeName, value);
 				}
 			}
 			pendingAttributeName = null;

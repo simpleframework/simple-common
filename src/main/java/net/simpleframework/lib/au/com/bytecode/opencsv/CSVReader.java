@@ -222,7 +222,7 @@ public class CSVReader implements Closeable {
 	 */
 	public List<String[]> readAll() throws IOException {
 
-		final List<String[]> allElements = new ArrayList<String[]>();
+		final List<String[]> allElements = new ArrayList<>();
 		while (hasNext) {
 			final String[] nextLineAsTokens = readNext();
 			if (nextLineAsTokens != null) {

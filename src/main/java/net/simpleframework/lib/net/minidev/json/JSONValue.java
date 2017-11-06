@@ -171,7 +171,7 @@ public class JSONValue {
 	public static <T> T parse(final Reader in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
+			return p.parse(in, new UpdaterMapper<>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -220,7 +220,7 @@ public class JSONValue {
 	public static <T> T parse(final InputStream in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
+			return p.parse(in, new UpdaterMapper<>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
@@ -237,7 +237,7 @@ public class JSONValue {
 	public static <T> T parse(final String in, final T toUpdate) {
 		try {
 			final JSONParser p = new JSONParser(DEFAULT_PERMISSIVE_MODE);
-			return p.parse(in, new UpdaterMapper<T>(defaultReader, toUpdate));
+			return p.parse(in, new UpdaterMapper<>(defaultReader, toUpdate));
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;

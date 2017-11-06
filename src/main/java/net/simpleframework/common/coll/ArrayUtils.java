@@ -22,8 +22,8 @@ public abstract class ArrayUtils {
 		if (array == null) {
 			return null;
 		}
-		final LinkedHashSet<Object> oSet = new LinkedHashSet<Object>();
-		final HashSet<Class<?>> clsSet = new HashSet<Class<?>>();
+		final LinkedHashSet<Object> oSet = new LinkedHashSet<>();
+		final HashSet<Class<?>> clsSet = new HashSet<>();
 		for (final Object element : array) {
 			if (element == null) {
 				continue;
@@ -157,7 +157,7 @@ public abstract class ArrayUtils {
 	}
 
 	public static List<Object> toParams(final Object... a) {
-		return (List<Object>) _setColl(new ArrayList<Object>(), a);
+		return (List<Object>) _setColl(new ArrayList<>(), a);
 	}
 
 	public static <T> List<T> asList(final T... a) {

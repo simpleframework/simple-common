@@ -477,8 +477,8 @@ public class Enhancer extends AbstractClassGenerator {
 		preValidate();
 		final Object key = KEY_FACTORY.newInstance((superclass != null) ? superclass.getName() : null,
 				ReflectUtils.getNames(interfaces),
-				filter == ALL_ZERO ? null : new WeakCacheKey<CallbackFilter>(filter), callbackTypes,
-				useFactory, interceptDuringConstruction, serialVersionUID);
+				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes, useFactory,
+				interceptDuringConstruction, serialVersionUID);
 		this.currentKey = key;
 		final Object result = super.create(key);
 		return result;
@@ -722,7 +722,7 @@ public class Enhancer extends AbstractClassGenerator {
 		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		return new WeakReference<EnhancerFactoryData>(factoryData);
+		return new WeakReference<>(factoryData);
 	}
 
 	@Override
@@ -1181,7 +1181,6 @@ public class Enhancer extends AbstractClassGenerator {
 		se.invoke_constructor(THREAD_LOCAL, CSTRUCT_NULL);
 		se.putfield(THREAD_CALLBACKS_FIELD);
 
-		final Object[] state = new Object[1];
 		final CallbackGenerator.Context context = new CallbackGenerator.Context() {
 			@Override
 			public ClassLoader getClassLoader() {

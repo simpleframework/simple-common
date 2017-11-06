@@ -1,5 +1,9 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import static net.simpleframework.lib.org.jsoup.helper.StringUtil.inSorted;
+
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,50 +22,48 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
  * HTML Tree Builder; creates a DOM from Tokens.
  */
 public class HtmlTreeBuilder extends TreeBuilder {
-	// tag searches
-	public static final String[] TagsSearchInScope = new String[] { "applet", "caption", "html",
-			"table", "td", "th", "marquee", "object" };
-	private static final String[] TagSearchList = new String[] { "ol", "ul" };
-	private static final String[] TagSearchButton = new String[] { "button" };
-	private static final String[] TagSearchTableScope = new String[] { "html", "table" };
-	private static final String[] TagSearchSelectScope = new String[] { "optgroup", "option" };
-	private static final String[] TagSearchEndTags = new String[] { "dd", "dt", "li", "option",
-			"optgroup", "p", "rp", "rt" };
-	private static final String[] TagSearchSpecial = new String[] { "address", "applet", "area",
-			"article", "aside", "base", "basefont", "bgsound", "blockquote", "body", "br", "button",
-			"caption", "center", "col", "colgroup", "command", "dd", "details", "dir", "div", "dl",
-			"dt", "embed", "fieldset", "figcaption", "figure", "footer", "form", "frame", "frameset",
-			"h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "iframe",
-			"img", "input", "isindex", "li", "link", "listing", "marquee", "menu", "meta", "nav",
-			"noembed", "noframes", "noscript", "object", "ol", "p", "param", "plaintext", "pre",
-			"script", "section", "select", "style", "summary", "table", "tbody", "td", "textarea",
-			"tfoot", "th", "thead", "title", "tr", "ul", "wbr", "xmp" };
+	// tag searches. must be sorted, used in inSorted. MUST update
+	// HtmlTreeBuilderTest if more arrays are added.
+	static final String[] TagsSearchInScope = new String[] { "applet", "caption", "html", "marquee",
+			"object", "table", "td", "th" };
+	static final String[] TagSearchList = new String[] { "ol", "ul" };
+	static final String[] TagSearchButton = new String[] { "button" };
+	static final String[] TagSearchTableScope = new String[] { "html", "table" };
+	static final String[] TagSearchSelectScope = new String[] { "optgroup", "option" };
+	static final String[] TagSearchEndTags = new String[] { "dd", "dt", "li", "optgroup", "option",
+			"p", "rp", "rt" };
+	static final String[] TagSearchSpecial = new String[] { "address", "applet", "area", "article",
+			"aside", "base", "basefont", "bgsound", "blockquote", "body", "br", "button", "caption",
+			"center", "col", "colgroup", "command", "dd", "details", "dir", "div", "dl", "dt", "embed",
+			"fieldset", "figcaption", "figure", "footer", "form", "frame", "frameset", "h1", "h2",
+			"h3", "h4", "h5", "h6", "head", "header", "hgroup", "hr", "html", "iframe", "img", "input",
+			"isindex", "li", "link", "listing", "marquee", "menu", "meta", "nav", "noembed",
+			"noframes", "noscript", "object", "ol", "p", "param", "plaintext", "pre", "script",
+			"section", "select", "style", "summary", "table", "tbody", "td", "textarea", "tfoot", "th",
+			"thead", "title", "tr", "ul", "wbr", "xmp" };
+
+	public static final int MaxScopeSearchDepth = 100; // prevents the parser
+																		// bogging down in
+																		// exceptionally broken
+																		// pages
 
 	private HtmlTreeBuilderState state; // the current state
 	private HtmlTreeBuilderState originalState; // original / marked state
 
-	private boolean baseUriSetFromDoc = false;
+	private boolean baseUriSetFromDoc;
 	private Element headElement; // the current head element
 	private FormElement formElement; // the current form element
 	private Element contextElement; // fragment parse context -- could be null
 												// even if fragment parsing
-	private final ArrayList<Element> formattingElements = new ArrayList<Element>(); // active
-	// (open)
-	// formatting
-	// elements
-	private List<String> pendingTableCharacters = new ArrayList<String>(); // chars
-																									// in
-																									// table
-																									// to
-																									// be
-																									// shifted
-																									// out
-	private final Token.EndTag emptyEnd = new Token.EndTag(); // reused empty end
-																					// tag
+	private ArrayList<Element> formattingElements; // active (open) formatting
+																	// elements
+	private List<String> pendingTableCharacters; // chars in table to be shifted
+																// out
+	private Token.EndTag emptyEnd; // reused empty end tag
 
-	private boolean framesetOk = true; // if ok to go into frameset
-	private boolean fosterInserts = false; // if next inserts should be fostered
-	private boolean fragmentParsing = false; // if parsing a fragment of html
+	private boolean framesetOk; // if ok to go into frameset
+	private boolean fosterInserts; // if next inserts should be fostered
+	private boolean fragmentParsing; // if parsing a fragment of html
 
 	HtmlTreeBuilder() {
 	}
@@ -72,18 +74,31 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	@Override
-	Document parse(final String input, final String baseUri, final ParseErrorList errors,
-			final ParseSettings settings) {
+	protected void initialiseParse(final Reader input, final String baseUri,
+			final ParseErrorList errors, final ParseSettings settings) {
+		super.initialiseParse(input, baseUri, errors, settings);
+
+		// this is a bit mucky. todo - probably just create new parser objects to
+		// ensure all reset.
 		state = HtmlTreeBuilderState.Initial;
+		originalState = null;
 		baseUriSetFromDoc = false;
-		return super.parse(input, baseUri, errors, settings);
+		headElement = null;
+		formElement = null;
+		contextElement = null;
+		formattingElements = new ArrayList<>();
+		pendingTableCharacters = new ArrayList<>();
+		emptyEnd = new Token.EndTag();
+		framesetOk = true;
+		fosterInserts = false;
+		fragmentParsing = false;
 	}
 
 	List<Node> parseFragment(final String inputFragment, final Element context, final String baseUri,
 			final ParseErrorList errors, final ParseSettings settings) {
 		// context may be null
 		state = HtmlTreeBuilderState.Initial;
-		initialiseParse(inputFragment, baseUri, errors, settings);
+		initialiseParse(new StringReader(inputFragment), baseUri, errors, settings);
 		contextElement = context;
 		fragmentParsing = true;
 		Element root = null;
@@ -103,6 +118,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 				tokeniser.transition(TokeniserState.ScriptData);
 			} else if (contextTag.equals(("noscript"))) {
 				tokeniser.transition(TokeniserState.Data); // if scripting enabled,
+																			// rawtext
 			} else if (contextTag.equals("plaintext")) {
 				tokeniser.transition(TokeniserState.Data);
 			} else {
@@ -128,7 +144,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		}
 
 		runParser();
-		if (context != null && root != null) {
+		if (context != null) {
 			return root.childNodes();
 		} else {
 			return doc.childNodes();
@@ -248,14 +264,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
 			if (tag.isKnownTag()) {
-				if (tag.isSelfClosing()) {
-					tokeniser.acknowledgeSelfClosingFlag(); // if not acked,
-																			// promulagates error
+				if (!tag.isEmpty()) {
+					tokeniser.error("Tag cannot be self closing; not a void tag");
 				}
 			} else {
-				// unknown tag, remember this is self closing for output
 				tag.setSelfClosing();
-				tokeniser.acknowledgeSelfClosingFlag(); // not an distinct error
 			}
 		}
 		return el;
@@ -273,7 +286,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	void insert(final Token.Comment commentToken) {
-		final Comment comment = new Comment(commentToken.getData(), baseUri);
+		final Comment comment = new Comment(commentToken.getData());
 		insertNode(comment);
 	}
 
@@ -282,9 +295,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		// characters in script and style go in as datanodes, not text nodes
 		final String tagName = currentElement().tagName();
 		if (tagName.equals("script") || tagName.equals("style")) {
-			node = new DataNode(characterToken.getData(), baseUri);
+			node = new DataNode(characterToken.getData());
 		} else {
-			node = new TextNode(characterToken.getData(), baseUri);
+			node = new TextNode(characterToken.getData());
 		}
 		currentElement().appendChild(node); // doesn't use insertNode, because we
 														// don't foster these; and will always
@@ -368,11 +381,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		}
 	}
 
+	// elnames is sorted, comes from Constants
 	void popStackToClose(final String... elNames) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
 			stack.remove(pos);
-			if (StringUtil.in(next.nodeName(), elNames)) {
+			if (inSorted(next.nodeName(), elNames)) {
 				break;
 			}
 		}
@@ -394,11 +408,11 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	void clearStackToTableBodyContext() {
-		clearStackToContext("tbody", "tfoot", "thead");
+		clearStackToContext("tbody", "tfoot", "thead", "template");
 	}
 
 	void clearStackToTableRowContext() {
-		clearStackToContext("tr");
+		clearStackToContext("tr", "template");
 	}
 
 	private void clearStackToContext(final String... nodeNames) {
@@ -500,16 +514,20 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
 	private boolean inSpecificScope(final String[] targetNames, final String[] baseTypes,
 			final String[] extraTypes) {
-		for (int pos = stack.size() - 1; pos >= 0; pos--) {
+		int depth = stack.size() - 1;
+		if (depth > MaxScopeSearchDepth) {
+			depth = MaxScopeSearchDepth;
+		}
+		for (int pos = depth; pos >= 0; pos--) {
 			final Element el = stack.get(pos);
 			final String elName = el.nodeName();
-			if (StringUtil.in(elName, targetNames)) {
+			if (inSorted(elName, targetNames)) {
 				return true;
 			}
-			if (StringUtil.in(elName, baseTypes)) {
+			if (inSorted(elName, baseTypes)) {
 				return false;
 			}
-			if (extraTypes != null && StringUtil.in(elName, extraTypes)) {
+			if (extraTypes != null && inSorted(elName, extraTypes)) {
 				return false;
 			}
 		}
@@ -550,8 +568,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			if (elName.equals(targetName)) {
 				return true;
 			}
-			if (!StringUtil.in(elName, TagSearchSelectScope)) {
-				// except
+			if (!inSorted(elName, TagSearchSelectScope)) {
 				return false;
 			}
 		}
@@ -584,7 +601,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	void newPendingTableCharacters() {
-		pendingTableCharacters = new ArrayList<String>();
+		pendingTableCharacters = new ArrayList<>();
 	}
 
 	List<String> getPendingTableCharacters() {
@@ -612,7 +629,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	 */
 	void generateImpliedEndTags(final String excludeTag) {
 		while ((excludeTag != null && !currentElement().nodeName().equals(excludeTag))
-				&& StringUtil.in(currentElement().nodeName(), TagSearchEndTags)) {
+				&& inSorted(currentElement().nodeName(), TagSearchEndTags)) {
 			pop();
 		}
 	}
@@ -625,7 +642,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		// todo: mathml's mi, mo, mn
 		// todo: svg's foreigObject, desc, title
 		final String name = el.nodeName();
-		return StringUtil.in(name, TagSearchSpecial);
+		return inSorted(name, TagSearchSpecial);
 	}
 
 	Element lastFormattingElement() {
@@ -690,7 +707,6 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			entry = formattingElements.get(--pos); // step 5. one earlier than
 																// entry
 			if (entry == null || onStack(entry)) {
-				// stack
 				break; // jump to 8, else continue back to 4
 			}
 		}
@@ -705,7 +721,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			// stack
 			skip = false; // can only skip increment from 4.
 			final Element newEl = insertStartTag(entry.nodeName()); // todo: avoid
-			// fostering here?
+																						// fostering
+																						// here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
 

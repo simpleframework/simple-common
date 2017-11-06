@@ -30,9 +30,9 @@ public class OptimizerFactory {
 	public static String SAFE_REFLECTIVE = "reflective";
 
 	private static String defaultOptimizer;
-	private static final Map<String, AccessorOptimizer> accessorCompilers = new HashMap<String, AccessorOptimizer>();
+	private static final Map<String, AccessorOptimizer> accessorCompilers = new HashMap<>();
 
-	private static ThreadLocal<Class<? extends AccessorOptimizer>> threadOptimizer = new ThreadLocal<Class<? extends AccessorOptimizer>>();
+	private static ThreadLocal<Class<? extends AccessorOptimizer>> threadOptimizer = new ThreadLocal<>();
 
 	static {
 		accessorCompilers.put(SAFE_REFLECTIVE, new ReflectiveAccessorOptimizer());

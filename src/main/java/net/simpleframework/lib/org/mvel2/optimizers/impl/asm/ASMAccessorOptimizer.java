@@ -144,7 +144,6 @@ import net.simpleframework.lib.org.mvel2.ast.FunctionInstance;
 import net.simpleframework.lib.org.mvel2.ast.TypeDescriptor;
 import net.simpleframework.lib.org.mvel2.ast.WithNode;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
-import net.simpleframework.lib.org.mvel2.compiler.AccessorNode;
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableAccessor;
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableLiteral;
 import net.simpleframework.lib.org.mvel2.compiler.ExecutableStatement;
@@ -336,7 +335,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		time = System.currentTimeMillis();
 
 		if (compiledInputs == null) {
-			compiledInputs = new ArrayList<ExecutableStatement>();
+			compiledInputs = new ArrayList<>();
 		}
 
 		this.start = cursor = start;
@@ -372,7 +371,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		this.first = true;
 		this.ingressType = ingressType;
 
-		compiledInputs = new ArrayList<ExecutableStatement>();
+		compiledInputs = new ArrayList<>();
 
 		this.pCtx = pCtx;
 		this.ctx = ctx;
@@ -389,13 +388,10 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			root = subset(property, 0, split);
 		}
 
-		final AccessorNode rootAccessor = null;
-
 		_initJIT2();
 
 		if (root != null) {
 			final int _length = this.length;
-			final int _end = this.end;
 			final char[] _expr = this.expr;
 
 			this.length = end = (this.expr = root).length;
@@ -2873,7 +2869,6 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 			return MAP;
 		} else if (o instanceof Object[]) {
-			final Accessor[] a = new Accessor[((Object[]) o).length];
 			int i = 0;
 			int dim = 0;
 
@@ -3020,7 +3015,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		type = toNonPrimitiveArray(type);
 		this.returnType = type;
 
-		this.compiledInputs = new ArrayList<ExecutableStatement>();
+		this.compiledInputs = new ArrayList<>();
 
 		this.ctx = ctx;
 		this.thisRef = thisRef;
@@ -3099,7 +3094,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			final VariableResolverFactory factory) {
 		_initJIT();
 
-		compiledInputs = new ArrayList<ExecutableStatement>();
+		compiledInputs = new ArrayList<>();
 		this.start = cursor = start;
 		this.end = start + offset;
 		this.length = this.end - this.start;

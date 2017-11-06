@@ -39,7 +39,7 @@ public class ListCreator implements Accessor {
 		for (int i = 0; i < getValues().length; i++) {
 			template[i] = getValues()[i].getValue(ctx, elCtx, variableFactory);
 		}
-		return new ArrayList<Object>(Arrays.asList(template));
+		return new ArrayList<>(Arrays.asList(template));
 	}
 
 	public ListCreator(final Accessor[] values) {

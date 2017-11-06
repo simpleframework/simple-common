@@ -2,6 +2,7 @@ package net.simpleframework.lib.org.jsoup.parser;
 
 import java.util.Arrays;
 
+import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Entities;
 
@@ -27,13 +28,19 @@ final class Tokeniser {
 	private String charsString = null; // characters pending an emit. Will fall
 													// to charsBuilder if more than one
 	private final StringBuilder charsBuilder = new StringBuilder(1024); // buffers
-	// characters
-	// to output
-	// as one
-	// token, if
-	// more than
-	// one emit
-	// per read
+																								// characters
+																								// to
+																								// output
+																								// as
+																								// one
+																								// token,
+																								// if
+																								// more
+																								// than
+																								// one
+																								// emit
+																								// per
+																								// read
 	StringBuilder dataBuffer = new StringBuilder(1024); // buffers data looking
 																			// for </script>
 
@@ -45,7 +52,6 @@ final class Tokeniser {
 	Token.Comment commentPending = new Token.Comment(); // comment building up
 	private String lastStartTag; // the last start tag emitted, to test
 											// appropriate end tag
-	private boolean selfClosingFlagAcknowledged = true;
 
 	Tokeniser(final CharacterReader reader, final ParseErrorList errors) {
 		this.reader = reader;
@@ -53,11 +59,6 @@ final class Tokeniser {
 	}
 
 	Token read() {
-		if (!selfClosingFlagAcknowledged) {
-			error("Self closing flag not acknowledged");
-			selfClosingFlagAcknowledged = true;
-		}
-
 		while (!isEmitPending) {
 			state.read(this, reader);
 		}
@@ -88,9 +89,6 @@ final class Tokeniser {
 		if (token.type == Token.TokenType.StartTag) {
 			final Token.StartTag startTag = (Token.StartTag) token;
 			lastStartTag = startTag.tagName;
-			if (startTag.selfClosing) {
-				selfClosingFlagAcknowledged = false;
-			}
 		} else if (token.type == Token.TokenType.EndTag) {
 			final Token.EndTag endTag = (Token.EndTag) token;
 			if (endTag.attributes != null) {
@@ -139,10 +137,6 @@ final class Tokeniser {
 		this.state = state;
 	}
 
-	void acknowledgeSelfClosingFlag() {
-		selfClosingFlagAcknowledged = true;
-	}
-
 	final private int[] codepointHolder = new int[1]; // holder to not have to
 																		// keep creating arrays
 	final private int[] multipointHolder = new int[2];
@@ -177,7 +171,7 @@ final class Tokeniser {
 			try {
 				final int base = isHexMode ? 16 : 10;
 				charval = Integer.valueOf(numRef, base);
-			} catch (final NumberFormatException e) {
+			} catch (final NumberFormatException ignored) {
 			} // skip
 			if (charval == -1 || (charval >= 0xD800 && charval <= 0xDFFF) || charval > 0x10FFFF) {
 				characterReferenceError("character outside of valid range");
@@ -262,10 +256,7 @@ final class Tokeniser {
 	}
 
 	String appropriateEndTagName() {
-		if (lastStartTag == null) {
-			return null;
-		}
-		return lastStartTag;
+		return lastStartTag; // could be null
 	}
 
 	void error(final TokeniserState state) {
@@ -288,7 +279,7 @@ final class Tokeniser {
 		}
 	}
 
-	private void error(final String errorMsg) {
+	void error(final String errorMsg) {
 		if (errors.canAddError()) {
 			errors.add(new ParseError(reader.pos(), errorMsg));
 		}
@@ -305,10 +296,11 @@ final class Tokeniser {
 	 * Utility method to consume reader and unescape entities found within.
 	 * 
 	 * @param inAttribute
+	 *        if the text to be unescaped is in an attribute
 	 * @return unescaped string from reader
 	 */
 	String unescapeEntities(final boolean inAttribute) {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = StringUtil.stringBuilder();
 		while (!reader.isEmpty()) {
 			builder.append(reader.consumeTo('&'));
 			if (reader.matches('&')) {

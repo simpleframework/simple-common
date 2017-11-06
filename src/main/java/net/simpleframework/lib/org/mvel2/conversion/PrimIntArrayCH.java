@@ -26,7 +26,7 @@ import net.simpleframework.lib.org.mvel2.ConversionHandler;
 
 public class PrimIntArrayCH implements ConversionHandler {
 
-	private static final Map<Class, Converter> CNV = new HashMap<Class, Converter>();
+	private static final Map<Class, Converter> CNV = new HashMap<>();
 
 	@Override
 	public Object convertFrom(final Object in) {

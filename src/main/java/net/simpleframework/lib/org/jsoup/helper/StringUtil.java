@@ -10,9 +10,11 @@ import java.util.Iterator;
  * A minimal String utility class. Designed for internal jsoup use only.
  */
 public final class StringUtil {
-	// memoised padding up to 10
-	private static final String[] padding = { "", " ", "  ", "   ", "    ", "     ", "      ",
-			"       ", "        ", "         ", "          " };
+	// memoised padding up to 21
+	static final String[] padding = { "", " ", "  ", "   ", "    ", "     ", "      ", "       ",
+			"        ", "         ", "          ", "           ", "            ", "             ",
+			"              ", "               ", "                ", "                 ",
+			"                  ", "                   ", "                    " };
 
 	/**
 	 * Join a collection of strings by a separator
@@ -55,6 +57,19 @@ public final class StringUtil {
 	}
 
 	/**
+	 * Join an array of strings by a separator
+	 * 
+	 * @param strings
+	 *        collection of string objects
+	 * @param sep
+	 *        string to place between strings
+	 * @return joined string
+	 */
+	public static String join(final String[] strings, final String sep) {
+		return join(Arrays.asList(strings), sep);
+	}
+
+	/**
 	 * Returns space padding
 	 * 
 	 * @param width
@@ -69,7 +84,6 @@ public final class StringUtil {
 		if (width < padding.length) {
 			return padding[width];
 		}
-
 		final char[] out = new char[width];
 		for (int i = 0; i < width; i++) {
 			out[i] = ' ';
@@ -122,14 +136,29 @@ public final class StringUtil {
 	}
 
 	/**
-	 * Tests if a code point is "whitespace" as defined in the HTML spec.
+	 * Tests if a code point is "whitespace" as defined in the HTML spec. Used
+	 * for output HTML.
+	 * 
+	 * @param c
+	 *        code point to test
+	 * @return true if code point is whitespace, false otherwise
+	 * @see #isActuallyWhitespace(int)
+	 */
+	public static boolean isWhitespace(final int c) {
+		return c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r';
+	}
+
+	/**
+	 * Tests if a code point is "whitespace" as defined by what it looks like.
+	 * Used for Element.text etc.
 	 * 
 	 * @param c
 	 *        code point to test
 	 * @return true if code point is whitespace, false otherwise
 	 */
-	public static boolean isWhitespace(final int c) {
-		return c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r';
+	public static boolean isActuallyWhitespace(final int c) {
+		return c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r' || c == 160;
+		// 160 is &nbsp; (non-breaking space). Not in the spec but expected.
 	}
 
 	/**
@@ -142,7 +171,7 @@ public final class StringUtil {
 	 * @return normalised string
 	 */
 	public static String normaliseWhitespace(final String string) {
-		final StringBuilder sb = new StringBuilder(string.length());
+		final StringBuilder sb = StringUtil.stringBuilder();
 		appendNormalisedWhitespace(sb, string, false);
 		return sb.toString();
 	}
@@ -167,7 +196,7 @@ public final class StringUtil {
 		int c;
 		for (int i = 0; i < len; i += Character.charCount(c)) {
 			c = string.codePointAt(i);
-			if (isWhitespace(c)) {
+			if (isActuallyWhitespace(c)) {
 				if ((stripLeading && !reachedNonWhite) || lastWasWhite) {
 					continue;
 				}
@@ -182,8 +211,9 @@ public final class StringUtil {
 	}
 
 	public static boolean in(final String needle, final String... haystack) {
-		for (final String hay : haystack) {
-			if (hay.equals(needle)) {
+		final int len = haystack.length;
+		for (int i = 0; i < len; i++) {
+			if (haystack[i].equals(needle)) {
 				return true;
 			}
 		}
@@ -248,6 +278,34 @@ public final class StringUtil {
 		} catch (final MalformedURLException e) {
 			return "";
 		}
+	}
+
+	/**
+	 * Maintains a cached StringBuilder, to minimize new StringBuilder GCs.
+	 * Prevents it from growing to big per thread.
+	 * Care must be taken to not grab more than one in the same stack (not locked
+	 * or mutexed or anything).
+	 * 
+	 * @return an empty StringBuilder
+	 */
+	public static StringBuilder stringBuilder() {
+		StringBuilder sb = stringLocal.get();
+		if (sb.length() > MaxCachedBuilderSize) {
+			sb = new StringBuilder(MaxCachedBuilderSize);
+			stringLocal.set(sb);
+		} else {
+			sb.delete(0, sb.length());
+		}
+		return sb;
 
 	}
+
+	private static final int MaxCachedBuilderSize = 8 * 1024;
+	private static final ThreadLocal<StringBuilder> stringLocal = new ThreadLocal<StringBuilder>() {
+		@Override
+		protected StringBuilder initialValue() {
+			return new StringBuilder(MaxCachedBuilderSize);
+		}
+	};
+
 }

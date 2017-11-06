@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *         http://www.simpleframework.net
  */
 public abstract class NumberUtils {
-	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<String, DecimalFormat>();
+	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<>();
 
 	public static float toMoney(final Number number) {
 		return toFloat(number, 2);

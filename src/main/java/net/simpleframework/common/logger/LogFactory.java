@@ -13,7 +13,7 @@ public class LogFactory {
 
 	static Map<Class<?>, Log> lCache;
 	static {
-		lCache = new ConcurrentHashMap<Class<?>, Log>();
+		lCache = new ConcurrentHashMap<>();
 	}
 
 	private static Log createLog(final Class<?> beanClass) {

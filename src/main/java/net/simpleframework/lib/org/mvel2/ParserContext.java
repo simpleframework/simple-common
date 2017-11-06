@@ -509,10 +509,10 @@ public class ParserContext implements Serializable {
 	 */
 	public void initializeTables() {
 		if (variables == null) {
-			variables = new LinkedHashMap<String, Class>();
+			variables = new LinkedHashMap<>();
 		}
 		if (inputs == null) {
-			inputs = new LinkedHashMap<String, Class>();
+			inputs = new LinkedHashMap<>();
 		}
 
 		if (variableVisibility == null) {
@@ -594,7 +594,7 @@ public class ParserContext implements Serializable {
 
 	public void addInput(final String name, Class type) {
 		if (inputs == null) {
-			inputs = new LinkedHashMap<String, Class>();
+			inputs = new LinkedHashMap<>();
 		}
 		if (inputs.containsKey(name) || (variables != null && variables.containsKey(name))) {
 			return;
@@ -613,7 +613,7 @@ public class ParserContext implements Serializable {
 		addInput(name, type);
 
 		if (this.typeParameters == null) {
-			this.typeParameters = new LinkedHashMap<String, Map<String, Type>>();
+			this.typeParameters = new LinkedHashMap<>();
 		}
 		if (this.typeParameters.get(name) == null) {
 			this.typeParameters.put(name, new LinkedHashMap<String, Type>());
@@ -665,7 +665,7 @@ public class ParserContext implements Serializable {
 
 	public void addError(final ErrorDetail errorDetail) {
 		if (errorList == null) {
-			errorList = new ArrayList<ErrorDetail>();
+			errorList = new ArrayList<>();
 		} else {
 			for (final ErrorDetail detail : errorList) {
 				if (detail.getMessage().equals(errorDetail.getMessage())
@@ -781,7 +781,7 @@ public class ParserContext implements Serializable {
 
 	private void initVariableVisibility() {
 		if (variableVisibility == null) {
-			variableVisibility = new ArrayList<Set<String>>();
+			variableVisibility = new ArrayList<>();
 		}
 	}
 
@@ -862,7 +862,7 @@ public class ParserContext implements Serializable {
 
 	public void initLineMapping(final String sourceName, final char[] expr) {
 		if (sourceLineLookups == null) {
-			sourceLineLookups = new HashMap<String, LineMapper.LineLookup>();
+			sourceLineLookups = new HashMap<>();
 		}
 		sourceLineLookups.put(sourceName, new LineMapper(expr).map());
 	}
@@ -879,7 +879,7 @@ public class ParserContext implements Serializable {
 
 	public void visitLine(final String sourceName, final int lineNumber) {
 		if (visitedLines == null) {
-			visitedLines = new HashMap<String, Set<Integer>>();
+			visitedLines = new HashMap<>();
 		}
 
 		if (!visitedLines.containsKey(sourceName)) {
@@ -903,7 +903,7 @@ public class ParserContext implements Serializable {
 
 	public void declareFunction(final Function function) {
 		if (globalFunctions == null) {
-			globalFunctions = new LinkedHashMap<String, Function>();
+			globalFunctions = new LinkedHashMap<>();
 		}
 		globalFunctions.put(function.getName(), function);
 	}
@@ -926,10 +926,10 @@ public class ParserContext implements Serializable {
 
 	public void addTypeParameters(final String name, final Class type) {
 		if (typeParameters == null) {
-			typeParameters = new HashMap<String, Map<String, Type>>();
+			typeParameters = new HashMap<>();
 		}
 
-		final Map<String, Type> newPkg = new HashMap<String, Type>();
+		final Map<String, Type> newPkg = new HashMap<>();
 
 		for (final Type t : type.getTypeParameters()) {
 			newPkg.put(t.toString(), Object.class);
@@ -943,7 +943,7 @@ public class ParserContext implements Serializable {
 			return;
 		}
 		if (this.typeParameters == null) {
-			typeParameters = new HashMap<String, Map<String, Type>>();
+			typeParameters = new HashMap<>();
 		}
 
 		Map iMap;
@@ -1016,10 +1016,10 @@ public class ParserContext implements Serializable {
 
 	private void initIndexedVariables() {
 		if (indexedInputs == null) {
-			indexedInputs = new ArrayList<String>();
+			indexedInputs = new ArrayList<>();
 		}
 		if (indexedLocals == null) {
-			indexedLocals = new ArrayList<String>();
+			indexedLocals = new ArrayList<>();
 		}
 	}
 
@@ -1148,14 +1148,14 @@ public class ParserContext implements Serializable {
 
 	public Map<String, CompiledExpression> getCompiledExpressionCache() {
 		if (compiledExpressionCache == null) {
-			compiledExpressionCache = new HashMap<String, CompiledExpression>();
+			compiledExpressionCache = new HashMap<>();
 		}
 		return compiledExpressionCache;
 	}
 
 	public Map<String, Class> getReturnTypeCache() {
 		if (returnTypeCache == null) {
-			returnTypeCache = new HashMap<String, Class>();
+			returnTypeCache = new HashMap<>();
 		}
 		return returnTypeCache;
 	}
@@ -1197,7 +1197,7 @@ public class ParserContext implements Serializable {
 	}
 
 	public ParserContext withIndexedVars(final String[] varNames) {
-		indexedInputs = new ArrayList<String>();
+		indexedInputs = new ArrayList<>();
 		Collections.addAll(indexedInputs, varNames);
 
 		return this;

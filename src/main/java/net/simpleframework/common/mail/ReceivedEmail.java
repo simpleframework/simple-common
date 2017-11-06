@@ -69,7 +69,7 @@ public class ReceivedEmail extends CommonEmail {
 	public void addAttachment(final String filename, final String mimeType, final String contentId,
 			final byte[] content) {
 		if (attachments == null) {
-			attachments = new ArrayList<EmailAttachment>();
+			attachments = new ArrayList<>();
 		}
 		final EmailAttachment emailAttachment = new ByteArrayAttachment(content, mimeType, filename,
 				contentId);

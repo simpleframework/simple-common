@@ -463,8 +463,6 @@ public class MultipartParser {
 	private String readLine() throws IOException {
 		final StringBuffer sbuf = new StringBuffer();
 		int result;
-		final String line;
-
 		do {
 			result = in.readLine(buf, 0, buf.length); // does +=
 			if (result != -1) {

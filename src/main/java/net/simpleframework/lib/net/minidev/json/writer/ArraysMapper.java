@@ -26,7 +26,7 @@ public class ArraysMapper<T> extends JsonReaderI<T> {
 
 	@Override
 	public Object createArray() {
-		return new ArrayList<Object>();
+		return new ArrayList<>();
 	}
 
 	@SuppressWarnings("unchecked")

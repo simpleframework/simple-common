@@ -65,7 +65,6 @@ public class Cleaner {
 
 		final Document clean = Document.createShell(dirtyDocument.baseUri());
 		if (dirtyDocument.body() != null) {
-			// the clean doc will have empty body.
 			copySafeNodes(dirtyDocument.body(), clean.body());
 		}
 
@@ -160,11 +159,11 @@ public class Cleaner {
 				}
 			} else if (source instanceof TextNode) {
 				final TextNode sourceText = (TextNode) source;
-				final TextNode destText = new TextNode(sourceText.getWholeText(), source.baseUri());
+				final TextNode destText = new TextNode(sourceText.getWholeText());
 				destination.appendChild(destText);
 			} else if (source instanceof DataNode && whitelist.isSafeTag(source.parent().nodeName())) {
 				final DataNode sourceData = (DataNode) source;
-				final DataNode destData = new DataNode(sourceData.getWholeData(), source.baseUri());
+				final DataNode destData = new DataNode(sourceData.getWholeData());
 				destination.appendChild(destData);
 			} else { // else, we don't care about comments, xml proc instructions,
 						// etc
@@ -183,8 +182,7 @@ public class Cleaner {
 
 	private int copySafeNodes(final Element source, final Element dest) {
 		final CleaningVisitor cleaningVisitor = new CleaningVisitor(source, dest);
-		final NodeTraversor traversor = new NodeTraversor(cleaningVisitor);
-		traversor.traverse(source);
+		NodeTraversor.traverse(cleaningVisitor, source);
 		return cleaningVisitor.numDiscarded;
 	}
 

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class SimpleTemplateRegistry implements TemplateRegistry {
-	private final Map<String, CompiledTemplate> NAMED_TEMPLATES = new HashMap<String, CompiledTemplate>();
+	private final Map<String, CompiledTemplate> NAMED_TEMPLATES = new HashMap<>();
 
 	@Override
 	public void addNamedTemplate(final String name, final CompiledTemplate template) {

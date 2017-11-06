@@ -372,7 +372,7 @@ public class CompilerTools {
 	 */
 	public static Map<String, Function> extractAllDeclaredFunctions(
 			final CompiledExpression compile) {
-		final Map<String, Function> allFunctions = new LinkedHashMap<String, Function>();
+		final Map<String, Function> allFunctions = new LinkedHashMap<>();
 		final ASTIterator instructions = new ASTLinkedList(compile.getFirstNode());
 
 		ASTNode n;

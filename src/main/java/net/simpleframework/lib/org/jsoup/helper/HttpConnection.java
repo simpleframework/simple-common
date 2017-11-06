@@ -3,7 +3,9 @@ package net.simpleframework.lib.org.jsoup.helper;
 import static net.simpleframework.lib.org.jsoup.Connection.Method.HEAD;
 import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,6 +18,7 @@ import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
@@ -24,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +44,9 @@ import javax.net.ssl.X509TrustManager;
 
 import net.simpleframework.lib.org.jsoup.Connection;
 import net.simpleframework.lib.org.jsoup.HttpStatusException;
+import net.simpleframework.lib.org.jsoup.UncheckedIOException;
 import net.simpleframework.lib.org.jsoup.UnsupportedMimeTypeException;
+import net.simpleframework.lib.org.jsoup.internal.ConstrainableInputStream;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
@@ -66,6 +72,7 @@ public class HttpConnection implements Connection {
 	private static final int HTTP_TEMP_REDIR = 307; // http/1.1 temporary
 																	// redirect, not in Java's
 																	// set.
+	private static final String DefaultUploadType = "application/octet-stream";
 
 	public static Connection connect(final String url) {
 		final Connection con = new HttpConnection();
@@ -95,10 +102,14 @@ public class HttpConnection implements Connection {
 		}
 	}
 
-	private static URL encodeUrl(final URL u) {
+	static URL encodeUrl(final URL u) {
 		try {
 			// odd way to encode urls, but it works!
-			final URI uri = new URI(u.toExternalForm());
+			String urlS = u.toExternalForm(); // URL external form may have spaces
+															// which is illegal in new URL()
+															// (odd asymmetry)
+			urlS = urlS.replaceAll(" ", "%20");
+			final URI uri = new URI(urlS);
 			return new URL(uri.toASCIIString());
 		} catch (final Exception e) {
 			return u;
@@ -214,6 +225,13 @@ public class HttpConnection implements Connection {
 	@Override
 	public Connection data(final String key, final String filename, final InputStream inputStream) {
 		req.data(KeyVal.create(key, filename, inputStream));
+		return this;
+	}
+
+	@Override
+	public Connection data(final String key, final String filename, final InputStream inputStream,
+			final String contentType) {
+		req.data(KeyVal.create(key, filename, inputStream).contentType(contentType));
 		return this;
 	}
 
@@ -354,12 +372,12 @@ public class HttpConnection implements Connection {
 	private static abstract class Base<T extends Connection.Base> implements Connection.Base<T> {
 		URL url;
 		Method method;
-		Map<String, String> headers;
+		Map<String, List<String>> headers;
 		Map<String, String> cookies;
 
 		private Base() {
-			headers = new LinkedHashMap<String, String>();
-			cookies = new LinkedHashMap<String, String>();
+			headers = new LinkedHashMap<>();
+			cookies = new LinkedHashMap<>();
 		}
 
 		@Override
@@ -389,13 +407,34 @@ public class HttpConnection implements Connection {
 		@Override
 		public String header(final String name) {
 			Validate.notNull(name, "Header name must not be null");
-			String val = getHeaderCaseInsensitive(name);
-			if (val != null) {
-				// headers should be ISO8859 - but values are often actually UTF-8.
-				// Test if it looks like UTF8 and convert if so
-				val = fixHeaderEncoding(val);
+			final List<String> vals = getHeadersCaseInsensitive(name);
+			if (vals.size() > 0) {
+				// https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+				return StringUtil.join(vals, ", ");
 			}
-			return val;
+
+			return null;
+		}
+
+		@Override
+		public T addHeader(final String name, String value) {
+			Validate.notEmpty(name);
+			value = value == null ? "" : value;
+
+			List<String> values = headers(name);
+			if (values.isEmpty()) {
+				values = new ArrayList<>();
+				headers.put(name, values);
+			}
+			values.add(fixHeaderEncoding(value));
+
+			return (T) this;
+		}
+
+		@Override
+		public List<String> headers(final String name) {
+			Validate.notEmpty(name);
+			return getHeadersCaseInsensitive(name);
 		}
 
 		private static String fixHeaderEncoding(final String val) {
@@ -451,17 +490,16 @@ public class HttpConnection implements Connection {
 		@Override
 		public T header(final String name, final String value) {
 			Validate.notEmpty(name, "Header name must not be empty");
-			Validate.notNull(value, "Header value must not be null");
 			removeHeader(name); // ensures we don't get an "accept-encoding" and a
 										// "Accept-Encoding"
-			headers.put(name, value);
+			addHeader(name, value);
 			return (T) this;
 		}
 
 		@Override
 		public boolean hasHeader(final String name) {
 			Validate.notEmpty(name, "Header name must not be empty");
-			return getHeaderCaseInsensitive(name) != null;
+			return getHeadersCaseInsensitive(name).size() != 0;
 		}
 
 		/**
@@ -469,16 +507,25 @@ public class HttpConnection implements Connection {
 		 */
 		@Override
 		public boolean hasHeaderWithValue(final String name, final String value) {
-			return hasHeader(name) && header(name).equalsIgnoreCase(value);
+			Validate.notEmpty(name);
+			Validate.notEmpty(value);
+			final List<String> values = headers(name);
+			for (final String candidate : values) {
+				if (value.equalsIgnoreCase(candidate)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@Override
 		public T removeHeader(final String name) {
 			Validate.notEmpty(name, "Header name must not be empty");
-			final Map.Entry<String, String> entry = scanHeaders(name); // remove is
-																							// case
-			// insensitive
-			// too
+			final Map.Entry<String, List<String>> entry = scanHeaders(name); // remove
+																									// is
+																									// case
+																									// insensitive
+																									// too
 			if (entry != null) {
 				headers.remove(entry.getKey()); // ensures correct case
 			}
@@ -487,29 +534,37 @@ public class HttpConnection implements Connection {
 
 		@Override
 		public Map<String, String> headers() {
+			final LinkedHashMap<String, String> map = new LinkedHashMap<>(headers.size());
+			for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
+				final String header = entry.getKey();
+				final List<String> values = entry.getValue();
+				if (values.size() > 0) {
+					map.put(header, values.get(0));
+				}
+			}
+			return map;
+		}
+
+		@Override
+		public Map<String, List<String>> multiHeaders() {
 			return headers;
 		}
 
-		private String getHeaderCaseInsensitive(final String name) {
-			Validate.notNull(name, "Header name must not be null");
-			// quick evals for common case of title case, lower case, then scan for
-			// mixed
-			String value = headers.get(name);
-			if (value == null) {
-				value = headers.get(lowerCase(name));
-			}
-			if (value == null) {
-				final Map.Entry<String, String> entry = scanHeaders(name);
-				if (entry != null) {
-					value = entry.getValue();
+		private List<String> getHeadersCaseInsensitive(final String name) {
+			Validate.notNull(name);
+
+			for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
+				if (name.equalsIgnoreCase(entry.getKey())) {
+					return entry.getValue();
 				}
 			}
-			return value;
+
+			return Collections.emptyList();
 		}
 
-		private Map.Entry<String, String> scanHeaders(final String name) {
+		private Map.Entry<String, List<String>> scanHeaders(final String name) {
 			final String lc = lowerCase(name);
-			for (final Map.Entry<String, String> entry : headers.entrySet()) {
+			for (final Map.Entry<String, List<String>> entry : headers.entrySet()) {
 				if (lowerCase(entry.getKey()).equals(lc)) {
 					return entry;
 				}
@@ -566,14 +621,14 @@ public class HttpConnection implements Connection {
 		private boolean validateTSLCertificates = true;
 		private String postDataCharset = DataUtil.defaultCharset;
 
-		private Request() {
+		Request() {
 			timeoutMilliseconds = 30000; // 30 seconds
 			maxBodySizeBytes = 1024 * 1024; // 1MB
 			followRedirects = true;
-			data = new ArrayList<Connection.KeyVal>();
+			data = new ArrayList<>();
 			method = Method.GET;
-			headers.put("Accept-Encoding", "gzip");
-			headers.put(USER_AGENT, DEFAULT_UA);
+			addHeader("Accept-Encoding", "gzip");
+			addHeader(USER_AGENT, DEFAULT_UA);
 			parser = Parser.htmlParser();
 		}
 
@@ -720,9 +775,11 @@ public class HttpConnection implements Connection {
 		private int statusCode;
 		private String statusMessage;
 		private ByteBuffer byteData;
+		private InputStream bodyStream;
 		private String charset;
 		private String contentType;
 		private boolean executed = false;
+		private boolean inputStreamRead = false;
 		private int numRedirects = 0;
 		private Connection.Request req;
 
@@ -774,6 +831,7 @@ public class HttpConnection implements Connection {
 				mimeBoundary = setOutputContentType(req);
 			}
 
+			final long startTime = System.nanoTime();
 			final HttpURLConnection conn = createConnection(req);
 			Response res;
 			try {
@@ -800,23 +858,20 @@ public class HttpConnection implements Connection {
 
 					String location = res.header(LOCATION);
 					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
-						// broken
-						// Location:
-						// http:/temp/AAG_New/en/index.php
 						location = location.substring(6);
 					}
 					final URL redir = StringUtil.resolve(req.url(), location);
 					req.url(encodeUrl(redir));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
-						// response
-						// cookies
-						// to
-						// request
-						// (for
-						// e.g.
-						// login
-						// posts)
+																													// response
+																													// cookies
+																													// to
+																													// request
+																													// (for
+																													// e.g.
+																													// login
+																													// posts)
 						req.cookie(cookie.getKey(), cookie.getValue());
 					}
 					return execute(req, res);
@@ -872,29 +927,25 @@ public class HttpConnection implements Connection {
 																								// to
 																								// read
 																								// body
-					InputStream bodyStream = null;
-					try {
-						bodyStream = conn.getErrorStream() != null ? conn.getErrorStream()
-								: conn.getInputStream();
-						if (res.hasHeaderWithValue(CONTENT_ENCODING, "gzip")) {
-							bodyStream = new GZIPInputStream(bodyStream);
-						}
-
-						res.byteData = DataUtil.readToByteBuffer(bodyStream, req.maxBodySize());
-					} finally {
-						if (bodyStream != null) {
-							bodyStream.close();
-						}
+					res.bodyStream = null;
+					res.bodyStream = conn.getErrorStream() != null ? conn.getErrorStream()
+							: conn.getInputStream();
+					if (res.hasHeaderWithValue(CONTENT_ENCODING, "gzip")) {
+						res.bodyStream = new GZIPInputStream(res.bodyStream);
 					}
+					res.bodyStream = ConstrainableInputStream
+							.wrap(res.bodyStream, DataUtil.bufferSize, req.maxBodySize())
+							.timeout(startTime, req.timeout());
 				} else {
 					res.byteData = DataUtil.emptyByteBuffer();
 				}
-			} finally {
+			} catch (final IOException e) {
 				// per Java's documentation, this is not necessary, and precludes
 				// keepalives. However in practise,
 				// connection errors will not be released quickly enough and can
 				// cause a too many open files error.
 				conn.disconnect();
+				throw e;
 			}
 
 			res.executed = true;
@@ -931,19 +982,41 @@ public class HttpConnection implements Connection {
 		public Document parse() throws IOException {
 			Validate.isTrue(executed,
 					"Request must be executed (with .execute(), .get(), or .post() before parsing response");
-			final Document doc = DataUtil.parseByteData(byteData, charset, url.toExternalForm(),
+			if (byteData != null) { // bytes have been read in to the buffer, parse
+											// that
+				bodyStream = new ByteArrayInputStream(byteData.array());
+				inputStreamRead = false; // ok to reparse if in bytes
+			}
+			Validate.isFalse(inputStreamRead, "Input stream already read and parsed, cannot re-read.");
+			final Document doc = DataUtil.parseInputStream(bodyStream, charset, url.toExternalForm(),
 					req.parser());
-			byteData.rewind();
 			charset = doc.outputSettings().charset().name(); // update charset from
 																				// meta-equiv,
 																				// possibly
+			inputStreamRead = true;
+			safeClose();
 			return doc;
+		}
+
+		private void prepareByteData() {
+			Validate.isTrue(executed,
+					"Request must be executed (with .execute(), .get(), or .post() before getting response body");
+			if (byteData == null) {
+				Validate.isFalse(inputStreamRead, "Request has already been read (with .parse())");
+				try {
+					byteData = DataUtil.readToByteBuffer(bodyStream, req.maxBodySize());
+				} catch (final IOException e) {
+					throw new UncheckedIOException(e);
+				} finally {
+					inputStreamRead = true;
+					safeClose();
+				}
+			}
 		}
 
 		@Override
 		public String body() {
-			Validate.isTrue(executed,
-					"Request must be executed (with .execute(), .get(), or .post() before getting response body");
+			prepareByteData();
 			// charset gets set from header on execute, and from meta-equiv on
 			// parse. parse may not have happened yet
 			String body;
@@ -952,15 +1025,30 @@ public class HttpConnection implements Connection {
 			} else {
 				body = Charset.forName(charset).decode(byteData).toString();
 			}
-			byteData.rewind();
+			((Buffer) byteData).rewind(); // cast to avoid covariant return type
+													// change in jdk9
 			return body;
 		}
 
 		@Override
 		public byte[] bodyAsBytes() {
+			prepareByteData();
+			return byteData.array();
+		}
+
+		@Override
+		public Connection.Response bufferUp() {
+			prepareByteData();
+			return this;
+		}
+
+		@Override
+		public BufferedInputStream bodyStream() {
 			Validate.isTrue(executed,
 					"Request must be executed (with .execute(), .get(), or .post() before getting response body");
-			return byteData.array();
+			Validate.isFalse(inputStreamRead, "Request has already been read");
+			inputStreamRead = true;
+			return ConstrainableInputStream.wrap(bodyStream, DataUtil.bufferSize, req.maxBodySize());
 		}
 
 		// set up connection defaults, and details from request
@@ -973,7 +1061,9 @@ public class HttpConnection implements Connection {
 			conn.setInstanceFollowRedirects(false); // don't rely on native
 																	// redirection support
 			conn.setConnectTimeout(req.timeout());
-			conn.setReadTimeout(req.timeout());
+			conn.setReadTimeout(req.timeout() / 2); // gets reduced after
+																	// connection is made and
+																	// status is read
 
 			if (conn instanceof HttpsURLConnection) {
 				if (!req.validateTLSCertificates()) {
@@ -989,10 +1079,27 @@ public class HttpConnection implements Connection {
 			if (req.cookies().size() > 0) {
 				conn.addRequestProperty("Cookie", getRequestCookieString(req));
 			}
-			for (final Map.Entry<String, String> header : req.headers().entrySet()) {
-				conn.addRequestProperty(header.getKey(), header.getValue());
+			for (final Map.Entry<String, List<String>> header : req.multiHeaders().entrySet()) {
+				for (final String value : header.getValue()) {
+					conn.addRequestProperty(header.getKey(), value);
+				}
 			}
 			return conn;
+		}
+
+		/**
+		 * Call on completion of stream read, to close the body (or error) stream
+		 */
+		private void safeClose() {
+			if (bodyStream != null) {
+				try {
+					bodyStream.close();
+				} catch (final IOException e) {
+					// no-op
+				} finally {
+					bodyStream = null;
+				}
+			}
 		}
 
 		/**
@@ -1020,6 +1127,7 @@ public class HttpConnection implements Connection {
 		 * instantiated.
 		 *
 		 * @throws IOException
+		 *         on SSL init errors
 		 */
 		private static synchronized void initUnSecureTSL() throws IOException {
 			if (sslSocketFactory == null) {
@@ -1049,9 +1157,7 @@ public class HttpConnection implements Connection {
 					sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 					// Create an ssl socket factory with our all-trusting manager
 					sslSocketFactory = sslContext.getSocketFactory();
-				} catch (final NoSuchAlgorithmException e) {
-					throw new IOException("Can't create unsecure trust manager");
-				} catch (final KeyManagementException e) {
+				} catch (NoSuchAlgorithmException | KeyManagementException e) {
 					throw new IOException("Can't create unsecure trust manager");
 				}
 			}
@@ -1085,7 +1191,7 @@ public class HttpConnection implements Connection {
 				final HttpURLConnection conn) {
 			// the default sun impl of conn.getHeaderFields() returns header values
 			// out of order
-			final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<String, List<String>>();
+			final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<>();
 			int i = 0;
 			while (true) {
 				final String key = conn.getHeaderFieldKey(i);
@@ -1101,7 +1207,7 @@ public class HttpConnection implements Connection {
 				if (headers.containsKey(key)) {
 					headers.get(key).add(val);
 				} else {
-					final ArrayList<String> vals = new ArrayList<String>();
+					final ArrayList<String> vals = new ArrayList<>();
 					vals.add(val);
 					headers.put(key, vals);
 				}
@@ -1132,21 +1238,9 @@ public class HttpConnection implements Connection {
 							cookie(cookieName, cookieVal);
 						}
 					}
-				} else { // combine same header names with comma:
-							// http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
-					if (values.size() == 1) {
-						header(name, values.get(0));
-					} else if (values.size() > 1) {
-						final StringBuilder accum = new StringBuilder();
-						for (int i = 0; i < values.size(); i++) {
-							final String val = values.get(i);
-							if (i != 0) {
-								accum.append(", ");
-							}
-							accum.append(val);
-						}
-						header(name, accum.toString());
-					}
+				}
+				for (final String value : values) {
+					addHeader(name, value);
 				}
 			}
 		}
@@ -1185,7 +1279,9 @@ public class HttpConnection implements Connection {
 					if (keyVal.hasInputStream()) {
 						w.write("; filename=\"");
 						w.write(encodeMimeName(keyVal.value()));
-						w.write("\"\r\nContent-Type: application/octet-stream\r\n\r\n");
+						w.write("\"\r\nContent-Type: ");
+						w.write(keyVal.contentType() != null ? keyVal.contentType() : DefaultUploadType);
+						w.write("\r\n\r\n");
 						w.flush(); // flush
 						DataUtil.crossStreams(keyVal.inputStream(), outputStream);
 						outputStream.flush();
@@ -1220,7 +1316,7 @@ public class HttpConnection implements Connection {
 		}
 
 		private static String getRequestCookieString(final Connection.Request req) {
-			final StringBuilder sb = new StringBuilder();
+			final StringBuilder sb = StringUtil.stringBuilder();
 			boolean first = true;
 			for (final Map.Entry<String, String> cookie : req.cookies().entrySet()) {
 				if (!first) {
@@ -1238,7 +1334,7 @@ public class HttpConnection implements Connection {
 		// for get url reqs, serialise the data map into the url
 		private static void serialiseRequestUrl(final Connection.Request req) throws IOException {
 			final URL in = req.url();
-			final StringBuilder url = new StringBuilder();
+			final StringBuilder url = StringUtil.stringBuilder();
 			boolean first = true;
 			// reconstitute the query, ready for appends
 			url.append(in.getProtocol()).append("://").append(in.getAuthority()) // includes
@@ -1282,6 +1378,7 @@ public class HttpConnection implements Connection {
 		private String key;
 		private String value;
 		private InputStream stream;
+		private String contentType;
 
 		public static KeyVal create(final String key, final String value) {
 			return new KeyVal().key(key).value(value);
@@ -1334,6 +1431,18 @@ public class HttpConnection implements Connection {
 		@Override
 		public boolean hasInputStream() {
 			return stream != null;
+		}
+
+		@Override
+		public Connection.KeyVal contentType(final String contentType) {
+			Validate.notEmpty(contentType);
+			this.contentType = contentType;
+			return this;
+		}
+
+		@Override
+		public String contentType() {
+			return contentType;
 		}
 
 		@Override

@@ -33,7 +33,7 @@ public class DebuggerContext {
 	private int debuggerState = 0;
 
 	public DebuggerContext() {
-		breakpoints = new HashMap<String, Set<Integer>>();
+		breakpoints = new HashMap<>();
 	}
 
 	public Map<String, Set<Integer>> getBreakpoints() {

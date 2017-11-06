@@ -32,7 +32,7 @@ public abstract class BeanUtils {
 
 	private static Map<Class<?>, BeanWrapper> wrapperCache;
 	static {
-		wrapperCache = new ConcurrentHashMap<Class<?>, BeanWrapper>();
+		wrapperCache = new ConcurrentHashMap<>();
 	}
 
 	private static BeanWrapper getBeanWrapper(final Class<?> beanClass) {
@@ -57,7 +57,7 @@ public abstract class BeanUtils {
 		}
 
 		final Set<String> keys = wrapper.beanMap.keySet();
-		wrapper.properties = new HashMap<String, PropertyWrapper>();
+		wrapper.properties = new HashMap<>();
 		for (final PropertyDescriptor pd : arr) {
 			final String name = pd.getName();
 			if (!keys.contains(name)) {

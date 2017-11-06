@@ -1,19 +1,18 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
-import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
-import net.simpleframework.lib.org.jsoup.helper.ChangeNotifyingArrayList;
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
+import net.simpleframework.lib.org.jsoup.select.NodeFilter;
 import net.simpleframework.lib.org.jsoup.select.NodeTraversor;
 import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
 
@@ -24,41 +23,15 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public abstract class Node implements Cloneable {
-	private static final List<Node> EMPTY_NODES = Collections.emptyList();
+	static final String EmptyString = "";
 	Node parentNode;
-	List<Node> childNodes;
-	Attributes attributes;
-	String baseUri;
 	int siblingIndex;
-
-	/**
-	 * Create a new Node.
-	 * 
-	 * @param baseUri
-	 *        base URI
-	 * @param attributes
-	 *        attributes (not null, but may be empty)
-	 */
-	protected Node(final String baseUri, final Attributes attributes) {
-		Validate.notNull(baseUri);
-		Validate.notNull(attributes);
-
-		childNodes = EMPTY_NODES;
-		this.baseUri = baseUri.trim();
-		this.attributes = attributes;
-	}
-
-	protected Node(final String baseUri) {
-		this(baseUri, new Attributes());
-	}
 
 	/**
 	 * Default constructor. Doesn't setup base uri, children, or attributes; use
 	 * with caution.
 	 */
 	protected Node() {
-		childNodes = EMPTY_NODES;
-		attributes = null;
 	}
 
 	/**
@@ -70,6 +43,15 @@ public abstract class Node implements Cloneable {
 	public abstract String nodeName();
 
 	/**
+	 * Check if this Node has an actual Attributes object.
+	 */
+	protected abstract boolean hasAttributes();
+
+	public boolean hasParent() {
+		return parentNode != null;
+	}
+
+	/**
 	 * Get an attribute's value by its key. <b>Case insensitive</b>
 	 * <p>
 	 * To get an absolute URL from an attribute that may be a relative URL,
@@ -78,7 +60,7 @@ public abstract class Node implements Cloneable {
 	 * </p>
 	 * E.g.:
 	 * <blockquote><code>String url = a.attr("abs:href");</code></blockquote>
-	 * 
+	 *
 	 * @param attributeKey
 	 *        The attribute key.
 	 * @return The attribute, or empty string if not present (to avoid nulls).
@@ -88,11 +70,14 @@ public abstract class Node implements Cloneable {
 	 */
 	public String attr(final String attributeKey) {
 		Validate.notNull(attributeKey);
+		if (!hasAttributes()) {
+			return EmptyString;
+		}
 
-		final String val = attributes.getIgnoreCase(attributeKey);
+		final String val = attributes().getIgnoreCase(attributeKey);
 		if (val.length() > 0) {
 			return val;
-		} else if (lowerCase(attributeKey).startsWith("abs:")) {
+		} else if (attributeKey.startsWith("abs:")) {
 			return absUrl(attributeKey.substring("abs:".length()));
 		} else {
 			return "";
@@ -105,13 +90,12 @@ public abstract class Node implements Cloneable {
 	 * @return attributes (which implements iterable, in same order as presented
 	 *         in original HTML).
 	 */
-	public Attributes attributes() {
-		return attributes;
-	}
+	public abstract Attributes attributes();
 
 	/**
 	 * Set an attribute (key=value). If the attribute already exists, it is
-	 * replaced.
+	 * replaced. The attribute key comparison is
+	 * <b>case insensitive</b>.
 	 * 
 	 * @param attributeKey
 	 *        The attribute key.
@@ -120,7 +104,7 @@ public abstract class Node implements Cloneable {
 	 * @return this (for chaining)
 	 */
 	public Node attr(final String attributeKey, final String attributeValue) {
-		attributes.put(attributeKey, attributeValue);
+		attributes().putIgnoreCase(attributeKey, attributeValue);
 		return this;
 	}
 
@@ -136,11 +120,11 @@ public abstract class Node implements Cloneable {
 
 		if (attributeKey.startsWith("abs:")) {
 			final String key = attributeKey.substring("abs:".length());
-			if (attributes.hasKeyIgnoreCase(key) && !absUrl(key).equals("")) {
+			if (attributes().hasKeyIgnoreCase(key) && !absUrl(key).equals("")) {
 				return true;
 			}
 		}
-		return attributes.hasKeyIgnoreCase(attributeKey);
+		return attributes().hasKeyIgnoreCase(attributeKey);
 	}
 
 	/**
@@ -152,7 +136,7 @@ public abstract class Node implements Cloneable {
 	 */
 	public Node removeAttr(final String attributeKey) {
 		Validate.notNull(attributeKey);
-		attributes.removeIgnoreCase(attributeKey);
+		attributes().removeIgnoreCase(attributeKey);
 		return this;
 	}
 
@@ -162,7 +146,7 @@ public abstract class Node implements Cloneable {
 	 * @return this, for chaining
 	 */
 	public Node clearAttributes() {
-		final Iterator<Attribute> it = attributes.iterator();
+		final Iterator<Attribute> it = attributes().iterator();
 		while (it.hasNext()) {
 			it.next();
 			it.remove();
@@ -175,9 +159,16 @@ public abstract class Node implements Cloneable {
 	 * 
 	 * @return base URI
 	 */
-	public String baseUri() {
-		return baseUri;
-	}
+	public abstract String baseUri();
+
+	/**
+	 * Set the baseUri for just this node (not its descendants), if this Node
+	 * tracks base URIs.
+	 * 
+	 * @param baseUri
+	 *        new URI
+	 */
+	protected abstract void doSetBaseUri(String baseUri);
 
 	/**
 	 * Update the base URI of this node and all of its descendants.
@@ -191,7 +182,7 @@ public abstract class Node implements Cloneable {
 		traverse(new NodeVisitor() {
 			@Override
 			public void head(final Node node, final int depth) {
-				node.baseUri = baseUri;
+				node.doSetBaseUri(baseUri);
 			}
 
 			@Override
@@ -221,7 +212,7 @@ public abstract class Node implements Cloneable {
 	 * <code>abs:</code> prefix, e.g.:
 	 * <code>String absUrl = linkEl.attr("abs:href");</code>
 	 * </p>
-	 * 
+	 *
 	 * @param attributeKey
 	 *        The attribute key
 	 * @return An absolute URL if one could be made, or an empty string (not
@@ -236,9 +227,11 @@ public abstract class Node implements Cloneable {
 		if (!hasAttr(attributeKey)) {
 			return ""; // nothing to make absolute with
 		} else {
-			return StringUtil.resolve(baseUri, attr(attributeKey));
+			return StringUtil.resolve(baseUri(), attr(attributeKey));
 		}
 	}
+
+	protected abstract List<Node> ensureChildNodes();
 
 	/**
 	 * Get a child node by its 0-based index.
@@ -249,7 +242,7 @@ public abstract class Node implements Cloneable {
 	 *         {@code IndexOutOfBoundsException} if the index is out of bounds.
 	 */
 	public Node childNode(final int index) {
-		return childNodes.get(index);
+		return ensureChildNodes().get(index);
 	}
 
 	/**
@@ -260,7 +253,7 @@ public abstract class Node implements Cloneable {
 	 * @return list of children. If no children, returns an empty list.
 	 */
 	public List<Node> childNodes() {
-		return Collections.unmodifiableList(childNodes);
+		return Collections.unmodifiableList(ensureChildNodes());
 	}
 
 	/**
@@ -271,8 +264,9 @@ public abstract class Node implements Cloneable {
 	 * @return a deep copy of this node's children
 	 */
 	public List<Node> childNodesCopy() {
-		final List<Node> children = new ArrayList<Node>(childNodes.size());
-		for (final Node node : childNodes) {
+		final List<Node> nodes = ensureChildNodes();
+		final ArrayList<Node> children = new ArrayList<>(nodes.size());
+		for (final Node node : nodes) {
 			children.add(node.clone());
 		}
 		return children;
@@ -283,12 +277,10 @@ public abstract class Node implements Cloneable {
 	 * 
 	 * @return the number of child nodes that this node holds.
 	 */
-	public final int childNodeSize() {
-		return childNodes.size();
-	}
+	public abstract int childNodeSize();
 
 	protected Node[] childNodesAsArray() {
-		return childNodes.toArray(new Node[childNodeSize()]);
+		return ensureChildNodes().toArray(new Node[childNodeSize()]);
 	}
 
 	/**
@@ -430,7 +422,6 @@ public abstract class Node implements Cloneable {
 		final List<Node> wrapChildren = Parser.parseFragment(html, context, baseUri());
 		final Node wrapNode = wrapChildren.get(0);
 		if (wrapNode == null || !(wrapNode instanceof Element)) {
-			// with; noop
 			return null;
 		}
 
@@ -442,6 +433,8 @@ public abstract class Node implements Cloneable {
 		// remainder (unbalanced wrap, like <div></div><p></p> -- The <p> is
 		// remainder
 		if (wrapChildren.size() > 0) {
+			// noinspection ForLoopReplaceableByForEach (beacause it allocates an
+			// Iterator which is wasteful here)
 			for (int i = 0; i < wrapChildren.size(); i++) {
 				final Node remainder = wrapChildren.get(i);
 				remainder.parentNode.removeChild(remainder);
@@ -467,7 +460,7 @@ public abstract class Node implements Cloneable {
 	 * {@code <div>One Two <b>Three</b></div>}
 	 * </p>
 	 * and the {@code "Two "} {@link TextNode} being returned.
-	 * 
+	 *
 	 * @return the first child of this node, after the node has been unwrapped.
 	 *         Null if the node had no children.
 	 * @see #remove()
@@ -475,7 +468,7 @@ public abstract class Node implements Cloneable {
 	 */
 	public Node unwrap() {
 		Validate.notNull(parentNode);
-
+		final List<Node> childNodes = ensureChildNodes();
 		final Node firstChild = childNodes.size() > 0 ? childNodes.get(0) : null;
 		parentNode.addChildren(siblingIndex, this.childNodesAsArray());
 		this.remove();
@@ -524,7 +517,7 @@ public abstract class Node implements Cloneable {
 		}
 
 		final int index = out.siblingIndex;
-		childNodes.set(index, in);
+		ensureChildNodes().set(index, in);
 		in.parentNode = this;
 		in.setSiblingIndex(index);
 		out.parentNode = null;
@@ -533,7 +526,7 @@ public abstract class Node implements Cloneable {
 	protected void removeChild(final Node out) {
 		Validate.isTrue(out.parentNode == this);
 		final int index = out.siblingIndex;
-		childNodes.remove(index);
+		ensureChildNodes().remove(index);
 		reindexChildren(index);
 		out.parentNode = null;
 	}
@@ -541,39 +534,33 @@ public abstract class Node implements Cloneable {
 	protected void addChildren(final Node... children) {
 		// most used. short circuit addChildren(int), which hits reindex children
 		// and array copy
+		final List<Node> nodes = ensureChildNodes();
+
 		for (final Node child : children) {
 			reparentChild(child);
-			ensureChildNodes();
-			childNodes.add(child);
-			child.setSiblingIndex(childNodes.size() - 1);
+			nodes.add(child);
+			child.setSiblingIndex(nodes.size() - 1);
 		}
 	}
 
 	protected void addChildren(final int index, final Node... children) {
 		Validate.noNullElements(children);
-		ensureChildNodes();
-		for (int i = children.length - 1; i >= 0; i--) {
-			final Node in = children[i];
-			reparentChild(in);
-			childNodes.add(index, in);
-			reindexChildren(index);
-		}
-	}
+		final List<Node> nodes = ensureChildNodes();
 
-	protected void ensureChildNodes() {
-		if (childNodes == EMPTY_NODES) {
-			childNodes = new NodeList(4);
+		for (final Node child : children) {
+			reparentChild(child);
 		}
+		nodes.addAll(index, Arrays.asList(children));
+		reindexChildren(index);
 	}
 
 	protected void reparentChild(final Node child) {
-		if (child.parentNode != null) {
-			child.parentNode.removeChild(child);
-		}
 		child.setParentNode(this);
 	}
 
 	private void reindexChildren(final int start) {
+		final List<Node> childNodes = ensureChildNodes();
+
 		for (int i = start; i < childNodes.size(); i++) {
 			childNodes.get(i).setSiblingIndex(i);
 		}
@@ -591,8 +578,8 @@ public abstract class Node implements Cloneable {
 			return Collections.emptyList();
 		}
 
-		final List<Node> nodes = parentNode.childNodes;
-		final List<Node> siblings = new ArrayList<Node>(nodes.size() - 1);
+		final List<Node> nodes = parentNode.ensureChildNodes();
+		final List<Node> siblings = new ArrayList<>(nodes.size() - 1);
 		for (final Node node : nodes) {
 			if (node != this) {
 				siblings.add(node);
@@ -611,7 +598,7 @@ public abstract class Node implements Cloneable {
 			return null; // root
 		}
 
-		final List<Node> siblings = parentNode.childNodes;
+		final List<Node> siblings = parentNode.ensureChildNodes();
 		final int index = siblingIndex + 1;
 		if (siblings.size() > index) {
 			return siblings.get(index);
@@ -631,7 +618,7 @@ public abstract class Node implements Cloneable {
 		}
 
 		if (siblingIndex > 0) {
-			return parentNode.childNodes.get(siblingIndex - 1);
+			return parentNode.ensureChildNodes().get(siblingIndex - 1);
 		} else {
 			return null;
 		}
@@ -662,8 +649,20 @@ public abstract class Node implements Cloneable {
 	 */
 	public Node traverse(final NodeVisitor nodeVisitor) {
 		Validate.notNull(nodeVisitor);
-		final NodeTraversor traversor = new NodeTraversor(nodeVisitor);
-		traversor.traverse(this);
+		NodeTraversor.traverse(nodeVisitor, this);
+		return this;
+	}
+
+	/**
+	 * Perform a depth-first filtering through this node and its descendants.
+	 * 
+	 * @param nodeFilter
+	 *        the filter callbacks to perform on each node
+	 * @return this node, for chaining
+	 */
+	public Node filter(final NodeFilter nodeFilter) {
+		Validate.notNull(nodeFilter);
+		NodeTraversor.filter(nodeFilter, this);
 		return this;
 	}
 
@@ -679,7 +678,7 @@ public abstract class Node implements Cloneable {
 	}
 
 	protected void outerHtml(final Appendable accum) {
-		new NodeTraversor(new OuterHtmlVisitor(accum, getOutputSettings())).traverse(this);
+		NodeTraversor.traverse(new OuterHtmlVisitor(accum, getOutputSettings()), this);
 	}
 
 	// if this node has no document (or parent), retrieve the default output
@@ -697,10 +696,10 @@ public abstract class Node implements Cloneable {
 	 * @throws IOException
 	 *         if appending to the given accumulator fails.
 	 */
-	abstract void outerHtmlHead(Appendable accum, int depth, Document.OutputSettings out)
+	abstract void outerHtmlHead(final Appendable accum, int depth, final Document.OutputSettings out)
 			throws IOException;
 
-	abstract void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out)
+	abstract void outerHtmlTail(final Appendable accum, int depth, final Document.OutputSettings out)
 			throws IOException;
 
 	/**
@@ -722,7 +721,7 @@ public abstract class Node implements Cloneable {
 
 	protected void indent(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
-		accum.append("\n").append(StringUtil.padding(depth * out.indentAmount()));
+		accum.append('\n').append(StringUtil.padding(depth * out.indentAmount()));
 	}
 
 	/**
@@ -771,27 +770,42 @@ public abstract class Node implements Cloneable {
 	 * The cloned node may be adopted into another Document or node structure
 	 * using {@link Element#appendChild(Node)}.
 	 * 
-	 * @return stand-alone cloned node
+	 * @return a stand-alone cloned node, including clones of any children
+	 * @see #shallowClone()
 	 */
 	@Override
 	public Node clone() {
 		final Node thisClone = doClone(null); // splits for orphan
 
 		// Queue up nodes that need their children cloned (BFS).
-		final LinkedList<Node> nodesToProcess = new LinkedList<Node>();
+		final LinkedList<Node> nodesToProcess = new LinkedList<>();
 		nodesToProcess.add(thisClone);
 
 		while (!nodesToProcess.isEmpty()) {
 			final Node currParent = nodesToProcess.remove();
 
-			for (int i = 0; i < currParent.childNodes.size(); i++) {
-				final Node childClone = currParent.childNodes.get(i).doClone(currParent);
-				currParent.childNodes.set(i, childClone);
+			final int size = currParent.childNodeSize();
+			for (int i = 0; i < size; i++) {
+				final List<Node> childNodes = currParent.ensureChildNodes();
+				final Node childClone = childNodes.get(i).doClone(currParent);
+				childNodes.set(i, childClone);
 				nodesToProcess.add(childClone);
 			}
 		}
 
 		return thisClone;
+	}
+
+	/**
+	 * Create a stand-alone, shallow copy of this node. None of its children (if
+	 * any) will be cloned, and it will have
+	 * no parent or sibling nodes.
+	 * 
+	 * @return a single independent copy of this node
+	 * @see #clone()
+	 */
+	public Node shallowClone() {
+		return doClone(null);
 	}
 
 	/*
@@ -809,13 +823,6 @@ public abstract class Node implements Cloneable {
 
 		clone.parentNode = parent; // can be null, to create an orphan split
 		clone.siblingIndex = parent == null ? 0 : siblingIndex;
-		clone.attributes = attributes != null ? attributes.clone() : null;
-		clone.baseUri = baseUri;
-		clone.childNodes = new NodeList(childNodes.size());
-
-		for (final Node child : childNodes) {
-			clone.childNodes.add(child);
-		}
 
 		return clone;
 	}
@@ -827,6 +834,7 @@ public abstract class Node implements Cloneable {
 		OuterHtmlVisitor(final Appendable accum, final Document.OutputSettings out) {
 			this.accum = accum;
 			this.out = out;
+			out.prepareEncoder();
 		}
 
 		@Override
@@ -847,17 +855,6 @@ public abstract class Node implements Cloneable {
 					throw new SerializationException(exception);
 				}
 			}
-		}
-	}
-
-	private final class NodeList extends ChangeNotifyingArrayList<Node> {
-		NodeList(final int initialCapacity) {
-			super(initialCapacity);
-		}
-
-		@Override
-		public void onContentsChanged() {
-			nodelistChanged();
 		}
 	}
 }

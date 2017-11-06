@@ -17,14 +17,14 @@ public class GlobalListenerFactory {
 
 	public static boolean registerGetListener(final Listener getListener) {
 		if (propertyGetListeners == null) {
-			propertyGetListeners = new LinkedList<Listener>();
+			propertyGetListeners = new LinkedList<>();
 		}
 		return propertyGetListeners.add(getListener);
 	}
 
 	public static boolean registerSetListener(final Listener getListener) {
 		if (propertySetListeners == null) {
-			propertySetListeners = new LinkedList<Listener>();
+			propertySetListeners = new LinkedList<>();
 		}
 		return propertySetListeners.add(getListener);
 	}

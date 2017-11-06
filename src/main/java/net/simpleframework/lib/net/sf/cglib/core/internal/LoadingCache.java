@@ -21,7 +21,7 @@ public class LoadingCache<K, KK, V> {
 	public LoadingCache(final Function<K, KK> keyMapper, final Function<K, V> loader) {
 		this.keyMapper = keyMapper;
 		this.loader = loader;
-		this.map = new ConcurrentHashMap<KK, Object>();
+		this.map = new ConcurrentHashMap<>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,7 +59,7 @@ public class LoadingCache<K, KK, V> {
 			// Another thread is already loading an instance
 			task = (FutureTask<V>) v;
 		} else {
-			task = new FutureTask<V>(new Callable<V>() {
+			task = new FutureTask<>(new Callable<V>() {
 				@Override
 				public V call() throws Exception {
 					return loader.apply(key);

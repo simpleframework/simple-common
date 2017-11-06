@@ -36,7 +36,7 @@ public abstract class ObjectEx {
 
 	private Map<String, Object> _getAttributes() {
 		if (_attributes == null) {
-			_attributes = new ConcurrentHashMap<String, Object>();
+			_attributes = new ConcurrentHashMap<>();
 		}
 		return _attributes;
 	}
@@ -63,7 +63,7 @@ public abstract class ObjectEx {
 	}
 
 	public Enumeration<String> attrNames() {
-		return new Vector<String>(_getAttributes().keySet()).elements();
+		return new Vector<>(_getAttributes().keySet()).elements();
 	}
 
 	public int attrSize() {

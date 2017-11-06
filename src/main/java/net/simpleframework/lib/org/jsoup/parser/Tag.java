@@ -11,10 +11,8 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public class Tag {
-	private static final Map<String, Tag> tags = new HashMap<String, Tag>(); // map
-																										// of
-																										// known
-																										// tags
+	private static final Map<String, Tag> tags = new HashMap<>(); // map of known
+																						// tags
 
 	private final String tagName;
 	private boolean isBlock = true; // block or inline

@@ -49,7 +49,7 @@ public class ObjectFactory {
 
 	private final Map<Class<?>, Object> singletonCache;
 	{
-		singletonCache = new ConcurrentHashMap<Class<?>, Object>();
+		singletonCache = new ConcurrentHashMap<>();
 	}
 
 	private IObjectCreator _creator;
@@ -59,7 +59,7 @@ public class ObjectFactory {
 		return this;
 	}
 
-	private final Set<IObjectCreatorListener> listenerSet = new HashSet<IObjectCreatorListener>();
+	private final Set<IObjectCreatorListener> listenerSet = new HashSet<>();
 
 	public ObjectFactory addListener(final IObjectCreatorListener listener) {
 		listenerSet.add(listener);

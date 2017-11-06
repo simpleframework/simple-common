@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 public class ConvertDate {
-	static TreeMap<String, Integer> monthsTable = new TreeMap<String, Integer>(new StringCmpNS()); // StringCmpNS.COMP
-	static TreeMap<String, Integer> daysTable = new TreeMap<String, Integer>(new StringCmpNS()); // StringCmpNS.COMP
-	private static HashSet<String> voidData = new HashSet<String>();
+	static TreeMap<String, Integer> monthsTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+	static TreeMap<String, Integer> daysTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+	private static HashSet<String> voidData = new HashSet<>();
 
 	public static class StringCmpNS implements Comparator<String> {
 		@Override

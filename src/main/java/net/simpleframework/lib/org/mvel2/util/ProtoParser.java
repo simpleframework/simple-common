@@ -36,7 +36,7 @@ public class ProtoParser {
 
 	private final ExecutionStack splitAccumulator;
 
-	private static ThreadLocal<Queue<DeferredTypeResolve>> deferred = new ThreadLocal<Queue<DeferredTypeResolve>>();
+	private static ThreadLocal<Queue<DeferredTypeResolve>> deferred = new ThreadLocal<>();
 
 	public ProtoParser(final char[] expr, final int offset, final int offsetEnd,
 			final String protoName, final ParserContext pCtx, final int fields,
@@ -224,7 +224,7 @@ public class ProtoParser {
 			final String initializer) {
 		Queue<DeferredTypeResolve> recv = deferred.get();
 		if (recv == null) {
-			deferred.set(recv = new LinkedList<DeferredTypeResolve>());
+			deferred.set(recv = new LinkedList<>());
 		}
 
 		recv.add(new DeferredTypeResolve() {
@@ -248,7 +248,7 @@ public class ProtoParser {
 	public static void notifyForLateResolution(final Proto proto) {
 		if (deferred.get() != null) {
 			final Queue<DeferredTypeResolve> recv = deferred.get();
-			final Set<DeferredTypeResolve> remove = new HashSet<DeferredTypeResolve>();
+			final Set<DeferredTypeResolve> remove = new HashSet<>();
 			for (final DeferredTypeResolve r : recv) {
 				if (r.isWaitingFor(proto)) {
 					remove.add(r);

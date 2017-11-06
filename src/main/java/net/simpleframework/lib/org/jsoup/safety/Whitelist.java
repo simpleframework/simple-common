@@ -72,22 +72,23 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  */
 public class Whitelist {
 	private final Set<TagName> tagNames; // tags allowed, lower case. e.g. [p,
-														// br,
-	// span]
+														// br, span]
 	private final Map<TagName, Set<AttributeKey>> attributes; // tag ->
 																					// attribute[].
-	// allowed attributes
-	// [href] for a tag.
+																					// allowed
+																					// attributes
+																					// [href] for a
+																					// tag.
 	private final Map<TagName, Map<AttributeKey, AttributeValue>> enforcedAttributes; // always
-	// set
-	// these
-	// attribute
-	// values
+																													// set
+																													// these
+																													// attribute
+																													// values
 	private final Map<TagName, Map<AttributeKey, Set<Protocol>>> protocols; // allowed
-	// URL
-	// protocols
-	// for
-	// attributes
+																									// URL
+																									// protocols
+																									// for
+																									// attributes
 	private boolean preserveRelativeLinks; // option to preserve relative links
 
 	/**
@@ -201,10 +202,10 @@ public class Whitelist {
 	 * @see #relaxed()
 	 */
 	public Whitelist() {
-		tagNames = new HashSet<TagName>();
-		attributes = new HashMap<TagName, Set<AttributeKey>>();
-		enforcedAttributes = new HashMap<TagName, Map<AttributeKey, AttributeValue>>();
-		protocols = new HashMap<TagName, Map<AttributeKey, Set<Protocol>>>();
+		tagNames = new HashSet<>();
+		attributes = new HashMap<>();
+		enforcedAttributes = new HashMap<>();
+		protocols = new HashMap<>();
 		preserveRelativeLinks = false;
 	}
 
@@ -281,7 +282,7 @@ public class Whitelist {
 		if (!tagNames.contains(tagName)) {
 			tagNames.add(tagName);
 		}
-		final Set<AttributeKey> attributeSet = new HashSet<AttributeKey>();
+		final Set<AttributeKey> attributeSet = new HashSet<>();
 		for (final String key : attributes) {
 			Validate.notEmpty(key);
 			attributeSet.add(AttributeKey.valueOf(key));
@@ -321,7 +322,7 @@ public class Whitelist {
 		Validate.isTrue(attributes.length > 0, "No attribute names supplied.");
 
 		final TagName tagName = TagName.valueOf(tag);
-		final Set<AttributeKey> attributeSet = new HashSet<AttributeKey>();
+		final Set<AttributeKey> attributeSet = new HashSet<>();
 		for (final String key : attributes) {
 			Validate.notEmpty(key);
 			attributeSet.add(AttributeKey.valueOf(key));
@@ -338,18 +339,15 @@ public class Whitelist {
 			currentSet.removeAll(attributeSet);
 
 			if (currentSet.isEmpty()) {
-				// attributes are allowed for tag
 				this.attributes.remove(tagName);
 			}
 		}
 		if (tag.equals(":all")) {
-			// individually set tags
 			for (final TagName name : this.attributes.keySet()) {
 				final Set<AttributeKey> currentSet = this.attributes.get(name);
 				currentSet.removeAll(attributeSet);
 
 				if (currentSet.isEmpty()) {
-					// attributes are allowed for tag
 					this.attributes.remove(name);
 				}
 			}
@@ -392,7 +390,7 @@ public class Whitelist {
 		if (enforcedAttributes.containsKey(tagName)) {
 			enforcedAttributes.get(tagName).put(attrKey, attrVal);
 		} else {
-			final Map<AttributeKey, AttributeValue> attrMap = new HashMap<AttributeKey, AttributeValue>();
+			final Map<AttributeKey, AttributeValue> attrMap = new HashMap<>();
 			attrMap.put(attrKey, attrVal);
 			enforcedAttributes.put(tagName, attrMap);
 		}
@@ -419,7 +417,6 @@ public class Whitelist {
 			attrMap.remove(attrKey);
 
 			if (attrMap.isEmpty()) {
-				// enforced attributes are present
 				enforcedAttributes.remove(tagName);
 			}
 		}
@@ -488,13 +485,13 @@ public class Whitelist {
 		if (this.protocols.containsKey(tagName)) {
 			attrMap = this.protocols.get(tagName);
 		} else {
-			attrMap = new HashMap<AttributeKey, Set<Protocol>>();
+			attrMap = new HashMap<>();
 			this.protocols.put(tagName, attrMap);
 		}
 		if (attrMap.containsKey(attrKey)) {
 			protSet = attrMap.get(attrKey);
 		} else {
-			protSet = new HashSet<Protocol>();
+			protSet = new HashSet<>();
 			attrMap.put(attrKey, protSet);
 		}
 		for (final String protocol : protocols) {
@@ -609,8 +606,8 @@ public class Whitelist {
 		String value = el.absUrl(attr.getKey());
 		if (value.length() == 0) {
 			value = attr.getValue(); // if it could not be made abs, run as-is to
+												// allow custom unknown protocols
 		}
-		// allow custom unknown protocols
 		if (!preserveRelativeLinks) {
 			attr.setValue(value);
 		}

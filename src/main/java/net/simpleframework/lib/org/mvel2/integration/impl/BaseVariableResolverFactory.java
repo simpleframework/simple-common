@@ -33,7 +33,7 @@ import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
  * for the vast majority of integration needs.
  */
 public abstract class BaseVariableResolverFactory implements VariableResolverFactory {
-	protected Map<String, VariableResolver> variableResolvers = new HashMap<String, VariableResolver>();
+	protected Map<String, VariableResolver> variableResolvers = new HashMap<>();
 	protected VariableResolverFactory nextFactory;
 
 	protected int indexOffset = 0;
@@ -92,10 +92,10 @@ public abstract class BaseVariableResolverFactory implements VariableResolverFac
 	@Override
 	public Set<String> getKnownVariables() {
 		if (nextFactory == null) {
-			return new HashSet<String>(variableResolvers.keySet());
+			return new HashSet<>(variableResolvers.keySet());
 			// return new HashSet<String>(0);
 		} else {
-			final HashSet<String> vars = new HashSet<String>(variableResolvers.keySet());
+			final HashSet<String> vars = new HashSet<>(variableResolvers.keySet());
 			vars.addAll(nextFactory.getKnownVariables());
 			return vars;
 		}

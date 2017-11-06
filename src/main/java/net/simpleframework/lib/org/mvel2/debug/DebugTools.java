@@ -375,7 +375,7 @@ public class DebugTools {
 	public static Map<String, VariableResolver> getAllVariableResolvers(
 			final VariableResolverFactory rootFactory) {
 
-		final Map<String, VariableResolver> allVariableResolvers = new HashMap<String, VariableResolver>();
+		final Map<String, VariableResolver> allVariableResolvers = new HashMap<>();
 
 		VariableResolverFactory vrf = rootFactory;
 		do {

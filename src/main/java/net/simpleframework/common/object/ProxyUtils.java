@@ -25,13 +25,13 @@ public abstract class ProxyUtils {
 
 	private static Map<Class<?>, Map<Class<?>, IMethodInterceptor>> registryCache;
 	static {
-		registryCache = new ConcurrentHashMap<Class<?>, Map<Class<?>, IMethodInterceptor>>();
+		registryCache = new ConcurrentHashMap<>();
 	}
 
 	public static void regist(final Class<?> oClass, final IMethodInterceptor interceptor) {
 		Map<Class<?>, IMethodInterceptor> interceptors = registryCache.get(oClass);
 		if (interceptors == null) {
-			registryCache.put(oClass, interceptors = new HashMap<Class<?>, IMethodInterceptor>());
+			registryCache.put(oClass, interceptors = new HashMap<>());
 		}
 		interceptors.put(interceptor.getClass(), interceptor);
 	}
@@ -86,7 +86,7 @@ public abstract class ProxyUtils {
 	}
 
 	static class DefaultMethodInterceptor implements IMethodInterceptor {
-		private final List<Object[]> list = new ArrayList<Object[]>();
+		private final List<Object[]> list = new ArrayList<>();
 
 		DefaultMethodInterceptor(final Class<?>[] intfs) {
 			for (final Class<?> intf : intfs) {

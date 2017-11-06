@@ -91,7 +91,7 @@ public abstract class ClassUtils {
 	/**
 	 * 缓存资源为null的路径
 	 */
-	private static Set<String> resourceNull = new HashSet<String>();
+	private static Set<String> resourceNull = new HashSet<>();
 
 	public static InputStream getResourceAsStream(final Class<?> packageClass,
 			final String resourceName) {
@@ -130,7 +130,7 @@ public abstract class ClassUtils {
 	}
 
 	public static Class<?>[] getAllInterfaces(final Class<?> clazz) {
-		final HashSet<Class<?>> set = new HashSet<Class<?>>();
+		final HashSet<Class<?>> set = new HashSet<>();
 		Class<?> superClazz = ObjectFactory.original(clazz);
 		while (superClazz != null) {
 			set.addAll(ArrayUtils.asList(superClazz.getInterfaces()));
@@ -140,7 +140,7 @@ public abstract class ClassUtils {
 	}
 
 	public static Field[] getAllFields(final Class<?> clazz) {
-		final ArrayList<Field> al = new ArrayList<Field>();
+		final ArrayList<Field> al = new ArrayList<>();
 		Class<?> superClazz = ObjectFactory.original(clazz);
 		while (superClazz != null) {
 			al.addAll(ArrayUtils.asList(superClazz.getDeclaredFields()));
@@ -182,7 +182,7 @@ public abstract class ClassUtils {
 				final JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
 				final Enumeration<JarEntry> entries = jar.entries();
 				// 目录包缓存
-				final Set<String> packs = new HashSet<String>();
+				final Set<String> packs = new HashSet<>();
 				while (entries.hasMoreElements()) {
 					final JarEntry entry = entries.nextElement();
 					String name = entry.getName();

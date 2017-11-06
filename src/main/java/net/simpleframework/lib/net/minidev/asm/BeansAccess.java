@@ -33,7 +33,7 @@ public abstract class BeansAccess<T> {
 	protected void setAccessor(final Accessor[] accs) {
 		int i = 0;
 		this.accs = accs;
-		map = new HashMap<String, Accessor>();
+		map = new HashMap<>();
 		for (final Accessor acc : accs) {
 			acc.index = i++;
 			map.put(acc.getName(), acc);
@@ -51,7 +51,7 @@ public abstract class BeansAccess<T> {
 	/**
 	 * cache used to store built BeansAccess
 	 */
-	private static ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<Class<?>, BeansAccess<?>>();
+	private static ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<>();
 
 	// private final static ConcurrentHashMap<Type, AMapper<?>> cache;
 
@@ -128,7 +128,7 @@ public abstract class BeansAccess<T> {
 	}
 
 	private static LinkedList<Class<?>> getParents(Class<?> type) {
-		final LinkedList<Class<?>> m = new LinkedList<Class<?>>();
+		final LinkedList<Class<?>> m = new LinkedList<>();
 		while (type != null && !type.equals(Object.class)) {
 			m.addLast(type);
 			for (final Class<?> c : type.getInterfaces()) {
@@ -149,7 +149,7 @@ public abstract class BeansAccess<T> {
 		if (m == null) {
 			return;
 		}
-		final HashMap<String, Accessor> changes = new HashMap<String, Accessor>();
+		final HashMap<String, Accessor> changes = new HashMap<>();
 		for (final Entry<String, String> e : m.entrySet()) {
 			final Accessor a1 = access.map.get(e.getValue());
 			if (a1 != null) {

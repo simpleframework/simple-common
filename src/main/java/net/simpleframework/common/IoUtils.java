@@ -67,7 +67,7 @@ public abstract class IoUtils {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(reader);
-			final List<String> l = new ArrayList<String>();
+			final List<String> l = new ArrayList<>();
 			String s;
 			while ((s = br.readLine()) != null) {
 				l.add(s);
@@ -148,7 +148,7 @@ public abstract class IoUtils {
 	static class MacAddress {
 
 		public final static List<String> getMacAddresses() throws IOException {
-			final List<String> macAddressList = new ArrayList<String>();
+			final List<String> macAddressList = new ArrayList<>();
 
 			final BufferedReader reader = getMacAddressesReader();
 			for (String line = null; (line = reader.readLine()) != null;) {

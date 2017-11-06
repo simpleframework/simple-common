@@ -111,7 +111,7 @@ public class Email extends CommonEmail {
 
 	public Email attach(final EmailAttachment emailAttachment) {
 		if (attachments == null) {
-			attachments = new LinkedList<EmailAttachment>();
+			attachments = new LinkedList<>();
 		}
 		attachments.add(emailAttachment);
 		return this;

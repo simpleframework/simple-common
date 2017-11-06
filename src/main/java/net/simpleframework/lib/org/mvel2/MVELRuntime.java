@@ -228,7 +228,7 @@ public class MVELRuntime {
 	 */
 	private static void ensureDebuggerContext() {
 		if (debuggerContext == null) {
-			debuggerContext = new ThreadLocal<DebuggerContext>();
+			debuggerContext = new ThreadLocal<>();
 		}
 		if (debuggerContext.get() == null) {
 			debuggerContext.set(new DebuggerContext());

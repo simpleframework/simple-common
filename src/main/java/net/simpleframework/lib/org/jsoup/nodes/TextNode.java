@@ -10,16 +10,18 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
  * 
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class TextNode extends Node {
-	/*
-	 * TextNode is a node, and so by default comes with attributes and children.
-	 * The attributes are seldom used, but use
-	 * memory, and the child nodes are never used. So we don't have them, and
-	 * override accessors to attributes to create
-	 * them as needed on the fly.
+public class TextNode extends LeafNode {
+
+	/**
+	 * Create a new TextNode representing the supplied (unencoded) text).
+	 * 
+	 * @param text
+	 *        raw text
+	 * @see #createFromEncoded(String)
 	 */
-	private static final String TEXT_KEY = "text";
-	String text;
+	public TextNode(final String text) {
+		value = text;
+	}
 
 	/**
 	 * Create a new TextNode representing the supplied (unencoded) text).
@@ -27,12 +29,13 @@ public class TextNode extends Node {
 	 * @param text
 	 *        raw text
 	 * @param baseUri
-	 *        base uri
+	 *        base uri - ignored for this node type
 	 * @see #createFromEncoded(String, String)
+	 * @deprecated use {@link TextNode#TextNode(String)}
 	 */
+	@Deprecated
 	public TextNode(final String text, final String baseUri) {
-		this.baseUri = baseUri;
-		this.text = text;
+		this(text);
 	}
 
 	@Override
@@ -58,10 +61,7 @@ public class TextNode extends Node {
 	 * @return this, for chaining
 	 */
 	public TextNode text(final String text) {
-		this.text = text;
-		if (attributes != null) {
-			attributes.put(TEXT_KEY, text);
-		}
+		coreValue(text);
 		return this;
 	}
 
@@ -72,7 +72,7 @@ public class TextNode extends Node {
 	 * @return text
 	 */
 	public String getWholeText() {
-		return attributes == null ? text : attributes.get(TEXT_KEY);
+		return coreValue();
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class TextNode extends Node {
 	 *         contains any text content.
 	 */
 	public boolean isBlank() {
-		return StringUtil.isBlank(getWholeText());
+		return StringUtil.isBlank(coreValue());
 	}
 
 	/**
@@ -97,14 +97,15 @@ public class TextNode extends Node {
 	 * @return the newly created text node containing the text after the offset.
 	 */
 	public TextNode splitText(final int offset) {
+		final String text = coreValue();
 		Validate.isTrue(offset >= 0, "Split offset must be not be negative");
 		Validate.isTrue(offset < text.length(),
 				"Split offset must not be greater than current text length");
 
-		final String head = getWholeText().substring(0, offset);
-		final String tail = getWholeText().substring(offset);
+		final String head = text.substring(0, offset);
+		final String tail = text.substring(offset);
 		text(head);
-		final TextNode tailNode = new TextNode(tail, this.baseUri());
+		final TextNode tailNode = new TextNode(tail);
 		if (parent() != null) {
 			parent().addChildren(siblingIndex() + 1, tailNode);
 		}
@@ -123,7 +124,7 @@ public class TextNode extends Node {
 
 		final boolean normaliseWhite = out.prettyPrint() && parent() instanceof Element
 				&& !Element.preserveWhitespace(parent());
-		Entities.escape(accum, getWholeText(), out, false, normaliseWhite, false);
+		Entities.escape(accum, coreValue(), out, false, normaliseWhite, false);
 	}
 
 	@Override
@@ -143,10 +144,25 @@ public class TextNode extends Node {
 	 * @param baseUri
 	 *        Base uri
 	 * @return TextNode containing unencoded data (e.g. &lt;)
+	 * @deprecated use {@link TextNode#createFromEncoded(String)} instead, as
+	 *             LeafNodes don't carry base URIs.
 	 */
+	@Deprecated
 	public static TextNode createFromEncoded(final String encodedText, final String baseUri) {
 		final String text = Entities.unescape(encodedText);
-		return new TextNode(text, baseUri);
+		return new TextNode(text);
+	}
+
+	/**
+	 * Create a new TextNode from HTML encoded (aka escaped) data.
+	 * 
+	 * @param encodedText
+	 *        Text containing encoded HTML (e.g. &amp;lt;)
+	 * @return TextNode containing unencoded data (e.g. &lt;)
+	 */
+	public static TextNode createFromEncoded(final String encodedText) {
+		final String text = Entities.unescape(encodedText);
+		return new TextNode(text);
 	}
 
 	static String normaliseWhitespace(String text) {
@@ -162,47 +178,4 @@ public class TextNode extends Node {
 		return sb.length() != 0 && sb.charAt(sb.length() - 1) == ' ';
 	}
 
-	// attribute fiddling. create on first access.
-	private void ensureAttributes() {
-		if (attributes == null) {
-			attributes = new Attributes();
-			attributes.put(TEXT_KEY, text);
-		}
-	}
-
-	@Override
-	public String attr(final String attributeKey) {
-		ensureAttributes();
-		return super.attr(attributeKey);
-	}
-
-	@Override
-	public Attributes attributes() {
-		ensureAttributes();
-		return super.attributes();
-	}
-
-	@Override
-	public Node attr(final String attributeKey, final String attributeValue) {
-		ensureAttributes();
-		return super.attr(attributeKey, attributeValue);
-	}
-
-	@Override
-	public boolean hasAttr(final String attributeKey) {
-		ensureAttributes();
-		return super.hasAttr(attributeKey);
-	}
-
-	@Override
-	public Node removeAttr(final String attributeKey) {
-		ensureAttributes();
-		return super.removeAttr(attributeKey);
-	}
-
-	@Override
-	public String absUrl(final String attributeKey) {
-		ensureAttributes();
-		return super.absUrl(attributeKey);
-	}
 }

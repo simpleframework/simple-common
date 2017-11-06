@@ -18,8 +18,8 @@ public class LineMapper {
 	}
 
 	public LineLookup map() {
-		lineMapping = new ArrayList<Node>();
-		lines = new TreeSet<Integer>();
+		lineMapping = new ArrayList<>();
+		lines = new TreeSet<>();
 
 		int cursor = 0;
 		int start = 0;

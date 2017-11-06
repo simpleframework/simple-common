@@ -68,7 +68,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 	private static final int COL = 2;
 	private static final int WITH = 3;
 
-	private List<String> inputs = new LinkedList<String>();
+	private List<String> inputs = new LinkedList<>();
 	private boolean first = false;
 	private boolean classLiteral = false;
 	private boolean resolvedExternally;
@@ -225,7 +225,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 						final Type[] classArgs = ((Class) pt.getRawType()).getTypeParameters();
 
 						if (gpt.length > 0 && paramTypes == null) {
-							paramTypes = new HashMap<String, Type>();
+							paramTypes = new HashMap<>();
 						}
 						for (int i = 0; i < gpt.length; i++) {
 							paramTypes.put(classArgs[i].toString(), gpt[i]);
@@ -372,7 +372,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 			final Type[] classArgs = ((Class) pt.getRawType()).getTypeParameters();
 
 			if (gpt.length > 0 && paramTypes == null) {
-				paramTypes = new HashMap<String, Type>();
+				paramTypes = new HashMap<>();
 			}
 			for (int i = 0; i < gpt.length; i++) {
 				paramTypes.put(classArgs[i].toString(), gpt[i]);
@@ -552,7 +552,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 			// ExpressionCompiler compiler;
 
 			final List<ErrorDetail> errors = pCtx.getErrorList().isEmpty() ? pCtx.getErrorList()
-					: new ArrayList<ErrorDetail>(pCtx.getErrorList());
+					: new ArrayList<>(pCtx.getErrorList());
 
 			CompileException rethrow = null;
 			for (int i = 0; i < subtokens.size(); i++) {
@@ -631,7 +631,7 @@ public class PropertyVerifier extends AbstractOptimizer {
 		 * If we're in strict mode, we look for generic type information.
 		 */
 		if (pCtx.isStrictTypeEnforcement() && m.getGenericReturnType() != null) {
-			final Map<String, Class> typeArgs = new HashMap<String, Class>();
+			final Map<String, Class> typeArgs = new HashMap<>();
 
 			final Type[] gpt = m.getGenericParameterTypes();
 			Class z;

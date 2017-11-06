@@ -35,14 +35,14 @@ public class JedisVSet extends HashSet<String> {
 			Jedis jedis = null;
 			try {
 				jedis = pool.getResource();
-				return new HashSet<String>(jedis.smembers(key));
+				return new HashSet<>(jedis.smembers(key));
 			} finally {
 				if (jedis != null) {
 					jedis.close();
 				}
 			}
 		} else {
-			final Set<String> _set = new HashSet<String>();
+			final Set<String> _set = new HashSet<>();
 			for (final Object o : this) {
 				_set.add(o.toString());
 			}

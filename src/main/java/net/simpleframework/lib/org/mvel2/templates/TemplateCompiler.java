@@ -80,7 +80,7 @@ public class TemplateCompiler {
 
 	private ParserContext parserContext;
 
-	private static final Map<String, Integer> OPCODES = new HashMap<String, Integer>();
+	private static final Map<String, Integer> OPCODES = new HashMap<>();
 
 	static {
 		OPCODES.put("if", Opcodes.IF);

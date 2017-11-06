@@ -36,7 +36,7 @@ public class UpdaterMapper<T> extends JsonReaderI<T> {
 		if (bean == null) {
 			return mapper.startObject(key);
 		}
-		return new UpdaterMapper<Object>(base, bean, mapper.getType(key));
+		return new UpdaterMapper<>(base, bean, mapper.getType(key));
 	}
 
 	/**

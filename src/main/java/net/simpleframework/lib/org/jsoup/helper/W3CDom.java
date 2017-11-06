@@ -71,11 +71,10 @@ public class W3CDom {
 		}
 
 		final net.simpleframework.lib.org.jsoup.nodes.Element rootEl = in.child(0); // skip
-		// the
-		// #root
-		// node
-		final NodeTraversor traversor = new NodeTraversor(new W3CBuilder(out));
-		traversor.traverse(rootEl);
+																												// the
+																												// #root
+																												// node
+		NodeTraversor.traverse(new W3CBuilder(out), rootEl);
 	}
 
 	/**
@@ -86,9 +85,9 @@ public class W3CDom {
 		private static final String xmlnsPrefix = "xmlns:";
 
 		private final Document doc;
-		private final HashMap<String, String> namespaces = new HashMap<String, String>(); // prefix
-																														// =>
-																														// urn
+		private final HashMap<String, String> namespaces = new HashMap<>(); // prefix
+																									// =>
+																									// urn
 		private Element dest;
 
 		public W3CBuilder(final Document doc) {
@@ -141,7 +140,7 @@ public class W3CDom {
 			for (final Attribute attribute : source.attributes()) {
 				// valid xml attribute names are: ^[a-zA-Z_:][-a-zA-Z0-9_:.]
 				final String key = attribute.getKey().replaceAll("[^-a-zA-Z0-9_:.]", "");
-				if (key.matches("[a-zA-Z_:]{1}[-a-zA-Z0-9_:.]*")) {
+				if (key.matches("[a-zA-Z_:][-a-zA-Z0-9_:.]*")) {
 					el.setAttribute(key, attribute.getValue());
 				}
 			}

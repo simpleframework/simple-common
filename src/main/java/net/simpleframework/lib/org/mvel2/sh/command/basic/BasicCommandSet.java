@@ -28,7 +28,7 @@ public class BasicCommandSet implements CommandSet {
 
 	@Override
 	public Map<String, Command> load() {
-		final Map<String, Command> cmds = new HashMap<String, Command>();
+		final Map<String, Command> cmds = new HashMap<>();
 
 		cmds.put("set", new Set());
 		cmds.put("push", new PushContext());

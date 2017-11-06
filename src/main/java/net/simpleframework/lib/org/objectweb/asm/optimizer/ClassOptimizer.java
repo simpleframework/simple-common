@@ -57,7 +57,7 @@ public class ClassOptimizer extends ClassRemapper {
 
 	boolean isInterface = false;
 	boolean hasClinitMethod = false;
-	List<String> syntheticClassFields = new ArrayList<String>();
+	List<String> syntheticClassFields = new ArrayList<>();
 
 	public ClassOptimizer(final ClassVisitor cv, final Remapper remapper) {
 		super(Opcodes.ASM5, cv, remapper);

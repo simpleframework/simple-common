@@ -46,7 +46,7 @@ public class RSA {
 		final KeyPair keyPair = keyPairGen.generateKeyPair();
 		final RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
 		final RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-		final Map<String, Object> keyMap = new HashMap<String, Object>(2);
+		final Map<String, Object> keyMap = new HashMap<>(2);
 		keyMap.put(PUBLIC_KEY, publicKey);
 		keyMap.put(PRIVATE_KEY, privateKey);
 		return keyMap;

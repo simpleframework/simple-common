@@ -39,7 +39,7 @@ public class MimeTypes {
 			}
 		}
 
-		MIME_TYPE_MAP = new HashMap<String, String>(mimes.size() * 2);
+		MIME_TYPE_MAP = new HashMap<>(mimes.size() * 2);
 
 		final Enumeration<?> keys = mimes.propertyNames();
 		while (keys.hasMoreElements()) {

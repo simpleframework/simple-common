@@ -21,7 +21,7 @@ public class MapperRemapped<T> extends JsonReaderI<T> {
 	public MapperRemapped(final JsonReaderI<T> parent) {
 		super(parent.base);
 		this.parent = parent;
-		this.rename = new HashMap<String, String>();
+		this.rename = new HashMap<>();
 	}
 
 	public void renameField(final String source, final String dest) {

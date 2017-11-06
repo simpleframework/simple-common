@@ -180,7 +180,7 @@ public class JedisMap extends HashMap<String, Object> {
 				} else {
 					_set = jedis.keys((mkey + ":*").getBytes());
 				}
-				final Set<String> set = new HashSet<String>();
+				final Set<String> set = new HashSet<>();
 				for (final byte[] k : _set) {
 					set.add(new String(k));
 				}

@@ -2,7 +2,6 @@ package net.simpleframework.lib.org.jsoup.parser;
 
 import static net.simpleframework.lib.org.jsoup.internal.Normalizer.lowerCase;
 
-import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
 
 /**
@@ -59,9 +58,7 @@ public class ParseSettings {
 
 	Attributes normalizeAttributes(final Attributes attributes) {
 		if (!preserveAttributeCase) {
-			for (final Attribute attr : attributes) {
-				attr.setKey(lowerCase(attr.getKey()));
-			}
+			attributes.normalize();
 		}
 		return attributes;
 	}

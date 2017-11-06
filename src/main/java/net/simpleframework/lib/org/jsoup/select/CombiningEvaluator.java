@@ -16,7 +16,7 @@ abstract class CombiningEvaluator extends Evaluator {
 
 	CombiningEvaluator() {
 		super();
-		evaluators = new ArrayList<Evaluator>();
+		evaluators = new ArrayList<>();
 	}
 
 	CombiningEvaluator(final Collection<Evaluator> evaluators) {
@@ -108,7 +108,7 @@ abstract class CombiningEvaluator extends Evaluator {
 
 		@Override
 		public String toString() {
-			return String.format(":or%s", evaluators);
+			return StringUtil.join(evaluators, ", ");
 		}
 	}
 }

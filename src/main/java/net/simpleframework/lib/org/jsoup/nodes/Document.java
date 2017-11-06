@@ -161,7 +161,7 @@ public class Document extends Element {
 
 	// does not recurse.
 	private void normaliseTextNodes(final Element element) {
-		final List<Node> toMove = new ArrayList<Node>();
+		final List<Node> toMove = new ArrayList<>();
 		for (final Node node : element.childNodes) {
 			if (node instanceof TextNode) {
 				final TextNode tn = (TextNode) node;
@@ -174,7 +174,7 @@ public class Document extends Element {
 		for (int i = toMove.size() - 1; i >= 0; i--) {
 			final Node node = toMove.get(i);
 			element.removeChild(node);
-			body().prependChild(new TextNode(" ", ""));
+			body().prependChild(new TextNode(" "));
 			body().prependChild(node);
 		}
 	}
@@ -184,15 +184,12 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created
-		// above if not existent
+																// created above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
-			final List<Node> toMove = new ArrayList<Node>();
+			final List<Node> toMove = new ArrayList<>();
 			for (int i = 1; i < elements.size(); i++) {
 				final Node dupe = elements.get(i);
-				for (final Node node : dupe.childNodes) {
-					toMove.add(node);
-				}
+				toMove.addAll(dupe.ensureChildNodes());
 				dupe.remove();
 			}
 
@@ -211,8 +208,9 @@ public class Document extends Element {
 		if (node.nodeName().equals(tag)) {
 			return (Element) node;
 		} else {
-			for (final Node child : node.childNodes) {
-				final Element found = findFirstElementByTagName(tag, child);
+			final int size = node.childNodeSize();
+			for (int i = 0; i < size; i++) {
+				final Element found = findFirstElementByTagName(tag, node.childNode(i));
 				if (found != null) {
 					return found;
 				}
@@ -388,14 +386,14 @@ public class Document extends Element {
 							decl.attr("version", "1.0");
 						}
 					} else {
-						decl = new XmlDeclaration("xml", baseUri, false);
+						decl = new XmlDeclaration("xml", false);
 						decl.attr("version", "1.0");
 						decl.attr("encoding", charset().displayName());
 
 						prependChild(decl);
 					}
 				} else {
-					final XmlDeclaration decl = new XmlDeclaration("xml", baseUri, false);
+					final XmlDeclaration decl = new XmlDeclaration("xml", false);
 					decl.attr("version", "1.0");
 					decl.attr("encoding", charset().displayName());
 
@@ -418,13 +416,18 @@ public class Document extends Element {
 		}
 
 		private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;
-		private Charset charset = Charset.forName("UTF-8");
+		private Charset charset;
+		CharsetEncoder encoder; // initialized by start of OuterHtmlVisitor and
+										// cleared at end
+		Entities.CoreCharset coreCharset; // fast encoders for ascii and utf8
+
 		private boolean prettyPrint = true;
 		private boolean outline = false;
 		private int indentAmount = 1;
 		private Syntax syntax = Syntax.html;
 
 		public OutputSettings() {
+			charset(Charset.forName("UTF8"));
 		}
 
 		/**
@@ -497,8 +500,13 @@ public class Document extends Element {
 			return this;
 		}
 
-		CharsetEncoder encoder() {
-			return charset.newEncoder();
+		CharsetEncoder prepareEncoder() {
+			encoder = charset.newEncoder(); // created at start of OuterHtmlVisitor
+														// so each pass has own encoder, so
+														// OutputSettings can be shared among
+														// threads
+			coreCharset = Entities.CoreCharset.byName(encoder.charset().name());
+			return encoder;
 		}
 
 		/**

@@ -62,8 +62,7 @@ import net.simpleframework.lib.org.mvel2.util.FastList;
  * @see ConversionHandler
  */
 public class DataConversion {
-	private static final Map<Class, ConversionHandler> CONVERTERS = new HashMap<Class, ConversionHandler>(
-			38 * 2, 0.5f);
+	private static final Map<Class, ConversionHandler> CONVERTERS = new HashMap<>(38 * 2, 0.5f);
 
 	private interface ArrayTypeMarker {
 	}

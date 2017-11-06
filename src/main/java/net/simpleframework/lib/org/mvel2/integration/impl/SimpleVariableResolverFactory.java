@@ -16,7 +16,7 @@ public class SimpleVariableResolverFactory extends BaseVariableResolverFactory {
 	@Override
 	public VariableResolver createVariable(final String name, final Object value) {
 		if (variableResolvers == null) {
-			variableResolvers = new HashMap<String, VariableResolver>(5, 0.6f);
+			variableResolvers = new HashMap<>(5, 0.6f);
 		}
 		final SimpleValueResolver svr = new SimpleValueResolver(value);
 		variableResolvers.put(name, svr);
@@ -33,7 +33,7 @@ public class SimpleVariableResolverFactory extends BaseVariableResolverFactory {
 	public VariableResolver createVariable(final String name, final Object value,
 			final Class<?> type) {
 		if (variableResolvers == null) {
-			variableResolvers = new HashMap<String, VariableResolver>(5, 0.6f);
+			variableResolvers = new HashMap<>(5, 0.6f);
 		}
 		final SimpleSTValueResolver svr = new SimpleSTValueResolver(value, type);
 		variableResolvers.put(name, svr);

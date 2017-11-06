@@ -215,10 +215,10 @@ public class ClassNode extends ClassVisitor {
 	 */
 	public ClassNode(final int api) {
 		super(api);
-		this.interfaces = new ArrayList<String>();
-		this.innerClasses = new ArrayList<InnerClassNode>();
-		this.fields = new ArrayList<FieldNode>();
-		this.methods = new ArrayList<MethodNode>();
+		this.interfaces = new ArrayList<>();
+		this.innerClasses = new ArrayList<>();
+		this.fields = new ArrayList<>();
+		this.methods = new ArrayList<>();
 	}
 
 	// ------------------------------------------------------------------------
@@ -256,12 +256,12 @@ public class ClassNode extends ClassVisitor {
 		final AnnotationNode an = new AnnotationNode(desc);
 		if (visible) {
 			if (visibleAnnotations == null) {
-				visibleAnnotations = new ArrayList<AnnotationNode>(1);
+				visibleAnnotations = new ArrayList<>(1);
 			}
 			visibleAnnotations.add(an);
 		} else {
 			if (invisibleAnnotations == null) {
-				invisibleAnnotations = new ArrayList<AnnotationNode>(1);
+				invisibleAnnotations = new ArrayList<>(1);
 			}
 			invisibleAnnotations.add(an);
 		}
@@ -274,12 +274,12 @@ public class ClassNode extends ClassVisitor {
 		final TypeAnnotationNode an = new TypeAnnotationNode(typeRef, typePath, desc);
 		if (visible) {
 			if (visibleTypeAnnotations == null) {
-				visibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				visibleTypeAnnotations = new ArrayList<>(1);
 			}
 			visibleTypeAnnotations.add(an);
 		} else {
 			if (invisibleTypeAnnotations == null) {
-				invisibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				invisibleTypeAnnotations = new ArrayList<>(1);
 			}
 			invisibleTypeAnnotations.add(an);
 		}
@@ -289,7 +289,7 @@ public class ClassNode extends ClassVisitor {
 	@Override
 	public void visitAttribute(final Attribute attr) {
 		if (attrs == null) {
-			attrs = new ArrayList<Attribute>(1);
+			attrs = new ArrayList<>(1);
 		}
 		attrs.add(attr);
 	}

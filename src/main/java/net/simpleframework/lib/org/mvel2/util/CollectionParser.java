@@ -123,10 +123,10 @@ public class CollectionParser {
 			switch (type) {
 			case ARRAY:
 			case LIST:
-				list = new ArrayList<Object>();
+				list = new ArrayList<>();
 				break;
 			case MAP:
-				map = new HashMap<Object, Object>();
+				map = new HashMap<>();
 				break;
 			}
 		}
@@ -204,7 +204,7 @@ public class CollectionParser {
 
 			case ':':
 				if (type != MAP) {
-					map = new HashMap<Object, Object>();
+					map = new HashMap<>();
 					type = MAP;
 				}
 				curr = createStringTrimmed(property, st, cursor - st);

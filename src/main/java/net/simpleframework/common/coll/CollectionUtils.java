@@ -37,7 +37,7 @@ public abstract class CollectionUtils {
 		if (it == null) {
 			return null;
 		}
-		final List<T> l = new ArrayList<T>();
+		final List<T> l = new ArrayList<>();
 		while (it.hasNext()) {
 			l.add(it.next());
 		}

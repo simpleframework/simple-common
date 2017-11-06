@@ -97,7 +97,7 @@ public class ParseTools {
 	}
 
 	public static String[] parseParameterDefList(final char[] parm, final int offset, int length) {
-		final List<String> list = new LinkedList<String>();
+		final List<String> list = new LinkedList<>();
 
 		if (length == -1) {
 			length = parm.length;
@@ -165,7 +165,7 @@ public class ParseTools {
 	}
 
 	public static List<char[]> parseParameterList(final char[] parm, final int offset, int length) {
-		final List<char[]> list = new ArrayList<char[]>();
+		final List<char[]> list = new ArrayList<>();
 
 		if (length == -1) {
 			length = parm.length;
@@ -448,8 +448,7 @@ public class ParseTools {
 		if (ref != null && (parms = ref.get()) != null) {
 			return parms;
 		} else {
-			CONSTRUCTOR_PARMS_CACHE.put(cns,
-					new WeakReference<Class[]>(parms = cns.getParameterTypes()));
+			CONSTRUCTOR_PARMS_CACHE.put(cns, new WeakReference<>(parms = cns.getParameterTypes()));
 			return parms;
 		}
 	}
@@ -528,7 +527,7 @@ public class ParseTools {
 				}
 			}
 
-			cache.put(className, new WeakReference<Class>(cls));
+			cache.put(className, new WeakReference<>(cls));
 			return cls;
 		}
 	}
@@ -540,8 +539,7 @@ public class ParseTools {
 		if (ref != null && (cns = ref.get()) != null) {
 			return cns;
 		} else {
-			CLASS_CONSTRUCTOR_CACHE.put(cls,
-					new WeakReference<Constructor[]>(cns = cls.getConstructors()));
+			CLASS_CONSTRUCTOR_CACHE.put(cls, new WeakReference<>(cns = cls.getConstructors()));
 			return cns;
 		}
 	}
@@ -1018,7 +1016,7 @@ public class ParseTools {
 		return newArray;
 	}
 
-	private static final HashMap<Class, Integer> typeResolveMap = new HashMap<Class, Integer>();
+	private static final HashMap<Class, Integer> typeResolveMap = new HashMap<>();
 
 	static {
 		final Map<Class, Integer> t = typeResolveMap;
@@ -1061,7 +1059,7 @@ public class ParseTools {
 		}
 	}
 
-	private static final Map<Class, Integer> typeCodes = new HashMap<Class, Integer>(30, 0.5f);
+	private static final Map<Class, Integer> typeCodes = new HashMap<>(30, 0.5f);
 
 	static {
 		typeCodes.put(Integer.class, DataTypes.W_INTEGER);

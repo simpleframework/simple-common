@@ -1,5 +1,7 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.nodes.Document;
@@ -33,7 +35,12 @@ public class Parser {
 
 	public Document parseInput(final String html, final String baseUri) {
 		errors = isTrackErrors() ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
-		return treeBuilder.parse(html, baseUri, errors, settings);
+		return treeBuilder.parse(new StringReader(html), baseUri, errors, settings);
+	}
+
+	public Document parseInput(final Reader inputHtml, final String baseUri) {
+		errors = isTrackErrors() ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
+		return treeBuilder.parse(inputHtml, baseUri, errors, settings);
 	}
 
 	// gets & sets
@@ -112,7 +119,7 @@ public class Parser {
 	 */
 	public static Document parse(final String html, final String baseUri) {
 		final TreeBuilder treeBuilder = new HtmlTreeBuilder();
-		return treeBuilder.parse(html, baseUri, ParseErrorList.noTracking(),
+		return treeBuilder.parse(new StringReader(html), baseUri, ParseErrorList.noTracking(),
 				treeBuilder.defaultSettings());
 	}
 
@@ -199,10 +206,11 @@ public class Parser {
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
 		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
 																								// node
-		// list gets
-		// modified
-		// when
-		// re-parented
+																								// list
+																								// gets
+																								// modified
+																								// when
+																								// re-parented
 		for (int i = nodes.length - 1; i > 0; i--) {
 			nodes[i].remove();
 		}

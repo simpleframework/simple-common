@@ -34,7 +34,7 @@ public class JsonReader {
 	public JsonReaderI<JSONAwareEx> DEFAULT_ORDERED;
 
 	public JsonReader() {
-		cache = new ConcurrentHashMap<Type, JsonReaderI<?>>(100);
+		cache = new ConcurrentHashMap<>(100);
 
 		cache.put(Date.class, BeansMapper.MAPPER_DATE);
 
@@ -62,7 +62,7 @@ public class JsonReader {
 		cache.put(boolean[].class, ArraysMapper.MAPPER_PRIM_BOOL);
 		cache.put(Boolean[].class, ArraysMapper.MAPPER_BOOL);
 
-		this.DEFAULT = new DefaultMapper<JSONAwareEx>(this);
+		this.DEFAULT = new DefaultMapper<>(this);
 		this.DEFAULT_ORDERED = new DefaultMapperOrdered(this);
 
 		cache.put(JSONAwareEx.class, this.DEFAULT);
@@ -83,7 +83,7 @@ public class JsonReader {
 	public <T> void remapField(final Class<T> type, final String fromJson, final String toJava) {
 		JsonReaderI<T> map = this.getMapper(type);
 		if (!(map instanceof MapperRemapped)) {
-			map = new MapperRemapped<T>(map);
+			map = new MapperRemapped<>(map);
 			registerReader(type, map);
 		}
 		((MapperRemapped<T>) map).renameField(fromJson, toJava);
@@ -119,9 +119,9 @@ public class JsonReader {
 		 */
 		if (type instanceof Class) {
 			if (Map.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection<T>(this, type);
+				map = new DefaultMapperCollection<>(this, type);
 			} else if (List.class.isAssignableFrom(type)) {
-				map = new DefaultMapperCollection<T>(this, type);
+				map = new DefaultMapperCollection<>(this, type);
 			}
 			if (map != null) {
 				cache.put(type, map);
@@ -130,14 +130,14 @@ public class JsonReader {
 		}
 
 		if (type.isArray()) {
-			map = new ArraysMapper.GenericMapper<T>(this, type);
+			map = new ArraysMapper.GenericMapper<>(this, type);
 		} else if (List.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.ListClass<T>(this, type);
+			map = new CollectionMapper.ListClass<>(this, type);
 		} else if (Map.class.isAssignableFrom(type)) {
-			map = new CollectionMapper.MapClass<T>(this, type);
+			map = new CollectionMapper.MapClass<>(this, type);
 		} else {
 			// use bean class
-			map = new BeansMapper.Bean<T>(this, type);
+			map = new BeansMapper.Bean<>(this, type);
 		}
 		cache.putIfAbsent(type, map);
 		return map;
@@ -151,9 +151,9 @@ public class JsonReader {
 		}
 		final Class<T> clz = (Class<T>) type.getRawType();
 		if (List.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.ListType<T>(this, type);
+			map = new CollectionMapper.ListType<>(this, type);
 		} else if (Map.class.isAssignableFrom(clz)) {
-			map = new CollectionMapper.MapType<T>(this, type);
+			map = new CollectionMapper.MapType<>(this, type);
 		}
 		cache.putIfAbsent(type, map);
 		return map;

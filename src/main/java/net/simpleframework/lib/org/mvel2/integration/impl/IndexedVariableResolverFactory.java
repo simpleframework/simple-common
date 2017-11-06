@@ -136,7 +136,7 @@ public class IndexedVariableResolverFactory extends BaseVariableResolverFactory 
 
 	@Override
 	public Set<String> getKnownVariables() {
-		return new HashSet<String>(Arrays.asList(indexedVariableNames));
+		return new HashSet<>(Arrays.asList(indexedVariableNames));
 	}
 
 	public void clear() {

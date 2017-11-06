@@ -31,7 +31,7 @@ public class HtmlDecoder {
 			}
 		}
 
-		ENTITY_MAP = new HashMap<String, Character>(entityReferences.size());
+		ENTITY_MAP = new HashMap<>(entityReferences.size());
 
 		final Enumeration<?> keys = entityReferences.propertyNames();
 		while (keys.hasMoreElements()) {

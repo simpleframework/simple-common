@@ -45,7 +45,7 @@ public abstract class I18n {
 	// return getCharset(getLocale());
 	// }
 
-	private static HashSet<String> basenames = new HashSet<String>();
+	private static HashSet<String> basenames = new HashSet<>();
 	static {
 		addBasename(I18n.class);
 	}
@@ -129,7 +129,7 @@ public abstract class I18n {
 		}
 	}
 
-	private static final Map<String, Map<Locale, ResourceBundle>> cachedResourceBundles = new HashMap<String, Map<Locale, ResourceBundle>>();
+	private static final Map<String, Map<Locale, ResourceBundle>> cachedResourceBundles = new HashMap<>();
 
 	private static ResourceBundle getResourceBundle(final String basename, final Locale locale) {
 		synchronized (cachedResourceBundles) {
@@ -143,8 +143,7 @@ public abstract class I18n {
 			try {
 				final ResourceBundle bundle = ResourceBundle.getBundle(basename, locale);
 				if (localeMap == null) {
-					cachedResourceBundles.put(basename,
-							localeMap = new HashMap<Locale, ResourceBundle>());
+					cachedResourceBundles.put(basename, localeMap = new HashMap<>());
 				}
 				localeMap.put(locale, bundle);
 				return bundle;

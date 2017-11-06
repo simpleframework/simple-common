@@ -112,14 +112,14 @@ public class CachingMapVariableResolverFactory extends BaseVariableResolverFacto
 	public Set<String> getKnownVariables() {
 		if (nextFactory == null) {
 			if (variables != null) {
-				return new HashSet<String>(variables.keySet());
+				return new HashSet<>(variables.keySet());
 			}
-			return new HashSet<String>(0);
+			return new HashSet<>(0);
 		} else {
 			if (variables != null) {
-				return new HashSet<String>(variables.keySet());
+				return new HashSet<>(variables.keySet());
 			}
-			return new HashSet<String>(0);
+			return new HashSet<>(0);
 		}
 	}
 

@@ -27,8 +27,8 @@ enum HtmlTreeBuilderState {
 				// todo: quirk state check on doctype ids
 				final Token.Doctype d = t.asDoctype();
 				final DocumentType doctype = new DocumentType(tb.settings.normalizeTag(d.getName()),
-						d.getPubSysKey(), d.getPublicIdentifier(), d.getSystemIdentifier(),
-						tb.getBaseUri());
+						d.getPublicIdentifier(), d.getSystemIdentifier());
+				doctype.setPubSysKey(d.getPubSysKey());
 				tb.getDocument().appendChild(doctype);
 				if (d.isForceQuirks()) {
 					tb.getDocument().quirksMode(Document.QuirksMode.quirks);
@@ -129,8 +129,7 @@ enum HtmlTreeBuilderState {
 						tb.maybeSetBaseUri(el);
 					}
 				} else if (name.equals("meta")) {
-					final Element meta = tb.insertEmpty(start);
-					// todo: charset switches
+					tb.insertEmpty(start);
 				} else if (name.equals("title")) {
 					handleRcData(start, tb);
 				} else if (StringUtil.in(name, "noframes", "style")) {
@@ -296,6 +295,7 @@ enum HtmlTreeBuilderState {
 			}
 			case StartTag:
 				final Token.StartTag startTag = t.asStartTag();
+				// todo - refactor to a switch statement
 				String name = startTag.normalName();
 				if (name.equals("a")) {
 					if (tb.getActiveFormattingElement("a") != null) {
@@ -508,7 +508,6 @@ enum HtmlTreeBuilderState {
 						return false;
 					}
 
-					tb.tokeniser.acknowledgeSelfClosingFlag();
 					tb.processStartTag("form");
 					if (startTag.attributes.hasKey("action")) {
 						final Element form = tb.getFormElement();
@@ -591,12 +590,10 @@ enum HtmlTreeBuilderState {
 					// todo: handle A start tag whose tag name is "math" (i.e.
 					// foreign, mathml)
 					tb.insert(startTag);
-					tb.tokeniser.acknowledgeSelfClosingFlag();
 				} else if (name.equals("svg")) {
 					tb.reconstructFormattingElements();
 					// todo: handle A start tag whose tag name is "svg" (xlink, svg)
 					tb.insert(startTag);
-					tb.tokeniser.acknowledgeSelfClosingFlag();
 				} else if (StringUtil.inSorted(name, Constants.InBodyStartDrop)) {
 					tb.error(this);
 					return false;
@@ -849,9 +846,12 @@ enum HtmlTreeBuilderState {
 		}
 
 		boolean anyOtherEndTag(final Token t, final HtmlTreeBuilder tb) {
-			final String name = t.asEndTag().name(); // matches with case
-																	// sensitivity if
-			// enabled
+			final String name = tb.settings.normalizeTag(t.asEndTag().name()); // matches
+																										// with
+																										// case
+																										// sensitivity
+																										// if
+																										// enabled
 			final ArrayList<Element> stack = tb.getStack();
 			for (int pos = stack.size() - 1; pos >= 0; pos--) {
 				final Element node = stack.get(pos);
@@ -1092,19 +1092,19 @@ enum HtmlTreeBuilderState {
 				break;
 			case StartTag:
 				final Token.StartTag startTag = t.asStartTag();
-				String name = startTag.normalName();
-				if (name.equals("html")) {
+				switch (startTag.normalName()) {
+				case "html":
 					return tb.process(t, InBody);
-				} else if (name.equals("col")) {
+				case "col":
 					tb.insertEmpty(startTag);
-				} else {
+					break;
+				default:
 					return anythingElse(t, tb);
 				}
 				break;
 			case EndTag:
 				final Token.EndTag endTag = t.asEndTag();
-				name = endTag.normalName();
-				if (name.equals("colgroup")) {
+				if (endTag.normalName.equals("colgroup")) {
 					if (tb.currentElement().nodeName().equals("html")) { // frag case
 						tb.error(this);
 						return false;
@@ -1143,7 +1143,9 @@ enum HtmlTreeBuilderState {
 			case StartTag:
 				final Token.StartTag startTag = t.asStartTag();
 				String name = startTag.normalName();
-				if (name.equals("tr")) {
+				if (name.equals("template")) {
+					tb.insert(startTag);
+				} else if (name.equals("tr")) {
 					tb.clearStackToTableBodyContext();
 					tb.insert(startTag);
 					tb.transition(InRow);
@@ -1209,7 +1211,9 @@ enum HtmlTreeBuilderState {
 				final Token.StartTag startTag = t.asStartTag();
 				final String name = startTag.normalName();
 
-				if (StringUtil.in(name, "th", "td")) {
+				if (name.equals("template")) {
+					tb.insert(startTag);
+				} else if (StringUtil.in(name, "th", "td")) {
 					tb.clearStackToTableRowContext();
 					tb.insert(startTag);
 					tb.transition(InCell);
@@ -1382,7 +1386,8 @@ enum HtmlTreeBuilderState {
 			case EndTag:
 				final Token.EndTag end = t.asEndTag();
 				name = end.normalName();
-				if (name.equals("optgroup")) {
+				switch (name) {
+				case "optgroup":
 					if (tb.currentElement().nodeName().equals("option")
 							&& tb.aboveOnStack(tb.currentElement()) != null
 							&& tb.aboveOnStack(tb.currentElement()).nodeName().equals("optgroup")) {
@@ -1393,13 +1398,15 @@ enum HtmlTreeBuilderState {
 					} else {
 						tb.error(this);
 					}
-				} else if (name.equals("option")) {
+					break;
+				case "option":
 					if (tb.currentElement().nodeName().equals("option")) {
 						tb.pop();
 					} else {
 						tb.error(this);
 					}
-				} else if (name.equals("select")) {
+					break;
+				case "select":
 					if (!tb.inSelectScope(name)) {
 						tb.error(this);
 						return false;
@@ -1407,7 +1414,8 @@ enum HtmlTreeBuilderState {
 						tb.popStackToClose(name);
 						tb.resetInsertionMode();
 					}
-				} else {
+					break;
+				default:
 					return anythingElse(t, tb);
 				}
 				break;
@@ -1490,16 +1498,18 @@ enum HtmlTreeBuilderState {
 				return false;
 			} else if (t.isStartTag()) {
 				final Token.StartTag start = t.asStartTag();
-				final String name = start.normalName();
-				if (name.equals("html")) {
+				switch (start.normalName()) {
+				case "html":
 					return tb.process(start, InBody);
-				} else if (name.equals("frameset")) {
+				case "frameset":
 					tb.insert(start);
-				} else if (name.equals("frame")) {
+					break;
+				case "frame":
 					tb.insertEmpty(start);
-				} else if (name.equals("noframes")) {
+					break;
+				case "noframes":
 					return tb.process(start, InHead);
-				} else {
+				default:
 					tb.error(this);
 					return false;
 				}
@@ -1619,53 +1629,53 @@ enum HtmlTreeBuilderState {
 	}
 
 	private static void handleRcData(final Token.StartTag startTag, final HtmlTreeBuilder tb) {
-		tb.insert(startTag);
 		tb.tokeniser.transition(TokeniserState.Rcdata);
 		tb.markInsertionMode();
 		tb.transition(Text);
+		tb.insert(startTag);
 	}
 
 	private static void handleRawtext(final Token.StartTag startTag, final HtmlTreeBuilder tb) {
-		tb.insert(startTag);
 		tb.tokeniser.transition(TokeniserState.Rawtext);
 		tb.markInsertionMode();
 		tb.transition(Text);
+		tb.insert(startTag);
 	}
 
 	// lists of tags to search through. A little harder to read here, but causes
 	// less GC than dynamic varargs.
 	// was contributing around 10% of parse GC load.
-	private static final class Constants {
-		private static final String[] InBodyStartToHead = new String[] { "base", "basefont",
-				"bgsound", "command", "link", "meta", "noframes", "script", "style", "title" };
-		private static final String[] InBodyStartPClosers = new String[] { "address", "article",
-				"aside", "blockquote", "center", "details", "dir", "div", "dl", "fieldset",
-				"figcaption", "figure", "footer", "header", "hgroup", "menu", "nav", "ol", "p",
-				"section", "summary", "ul" };
-		private static final String[] Headings = new String[] { "h1", "h2", "h3", "h4", "h5", "h6" };
-		private static final String[] InBodyStartPreListing = new String[] { "pre", "listing" };
-		private static final String[] InBodyStartLiBreakers = new String[] { "address", "div", "p" };
-		private static final String[] DdDt = new String[] { "dd", "dt" };
-		private static final String[] Formatters = new String[] { "b", "big", "code", "em", "font",
-				"i", "s", "small", "strike", "strong", "tt", "u" };
-		private static final String[] InBodyStartApplets = new String[] { "applet", "marquee",
-				"object" };
-		private static final String[] InBodyStartEmptyFormatters = new String[] { "area", "br",
-				"embed", "img", "keygen", "wbr" };
-		private static final String[] InBodyStartMedia = new String[] { "param", "source", "track" };
-		private static final String[] InBodyStartInputAttribs = new String[] { "name", "action",
-				"prompt" };
-		private static final String[] InBodyStartOptions = new String[] { "optgroup", "option" };
-		private static final String[] InBodyStartRuby = new String[] { "rp", "rt" };
-		private static final String[] InBodyStartDrop = new String[] { "caption", "col", "colgroup",
-				"frame", "head", "tbody", "td", "tfoot", "th", "thead", "tr" };
-		private static final String[] InBodyEndClosers = new String[] { "address", "article", "aside",
+	// must make sure these are sorted, as used in findSorted. MUST update
+	// HtmlTreebuilderStateTest if more arrays added.
+	static final class Constants {
+		static final String[] InBodyStartToHead = new String[] { "base", "basefont", "bgsound",
+				"command", "link", "meta", "noframes", "script", "style", "title" };
+		static final String[] InBodyStartPClosers = new String[] { "address", "article", "aside",
+				"blockquote", "center", "details", "dir", "div", "dl", "fieldset", "figcaption",
+				"figure", "footer", "header", "hgroup", "menu", "nav", "ol", "p", "section", "summary",
+				"ul" };
+		static final String[] Headings = new String[] { "h1", "h2", "h3", "h4", "h5", "h6" };
+		static final String[] InBodyStartPreListing = new String[] { "listing", "pre" };
+		static final String[] InBodyStartLiBreakers = new String[] { "address", "div", "p" };
+		static final String[] DdDt = new String[] { "dd", "dt" };
+		static final String[] Formatters = new String[] { "b", "big", "code", "em", "font", "i", "s",
+				"small", "strike", "strong", "tt", "u" };
+		static final String[] InBodyStartApplets = new String[] { "applet", "marquee", "object" };
+		static final String[] InBodyStartEmptyFormatters = new String[] { "area", "br", "embed",
+				"img", "keygen", "wbr" };
+		static final String[] InBodyStartMedia = new String[] { "param", "source", "track" };
+		static final String[] InBodyStartInputAttribs = new String[] { "action", "name", "prompt" };
+		static final String[] InBodyStartOptions = new String[] { "optgroup", "option" };
+		static final String[] InBodyStartRuby = new String[] { "rp", "rt" };
+		static final String[] InBodyStartDrop = new String[] { "caption", "col", "colgroup", "frame",
+				"head", "tbody", "td", "tfoot", "th", "thead", "tr" };
+		static final String[] InBodyEndClosers = new String[] { "address", "article", "aside",
 				"blockquote", "button", "center", "details", "dir", "div", "dl", "fieldset",
 				"figcaption", "figure", "footer", "header", "hgroup", "listing", "menu", "nav", "ol",
 				"pre", "section", "summary", "ul" };
-		private static final String[] InBodyEndAdoptionFormatters = new String[] { "a", "b", "big",
-				"code", "em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" };
-		private static final String[] InBodyEndTableFosters = new String[] { "table", "tbody",
-				"tfoot", "thead", "tr" };
+		static final String[] InBodyEndAdoptionFormatters = new String[] { "a", "b", "big", "code",
+				"em", "font", "i", "nobr", "s", "small", "strike", "strong", "tt", "u" };
+		static final String[] InBodyEndTableFosters = new String[] { "table", "tbody", "tfoot",
+				"thead", "tr" };
 	}
 }

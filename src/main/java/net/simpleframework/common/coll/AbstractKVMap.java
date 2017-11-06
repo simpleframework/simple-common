@@ -35,7 +35,7 @@ public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>>
 	}
 
 	protected Map<String, T> create(final int initialCapacity) {
-		return new LinkedHashMap<String, T>(initialCapacity);
+		return new LinkedHashMap<>(initialCapacity);
 	}
 
 	public M add(final String key, final T value) {
@@ -68,7 +68,7 @@ public abstract class AbstractKVMap<T, M extends AbstractKVMap<T, M>>
 
 	public M setCaseInsensitive(final boolean caseInsensitive) {
 		if (caseInsensitive) {
-			caseInsensitiveKeys = new HashMap<String, String>();
+			caseInsensitiveKeys = new HashMap<>();
 		}
 		this.caseInsensitive = caseInsensitive;
 		return (M) this;

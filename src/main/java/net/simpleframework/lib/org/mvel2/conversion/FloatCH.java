@@ -29,7 +29,7 @@ import net.simpleframework.lib.org.mvel2.ConversionException;
 import net.simpleframework.lib.org.mvel2.ConversionHandler;
 
 public class FloatCH implements ConversionHandler {
-	private static final Map<Class, Converter> CNV = new HashMap<Class, Converter>();
+	private static final Map<Class, Converter> CNV = new HashMap<>();
 
 	private static Converter stringConverter = new Converter() {
 		@Override

@@ -101,7 +101,7 @@ public abstract class CommonEmail {
 
 	// ---------------------------------------------------------------- message
 
-	protected LinkedList<EmailMessage> messages = new LinkedList<EmailMessage>();
+	protected LinkedList<EmailMessage> messages = new LinkedList<>();
 
 	public LinkedList<EmailMessage> getAllMessages() {
 		return messages;
@@ -129,7 +129,7 @@ public abstract class CommonEmail {
 
 	public void setHeader(final String name, final String value) {
 		if (headers == null) {
-			headers = new HashMap<String, String>();
+			headers = new HashMap<>();
 		}
 		headers.put(name, value);
 	}

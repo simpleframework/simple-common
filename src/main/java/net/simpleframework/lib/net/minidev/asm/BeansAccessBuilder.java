@@ -48,7 +48,7 @@ public class BeansAccessBuilder {
 	final String accessClassName;
 	final String accessClassNameInternal;
 	final String classNameInternal;
-	final HashMap<Class<?>, Method> convMtds = new HashMap<Class<?>, Method>();
+	final HashMap<Class<?>, Method> convMtds = new HashMap<>();
 	// Class<? extends Exception> exeptionClass =
 	// net.simpleframework.lib.net.minidev.asm.ex.NoSuchFieldException.class;
 	Class<? extends Exception> exeptionClass = NoSuchFieldException.class;

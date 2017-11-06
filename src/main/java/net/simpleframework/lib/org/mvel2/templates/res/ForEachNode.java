@@ -84,7 +84,7 @@ public class ForEachNode extends Node {
 			}
 		}
 
-		final Map<String, Object> locals = new HashMap<String, Object>();
+		final Map<String, Object> locals = new HashMap<>();
 		final MapVariableResolverFactory localFactory = new MapVariableResolverFactory(locals,
 				factory);
 
@@ -119,8 +119,8 @@ public class ForEachNode extends Node {
 	}
 
 	private void configure() {
-		final ArrayList<String> items = new ArrayList<String>();
-		final ArrayList<String> expr = new ArrayList<String>();
+		final ArrayList<String> items = new ArrayList<>();
+		final ArrayList<String> expr = new ArrayList<>();
 
 		int start = cStart;
 		for (int i = start; i < cEnd; i++) {

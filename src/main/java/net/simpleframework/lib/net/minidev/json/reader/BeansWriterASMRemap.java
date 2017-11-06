@@ -11,7 +11,7 @@ import net.simpleframework.lib.net.minidev.json.JSONStyle;
 import net.simpleframework.lib.net.minidev.json.JSONUtil;
 
 public class BeansWriterASMRemap implements JsonWriterI<Object> {
-	private final Map<String, String> rename = new HashMap<String, String>();
+	private final Map<String, String> rename = new HashMap<>();
 
 	public void renameField(final String source, final String dest) {
 		rename.put(source, dest);

@@ -308,12 +308,12 @@ public class MethodNode extends MethodVisitor {
 		this.name = name;
 		this.desc = desc;
 		this.signature = signature;
-		this.exceptions = new ArrayList<String>(exceptions == null ? 0 : exceptions.length);
+		this.exceptions = new ArrayList<>(exceptions == null ? 0 : exceptions.length);
 		final boolean isAbstract = (access & Opcodes.ACC_ABSTRACT) != 0;
 		if (!isAbstract) {
-			this.localVariables = new ArrayList<LocalVariableNode>(5);
+			this.localVariables = new ArrayList<>(5);
 		}
-		this.tryCatchBlocks = new ArrayList<TryCatchBlockNode>();
+		this.tryCatchBlocks = new ArrayList<>();
 		if (exceptions != null) {
 			this.exceptions.addAll(Arrays.asList(exceptions));
 		}
@@ -327,7 +327,7 @@ public class MethodNode extends MethodVisitor {
 	@Override
 	public void visitParameter(final String name, final int access) {
 		if (parameters == null) {
-			parameters = new ArrayList<ParameterNode>(5);
+			parameters = new ArrayList<>(5);
 		}
 		parameters.add(new ParameterNode(name, access));
 	}
@@ -349,12 +349,12 @@ public class MethodNode extends MethodVisitor {
 		final AnnotationNode an = new AnnotationNode(desc);
 		if (visible) {
 			if (visibleAnnotations == null) {
-				visibleAnnotations = new ArrayList<AnnotationNode>(1);
+				visibleAnnotations = new ArrayList<>(1);
 			}
 			visibleAnnotations.add(an);
 		} else {
 			if (invisibleAnnotations == null) {
-				invisibleAnnotations = new ArrayList<AnnotationNode>(1);
+				invisibleAnnotations = new ArrayList<>(1);
 			}
 			invisibleAnnotations.add(an);
 		}
@@ -367,12 +367,12 @@ public class MethodNode extends MethodVisitor {
 		final TypeAnnotationNode an = new TypeAnnotationNode(typeRef, typePath, desc);
 		if (visible) {
 			if (visibleTypeAnnotations == null) {
-				visibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				visibleTypeAnnotations = new ArrayList<>(1);
 			}
 			visibleTypeAnnotations.add(an);
 		} else {
 			if (invisibleTypeAnnotations == null) {
-				invisibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				invisibleTypeAnnotations = new ArrayList<>(1);
 			}
 			invisibleTypeAnnotations.add(an);
 		}
@@ -390,7 +390,7 @@ public class MethodNode extends MethodVisitor {
 				visibleParameterAnnotations = (List<AnnotationNode>[]) new List<?>[params];
 			}
 			if (visibleParameterAnnotations[parameter] == null) {
-				visibleParameterAnnotations[parameter] = new ArrayList<AnnotationNode>(1);
+				visibleParameterAnnotations[parameter] = new ArrayList<>(1);
 			}
 			visibleParameterAnnotations[parameter].add(an);
 		} else {
@@ -399,7 +399,7 @@ public class MethodNode extends MethodVisitor {
 				invisibleParameterAnnotations = (List<AnnotationNode>[]) new List<?>[params];
 			}
 			if (invisibleParameterAnnotations[parameter] == null) {
-				invisibleParameterAnnotations[parameter] = new ArrayList<AnnotationNode>(1);
+				invisibleParameterAnnotations[parameter] = new ArrayList<>(1);
 			}
 			invisibleParameterAnnotations[parameter].add(an);
 		}
@@ -409,7 +409,7 @@ public class MethodNode extends MethodVisitor {
 	@Override
 	public void visitAttribute(final Attribute attr) {
 		if (attrs == null) {
-			attrs = new ArrayList<Attribute>(1);
+			attrs = new ArrayList<>(1);
 		}
 		attrs.add(attr);
 	}
@@ -528,12 +528,12 @@ public class MethodNode extends MethodVisitor {
 		final TypeAnnotationNode an = new TypeAnnotationNode(typeRef, typePath, desc);
 		if (visible) {
 			if (insn.visibleTypeAnnotations == null) {
-				insn.visibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				insn.visibleTypeAnnotations = new ArrayList<>(1);
 			}
 			insn.visibleTypeAnnotations.add(an);
 		} else {
 			if (insn.invisibleTypeAnnotations == null) {
-				insn.invisibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				insn.invisibleTypeAnnotations = new ArrayList<>(1);
 			}
 			insn.invisibleTypeAnnotations.add(an);
 		}
@@ -554,12 +554,12 @@ public class MethodNode extends MethodVisitor {
 		final TypeAnnotationNode an = new TypeAnnotationNode(typeRef, typePath, desc);
 		if (visible) {
 			if (tcb.visibleTypeAnnotations == null) {
-				tcb.visibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				tcb.visibleTypeAnnotations = new ArrayList<>(1);
 			}
 			tcb.visibleTypeAnnotations.add(an);
 		} else {
 			if (tcb.invisibleTypeAnnotations == null) {
-				tcb.invisibleTypeAnnotations = new ArrayList<TypeAnnotationNode>(1);
+				tcb.invisibleTypeAnnotations = new ArrayList<>(1);
 			}
 			tcb.invisibleTypeAnnotations.add(an);
 		}
@@ -581,12 +581,12 @@ public class MethodNode extends MethodVisitor {
 				getLabelNodes(start), getLabelNodes(end), index, desc);
 		if (visible) {
 			if (visibleLocalVariableAnnotations == null) {
-				visibleLocalVariableAnnotations = new ArrayList<LocalVariableAnnotationNode>(1);
+				visibleLocalVariableAnnotations = new ArrayList<>(1);
 			}
 			visibleLocalVariableAnnotations.add(an);
 		} else {
 			if (invisibleLocalVariableAnnotations == null) {
-				invisibleLocalVariableAnnotations = new ArrayList<LocalVariableAnnotationNode>(1);
+				invisibleLocalVariableAnnotations = new ArrayList<>(1);
 			}
 			invisibleLocalVariableAnnotations.add(an);
 		}

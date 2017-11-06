@@ -108,7 +108,7 @@ public class Elements extends ArrayList<Element> {
 	 * @return a list of each element's attribute value for the attribute
 	 */
 	public List<String> eachAttr(final String attributeKey) {
-		final List<String> attrs = new ArrayList<String>(size());
+		final List<String> attrs = new ArrayList<>(size());
 		for (final Element element : this) {
 			if (element.hasAttr(attributeKey)) {
 				attrs.add(element.attr(attributeKey));
@@ -286,7 +286,7 @@ public class Elements extends ArrayList<Element> {
 	 * @see #text()
 	 */
 	public List<String> eachText() {
-		final ArrayList<String> texts = new ArrayList<String>(size());
+		final ArrayList<String> texts = new ArrayList<>(size());
 		for (final Element el : this) {
 			if (el.hasText()) {
 				texts.add(el.text());
@@ -748,7 +748,7 @@ public class Elements extends ArrayList<Element> {
 	 * @return all of the parents and ancestor elements of the matched elements
 	 */
 	public Elements parents() {
-		final HashSet<Element> combo = new LinkedHashSet<Element>();
+		final HashSet<Element> combo = new LinkedHashSet<>();
 		for (final Element e : this) {
 			combo.addAll(e.parents());
 		}
@@ -784,11 +784,19 @@ public class Elements extends ArrayList<Element> {
 	 * @return this, for chaining
 	 */
 	public Elements traverse(final NodeVisitor nodeVisitor) {
-		Validate.notNull(nodeVisitor);
-		final NodeTraversor traversor = new NodeTraversor(nodeVisitor);
-		for (final Element el : this) {
-			traversor.traverse(el);
-		}
+		NodeTraversor.traverse(nodeVisitor, this);
+		return this;
+	}
+
+	/**
+	 * Perform a depth-first filtering on each of the selected elements.
+	 * 
+	 * @param nodeFilter
+	 *        the filter callbacks to perform on each node
+	 * @return this, for chaining
+	 */
+	public Elements filter(final NodeFilter nodeFilter) {
+		NodeTraversor.filter(nodeFilter, this);
 		return this;
 	}
 
@@ -800,7 +808,7 @@ public class Elements extends ArrayList<Element> {
 	 *         no forms.
 	 */
 	public List<FormElement> forms() {
-		final ArrayList<FormElement> forms = new ArrayList<FormElement>();
+		final ArrayList<FormElement> forms = new ArrayList<>();
 		for (final Element el : this) {
 			if (el instanceof FormElement) {
 				forms.add((FormElement) el);

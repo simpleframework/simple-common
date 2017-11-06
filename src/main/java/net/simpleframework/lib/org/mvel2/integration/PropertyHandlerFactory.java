@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PropertyHandlerFactory {
-	protected static Map<Class, PropertyHandler> propertyHandlerClass = new HashMap<Class, PropertyHandler>();
+	protected static Map<Class, PropertyHandler> propertyHandlerClass = new HashMap<>();
 
 	protected static PropertyHandler nullPropertyHandler;
 	protected static PropertyHandler nullMethodHandler;

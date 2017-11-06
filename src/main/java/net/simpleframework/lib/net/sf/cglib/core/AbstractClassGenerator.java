@@ -37,7 +37,7 @@ import net.simpleframework.lib.org.objectweb.asm.ClassReader;
 abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
-	private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<ClassLoader, ClassLoaderData>();
+	private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<>();
 	// private static final WeakLoadingCache<ClassLoader, ClassLoaderData> CACHE
 	// =
 	// new WeakLoadingCache<ClassLoader, ClassLoaderData>(
@@ -59,8 +59,8 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	private boolean attemptLoad;
 
 	protected static class ClassLoaderData {
-		private final ConcurrentMap<String, Boolean> reservedClassNames = new ConcurrentHashMap<String, Boolean>(
-				1, 0.75f, 1);
+		private final ConcurrentMap<String, Boolean> reservedClassNames = new ConcurrentHashMap<>(1,
+				0.75f, 1);
 		private final LoadingCache<AbstractClassGenerator, Object, Object> generatedClasses;
 		private final WeakReference<ClassLoader> classLoader;
 
@@ -82,7 +82,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			if (classLoader == null) {
 				throw new IllegalArgumentException("classLoader == null is not yet supported");
 			}
-			this.classLoader = new WeakReference<ClassLoader>(classLoader);
+			this.classLoader = new WeakReference<>(classLoader);
 			final Function<AbstractClassGenerator, Object> load = new Function<AbstractClassGenerator, Object>() {
 				@Override
 				public Object apply(final AbstractClassGenerator gen) {
@@ -90,7 +90,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 					return gen.wrapCachedClass(klass);
 				}
 			};
-			generatedClasses = new LoadingCache<AbstractClassGenerator, Object, Object>(GET_KEY, load);
+			generatedClasses = new LoadingCache<>(GET_KEY, load);
 		}
 
 		public ClassLoader getClassLoader() {
@@ -283,8 +283,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 				synchronized (AbstractClassGenerator.class) {
 					data = cache.get(loader);
 					if (data == null) {
-						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<ClassLoader, ClassLoaderData>(
-								cache);
+						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<>(cache);
 						data = new ClassLoaderData(loader);
 						newCache.put(loader, data);
 						CACHE = newCache;

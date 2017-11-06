@@ -60,7 +60,7 @@ public class HeaderColumnNameMappingStrategy<T> implements MappingStrategy<T> {
 
 	protected Map<String, PropertyDescriptor> loadDescriptorMap(final Class<T> cls)
 			throws IntrospectionException {
-		final Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+		final Map<String, PropertyDescriptor> map = new HashMap<>();
 
 		PropertyDescriptor[] descriptors;
 		descriptors = loadDescriptors(getType());

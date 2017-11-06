@@ -97,7 +97,7 @@ public class ObjectInspector implements Command {
 	}
 
 	private static String renderClassHeirarchy(Class cls) {
-		final List<String> list = new LinkedList<String>();
+		final List<String> list = new LinkedList<>();
 		list.add(cls.getName());
 
 		while ((cls = cls.getSuperclass()) != null) {

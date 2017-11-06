@@ -302,7 +302,7 @@ public abstract class HttpUtils implements HtmlConst {
 		}
 		String[] sVal;
 		if (value.getClass().isArray()) {
-			final ArrayList<String> al = new ArrayList<String>();
+			final ArrayList<String> al = new ArrayList<>();
 			final int l = Array.getLength(value);
 			for (int i = 0; i < l; i++) {
 				al.add(Convert.toString(Array.get(value, i)));

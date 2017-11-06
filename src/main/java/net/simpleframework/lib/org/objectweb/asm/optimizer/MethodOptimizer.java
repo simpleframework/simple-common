@@ -164,7 +164,7 @@ public class MethodOptimizer extends MethodRemapper implements Opcodes {
 				{ "java/lang/Character", "(C)V" }, { "java/lang/Integer", "(I)V" },
 				{ "java/lang/Long", "(J)V" }, { "java/lang/Float", "(F)V" },
 				{ "java/lang/Double", "(D)V" }, };
-		final HashMap<String, String[]> map = new HashMap<String, String[]>();
+		final HashMap<String, String[]> map = new HashMap<>();
 		for (final String[] boxingName : boxingNames) {
 			final String wrapper = boxingName[0];
 			final String desc = boxingName[1];

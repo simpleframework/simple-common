@@ -1,5 +1,6 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
+import java.io.Reader;
 import java.util.ArrayList;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
@@ -27,7 +28,7 @@ abstract class TreeBuilder {
 
 	abstract ParseSettings defaultSettings();
 
-	protected void initialiseParse(final String input, final String baseUri,
+	protected void initialiseParse(final Reader input, final String baseUri,
 			final ParseErrorList errors, final ParseSettings settings) {
 		Validate.notNull(input, "String input must not be null");
 		Validate.notNull(baseUri, "BaseURI must not be null");
@@ -36,12 +37,13 @@ abstract class TreeBuilder {
 		this.settings = settings;
 		reader = new CharacterReader(input);
 		this.errors = errors;
+		currentToken = null;
 		tokeniser = new Tokeniser(reader, errors);
-		stack = new ArrayList<Element>(32);
+		stack = new ArrayList<>(32);
 		this.baseUri = baseUri;
 	}
 
-	Document parse(final String input, final String baseUri, final ParseErrorList errors,
+	Document parse(final Reader input, final String baseUri, final ParseErrorList errors,
 			final ParseSettings settings) {
 		initialiseParse(input, baseUri, errors, settings);
 		runParser();

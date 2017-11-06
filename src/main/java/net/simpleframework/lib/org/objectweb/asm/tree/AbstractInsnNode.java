@@ -298,7 +298,7 @@ public abstract class AbstractInsnNode {
 	 */
 	protected final AbstractInsnNode cloneAnnotations(final AbstractInsnNode insn) {
 		if (insn.visibleTypeAnnotations != null) {
-			this.visibleTypeAnnotations = new ArrayList<TypeAnnotationNode>();
+			this.visibleTypeAnnotations = new ArrayList<>();
 			for (int i = 0; i < insn.visibleTypeAnnotations.size(); ++i) {
 				final TypeAnnotationNode src = insn.visibleTypeAnnotations.get(i);
 				final TypeAnnotationNode ann = new TypeAnnotationNode(src.typeRef, src.typePath,
@@ -308,7 +308,7 @@ public abstract class AbstractInsnNode {
 			}
 		}
 		if (insn.invisibleTypeAnnotations != null) {
-			this.invisibleTypeAnnotations = new ArrayList<TypeAnnotationNode>();
+			this.invisibleTypeAnnotations = new ArrayList<>();
 			for (int i = 0; i < insn.invisibleTypeAnnotations.size(); ++i) {
 				final TypeAnnotationNode src = insn.invisibleTypeAnnotations.get(i);
 				final TypeAnnotationNode ann = new TypeAnnotationNode(src.typeRef, src.typePath,

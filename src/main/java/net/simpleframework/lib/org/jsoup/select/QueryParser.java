@@ -21,7 +21,7 @@ public class QueryParser {
 
 	private final TokenQueue tq;
 	private final String query;
-	private final List<Evaluator> evals = new ArrayList<Evaluator>();
+	private final List<Evaluator> evals = new ArrayList<>();
 
 	/**
 	 * Create a new QueryParser.
@@ -94,8 +94,7 @@ public class QueryParser {
 		Evaluator currentEval; // the evaluator the new eval will be combined to.
 										// could be root, or rightmost or.
 		final Evaluator newEval = parse(subQuery); // the evaluator to add into
-																	// target
-		// evaluator
+																	// target evaluator
 		boolean replaceRightMost = false;
 
 		if (evals.size() == 1) {
@@ -259,11 +258,10 @@ public class QueryParser {
 
 	private void byAttribute() {
 		final TokenQueue cq = new TokenQueue(tq.chompBalanced('[', ']')); // content
-		// queue
+																								// queue
 		final String key = cq.consumeToAny(AttributeEvals); // eq, not, start,
-																				// end,
-		// contain, match, (no
-		// val)
+																				// end, contain,
+																				// match, (no val)
 		Validate.notEmpty(key);
 		cq.consumeWhitespace();
 
@@ -313,9 +311,9 @@ public class QueryParser {
 	}
 
 	// pseudo selectors :first-child, :last-child, :nth-child, ...
-	private static final Pattern NTH_AB = Pattern
-			.compile("((\\+|-)?(\\d+)?)n(\\s*(\\+|-)?\\s*\\d+)?", Pattern.CASE_INSENSITIVE);
-	private static final Pattern NTH_B = Pattern.compile("(\\+|-)?(\\d+)");
+	private static final Pattern NTH_AB = Pattern.compile("(([+-])?(\\d+)?)n(\\s*([+-])?\\s*\\d+)?",
+			Pattern.CASE_INSENSITIVE);
+	private static final Pattern NTH_B = Pattern.compile("([+-])?(\\d+)");
 
 	private void cssNthChild(final boolean backwards, final boolean ofType) {
 		final String argS = normalize(tq.chompTo(")"));
@@ -391,8 +389,8 @@ public class QueryParser {
 	private void matches(final boolean own) {
 		tq.consume(own ? ":matchesOwn" : ":matches");
 		final String regex = tq.chompBalanced('(', ')'); // don't unescape, as
-																			// regex
-		// bits will be escaped
+																			// regex bits will be
+																			// escaped
 		Validate.notEmpty(regex, ":matches(regex) query must not be empty");
 
 		if (own) {

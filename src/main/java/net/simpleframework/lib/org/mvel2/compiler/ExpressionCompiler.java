@@ -477,8 +477,6 @@ public class ExpressionCompiler extends AbstractParser {
 					}
 				}
 			} else if (tk instanceof NewObjectNode) {
-				// this is a bit of a hack for now.
-				final NewObjectNode n = (NewObjectNode) tk;
 				final List<char[]> parms = ParseTools.parseMethodOrConstructor(tk.getNameAsArray());
 				if (parms != null) {
 					for (final char[] p : parms) {

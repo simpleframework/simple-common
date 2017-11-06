@@ -43,7 +43,7 @@ public class CsvToBean<T> {
 		try {
 			mapper.captureHeader(csv);
 			String[] line;
-			final List<T> list = new ArrayList<T>();
+			final List<T> list = new ArrayList<>();
 			while (null != (line = csv.readNext())) {
 				final T obj = processLine(mapper, line);
 				list.add(obj); // TODO: (Kyle) null check object
@@ -90,7 +90,7 @@ public class CsvToBean<T> {
 
 	private PropertyEditor getPropertyEditorValue(final Class<?> cls) {
 		if (editorMap == null) {
-			editorMap = new HashMap<Class<?>, PropertyEditor>();
+			editorMap = new HashMap<>();
 		}
 
 		PropertyEditor editor = editorMap.get(cls);

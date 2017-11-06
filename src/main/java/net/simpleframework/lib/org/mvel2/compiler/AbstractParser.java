@@ -204,8 +204,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected ASTNode lastNode;
 
-	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<String, char[]>(
-			15);
+	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(15);
 
 	public static HashMap<String, Object> LITERALS;
 	public static HashMap<String, Object> CLASS_LITERALS;
@@ -242,9 +241,9 @@ public class AbstractParser implements Parser, Serializable {
 	 */
 	public static void setupParser() {
 		if (LITERALS == null || LITERALS.isEmpty()) {
-			LITERALS = new HashMap<String, Object>();
-			CLASS_LITERALS = new HashMap<String, Object>();
-			OPERATORS = new HashMap<String, Integer>();
+			LITERALS = new HashMap<>();
+			CLASS_LITERALS = new HashMap<>();
+			OPERATORS = new HashMap<>();
 
 			/**
 			 * Add System and all the class wrappers from the JCL.
@@ -2469,7 +2468,7 @@ public class AbstractParser implements Parser, Serializable {
 	}
 
 	public static HashMap<String, Integer> loadLanguageFeaturesByLevel(final int languageLevel) {
-		final HashMap<String, Integer> operatorsTable = new HashMap<String, Integer>();
+		final HashMap<String, Integer> operatorsTable = new HashMap<>();
 		switch (languageLevel) {
 		case 6: // prototype definition
 			operatorsTable.put("proto", PROTO);

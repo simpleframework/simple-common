@@ -27,7 +27,7 @@ public class Proto extends ASTNode {
 	public Proto(final String name, final ParserContext pCtx) {
 		super(pCtx);
 		this.name = name;
-		this.receivers = new SimpleIndexHashMapWrapper<String, Receiver>();
+		this.receivers = new SimpleIndexHashMapWrapper<>();
 	}
 
 	public Receiver declareReceiver(final String name, final Function function) {
@@ -132,7 +132,7 @@ public class Proto extends ASTNode {
 				final VariableResolverFactory factory) {
 			this.protoType = protoType;
 
-			receivers = new SimpleIndexHashMapWrapper<String, Receiver>();
+			receivers = new SimpleIndexHashMapWrapper<>();
 			for (final Map.Entry<String, Receiver> entry : protoType.receivers.entrySet()) {
 				receivers.put(entry.getKey(), entry.getValue().init(this, ctx, thisCtx, factory));
 			}
@@ -218,8 +218,7 @@ public class Proto extends ASTNode {
 
 		public ProtoContextFactory(final SimpleIndexHashMapWrapper variables) {
 			super(variables);
-			variableResolvers = new SimpleIndexHashMapWrapper<String, VariableResolver>(variables,
-					true);
+			variableResolvers = new SimpleIndexHashMapWrapper<>(variables, true);
 		}
 
 		@Override

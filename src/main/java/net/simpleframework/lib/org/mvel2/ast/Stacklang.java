@@ -34,7 +34,7 @@ public class Stacklang extends BlockNode {
 
 		final String[] instructions = new String(expr, blockStart, blockOffset).split(";");
 
-		instructionList = new ArrayList<Instruction>(instructions.length);
+		instructionList = new ArrayList<>(instructions.length);
 		for (final String s : instructions) {
 			instructionList.add(parseInstruction(s.trim()));
 		}
@@ -261,7 +261,7 @@ public class Stacklang extends BlockNode {
 		return instruction;
 	}
 
-	static final Map<String, Integer> opcodes = new HashMap<String, Integer>();
+	static final Map<String, Integer> opcodes = new HashMap<>();
 
 	static {
 		opcodes.put("push", Operator.PUSH);

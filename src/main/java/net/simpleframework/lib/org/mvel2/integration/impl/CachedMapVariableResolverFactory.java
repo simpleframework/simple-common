@@ -20,7 +20,7 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 
 	public CachedMapVariableResolverFactory(final Map<String, Object> variables) {
 		this.variables = variables;
-		variableResolvers = new HashMap<String, VariableResolver>(variables.size() * 2);
+		variableResolvers = new HashMap<>(variables.size() * 2);
 
 		for (final Map.Entry<String, Object> entry : variables.entrySet()) {
 			variableResolvers.put(entry.getKey(),
@@ -32,7 +32,7 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 	public CachedMapVariableResolverFactory(final Map<String, Object> variables,
 			final VariableResolverFactory nextFactory) {
 		this.variables = variables;
-		variableResolvers = new HashMap<String, VariableResolver>(variables.size() * 2);
+		variableResolvers = new HashMap<>(variables.size() * 2);
 
 		for (final Map.Entry<String, Object> entry : variables.entrySet()) {
 			variableResolvers.put(entry.getKey(),
@@ -99,7 +99,7 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 
 	protected VariableResolver addResolver(final String name, final VariableResolver vr) {
 		if (variableResolvers == null) {
-			variableResolvers = new HashMap<String, VariableResolver>();
+			variableResolvers = new HashMap<>();
 		}
 		variableResolvers.put(name, vr);
 		return vr;
@@ -114,14 +114,14 @@ public class CachedMapVariableResolverFactory extends BaseVariableResolverFactor
 	public Set<String> getKnownVariables() {
 		if (nextFactory == null) {
 			if (variables != null) {
-				return new HashSet<String>(variables.keySet());
+				return new HashSet<>(variables.keySet());
 			}
-			return new HashSet<String>(0);
+			return new HashSet<>(0);
 		} else {
 			if (variables != null) {
-				return new HashSet<String>(variables.keySet());
+				return new HashSet<>(variables.keySet());
 			}
-			return new HashSet<String>(0);
+			return new HashSet<>(0);
 		}
 	}
 }

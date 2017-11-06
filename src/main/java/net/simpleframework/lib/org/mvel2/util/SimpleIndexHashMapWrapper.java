@@ -24,26 +24,26 @@ public class SimpleIndexHashMapWrapper<K, V> implements Map<K, V> {
 	private final ArrayList<ValueContainer<K, V>> indexBasedLookup;
 
 	public SimpleIndexHashMapWrapper() {
-		this.wrappedMap = new HashMap<K, ValueContainer<K, V>>();
-		this.indexBasedLookup = new ArrayList<ValueContainer<K, V>>();
+		this.wrappedMap = new HashMap<>();
+		this.indexBasedLookup = new ArrayList<>();
 	}
 
 	public SimpleIndexHashMapWrapper(final SimpleIndexHashMapWrapper<K, V> wrapper,
 			final boolean allocateOnly) {
-		this.indexBasedLookup = new ArrayList<ValueContainer<K, V>>(wrapper.indexBasedLookup.size());
-		this.wrappedMap = new HashMap<K, ValueContainer<K, V>>();
+		this.indexBasedLookup = new ArrayList<>(wrapper.indexBasedLookup.size());
+		this.wrappedMap = new HashMap<>();
 
 		ValueContainer<K, V> vc;
 		int index = 0;
 		if (allocateOnly) {
 			for (final ValueContainer<K, V> key : wrapper.indexBasedLookup) {
-				vc = new ValueContainer<K, V>(index++, key.getKey(), null);
+				vc = new ValueContainer<>(index++, key.getKey(), null);
 				indexBasedLookup.add(vc);
 				wrappedMap.put(key.getKey(), vc);
 			}
 		} else {
 			for (final ValueContainer<K, V> key : wrapper.indexBasedLookup) {
-				vc = new ValueContainer<K, V>(index++, key.getKey(), key.getValue());
+				vc = new ValueContainer<>(index++, key.getKey(), key.getValue());
 				indexBasedLookup.add(vc);
 				wrappedMap.put(key.getKey(), vc);
 			}
@@ -51,15 +51,15 @@ public class SimpleIndexHashMapWrapper<K, V> implements Map<K, V> {
 	}
 
 	public SimpleIndexHashMapWrapper(final K[] keys) {
-		this.wrappedMap = new HashMap<K, ValueContainer<K, V>>(keys.length * 2);
-		this.indexBasedLookup = new ArrayList<ValueContainer<K, V>>(keys.length);
+		this.wrappedMap = new HashMap<>(keys.length * 2);
+		this.indexBasedLookup = new ArrayList<>(keys.length);
 
 		initWithKeys(keys);
 	}
 
 	public SimpleIndexHashMapWrapper(final K[] keys, final int initialCapacity, final float load) {
-		this.wrappedMap = new HashMap<K, ValueContainer<K, V>>(initialCapacity * 2, load);
-		this.indexBasedLookup = new ArrayList<ValueContainer<K, V>>(initialCapacity);
+		this.wrappedMap = new HashMap<>(initialCapacity * 2, load);
+		this.indexBasedLookup = new ArrayList<>(initialCapacity);
 
 		initWithKeys(keys);
 	}
@@ -68,20 +68,20 @@ public class SimpleIndexHashMapWrapper<K, V> implements Map<K, V> {
 		int index = 0;
 		ValueContainer<K, V> vc;
 		for (final K key : keys) {
-			vc = new ValueContainer<K, V>(index++, key, null);
+			vc = new ValueContainer<>(index++, key, null);
 			wrappedMap.put(key, vc);
 			indexBasedLookup.add(vc);
 		}
 	}
 
 	public void addKey(final K key) {
-		final ValueContainer<K, V> vc = new ValueContainer<K, V>(indexCounter++, key, null);
+		final ValueContainer<K, V> vc = new ValueContainer<>(indexCounter++, key, null);
 		this.indexBasedLookup.add(vc);
 		this.wrappedMap.put(key, vc);
 	}
 
 	public void addKey(final K key, final V value) {
-		final ValueContainer<K, V> vc = new ValueContainer<K, V>(indexCounter++, key, value);
+		final ValueContainer<K, V> vc = new ValueContainer<>(indexCounter++, key, value);
 		this.indexBasedLookup.add(vc);
 		this.wrappedMap.put(key, vc);
 	}

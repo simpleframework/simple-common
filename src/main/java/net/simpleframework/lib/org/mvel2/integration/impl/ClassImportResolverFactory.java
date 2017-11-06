@@ -70,7 +70,7 @@ public class ClassImportResolverFactory extends BaseVariableResolverFactory {
 
 	public Class addClass(final Class clazz) {
 		if (dynImports == null) {
-			dynImports = new HashMap<String, Object>();
+			dynImports = new HashMap<>();
 		}
 		dynImports.put(clazz.getSimpleName(), clazz);
 		return clazz;
@@ -133,7 +133,7 @@ public class ClassImportResolverFactory extends BaseVariableResolverFactory {
 
 	public void addPackageImport(final String packageName) {
 		if (packageImports == null) {
-			packageImports = new HashSet<String>();
+			packageImports = new HashSet<>();
 		}
 		packageImports.add(packageName);
 	}

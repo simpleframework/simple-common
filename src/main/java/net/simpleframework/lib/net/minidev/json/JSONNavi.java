@@ -33,8 +33,8 @@ public class JSONNavi<T> {
 	private JsonReaderI<? super T> mapper;
 	private T root;
 
-	private final Stack<Object> stack = new Stack<Object>();
-	private final Stack<Object> path = new Stack<Object>();
+	private final Stack<Object> stack = new Stack<>();
+	private final Stack<Object> path = new Stack<>();
 
 	private Object current;
 	private boolean failure = false;
@@ -44,18 +44,18 @@ public class JSONNavi<T> {
 	private Object missingKey = null;
 
 	public static JSONNavi<JSONAwareEx> newInstance() {
-		return new JSONNavi<JSONAwareEx>(JSONValue.defaultReader.DEFAULT_ORDERED);
+		return new JSONNavi<>(JSONValue.defaultReader.DEFAULT_ORDERED);
 	}
 
 	public static JSONNavi<JSONObject> newInstanceObject() {
-		final JSONNavi<JSONObject> o = new JSONNavi<JSONObject>(
+		final JSONNavi<JSONObject> o = new JSONNavi<>(
 				JSONValue.defaultReader.getMapper(JSONObject.class));
 		o.object();
 		return o;
 	}
 
 	public static JSONNavi<JSONArray> newInstanceArray() {
-		final JSONNavi<JSONArray> o = new JSONNavi<JSONArray>(
+		final JSONNavi<JSONArray> o = new JSONNavi<>(
 				JSONValue.defaultReader.getMapper(JSONArray.class));
 		o.array();
 		return o;

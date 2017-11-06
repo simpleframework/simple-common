@@ -83,7 +83,7 @@ public class FormElement extends Element {
 	 * @return a list of key vals
 	 */
 	public List<Connection.KeyVal> formData() {
-		final ArrayList<Connection.KeyVal> data = new ArrayList<Connection.KeyVal>();
+		final ArrayList<Connection.KeyVal> data = new ArrayList<>();
 
 		// iterate the form control elements and accumulate their values
 		for (final Element el : elements) {

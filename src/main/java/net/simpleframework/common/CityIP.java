@@ -14,7 +14,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  *         http://www.simpleframework.net
  */
 public abstract class CityIP {
-	private static LRUMap<String, String> ipCache = new LRUMap<String, String>(1000);
+	private static LRUMap<String, String> ipCache = new LRUMap<>(1000);
 
 	public static String getCity(final String ip, final boolean more) throws IOException {
 		if ("127.0.0.1".equals(ip) || "localhost".equals(ip)) {

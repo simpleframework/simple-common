@@ -31,7 +31,7 @@ import net.simpleframework.lib.org.mvel2.util.MethodStub;
  */
 public class StaticMethodImportResolverFactory extends BaseVariableResolverFactory {
 	public StaticMethodImportResolverFactory(final ParserContext ctx) {
-		this.variableResolvers = new HashMap<String, VariableResolver>();
+		this.variableResolvers = new HashMap<>();
 		for (final Map.Entry<String, Object> entry : ctx.getImports().entrySet()) {
 			if (entry.getValue() instanceof Method) {
 				createVariable(entry.getKey(), entry.getValue());
@@ -40,7 +40,7 @@ public class StaticMethodImportResolverFactory extends BaseVariableResolverFacto
 	}
 
 	public StaticMethodImportResolverFactory() {
-		this.variableResolvers = new HashMap<String, VariableResolver>();
+		this.variableResolvers = new HashMap<>();
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class StaticMethodImportResolverFactory extends BaseVariableResolverFacto
 	}
 
 	public Map<String, Method> getImportedMethods() {
-		final Map<String, Method> im = new HashMap<String, Method>();
+		final Map<String, Method> im = new HashMap<>();
 		for (final Map.Entry<String, VariableResolver> e : this.variableResolvers.entrySet()) {
 			im.put(e.getKey(), (Method) e.getValue().getValue());
 		}

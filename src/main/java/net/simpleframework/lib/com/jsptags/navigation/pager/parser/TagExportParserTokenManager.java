@@ -90,12 +90,10 @@ public class TagExportParserTokenManager implements TagExportParserConstants {
 	static final long[] jjbitVec6 = { 0x3fffffffffffL, 0x0L, 0x0L, 0x0L };
 
 	private final int jjMoveNfa_0(final int startState, int curPos) {
-		final int[] nextStates;
 		int startsAt = 0;
 		jjnewStateCnt = 2;
 		int i = 1;
 		jjstateSet[0] = startState;
-		final int j;
 		int kind = 0x7fffffff;
 		for (;;) {
 			if (++jjround == 0x7fffffff) {
@@ -450,12 +448,10 @@ public class TagExportParserTokenManager implements TagExportParserConstants {
 	}
 
 	private final int jjMoveNfa_2(final int startState, int curPos) {
-		final int[] nextStates;
 		int startsAt = 0;
 		jjnewStateCnt = 2;
 		int i = 1;
 		jjstateSet[0] = startState;
-		final int j;
 		int kind = 0x7fffffff;
 		for (;;) {
 			if (++jjround == 0x7fffffff) {
@@ -922,12 +918,10 @@ public class TagExportParserTokenManager implements TagExportParserConstants {
 	}
 
 	private final int jjMoveNfa_3(final int startState, int curPos) {
-		final int[] nextStates;
 		int startsAt = 0;
 		jjnewStateCnt = 2;
 		int i = 1;
 		jjstateSet[0] = startState;
-		final int j;
 		int kind = 0x7fffffff;
 		for (;;) {
 			if (++jjround == 0x7fffffff) {
@@ -1341,12 +1335,10 @@ public class TagExportParserTokenManager implements TagExportParserConstants {
 	}
 
 	private final int jjMoveNfa_1(final int startState, int curPos) {
-		final int[] nextStates;
 		int startsAt = 0;
 		jjnewStateCnt = 2;
 		int i = 1;
 		jjstateSet[0] = startState;
-		final int j;
 		int kind = 0x7fffffff;
 		for (;;) {
 			if (++jjround == 0x7fffffff) {
@@ -1542,8 +1534,6 @@ public class TagExportParserTokenManager implements TagExportParserConstants {
 	int jjmatchedKind;
 
 	public final Token getNextToken() {
-		final int kind;
-		final Token specialToken = null;
 		Token matchedToken;
 		int curPos = 0;
 

@@ -535,11 +535,10 @@ public class PropertyAccessor {
 					.get(cls);
 
 			if (nestedMap == null) {
-				READ_PROPERTY_RESOLVER_CACHE.put(cls,
-						nestedMap = new WeakHashMap<Integer, WeakReference<Member>>());
+				READ_PROPERTY_RESOLVER_CACHE.put(cls, nestedMap = new WeakHashMap<>());
 			}
 
-			nestedMap.put(property, new WeakReference<Member>(member));
+			nestedMap.put(property, new WeakReference<>(member));
 		}
 	}
 
@@ -558,10 +557,9 @@ public class PropertyAccessor {
 		synchronized (WRITE_PROPERTY_RESOLVER_CACHE) {
 			WeakHashMap<Integer, WeakReference<Member>> map = WRITE_PROPERTY_RESOLVER_CACHE.get(cls);
 			if (map == null) {
-				WRITE_PROPERTY_RESOLVER_CACHE.put(cls,
-						map = new WeakHashMap<Integer, WeakReference<Member>>());
+				WRITE_PROPERTY_RESOLVER_CACHE.put(cls, map = new WeakHashMap<>());
 			}
-			map.put(property, new WeakReference<Member>(member));
+			map.put(property, new WeakReference<>(member));
 		}
 	}
 
@@ -582,7 +580,7 @@ public class PropertyAccessor {
 		if (pt == null || (ret = pt.get()) == null) {
 			// noinspection UnusedAssignment
 			METHOD_PARMTYPES_CACHE.put(member,
-					pt = new WeakReference<Class[]>(ret = member.getParameterTypes()));
+					pt = new WeakReference<>(ret = member.getParameterTypes()));
 		}
 		return ret;
 	}
@@ -592,11 +590,10 @@ public class PropertyAccessor {
 		synchronized (METHOD_RESOLVER_CACHE) {
 			WeakHashMap<Integer, WeakReference<Object[]>> map = METHOD_RESOLVER_CACHE.get(cls);
 			if (map == null) {
-				METHOD_RESOLVER_CACHE.put(cls,
-						map = new WeakHashMap<Integer, WeakReference<Object[]>>());
+				METHOD_RESOLVER_CACHE.put(cls, map = new WeakHashMap<>());
 			}
 			map.put(property,
-					new WeakReference<Object[]>(new Object[] { member, member.getParameterTypes() }));
+					new WeakReference<>(new Object[] { member, member.getParameterTypes() }));
 		}
 	}
 

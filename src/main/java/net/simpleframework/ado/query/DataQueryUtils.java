@@ -22,12 +22,12 @@ import net.simpleframework.common.coll.CollectionUtils;
 public abstract class DataQueryUtils {
 
 	public static <T> IDataQuery<T> nullQuery() {
-		return new ListDataQuery<T>();
+		return new ListDataQuery<>();
 	}
 
 	public static <T> List<T> toList(final IDataQuery<T> dataQuery) {
 		dataQuery.setFetchSize(0);
-		final List<T> al = new ArrayList<T>();
+		final List<T> al = new ArrayList<>();
 		T t;
 		while (dataQuery != null && (t = dataQuery.next()) != null) {
 			al.add(t);
@@ -36,7 +36,7 @@ public abstract class DataQueryUtils {
 	}
 
 	public static <T> Set<T> toSet(final IDataQuery<T> dataQuery) {
-		final Set<T> al = new LinkedHashSet<T>();
+		final Set<T> al = new LinkedHashSet<>();
 		T t;
 		while (dataQuery != null && (t = dataQuery.next()) != null) {
 			al.add(t);
@@ -48,18 +48,18 @@ public abstract class DataQueryUtils {
 		if (dataQuery == null) {
 			return CollectionUtils.EMPTY_ITERATOR();
 		}
-		return new DataQueryIterator<T>(dataQuery);
+		return new DataQueryIterator<>(dataQuery);
 	}
 
 	public static <T> Map<ID, Collection<T>> toTreeMap(final IDataQuery<T> dq) {
 		dq.setFetchSize(0);
-		final Map<ID, Collection<T>> _map = new HashMap<ID, Collection<T>>();
+		final Map<ID, Collection<T>> _map = new HashMap<>();
 		T t;
 		while ((t = dq.next()) != null) {
 			final ID k = ((ITreeBeanAware) t).getParentId();
 			Collection<T> coll = k != null ? _map.get(k) : _map.get(ID.NULL_ID);
 			if (coll == null) {
-				_map.put(k, coll = new ArrayList<T>());
+				_map.put(k, coll = new ArrayList<>());
 			}
 			coll.add(t);
 		}

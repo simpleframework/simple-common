@@ -107,7 +107,7 @@ public class ParserConfiguration implements Serializable {
 
 	public void addPackageImport(final String packageName) {
 		if (packageImports == null) {
-			packageImports = new LinkedHashSet<String>();
+			packageImports = new LinkedHashSet<>();
 		}
 		packageImports.add(packageName);
 		if (!addClassMemberStaticImports(packageName)) {
@@ -202,7 +202,7 @@ public class ParserConfiguration implements Serializable {
 
 	private void initImports() {
 		if (this.imports == null) {
-			this.imports = new ConcurrentHashMap<String, Object>();
+			this.imports = new ConcurrentHashMap<>();
 		}
 	}
 
@@ -295,7 +295,7 @@ public class ParserConfiguration implements Serializable {
 
 	private void cacheNegativeHitForDynamicImport(final String negativeHit) {
 		if (nonValidImports == null) {
-			nonValidImports = new LinkedHashSet<String>();
+			nonValidImports = new LinkedHashSet<>();
 		} else if (nonValidImports.size() > 1000) {
 			final Iterator<String> i = nonValidImports.iterator();
 			i.next();

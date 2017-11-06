@@ -80,7 +80,7 @@ public class TypeInjectionResolverFactoryImpl extends MapVariableResolverFactory
 	@Override
 	public Set<String> getKnownVariables() {
 		if (nextFactory == null) {
-			return new HashSet<String>(0);
+			return new HashSet<>(0);
 		} else {
 			return nextFactory.getKnownVariables();
 		}

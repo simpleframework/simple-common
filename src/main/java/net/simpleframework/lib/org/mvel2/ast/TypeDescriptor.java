@@ -69,7 +69,7 @@ public class TypeDescriptor implements Serializable {
 				className = new String(name, start, endRange - start).trim();
 				int to;
 
-				final LinkedList<char[]> sizes = new LinkedList<char[]>();
+				final LinkedList<char[]> sizes = new LinkedList<>();
 
 				final int end = start + offset;
 				while (endRange < end) {

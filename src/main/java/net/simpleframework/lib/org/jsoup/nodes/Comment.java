@@ -7,7 +7,7 @@ import java.io.IOException;
  * 
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Comment extends Node {
+public class Comment extends LeafNode {
 	private static final String COMMENT_KEY = "comment";
 
 	/**
@@ -15,12 +15,23 @@ public class Comment extends Node {
 	 * 
 	 * @param data
 	 *        The contents of the comment
-	 * @param baseUri
-	 *        base URI
 	 */
+	public Comment(final String data) {
+		value = data;
+	}
+
+	/**
+	 * Create a new comment node.
+	 * 
+	 * @param data
+	 *        The contents of the comment
+	 * @param baseUri
+	 *        base URI not used. This is a leaf node.
+	 * @deprecated
+	 */
+	@Deprecated
 	public Comment(final String data, final String baseUri) {
-		super(baseUri);
-		attributes.put(COMMENT_KEY, data);
+		this(data);
 	}
 
 	@Override
@@ -34,7 +45,7 @@ public class Comment extends Node {
 	 * @return comment content
 	 */
 	public String getData() {
-		return attributes.get(COMMENT_KEY);
+		return coreValue();
 	}
 
 	@Override

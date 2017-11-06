@@ -25,12 +25,12 @@ public class BeansAccessConfig {
 	 * 
 	 * @see DefaultConverter
 	 */
-	static protected HashMap<Class<?>, LinkedHashSet<Class<?>>> classMapper = new HashMap<Class<?>, LinkedHashSet<Class<?>>>();
+	static protected HashMap<Class<?>, LinkedHashSet<Class<?>>> classMapper = new HashMap<>();
 
 	/**
 	 * FiledName remapper for a specific class or interface
 	 */
-	static protected HashMap<Class<?>, HashMap<String, String>> classFiledNameMapper = new HashMap<Class<?>, HashMap<String, String>>();
+	static protected HashMap<Class<?>, HashMap<String, String>> classFiledNameMapper = new HashMap<>();
 
 	static {
 		addTypeMapper(Object.class, DefaultConverter.class);
@@ -65,7 +65,7 @@ public class BeansAccessConfig {
 		synchronized (classMapper) {
 			LinkedHashSet<Class<?>> h = classMapper.get(clz);
 			if (h == null) {
-				h = new LinkedHashSet<Class<?>>();
+				h = new LinkedHashSet<>();
 				classMapper.put(clz, h);
 			}
 

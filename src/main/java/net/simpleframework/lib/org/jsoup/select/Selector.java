@@ -9,7 +9,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
 
 /**
  * CSS-like element selector, that finds elements matching a query.
- * 
+ *
  * <h2>Selector syntax</h2>
  * <p>
  * A selector is a chain of simple selectors, separated by combinators.
@@ -317,31 +317,13 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td></td>
  * </tr>
  * </table>
- * 
+ *
  * @author Jonathan Hedley, jonathan@hedley.net
  * @see Element#select(String)
  */
 public class Selector {
-	private final Evaluator evaluator;
-	private final Element root;
-
-	private Selector(String query, final Element root) {
-		Validate.notNull(query);
-		query = query.trim();
-		Validate.notEmpty(query);
-		Validate.notNull(root);
-
-		this.evaluator = QueryParser.parse(query);
-
-		this.root = root;
-	}
-
-	private Selector(final Evaluator evaluator, final Element root) {
-		Validate.notNull(evaluator);
-		Validate.notNull(root);
-
-		this.evaluator = evaluator;
-		this.root = root;
+	// not instantiable
+	private Selector() {
 	}
 
 	/**
@@ -356,7 +338,8 @@ public class Selector {
 	 *         (unchecked) on an invalid CSS query.
 	 */
 	public static Elements select(final String query, final Element root) {
-		return new Selector(query, root).select();
+		Validate.notEmpty(query);
+		return select(QueryParser.parse(query), root);
 	}
 
 	/**
@@ -369,7 +352,9 @@ public class Selector {
 	 * @return matching elements, empty if none
 	 */
 	public static Elements select(final Evaluator evaluator, final Element root) {
-		return new Selector(evaluator, root).select();
+		Validate.notNull(evaluator);
+		Validate.notNull(root);
+		return Collector.collect(evaluator, root);
 	}
 
 	/**
@@ -385,8 +370,8 @@ public class Selector {
 		Validate.notEmpty(query);
 		Validate.notNull(roots);
 		final Evaluator evaluator = QueryParser.parse(query);
-		final ArrayList<Element> elements = new ArrayList<Element>();
-		final IdentityHashMap<Element, Boolean> seenElements = new IdentityHashMap<Element, Boolean>();
+		final ArrayList<Element> elements = new ArrayList<>();
+		final IdentityHashMap<Element, Boolean> seenElements = new IdentityHashMap<>();
 		// dedupe elements by identity, not equality
 
 		for (final Element root : roots) {
@@ -399,10 +384,6 @@ public class Selector {
 			}
 		}
 		return new Elements(elements);
-	}
-
-	private Elements select() {
-		return Collector.collect(evaluator, root);
 	}
 
 	// exclude set. package open so that Elements can implement .not() selector.
@@ -421,6 +402,20 @@ public class Selector {
 			}
 		}
 		return output;
+	}
+
+	/**
+	 * Find the first element that matches the query.
+	 * 
+	 * @param cssQuery
+	 *        CSS selector
+	 * @param root
+	 *        root element to descend into
+	 * @return the matching element, or <b>null</b> if none.
+	 */
+	public static Element selectFirst(final String cssQuery, final Element root) {
+		Validate.notEmpty(cssQuery);
+		return Collector.findFirst(QueryParser.parse(cssQuery), root);
 	}
 
 	public static class SelectorParseException extends IllegalStateException {

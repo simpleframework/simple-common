@@ -8,8 +8,17 @@ import java.io.IOException;
  * 
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class DataNode extends Node {
-	private static final String DATA_KEY = "data";
+public class DataNode extends LeafNode {
+
+	/**
+	 * Create a new DataNode.
+	 * 
+	 * @param data
+	 *        data contents
+	 */
+	public DataNode(final String data) {
+		value = data;
+	}
 
 	/**
 	 * Create a new DataNode.
@@ -17,11 +26,12 @@ public class DataNode extends Node {
 	 * @param data
 	 *        data contents
 	 * @param baseUri
-	 *        base URI
+	 *        Unused, Leaf Nodes do not hold base URis
+	 * @deprecated use {@link #DataNode(String)} instead
 	 */
+	@Deprecated
 	public DataNode(final String data, final String baseUri) {
-		super(baseUri);
-		attributes.put(DATA_KEY, data);
+		this(data);
 	}
 
 	@Override
@@ -36,7 +46,7 @@ public class DataNode extends Node {
 	 * @return data
 	 */
 	public String getWholeData() {
-		return attributes.get(DATA_KEY);
+		return coreValue();
 	}
 
 	/**
@@ -47,7 +57,7 @@ public class DataNode extends Node {
 	 * @return this node, for chaining
 	 */
 	public DataNode setWholeData(final String data) {
-		attributes.put(DATA_KEY, data);
+		coreValue(data);
 		return this;
 	}
 
@@ -78,6 +88,6 @@ public class DataNode extends Node {
 	 */
 	public static DataNode createFromEncoded(final String encodedData, final String baseUri) {
 		final String data = Entities.unescape(encodedData);
-		return new DataNode(data, baseUri);
+		return new DataNode(data);
 	}
 }

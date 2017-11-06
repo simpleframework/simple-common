@@ -99,7 +99,7 @@ public class WithNode extends BlockNode implements NestedStatement {
 		 *
 		 */
 
-		final List<ParmValuePair> parms = new ArrayList<ParmValuePair>();
+		final List<ParmValuePair> parms = new ArrayList<>();
 		String parm = "";
 
 		final int end = start + offset;
