@@ -3,6 +3,7 @@ package net.simpleframework.common;
 import static net.simpleframework.lib.net.minidev.json.parser.JSONParser.DEFAULT_PERMISSIVE_MODE;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,8 @@ import net.simpleframework.lib.net.minidev.json.writer.JsonReaderI;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class JsonUtils {
@@ -47,15 +49,16 @@ public abstract class JsonUtils {
 
 	/*-------------------------------json-to-bean-------------------------------*/
 
-	public static Map<String, ?> toMap(final String json) {
-		return toObject(json, JSONObject.class);
+	public static Map<String, Object> toMap(final String json) {
+		final Map<String, Object> map = toObject(json, JSONObject.class);
+		return map != null ? map : new HashMap<String, Object>();
 	}
 
 	public static <T> T toObject(final String json, final Class<T> valueType) {
 		return json == null ? null : JSONValue.parse(json, valueType);
 	}
 
-	public static List<Map<String, ?>> toList(final String json) {
+	public static List<Map<String, Object>> toList(final String json) {
 		return toList(json, JSONObject.class);
 	}
 
