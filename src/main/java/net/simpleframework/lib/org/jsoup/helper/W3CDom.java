@@ -2,6 +2,7 @@ package net.simpleframework.lib.org.jsoup.helper;
 
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,22 +86,32 @@ public class W3CDom {
 		private static final String xmlnsPrefix = "xmlns:";
 
 		private final Document doc;
-		private final HashMap<String, String> namespaces = new HashMap<>(); // prefix
-																									// =>
-																									// urn
+		private final Stack<HashMap<String, String>> namespacesStack = new Stack<>(); // stack
+																												// of
+																												// namespaces,
+																												// prefix
+																												// =>
+																												// urn
 		private Element dest;
 
 		public W3CBuilder(final Document doc) {
 			this.doc = doc;
+			this.namespacesStack.push(new HashMap<String, String>());
 		}
 
 		@Override
 		public void head(final net.simpleframework.lib.org.jsoup.nodes.Node source, final int depth) {
+			namespacesStack.push(new HashMap<>(namespacesStack.peek())); // inherit
+																								// from
+																								// above
+																								// on
+																								// the
+																								// stack
 			if (source instanceof net.simpleframework.lib.org.jsoup.nodes.Element) {
 				final net.simpleframework.lib.org.jsoup.nodes.Element sourceEl = (net.simpleframework.lib.org.jsoup.nodes.Element) source;
 
 				final String prefix = updateNamespaces(sourceEl);
-				final String namespace = namespaces.get(prefix);
+				final String namespace = namespacesStack.peek().get(prefix);
 
 				final Element el = doc.createElementNS(namespace, sourceEl.tagName());
 				copyAttributes(sourceEl, el);
@@ -133,6 +144,7 @@ public class W3CDom {
 					&& dest.getParentNode() instanceof Element) {
 				dest = (Element) dest.getParentNode(); // undescend. cromulent.
 			}
+			namespacesStack.pop();
 		}
 
 		private void copyAttributes(final net.simpleframework.lib.org.jsoup.nodes.Node source,
@@ -163,7 +175,7 @@ public class W3CDom {
 				} else {
 					continue;
 				}
-				namespaces.put(prefix, attr.getValue());
+				namespacesStack.peek().put(prefix, attr.getValue());
 			}
 
 			// get the element prefix if any

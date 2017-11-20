@@ -1241,7 +1241,8 @@ public class Element extends Node {
 	</p>
 	 * }, {@code p.text()} returns {@code "Hello there now!"}
 	 *
-	 * @return unencoded text, or empty string if none.
+	 * @return unencoded, normalized text, or empty string if none.
+	 * @see #wholeText() if you don't want the text to be normalized.
 	 * @see #ownText()
 	 * @see #textNodes()
 	 */
@@ -1267,6 +1268,32 @@ public class Element extends Node {
 			}
 		}, this);
 		return accum.toString().trim();
+	}
+
+	/**
+	 * Get the (unencoded) text of all children of this element, including any
+	 * newlines and spaces present in the
+	 * original.
+	 *
+	 * @return unencoded, un-normalized text
+	 * @see #text()
+	 */
+	public String wholeText() {
+		final StringBuilder accum = new StringBuilder();
+		NodeTraversor.traverse(new NodeVisitor() {
+			@Override
+			public void head(final Node node, final int depth) {
+				if (node instanceof TextNode) {
+					final TextNode textNode = (TextNode) node;
+					accum.append(textNode.getWholeText());
+				}
+			}
+
+			@Override
+			public void tail(final Node node, final int depth) {
+			}
+		}, this);
+		return accum.toString();
 	}
 
 	/**
@@ -1322,12 +1349,18 @@ public class Element extends Node {
 	}
 
 	static boolean preserveWhitespace(final Node node) {
-		// looks only at this element and one level up, to prevent recursion &
+		// looks only at this element and five levels up, to prevent recursion &
 		// needless stack searches
 		if (node != null && node instanceof Element) {
-			final Element element = (Element) node;
-			return element.tag.preserveWhitespace()
-					|| element.parent() != null && element.parent().tag.preserveWhitespace();
+			Element el = (Element) node;
+			int i = 0;
+			do {
+				if (el.tag.preserveWhitespace()) {
+					return true;
+				}
+				el = el.parent();
+				i++;
+			} while (i < 6 && el != null);
 		}
 		return false;
 	}

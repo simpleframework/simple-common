@@ -13,6 +13,8 @@ import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.DocumentType;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
+import net.simpleframework.lib.org.jsoup.nodes.PseudoTextElement;
+import net.simpleframework.lib.org.jsoup.nodes.TextNode;
 import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
 
 /**
@@ -790,6 +792,31 @@ public abstract class Evaluator {
 		@Override
 		public String toString() {
 			return String.format(":matchesOwn(%s)", pattern);
+		}
+	}
+
+	public static final class MatchText extends Evaluator {
+
+		@Override
+		public boolean matches(final Element root, final Element element) {
+			if (element instanceof PseudoTextElement) {
+				return true;
+			}
+
+			final List<TextNode> textNodes = element.textNodes();
+			for (final TextNode textNode : textNodes) {
+				final PseudoTextElement pel = new PseudoTextElement(
+						net.simpleframework.lib.org.jsoup.parser.Tag.valueOf(element.tagName()),
+						element.baseUri(), element.attributes());
+				textNode.replaceWith(pel);
+				pel.appendChild(textNode);
+			}
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return ":matchText";
 		}
 	}
 }

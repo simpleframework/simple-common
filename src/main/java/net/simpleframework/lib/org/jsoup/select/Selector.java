@@ -222,6 +222,24 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>.light:contains(name):eq(0)</code></td>
  * </tr>
  * <tr>
+ * <td><code>:matchText</code></td>
+ * <td>treats text nodes as elements, and so allows you to match against and
+ * select text nodes.
+ * <p>
+ * <b>Note</b> that using this selector will modify the DOM, so you may want to
+ * {@code clone} your document before using.</td>
+ * <td>{@code p:matchText:firstChild} with input {@code 
+ * 
+<p>
+ * One<br />
+ * Two
+ * 
+</p>
+ * } will return one
+ * {@link net.simpleframework.lib.org.jsoup.nodes.PseudoTextElement} with text
+ * "{@code One}".</td>
+ * </tr>
+ * <tr>
  * <td colspan="3">
  * <h3>Structural pseudo selectors</h3></td>
  * </tr>

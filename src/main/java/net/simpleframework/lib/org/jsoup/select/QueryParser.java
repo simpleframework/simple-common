@@ -217,6 +217,8 @@ public class QueryParser {
 			evals.add(new Evaluator.IsEmpty());
 		} else if (tq.matchChomp(":root")) {
 			evals.add(new Evaluator.IsRoot());
+		} else if (tq.matchChomp(":matchText")) {
+			evals.add(new Evaluator.MatchText());
 		} else {
 			throw new Selector.SelectorParseException(
 					"Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());

@@ -16,7 +16,7 @@ import net.simpleframework.lib.org.jsoup.helper.Validate;
 public final class CharacterReader {
 	static final char EOF = (char) -1;
 	private static final int maxStringCacheLen = 12;
-	private static final int maxBufferLen = 1024 * 32;
+	static final int maxBufferLen = 1024 * 32; // visible for testing
 	private static final int readAheadLimit = (int) (maxBufferLen * 0.75);
 
 	private final char[] charBuf;
@@ -471,6 +471,9 @@ public final class CharacterReader {
 		// limit (no cache):
 		if (count > maxStringCacheLen) {
 			return new String(charBuf, start, count);
+		}
+		if (count < 1) {
+			return "";
 		}
 
 		// calculate hash:
