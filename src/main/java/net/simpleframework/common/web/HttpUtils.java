@@ -412,7 +412,7 @@ public abstract class HttpUtils implements HtmlConst {
 			}
 		}
 		String qs = toQueryString(params, charset);
-		if (StringUtils.hasText(qs)) {
+		if (StringUtils.hasText(request) && StringUtils.hasText(qs)) {
 			qs = "?" + qs;
 		}
 		return request + qs;
