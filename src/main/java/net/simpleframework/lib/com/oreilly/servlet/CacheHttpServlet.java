@@ -281,9 +281,9 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	}
 
 	@Override
-	public void setCharacterEncoding(String encoding) {
+	public void setCharacterEncoding(final String encoding) {
 		delegate.setCharacterEncoding(encoding);
-		encoding = encoding;
+		this.encoding = encoding;
 	}
 
 	@Override
