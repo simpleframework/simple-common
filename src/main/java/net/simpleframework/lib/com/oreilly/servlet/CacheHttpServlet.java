@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -438,6 +439,26 @@ class CacheHttpServletResponse implements HttpServletResponse {
 	@Override
 	public String encodeRedirectUrl(final String url) {
 		return this.encodeRedirectURL(url);
+	}
+
+	@Override
+	public int getStatus() {
+		return delegate.getStatus();
+	}
+
+	@Override
+	public String getHeader(final String name) {
+		return delegate.getHeader(name);
+	}
+
+	@Override
+	public Collection<String> getHeaders(final String name) {
+		return delegate.getHeaders(name);
+	}
+
+	@Override
+	public Collection<String> getHeaderNames() {
+		return delegate.getHeaderNames();
 	}
 }
 
