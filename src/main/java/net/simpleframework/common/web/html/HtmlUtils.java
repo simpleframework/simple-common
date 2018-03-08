@@ -13,6 +13,7 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
+import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
@@ -311,6 +312,41 @@ public abstract class HtmlUtils implements HtmlConst {
 			public void doElement(final Element ele) {
 				if (tag.equalsIgnoreCase(ele.tagName())) {
 					ele.tagName(tag2);
+				}
+			}
+		};
+	}
+
+	public static IElementVisitor REMOVE_EVENT_ATTRI_VISITOR() {
+		return new IElementVisitor() {
+			@Override
+			public void doElement(final Element ele) {
+				final String tag = ele.tagName().toLowerCase();
+				for (final Attribute attri : ele.attributes().clone()) {
+					final String key = attri.getKey().toLowerCase();
+					if (key.startsWith("on")) {
+						ele.removeAttr(key);
+					}
+					if ("a".equals(tag)) {
+						final String val = attri.getValue().toLowerCase();
+						if (key.equals("href") && val.startsWith("javascript:")) {
+							ele.removeAttr(key);
+						}
+					}
+				}
+			}
+		};
+	}
+
+	public static IElementVisitor REMOVE_CUSTOM_ATTRI_VISITOR() {
+		return new IElementVisitor() {
+			@Override
+			public void doElement(final Element ele) {
+				for (final Attribute attri : ele.attributes().clone()) {
+					final String key = attri.getKey();
+					if (key.indexOf("-") > -1) {
+						ele.removeAttr(key);
+					}
 				}
 			}
 		};
