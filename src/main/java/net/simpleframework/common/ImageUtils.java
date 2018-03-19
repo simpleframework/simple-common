@@ -152,8 +152,9 @@ public abstract class ImageUtils {
 	public static void thumbnail(final BufferedImage sbi, final double d,
 			final OutputStream outputStream, final String filetype) throws IOException {
 		final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
-		final BufferedImage bi = new BufferedImage(w, h, sbi.getAlphaRaster() != null
-				? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		final BufferedImage bi = new BufferedImage(w, h,
+				sbi.getAlphaRaster() != null ? BufferedImage.TYPE_INT_ARGB
+						: BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = bi.createGraphics();
 		g.drawImage(sbi, 0, 0, w, h, null);
 		g.dispose();
@@ -180,8 +181,12 @@ public abstract class ImageUtils {
 	}
 
 	public static boolean isImage(final File file) {
+		return isImage(file, true);
+	}
+
+	public static boolean isImage(final File file, final boolean bext) {
 		final String ext = FileUtils.getFilenameExtension(file.getName());
-		if (StringUtils.hasText(ext)) {
+		if (bext && StringUtils.hasText(ext)) {
 			return isImage(ext);
 		} else {
 			FileInputStream inputStream = null;
