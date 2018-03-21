@@ -72,6 +72,11 @@ public abstract class HttpUtils implements HtmlConst {
 		}
 	}
 
+	public static String toRequestURI(final String url) {
+		final int pos = url.lastIndexOf("?");
+		return pos > -1 ? url.substring(0, pos) : url;
+	}
+
 	public static String encodeUrl(final String url) {
 		return encodeUrl(url, "utf-8");
 	}
@@ -294,7 +299,6 @@ public abstract class HttpUtils implements HtmlConst {
 		return str;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void putParameter(final HttpServletRequest request, final String key,
 			final Object value) {
 		if (!StringUtils.hasText(key) || value == null) {
