@@ -98,7 +98,7 @@ public abstract class ImageUtils {
 	}
 
 	public static void thumbnail(final InputStream inputStream, int width, int height,
-			final boolean stretch, final OutputStream outputStream, final String filetype)
+			final boolean stretch, final OutputStream outputStream, String filetype)
 			throws IOException {
 		int w, h;
 		final BufferedImage sbi = ImageIO.read(inputStream);
@@ -146,6 +146,9 @@ public abstract class ImageUtils {
 			}
 		}
 		g.dispose();
+		if (filetype == null) {
+			filetype = alpha ? "png" : "jpg";
+		}
 		ImageIO.write(bi, filetype, outputStream);
 	}
 
