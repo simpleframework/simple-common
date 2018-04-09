@@ -93,43 +93,29 @@ public abstract class ImageUtils {
 	}
 
 	public static void thumbnail(final InputStream inputStream, final int width, final int height,
-			final OutputStream outputStream, final String filetype) throws IOException {
-		thumbnail(inputStream, width, height, false, outputStream, filetype);
-	}
-
-	public static void thumbnail(final InputStream inputStream, int width, int height,
-			final boolean stretch, final OutputStream outputStream, String filetype)
-			throws IOException {
-		int w, h;
+			final OutputStream outputStream, String filetype) throws IOException {
 		final BufferedImage sbi = ImageIO.read(inputStream);
 		if (sbi == null) {
 			IoUtils.copyStream(inputStream, outputStream);
 			return;
 		}
-		if (width == 0) {
-			width = sbi.getWidth();
-		} else {
-			width = Math.min(width, sbi.getWidth());
-		}
-		if (height == 0) {
-			height = sbi.getHeight();
-		} else {
-			height = Math.min(height, sbi.getHeight());
-		}
 
-		if (!stretch) {
-			final double d = (double) width / (double) height;
+		int w, h;
+		if (width == 0 && height == 0) {
+			w = sbi.getWidth();
+			h = sbi.getHeight();
+		} else {
 			final double d0 = (double) sbi.getWidth() / (double) sbi.getHeight();
-			if (d < d0) {
-				w = width;
+			if (width == 0) {
+				h = sbi.getHeight();
+				w = (int) (height * d0);
+			} else if (height == 0) {
+				w = sbi.getWidth();
 				h = (int) (width / d0);
 			} else {
-				w = (int) (height * d0);
+				w = width;
 				h = height;
 			}
-		} else {
-			w = width;
-			h = height;
 		}
 
 		final boolean alpha = sbi.getAlphaRaster() != null;
