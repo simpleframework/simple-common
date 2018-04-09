@@ -118,9 +118,9 @@ public abstract class ImageUtils {
 			final double d0 = (double) sbi.getWidth() / (double) sbi.getHeight();
 			if (d < d0) {
 				w = width;
-				h = (int) (width / d0);
+				h = Math.min((int) (width / d0), height);
 			} else {
-				w = (int) (height * d0);
+				w = Math.min((int) (height * d0), width);
 				h = height;
 			}
 		} else {
