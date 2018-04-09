@@ -108,9 +108,13 @@ public abstract class ImageUtils {
 		}
 		if (width == 0) {
 			width = sbi.getWidth();
+		} else {
+			width = Math.min(width, sbi.getWidth());
 		}
 		if (height == 0) {
 			height = sbi.getHeight();
+		} else {
+			height = Math.min(height, sbi.getHeight());
 		}
 
 		if (!stretch) {
@@ -118,9 +122,9 @@ public abstract class ImageUtils {
 			final double d0 = (double) sbi.getWidth() / (double) sbi.getHeight();
 			if (d < d0) {
 				w = width;
-				h = Math.min((int) (width / d0), height);
+				h = (int) (width / d0);
 			} else {
-				w = Math.min((int) (height * d0), width);
+				w = (int) (height * d0);
 				h = height;
 			}
 		} else {
