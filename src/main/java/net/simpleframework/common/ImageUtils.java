@@ -93,29 +93,39 @@ public abstract class ImageUtils {
 	}
 
 	public static void thumbnail(final InputStream inputStream, final int width, final int height,
-			final OutputStream outputStream, String filetype) throws IOException {
+			final OutputStream outputStream, final String filetype) throws IOException {
+		thumbnail(inputStream, width, height, false, outputStream, filetype);
+	}
+
+	public static void thumbnail(final InputStream inputStream, int width, int height,
+			final boolean stretch, final OutputStream outputStream, String filetype)
+			throws IOException {
+		int w, h;
 		final BufferedImage sbi = ImageIO.read(inputStream);
 		if (sbi == null) {
 			IoUtils.copyStream(inputStream, outputStream);
 			return;
 		}
+		if (width == 0) {
+			width = sbi.getWidth();
+		}
+		if (height == 0) {
+			height = sbi.getHeight();
+		}
 
-		int w, h;
-		if (width == 0 && height == 0) {
-			w = sbi.getWidth();
-			h = sbi.getHeight();
-		} else {
+		if (!stretch) {
+			final double d = (double) width / (double) height;
 			final double d0 = (double) sbi.getWidth() / (double) sbi.getHeight();
-			if (width == 0) {
-				h = sbi.getHeight();
-				w = (int) (height * d0);
-			} else if (height == 0) {
-				w = sbi.getWidth();
+			if (d < d0) {
+				w = width;
 				h = (int) (width / d0);
 			} else {
-				w = width;
+				w = (int) (height * d0);
 				h = height;
 			}
+		} else {
+			w = width;
+			h = height;
 		}
 
 		final boolean alpha = sbi.getAlphaRaster() != null;
@@ -167,6 +177,45 @@ public abstract class ImageUtils {
 	public static void thumbnail(final InputStream inputStream, final double d,
 			final OutputStream outputStream) throws IOException {
 		thumbnail(inputStream, d, outputStream, "png");
+	}
+
+	public static void scale(final InputStream inputStream, final int width, final int height,
+			final OutputStream outputStream, String filetype) throws IOException {
+		final BufferedImage sbi = ImageIO.read(inputStream);
+		if (sbi == null) {
+			IoUtils.copyStream(inputStream, outputStream);
+			return;
+		}
+
+		int w, h;
+		if (width == 0 && height == 0) {
+			w = sbi.getWidth();
+			h = sbi.getHeight();
+		} else {
+			w = width;
+			h = height;
+			final double d0 = (double) sbi.getWidth() / (double) sbi.getHeight();
+			if (w == 0) {
+				w = (int) (h * d0);
+			} else if (h == 0) {
+				h = (int) (w / d0);
+			}
+		}
+
+		final boolean alpha = sbi.getAlphaRaster() != null;
+		final BufferedImage bi = new BufferedImage(w, h,
+				alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g = bi.createGraphics();
+		if (!alpha) {
+			g.setBackground(Color.white);
+			g.fillRect(0, 0, width, height);
+		}
+		g.drawImage(sbi, 0, 0, w, h, null);
+		g.dispose();
+		if (filetype == null) {
+			filetype = alpha ? "png" : "jpg";
+		}
+		ImageIO.write(bi, filetype, outputStream);
 	}
 
 	public static boolean isImage(final String ext) {
