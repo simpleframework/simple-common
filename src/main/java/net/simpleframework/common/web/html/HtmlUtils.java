@@ -325,7 +325,10 @@ public abstract class HtmlUtils implements HtmlConst {
 				for (final Attribute attri : ele.attributes().clone()) {
 					final String key = attri.getKey().toLowerCase();
 					if (key.startsWith("on")) {
-						ele.removeAttr(key);
+						final String val = attri.getValue().toLowerCase();
+						if (!val.contains("$Actions")) {
+							ele.removeAttr(key);
+						}
 					}
 					if ("a".equals(tag)) {
 						final String val = attri.getValue().toLowerCase();
