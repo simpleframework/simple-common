@@ -85,7 +85,7 @@ public abstract class FileUtils {
 		OutputStream outputStream = null;
 		try {
 			IoUtils.copyStream(inputStream,
-					outputStream = new BufferedOutputStream(new FileOutputStream(to)));
+					outputStream = new BufferedOutputStream(new FileOutputStream(to)), 1024 * 1024);
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();

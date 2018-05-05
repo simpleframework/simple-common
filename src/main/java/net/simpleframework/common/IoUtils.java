@@ -82,11 +82,16 @@ public abstract class IoUtils {
 
 	public static int copyStream(final InputStream inputStream, final OutputStream outputStream)
 			throws IOException {
+		return copyStream(inputStream, outputStream, BUFFER);
+	}
+
+	public static int copyStream(final InputStream inputStream, final OutputStream outputStream,
+			final int bufferSize) throws IOException {
 		if (inputStream == null || outputStream == null) {
 			return 0;
 		}
 		int result = 0;
-		final byte[] buf = new byte[BUFFER];
+		final byte[] buf = new byte[bufferSize];
 		for (;;) {
 			final int numRead = inputStream.read(buf);
 			if (numRead == -1) {
@@ -99,7 +104,9 @@ public abstract class IoUtils {
 		return result;
 	}
 
-	/********************************* Serializable **********************************/
+	/*********************************
+	 * Serializable
+	 **********************************/
 
 	public static byte[] serialize(final Object obj) throws IOException {
 		if (obj == null) {
@@ -120,7 +127,9 @@ public abstract class IoUtils {
 		return ois.readObject();
 	}
 
-	/********************************* MacAddress **********************************/
+	/*********************************
+	 * MacAddress
+	 **********************************/
 
 	private static Method getHardwareAddressMethod;
 	static {

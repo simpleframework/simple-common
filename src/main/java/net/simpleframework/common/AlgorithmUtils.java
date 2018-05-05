@@ -22,14 +22,14 @@ public abstract class AlgorithmUtils {
 
 	static final int BUFFER = 8 * 1024;
 
-	public static String md(final InputStream inputStream, final String algorithm)
-			throws IOException {
+	public static String md(final InputStream inputStream, final String algorithm,
+			final int bufferSize) throws IOException {
 		if (inputStream == null) {
 			return null;
 		}
 		try {
 			final MessageDigest digest = MessageDigest.getInstance(algorithm);
-			final byte[] buf = new byte[BUFFER];
+			final byte[] buf = new byte[bufferSize];
 			for (;;) {
 				final int numRead = inputStream.read(buf);
 				if (numRead == -1) {
@@ -44,7 +44,7 @@ public abstract class AlgorithmUtils {
 	}
 
 	public static String md5Hex(final InputStream inputStream) throws IOException {
-		return md(inputStream, "MD5");
+		return md(inputStream, "MD5", BUFFER);
 	}
 
 	public static String md(final byte[] bytes, final String algorithm) {
