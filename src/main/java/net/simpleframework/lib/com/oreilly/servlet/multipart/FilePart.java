@@ -215,7 +215,7 @@ public class FilePart extends Part {
 		}
 		long size = 0;
 		int read;
-		final byte[] buf = new byte[8 * 1024];
+		final byte[] buf = new byte[80 * 1024];
 		while ((read = partInput.read(buf)) != -1) {
 			out.write(buf, 0, read);
 			size += read;
