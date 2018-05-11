@@ -261,9 +261,11 @@ public abstract class ImageUtils {
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-		width = Math.min(width, sbi.getWidth());
-		height = Math.min(height, sbi.getHeight());
-		g.drawImage(sbi, 0, 0, width, height, srcX, srcY, srcX + width, srcY + height, null);
+		if (sbi != null) {
+			width = Math.min(width, sbi.getWidth());
+			height = Math.min(height, sbi.getHeight());
+			g.drawImage(sbi, 0, 0, width, height, srcX, srcY, srcX + width, srcY + height, null);
+		}
 		g.dispose();
 		return bi;
 	}
