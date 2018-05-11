@@ -250,8 +250,6 @@ public abstract class ImageUtils {
 
 	public static BufferedImage clip(final InputStream istream, int width, int height,
 			final int srcX, final int srcY) throws IOException {
-		final BufferedImage sbi = ImageIO.read(istream);
-
 		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g = bi.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
@@ -261,6 +259,7 @@ public abstract class ImageUtils {
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
+		final BufferedImage sbi = ImageIO.read(istream);
 		if (sbi != null) {
 			width = Math.min(width, sbi.getWidth());
 			height = Math.min(height, sbi.getHeight());
