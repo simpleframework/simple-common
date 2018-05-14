@@ -76,7 +76,8 @@ public class FormElement extends Element {
 		Validate.notEmpty(action,
 				"Could not determine a form action URL for submit. Ensure you set a base URI when parsing.");
 		final Connection.Method method = attr("method").toUpperCase().equals("POST")
-				? Connection.Method.POST : Connection.Method.GET;
+				? Connection.Method.POST
+				: Connection.Method.GET;
 
 		return Jsoup.connect(action).data(formData()).method(method);
 	}

@@ -55,7 +55,8 @@ public class MVEL {
 	public static final String CODENAME = "liberty";
 	static boolean DEBUG_FILE = getBoolean("mvel2.debug.fileoutput");
 	static String ADVANCED_DEBUGGING_FILE = System.getProperty("mvel2.debugging.file") == null
-			? "mvel_debug.txt" : System.getProperty("mvel2.debugging.file");
+			? "mvel_debug.txt"
+			: System.getProperty("mvel2.debugging.file");
 	static boolean ADVANCED_DEBUG = getBoolean("mvel2.advanced_debugging");
 	static boolean WEAK_CACHE = getBoolean("mvel2.weak_caching");
 	static boolean NO_JIT = getBoolean("mvel2.disable.jit");
@@ -1166,7 +1167,8 @@ public class MVEL {
 	public static Object executeExpression(final Object compiledExpression, final Object ctx,
 			final Map vars) {
 		final CachingMapVariableResolverFactory factory = vars != null
-				? new CachingMapVariableResolverFactory(vars) : null;
+				? new CachingMapVariableResolverFactory(vars)
+				: null;
 		try {
 			return ((ExecutableStatement) compiledExpression).getValue(ctx, factory);
 		} finally {

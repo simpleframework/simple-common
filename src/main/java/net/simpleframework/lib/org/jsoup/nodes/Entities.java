@@ -73,7 +73,8 @@ public class Entities {
 				// come after uppercase, and we prefer to emit lower
 				// (and binary search for same item with multi results is undefined
 				return (index < nameVals.length - 1 && codeKeys[index + 1] == codepoint)
-						? nameVals[index + 1] : nameVals[index];
+						? nameVals[index + 1]
+						: nameVals[index];
 			}
 			return emptyName;
 		}

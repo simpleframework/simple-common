@@ -1055,7 +1055,8 @@ public class HttpConnection implements Connection {
 		private static HttpURLConnection createConnection(final Connection.Request req)
 				throws IOException {
 			final HttpURLConnection conn = (HttpURLConnection) (req.proxy() == null
-					? req.url().openConnection() : req.url().openConnection(req.proxy()));
+					? req.url().openConnection()
+					: req.url().openConnection(req.proxy()));
 
 			conn.setRequestMethod(req.method().name());
 			conn.setInstanceFollowRedirects(false); // don't rely on native

@@ -212,6 +212,7 @@ public class PropertyTools {
 	 */
 	public static String getJavaVersion() {
 		return System.getProperty("mvel.java.version") != null
-				? System.getProperty("mvel.java.version") : System.getProperty("java.version");
+				? System.getProperty("mvel.java.version")
+				: System.getProperty("java.version");
 	}
 }

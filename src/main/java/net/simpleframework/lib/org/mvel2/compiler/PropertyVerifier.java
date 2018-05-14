@@ -427,7 +427,8 @@ public class PropertyVerifier extends AbstractOptimizer {
 			if (Map.class.isAssignableFrom(
 					property.length() != 0 ? ctx = getBeanProperty(ctx, property) : ctx)) {
 				ctx = (Class) (pCtx.getLastTypeParameters().length != 0
-						? pCtx.getLastTypeParameters()[1] : Object.class);
+						? pCtx.getLastTypeParameters()[1]
+						: Object.class);
 			} else if (Collection.class.isAssignableFrom(ctx)) {
 				if (pCtx.getLastTypeParameters().length == 0) {
 					ctx = Object.class;
@@ -502,11 +503,11 @@ public class PropertyVerifier extends AbstractOptimizer {
 				final Function f = pCtx.getFunction(name);
 				if (f != null && f.getEgressType() != null) {
 					resolvedExternally = false;
-					f.checkArgumentCount(
-							parseParameterList(
-									(((cursor = balancedCapture(expr, cursor, end, '(')) - st) > 1
-											? ParseTools.subset(expr, st + 1, cursor - st - 1) : new char[0]),
-									0, -1).size());
+					f.checkArgumentCount(parseParameterList(
+							(((cursor = balancedCapture(expr, cursor, end, '(')) - st) > 1
+									? ParseTools.subset(expr, st + 1, cursor - st - 1)
+									: new char[0]),
+							0, -1).size());
 
 					return f.getEgressType();
 				} else if (pCtx.hasVarOrInput("this")) {
@@ -665,8 +666,9 @@ public class PropertyVerifier extends AbstractOptimizer {
 				final TypeVariable[] typeVariables = ctx.getTypeParameters();
 				for (int i = 0; i < typeVariables.length; i++) {
 					final Type typeArg = pCtx.getLastTypeParameters()[i];
-					typeArgs.put(typeVariables[i].getName(), typeArg instanceof Class
-							? (Class) pCtx.getLastTypeParameters()[i] : Object.class);
+					typeArgs.put(typeVariables[i].getName(),
+							typeArg instanceof Class ? (Class) pCtx.getLastTypeParameters()[i]
+									: Object.class);
 				}
 			}
 

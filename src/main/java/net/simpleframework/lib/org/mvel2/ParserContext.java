@@ -869,7 +869,8 @@ public class ParserContext implements Serializable {
 
 	public int getLineFor(final String sourceName, final int cursor) {
 		return (sourceLineLookups != null && sourceLineLookups.containsKey(sourceName))
-				? sourceLineLookups.get(sourceName).getLineFromCursor(cursor) : -1;
+				? sourceLineLookups.get(sourceName).getLineFromCursor(cursor)
+				: -1;
 	}
 
 	public boolean isVisitedLine(final String sourceName, final int lineNumber) {

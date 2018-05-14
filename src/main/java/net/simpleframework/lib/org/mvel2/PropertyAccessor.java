@@ -932,7 +932,8 @@ public class PropertyAccessor {
 
 		final String tk = cursor != end && property[cursor] == '('
 				&& ((cursor = balancedCapture(property, cursor, '(')) - _start) > 1
-						? new String(property, _start + 1, cursor - _start - 1) : "";
+						? new String(property, _start + 1, cursor - _start - 1)
+						: "";
 
 		cursor++;
 

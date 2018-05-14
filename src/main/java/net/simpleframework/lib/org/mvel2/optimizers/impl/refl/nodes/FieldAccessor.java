@@ -61,7 +61,8 @@ public class FieldAccessor implements AccessorNode {
 			try {
 				return nextNode.setValue(field.get(ctx), elCtx, variableFactory,
 						value == null && primitive
-								? PropertyTools.getPrimitiveInitialValue(field.getType()) : value);
+								? PropertyTools.getPrimitiveInitialValue(field.getType())
+								: value);
 			} catch (final Exception e) {
 				throw new RuntimeException("unable to access field", e);
 			}

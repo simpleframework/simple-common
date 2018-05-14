@@ -1763,7 +1763,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		final int st = cursor;
 		final String tk = cursor != end && expr[cursor] == '('
 				&& ((cursor = balancedCapture(expr, cursor, '(')) - st) > 1
-						? new String(expr, st + 1, cursor - st - 1) : "";
+						? new String(expr, st + 1, cursor - st - 1)
+						: "";
 		cursor++;
 
 		Object[] preConvArgs;
@@ -3164,7 +3165,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 									+ "integration/VariableResolverFactory;)Ljava/lang/Object;");
 
 					tg = cns.getParameterTypes()[i].isPrimitive()
-							? getWrapperClass(cns.getParameterTypes()[i]) : cns.getParameterTypes()[i];
+							? getWrapperClass(cns.getParameterTypes()[i])
+							: cns.getParameterTypes()[i];
 
 					if (parms[i] != null
 							&& !parms[i].getClass().isAssignableFrom(cns.getParameterTypes()[i])) {

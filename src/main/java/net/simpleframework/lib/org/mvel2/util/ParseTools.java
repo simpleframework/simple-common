@@ -1140,7 +1140,8 @@ public class ParseTools {
 		}
 
 		return clazz.getSuperclass() != null
-				? determineActualTargetMethod(clazz.getSuperclass(), method) : null;
+				? determineActualTargetMethod(clazz.getSuperclass(), method)
+				: null;
 	}
 
 	public static int captureToNextTokenJunction(final char[] expr, int cursor, final int end,

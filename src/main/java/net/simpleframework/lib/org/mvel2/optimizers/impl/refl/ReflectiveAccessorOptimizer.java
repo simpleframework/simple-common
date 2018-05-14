@@ -972,7 +972,8 @@ public class ReflectiveAccessorOptimizer extends AbstractOptimizer implements Ac
 		final int st = cursor;
 		final String tk = cursor != end && expr[cursor] == '('
 				&& ((cursor = balancedCapture(expr, cursor, '(')) - st) > 1
-						? new String(expr, st + 1, cursor - st - 1) : "";
+						? new String(expr, st + 1, cursor - st - 1)
+						: "";
 		cursor++;
 
 		Object[] args;

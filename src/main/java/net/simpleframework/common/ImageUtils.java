@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +16,9 @@ import java.io.OutputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
@@ -49,8 +53,7 @@ public abstract class ImageUtils {
 	public static String genCode(final int width, final int height, final OutputStream outputStream)
 			throws IOException {
 		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		final Graphics2D g = bi.createGraphics();
-
+		final Graphics2D g = createGraphics(bi);
 		final GradientPaint gp = new GradientPaint(0, 0, Color.WHITE, width, height,
 				getRandColor(120, 200), false);
 		g.setPaint(gp);
@@ -129,9 +132,8 @@ public abstract class ImageUtils {
 		}
 
 		final boolean alpha = sbi.getAlphaRaster() != null;
-		final BufferedImage bi = new BufferedImage(width, height,
-				alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = bi.createGraphics();
+		final BufferedImage bi = new BufferedImage(width, height, sbi.getType());
+		final Graphics2D g = createGraphics(bi);
 		if (w == width && h == height) {
 			g.drawImage(sbi, 0, 0, w, h, null);
 		} else {
@@ -155,10 +157,8 @@ public abstract class ImageUtils {
 	public static void thumbnail(final BufferedImage sbi, final double d,
 			final OutputStream outputStream, final String filetype) throws IOException {
 		final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
-		final BufferedImage bi = new BufferedImage(w, h,
-				sbi.getAlphaRaster() != null ? BufferedImage.TYPE_INT_ARGB
-						: BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = bi.createGraphics();
+		final BufferedImage bi = new BufferedImage(w, h, sbi.getType());
+		final Graphics2D g = createGraphics(bi);
 		g.drawImage(sbi, 0, 0, w, h, null);
 		g.dispose();
 		ImageIO.write(bi, filetype, outputStream);
@@ -202,10 +202,9 @@ public abstract class ImageUtils {
 			}
 		}
 
+		final BufferedImage bi = new BufferedImage(w, h, sbi.getType());
+		final Graphics2D g = createGraphics(bi);
 		final boolean alpha = sbi.getAlphaRaster() != null;
-		final BufferedImage bi = new BufferedImage(w, h,
-				alpha ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = bi.createGraphics();
 		if (!alpha) {
 			g.setBackground(Color.white);
 			g.fillRect(0, 0, width, height);
@@ -216,6 +215,38 @@ public abstract class ImageUtils {
 			filetype = alpha ? "png" : "jpg";
 		}
 		ImageIO.write(bi, filetype, outputStream);
+	}
+
+	private static Graphics2D createGraphics(final BufferedImage bi) {
+		final Graphics2D g = bi.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		return g;
+	}
+
+	public static void clip(final InputStream istream, final OutputStream ostream,
+			final Rectangle rect, final String suffix) throws IOException {
+		try {
+			final ImageInputStream iis = ImageIO.createImageInputStream(istream);
+			final ImageReader reader = ImageIO.getImageReadersBySuffix(suffix).next();
+			reader.setInput(iis, true);
+			final ImageReadParam param = reader.getDefaultReadParam();
+			param.setSourceRegion(rect);
+			final BufferedImage bi = reader.read(0, param);
+			ImageIO.write(bi, suffix, ostream);
+		} finally {
+			if (istream != null) {
+				try {
+					istream.close();
+				} catch (final Exception e) {
+				}
+			}
+			if (ostream != null) {
+				try {
+					ostream.close();
+				} catch (final Exception e) {
+				}
+			}
+		}
 	}
 
 	public static boolean isImage(final String ext) {
@@ -246,26 +277,5 @@ public abstract class ImageUtils {
 				}
 			}
 		}
-	}
-
-	public static BufferedImage clip(final InputStream istream, int width, int height,
-			final int srcX, final int srcY) throws IOException {
-		final BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		final Graphics2D g = bi.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, width, height);
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-		final BufferedImage sbi = ImageIO.read(istream);
-		if (sbi != null) {
-			width = Math.min(width, sbi.getWidth());
-			height = Math.min(height, sbi.getHeight());
-			g.drawImage(sbi, 0, 0, width, height, srcX, srcY, srcX + width, srcY + height, null);
-		}
-		g.dispose();
-		return bi;
 	}
 }

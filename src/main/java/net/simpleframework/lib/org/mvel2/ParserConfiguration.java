@@ -93,7 +93,8 @@ public class ParserConfiguration implements Serializable {
 			return (Class) imports.get(name);
 		}
 		return (Class) (AbstractParser.LITERALS.get(name) instanceof Class
-				? AbstractParser.LITERALS.get(name) : null);
+				? AbstractParser.LITERALS.get(name)
+				: null);
 	}
 
 	public MethodStub getStaticImport(final String name) {

@@ -114,7 +114,8 @@ public class JSONParser {
 	 * Default json-smart processing mode
 	 */
 	public static int DEFAULT_PERMISSIVE_MODE = (System.getProperty("JSON_SMART_SIMPLE") != null)
-			? MODE_JSON_SIMPLE : MODE_PERMISSIVE;
+			? MODE_JSON_SIMPLE
+			: MODE_PERMISSIVE;
 
 	/*
 	 * internal fields
