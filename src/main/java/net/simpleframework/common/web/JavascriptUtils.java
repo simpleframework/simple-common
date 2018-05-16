@@ -19,7 +19,8 @@ import net.simpleframework.common.web.html.HtmlConst;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class JavascriptUtils implements HtmlConst {
@@ -119,16 +120,17 @@ public abstract class JavascriptUtils implements HtmlConst {
 			FileUtils.copyFile(inputStream, to);
 			return;
 		}
+		final String encode = "utf-8";
 		final String filename = to.getName();
 		if ((jsCompress && filename.endsWith(".js")) || (cssCompress && filename.endsWith(".css"))) {
 			OutputStreamWriter oWriter = null;
 			String c = null;
 			try {
-				c = IoUtils.getStringFromInputStream(inputStream);
+				c = IoUtils.getStringFromInputStream(inputStream, encode);
 				if (!to.exists()) {
 					FileUtils.createFile(to);
 				}
-				oWriter = new OutputStreamWriter(new FileOutputStream(to), "utf-8");
+				oWriter = new OutputStreamWriter(new FileOutputStream(to), encode);
 				if (filename.endsWith(".js")) {
 					new com.yahoo.platform.yui.compressor.JavaScriptCompressor(new StringReader(c), null)
 							.compress(oWriter, 200, true, false, false, false);
@@ -138,7 +140,7 @@ public abstract class JavascriptUtils implements HtmlConst {
 				}
 			} catch (final Exception e) {
 				if (c != null) {
-					FileUtils.copyFile(new ByteArrayInputStream(c.getBytes()), to);
+					FileUtils.copyFile(new ByteArrayInputStream(c.getBytes(encode)), to);
 				}
 			} finally {
 				if (oWriter != null) {
