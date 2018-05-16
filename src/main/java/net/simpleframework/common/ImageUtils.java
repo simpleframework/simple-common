@@ -223,8 +223,8 @@ public abstract class ImageUtils {
 		return g;
 	}
 
-	public static void clip(final InputStream istream, final OutputStream ostream,
-			final Rectangle rect, final String suffix) throws IOException {
+	public static BufferedImage clip(final InputStream istream, final Rectangle rect,
+			final String suffix) throws IOException {
 		try {
 			final ImageInputStream iis = ImageIO.createImageInputStream(istream);
 			final ImageReader reader = ImageIO.getImageReadersBySuffix(suffix).next();
@@ -232,7 +232,7 @@ public abstract class ImageUtils {
 			final ImageReadParam param = reader.getDefaultReadParam();
 			param.setSourceRegion(rect);
 			final BufferedImage bi = reader.read(0, param);
-			ImageIO.write(bi, suffix, ostream);
+			return bi;
 		} finally {
 			if (istream != null) {
 				try {
@@ -240,6 +240,15 @@ public abstract class ImageUtils {
 				} catch (final Exception e) {
 				}
 			}
+		}
+	}
+
+	public static void clip(final InputStream istream, final OutputStream ostream,
+			final Rectangle rect, final String suffix) throws IOException {
+		try {
+			final BufferedImage bi = clip(istream, rect, suffix);
+			ImageIO.write(bi, suffix, ostream);
+		} finally {
 			if (ostream != null) {
 				try {
 					ostream.close();
