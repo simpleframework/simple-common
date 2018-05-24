@@ -10,7 +10,8 @@ import net.simpleframework.common.StringUtils;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class ThrowableUtils {
@@ -18,8 +19,10 @@ public abstract class ThrowableUtils {
 	public static Throwable getCause(final Class<? extends Throwable> clazz,
 			final Throwable throwable) {
 		Throwable cause = throwable;
-		while ((cause = cause.getCause()) != null && clazz.isAssignableFrom(cause.getClass())) {
-			break;
+		while ((cause = cause.getCause()) != null) {
+			if (clazz.isAssignableFrom(cause.getClass())) {
+				break;
+			}
 		}
 		return cause;
 	}
