@@ -202,7 +202,9 @@ public abstract class ImageUtils {
 			}
 		}
 
-		final BufferedImage bi = new BufferedImage(w, h, sbi.getType());
+		final int type = sbi.getType();
+		final BufferedImage bi = new BufferedImage(w, h,
+				type == 0 ? BufferedImage.TYPE_3BYTE_BGR : type);
 		final Graphics2D g = createGraphics(bi);
 		final boolean alpha = sbi.getAlphaRaster() != null;
 		if (!alpha) {
