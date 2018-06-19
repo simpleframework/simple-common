@@ -132,7 +132,7 @@ public abstract class ImageUtils {
 		}
 
 		final boolean alpha = sbi.getAlphaRaster() != null;
-		final BufferedImage bi = new BufferedImage(width, height, sbi.getType());
+		final BufferedImage bi = new BufferedImage(width, height, getType(sbi));
 		final Graphics2D g = createGraphics(bi);
 		if (w == width && h == height) {
 			g.drawImage(sbi, 0, 0, w, h, null);
@@ -157,7 +157,7 @@ public abstract class ImageUtils {
 	public static void thumbnail(final BufferedImage sbi, final double d,
 			final OutputStream outputStream, final String filetype) throws IOException {
 		final int w = (int) (sbi.getWidth() * d), h = (int) (sbi.getHeight() * d);
-		final BufferedImage bi = new BufferedImage(w, h, sbi.getType());
+		final BufferedImage bi = new BufferedImage(w, h, getType(sbi));
 		final Graphics2D g = createGraphics(bi);
 		g.drawImage(sbi, 0, 0, w, h, null);
 		g.dispose();
@@ -202,9 +202,7 @@ public abstract class ImageUtils {
 			}
 		}
 
-		final int type = sbi.getType();
-		final BufferedImage bi = new BufferedImage(w, h,
-				type == 0 ? BufferedImage.TYPE_3BYTE_BGR : type);
+		final BufferedImage bi = new BufferedImage(w, h, getType(sbi));
 		final Graphics2D g = createGraphics(bi);
 		final boolean alpha = sbi.getAlphaRaster() != null;
 		if (!alpha) {
@@ -217,6 +215,11 @@ public abstract class ImageUtils {
 			filetype = alpha ? "png" : "jpg";
 		}
 		ImageIO.write(bi, filetype, outputStream);
+	}
+
+	private static int getType(final BufferedImage sbi) {
+		final int type = sbi.getType();
+		return type == 0 ? BufferedImage.TYPE_3BYTE_BGR : type;
 	}
 
 	private static Graphics2D createGraphics(final BufferedImage bi) {
