@@ -23,6 +23,11 @@ public class TimePeriod implements Serializable {
 		return new TimePeriod(cal[0].getTime(), cal[1].getTime());
 	}
 
+	public static TimePeriod today() {
+		final Calendar[] cal = DateUtils.getTodayInterval();
+		return new TimePeriod(cal[0].getTime(), cal[1].getTime());
+	}
+
 	private ETimePeriod timePeriod;
 
 	private String dateFormat = "yyyy-MM-dd";
