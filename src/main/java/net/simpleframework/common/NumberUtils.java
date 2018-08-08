@@ -10,14 +10,24 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class NumberUtils {
 	private static Map<String, DecimalFormat> decimalFormats = new ConcurrentHashMap<>();
 
-	public static float toMoney(final Number number) {
-		return toFloat(number, 2);
+	public static double toMoney(final Number number) {
+		return toDouble(number, 2);
+	}
+
+	public static double toDouble(final Number number) {
+		return toDouble(number, 1);
+	}
+
+	public static double toDouble(final Number number, final int scale) {
+		return new BigDecimal(number.doubleValue()).setScale(scale, RoundingMode.HALF_DOWN)
+				.doubleValue();
 	}
 
 	public static float toFloat(final Number number) {
