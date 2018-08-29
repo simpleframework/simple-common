@@ -10,8 +10,12 @@ import java.util.regex.Pattern;
  */
 public abstract class MobileUtils {
 	public static String toSMobile(final String mobile) {
-		final int l = mobile.length();
-		return StringUtils.replace(mobile, mobile.substring(l - 8, l - 4), "****");
+		if (RegexUtils.isMobile(mobile)) {
+			final int l = mobile.length();
+			return StringUtils.replace(mobile, mobile.substring(l - 8, l - 4), "****");
+		} else {
+			return mobile;
+		}
 	}
 
 	static final Pattern MOBILE_PATTERN = Pattern
