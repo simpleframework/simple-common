@@ -14,6 +14,18 @@ final class Tokeniser {
 	private static final char[] notCharRefCharsSorted = new char[] { '\t', '\n', '\r', '\f', ' ',
 			'<', '&' };
 
+	// Some illegal character escapes are parsed by browsers as windows-1252
+	// instead. See issue #1034
+	// https://html.spec.whatwg.org/multipage/parsing.html#numeric-character-reference-end-state
+	static final int win1252ExtensionsStart = 0x80;
+	static final int[] win1252Extensions = new int[] {
+			// we could build this manually, but Windows-1252 is not a standard
+			// java charset so that could break on
+			// some platforms - this table is verified with a test
+			0x20AC, 0x0081, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030, 0x0160,
+			0x2039, 0x0152, 0x008D, 0x017D, 0x008F, 0x0090, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022,
+			0x2013, 0x2014, 0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x009D, 0x017E, 0x0178, };
+
 	static {
 		Arrays.sort(notCharRefCharsSorted);
 	}
@@ -28,19 +40,13 @@ final class Tokeniser {
 	private String charsString = null; // characters pending an emit. Will fall
 													// to charsBuilder if more than one
 	private final StringBuilder charsBuilder = new StringBuilder(1024); // buffers
-																								// characters
-																								// to
-																								// output
-																								// as
-																								// one
-																								// token,
-																								// if
-																								// more
-																								// than
-																								// one
-																								// emit
-																								// per
-																								// read
+	// characters
+	// to output
+	// as one
+	// token, if
+	// more than
+	// one emit
+	// per read
 	StringBuilder dataBuffer = new StringBuilder(1024); // buffers data looking
 																			// for </script>
 
@@ -178,6 +184,13 @@ final class Tokeniser {
 				codeRef[0] = replacementChar;
 				return codeRef;
 			} else {
+				// fix illegal unicode characters to match browser behavior
+				if (charval >= win1252ExtensionsStart
+						&& charval < win1252ExtensionsStart + win1252Extensions.length) {
+					characterReferenceError("character is not a valid unicode code point");
+					charval = win1252Extensions[charval - win1252ExtensionsStart];
+				}
+
 				// todo: implement number replacement table
 				// todo: check for extra illegal unicode points as parse errors
 				codeRef[0] = charval;

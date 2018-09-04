@@ -287,7 +287,7 @@ public final class StringUtil {
 
 	/**
 	 * Maintains a cached StringBuilder, to minimize new StringBuilder GCs.
-	 * Prevents it from growing to big per thread.
+	 * Prevents it from growing too big per thread.
 	 * Care must be taken to not grab more than one in the same stack (not locked
 	 * or mutexed or anything).
 	 * 

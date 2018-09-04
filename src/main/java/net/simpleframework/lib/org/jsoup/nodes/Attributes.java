@@ -319,13 +319,13 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 		final ArrayList<Attribute> list = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
 			final Attribute attr = vals[i] == null ? new BooleanAttribute(keys[i]) : // deprecated
-																												// class,
-																												// but
-																												// maybe
-																												// someone
-																												// still
-																												// wants
-																												// it
+			// class,
+			// but
+			// maybe
+			// someone
+			// still
+			// wants
+			// it
 					new Attribute(keys[i], vals[i], Attributes.this);
 			list.add(attr);
 		}
@@ -373,9 +373,7 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 			accum.append(' ').append(key);
 
 			// collapse checked=null, checked="", checked=checked; write out others
-			if (!(out.syntax() == Document.OutputSettings.Syntax.html
-					&& (val == null || val.equals(key) && Attribute.isBooleanAttribute(key)))) {
-
+			if (!Attribute.shouldCollapseAttribute(key, val, out)) {
 				accum.append("=\"");
 				Entities.escape(accum, val == null ? EmptyString : val, out, true, false, false);
 				accum.append('"');

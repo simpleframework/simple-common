@@ -976,6 +976,7 @@ enum TokeniserState {
 				// is implemented properly, keep handling as cdata
 				// } else if (!t.currentNodeInHtmlNS() && r.matchConsume("[CDATA["))
 				// {
+				t.createTempBuffer();
 				t.transition(CdataSection);
 			} else {
 				t.error(this);
@@ -1684,8 +1685,9 @@ enum TokeniserState {
 		@Override
 		void read(final Tokeniser t, final CharacterReader r) {
 			final String data = r.consumeTo("]]>");
-			t.emit(data);
+			t.dataBuffer.append(data);
 			if (r.matchConsume("]]>") || r.isEmpty()) {
+				t.emit(new Token.CData(t.dataBuffer.toString()));
 				t.transition(Data);
 			} // otherwise, buffer underrun, stay in data section
 		}
@@ -1769,9 +1771,9 @@ enum TokeniserState {
 			break;
 		default:
 			final String data = r.consumeToAny('<', nullChar); // todo - why hunt
-																				// for null here?
-																				// Just
-																				// consumeTo'<'?
+																				// for
+			// null here? Just
+			// consumeTo'<'?
 			t.emit(data);
 			break;
 		}

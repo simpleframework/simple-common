@@ -184,7 +184,8 @@ public class Document extends Element {
 	private void normaliseStructure(final String tag, final Element htmlEl) {
 		final Elements elements = this.getElementsByTag(tag);
 		final Element master = elements.first(); // will always be available as
-																// created above if not existent
+																// created
+		// above if not existent
 		if (elements.size() > 1) { // dupes, move contents to master
 			final List<Node> toMove = new ArrayList<>();
 			for (int i = 1; i < elements.size(); i++) {
@@ -418,10 +419,10 @@ public class Document extends Element {
 		private Entities.EscapeMode escapeMode = Entities.EscapeMode.base;
 		private Charset charset;
 		private final ThreadLocal<CharsetEncoder> encoderThreadLocal = new ThreadLocal<>(); // initialized
-																														// by
-																														// start
-																														// of
-																														// OuterHtmlVisitor
+		// by
+		// start
+		// of
+		// OuterHtmlVisitor
 		Entities.CoreCharset coreCharset; // fast encoders for ascii and utf8
 
 		private boolean prettyPrint = true;

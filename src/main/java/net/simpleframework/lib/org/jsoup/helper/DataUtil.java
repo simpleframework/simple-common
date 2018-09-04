@@ -17,6 +17,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.simpleframework.lib.org.jsoup.UncheckedIOException;
 import net.simpleframework.lib.org.jsoup.internal.ConstrainableInputStream;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
@@ -127,17 +128,27 @@ public final class DataUtil {
 		boolean fullyRead = false;
 
 		// read the start of the stream and look for a BOM or meta charset
-		input.mark(firstReadBufferSize);
+		input.mark(bufferSize);
 		final ByteBuffer firstBytes = readToByteBuffer(input, firstReadBufferSize - 1); // -1
-																													// because
-																													// we
-																													// read
-																													// one
-																													// more
-																													// to
-																													// see
-																													// if
-																													// completed
+		// because
+		// we
+		// read
+		// one
+		// more
+		// to
+		// see
+		// if
+		// completed.
+		// First
+		// read
+		// is
+		// <
+		// buffer
+		// size,
+		// so
+		// can't
+		// be
+		// invalid.
 		fullyRead = input.read() == -1;
 		input.reset();
 
@@ -145,7 +156,6 @@ public final class DataUtil {
 		final BomCharset bomCharset = detectCharsetFromBom(firstBytes);
 		if (bomCharset != null) {
 			charsetName = bomCharset.charset;
-			input.skip(bomCharset.offset);
 		}
 
 		if (charsetName == null) { // determine from meta. safe first parse as
@@ -207,7 +217,19 @@ public final class DataUtil {
 			}
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetName),
 					bufferSize);
-			doc = parser.parseInput(reader, baseUri);
+			if (bomCharset != null && bomCharset.offset) {
+				// reader ignores the
+				// input pos, so must skip
+				// here
+				reader.skip(1);
+			}
+			try {
+				doc = parser.parseInput(reader, baseUri);
+			} catch (final UncheckedIOException e) {
+				// io exception when parsing (not seen before because reading the
+				// stream as we go)
+				throw e.ioException();
+			}
 			doc.outputSettings().charset(charsetName);
 		}
 		input.close();
@@ -324,12 +346,13 @@ public final class DataUtil {
 		}
 		if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == (byte) 0xFE && bom[3] == (byte) 0xFF || // BE
 				bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE && bom[2] == 0x00 && bom[3] == 0x00) { // LE
-			return new BomCharset("UTF-32", 0); // and I hope it's on your system
+			return new BomCharset("UTF-32", false); // and I hope it's on your
+																	// system
 		} else if (bom[0] == (byte) 0xFE && bom[1] == (byte) 0xFF || // BE
 				bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE) {
-			return new BomCharset("UTF-16", 0); // in all Javas
+			return new BomCharset("UTF-16", false); // in all Javas
 		} else if (bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF) {
-			return new BomCharset("UTF-8", 3); // in all Javas
+			return new BomCharset("UTF-8", true); // in all Javas
 			// 16 and 32 decoders consume the BOM to determine be/le; utf-8 should
 			// be consumed here
 		}
@@ -338,9 +361,9 @@ public final class DataUtil {
 
 	private static class BomCharset {
 		private final String charset;
-		private final int offset;
+		private final boolean offset;
 
-		public BomCharset(final String charset, final int offset) {
+		public BomCharset(final String charset, final boolean offset) {
 			this.charset = charset;
 			this.offset = offset;
 		}

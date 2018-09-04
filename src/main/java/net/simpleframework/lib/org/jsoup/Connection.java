@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 
@@ -220,6 +222,15 @@ public interface Connection {
 	 */
 	@Deprecated
 	Connection validateTLSCertificates(boolean value);
+
+	/**
+	 * Set custom SSL socket factory
+	 * 
+	 * @param sslSocketFactory
+	 *        custom SSL socket factory
+	 * @return this Connection, for chaining
+	 */
+	Connection sslSocketFactory(SSLSocketFactory sslSocketFactory);
 
 	/**
 	 * Add a request data parameter. Request parameters are sent in the request
@@ -815,10 +826,26 @@ public interface Connection {
 		 *        set false to ignore TLS (SSL) certificates
 		 * @deprecated as distributions (specifically Google Play) are starting to
 		 *             show warnings if these checks are
-		 *             disabled.
+		 *             disabled. This method will be removed in the next release.
+		 * @see #sslSocketFactory(SSLSocketFactory)
 		 */
 		@Deprecated
 		void validateTLSCertificates(boolean value);
+
+		/**
+		 * Get the current custom SSL socket factory, if any.
+		 * 
+		 * @return custom SSL socket factory if set, null otherwise
+		 */
+		SSLSocketFactory sslSocketFactory();
+
+		/**
+		 * Set a custom SSL socket factory.
+		 * 
+		 * @param sslSocketFactory
+		 *        SSL socket factory
+		 */
+		void sslSocketFactory(SSLSocketFactory sslSocketFactory);
 
 		/**
 		 * Add a data parameter to the request
@@ -970,6 +997,8 @@ public interface Connection {
 		 * has the same effect.
 		 * 
 		 * @return this response, for chaining
+		 * @throws UncheckedIOException
+		 *         if an IO exception occurs during buffering.
 		 */
 		Response bufferUp();
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.nodes.CDataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Comment;
 import net.simpleframework.lib.org.jsoup.nodes.DataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
@@ -65,9 +66,6 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	private boolean fosterInserts; // if next inserts should be fostered
 	private boolean fragmentParsing; // if parsing a fragment of html
 
-	HtmlTreeBuilder() {
-	}
-
 	@Override
 	ParseSettings defaultSettings() {
 		return ParseSettings.htmlDefault;
@@ -118,7 +116,6 @@ public class HtmlTreeBuilder extends TreeBuilder {
 				tokeniser.transition(TokeniserState.ScriptData);
 			} else if (contextTag.equals(("noscript"))) {
 				tokeniser.transition(TokeniserState.Data); // if scripting enabled,
-																			// rawtext
 			} else if (contextTag.equals("plaintext")) {
 				tokeniser.transition(TokeniserState.Data);
 			} else {
@@ -294,10 +291,14 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		Node node;
 		// characters in script and style go in as datanodes, not text nodes
 		final String tagName = currentElement().tagName();
-		if (tagName.equals("script") || tagName.equals("style")) {
-			node = new DataNode(characterToken.getData());
+		final String data = characterToken.getData();
+
+		if (characterToken.isCData()) {
+			node = new CDataNode(data);
+		} else if (tagName.equals("script") || tagName.equals("style")) {
+			node = new DataNode(data);
 		} else {
-			node = new TextNode(characterToken.getData());
+			node = new TextNode(data);
 		}
 		currentElement().appendChild(node); // doesn't use insertNode, because we
 														// don't foster these; and will always
@@ -708,6 +709,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			entry = formattingElements.get(--pos); // step 5. one earlier than
 																// entry
 			if (entry == null || onStack(entry)) {
+				// stack
 				break; // jump to 8, else continue back to 4
 			}
 		}
@@ -722,8 +724,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			// stack
 			skip = false; // can only skip increment from 4.
 			final Element newEl = insertStartTag(entry.nodeName()); // todo: avoid
-																						// fostering
-																						// here?
+			// fostering here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
 

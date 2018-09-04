@@ -1,10 +1,13 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 
 abstract class LeafNode extends Node {
+	private static final List<Node> EmptyNodes = Collections.emptyList();
+
 	Object value; // either a string value, or an attribute map (in the rare case
 						// multiple attributes are set)
 
@@ -93,6 +96,6 @@ abstract class LeafNode extends Node {
 
 	@Override
 	protected List<Node> ensureChildNodes() {
-		throw new UnsupportedOperationException("Leaf Nodes do not have child nodes.");
+		return EmptyNodes;
 	}
 }

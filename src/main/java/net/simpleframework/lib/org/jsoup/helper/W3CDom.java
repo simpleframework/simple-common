@@ -72,9 +72,9 @@ public class W3CDom {
 		}
 
 		final net.simpleframework.lib.org.jsoup.nodes.Element rootEl = in.child(0); // skip
-																												// the
-																												// #root
-																												// node
+		// the
+		// #root
+		// node
 		NodeTraversor.traverse(new W3CBuilder(out), rootEl);
 	}
 

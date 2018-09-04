@@ -50,7 +50,7 @@ public class TextNode extends LeafNode {
 	 * @see TextNode#getWholeText()
 	 */
 	public String text() {
-		return normaliseWhitespace(getWholeText());
+		return StringUtil.normaliseWhitespace(getWholeText());
 	}
 
 	/**

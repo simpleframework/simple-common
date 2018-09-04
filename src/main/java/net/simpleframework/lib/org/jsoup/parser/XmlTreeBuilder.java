@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.Jsoup;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.nodes.CDataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Comment;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.DocumentType;
@@ -89,6 +90,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
 			if (!tag.isKnownTag()) {
+				// for output. see above.
 				tag.setSelfClosing();
 			}
 		} else {
@@ -109,17 +111,20 @@ public class XmlTreeBuilder extends TreeBuilder {
 			if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
 				final Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">",
 						baseUri, Parser.xmlParser());
-				final Element el = doc.child(0);
-				insert = new XmlDeclaration(settings.normalizeTag(el.tagName()), data.startsWith("!"));
-				insert.attributes().addAll(el.attributes());
+				if (doc.childNodeSize() > 0) {
+					final Element el = doc.child(0);
+					insert = new XmlDeclaration(settings.normalizeTag(el.tagName()),
+							data.startsWith("!"));
+					insert.attributes().addAll(el.attributes());
+				} // else, we couldn't parse it as a decl, so leave as a comment
 			}
 		}
 		insertNode(insert);
 	}
 
-	void insert(final Token.Character characterToken) {
-		final Node node = new TextNode(characterToken.getData());
-		insertNode(node);
+	void insert(final Token.Character token) {
+		final String data = token.getData();
+		insertNode(token.isCData() ? new CDataNode(data) : new TextNode(data));
 	}
 
 	void insert(final Token.Doctype d) {
@@ -138,7 +143,7 @@ public class XmlTreeBuilder extends TreeBuilder {
 	 *        tag to close
 	 */
 	private void popStackToClose(final Token.EndTag endTag) {
-		final String elName = endTag.name();
+		final String elName = settings.normalizeTag(endTag.tagName);
 		Element firstFound = null;
 
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {

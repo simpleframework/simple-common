@@ -405,7 +405,7 @@ enum HtmlTreeBuilderState {
 						tb.processEndTag("p");
 					}
 					tb.insert(startTag);
-					// todo: ignore LF if next token
+					tb.reader.matchConsume("\n"); // ignore LF if next token
 					tb.framesetOk(false);
 				} else if (name.equals("form")) {
 					if (tb.getFormElement() != null) {
@@ -847,11 +847,11 @@ enum HtmlTreeBuilderState {
 
 		boolean anyOtherEndTag(final Token t, final HtmlTreeBuilder tb) {
 			final String name = tb.settings.normalizeTag(t.asEndTag().name()); // matches
-																										// with
-																										// case
-																										// sensitivity
-																										// if
-																										// enabled
+			// with
+			// case
+			// sensitivity
+			// if
+			// enabled
 			final ArrayList<Element> stack = tb.getStack();
 			for (int pos = stack.size() - 1; pos >= 0; pos--) {
 				final Element node = stack.get(pos);
@@ -1618,14 +1618,7 @@ enum HtmlTreeBuilderState {
 	}
 
 	private static boolean isWhitespace(final String data) {
-		// todo: this checks more than spec - "\t", "\n", "\f", "\r", " "
-		for (int i = 0; i < data.length(); i++) {
-			final char c = data.charAt(i);
-			if (!StringUtil.isWhitespace(c)) {
-				return false;
-			}
-		}
-		return true;
+		return StringUtil.isBlank(data);
 	}
 
 	private static void handleRcData(final Token.StartTag startTag, final HtmlTreeBuilder tb) {

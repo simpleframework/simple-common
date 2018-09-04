@@ -764,6 +764,10 @@ public class Element extends Node {
 		}
 
 		if (parent() == null || parent() instanceof Document) {
+			// Document to
+			// selector, as will
+			// always have a
+			// html node
 			return selector.toString();
 		}
 
@@ -1265,6 +1269,16 @@ public class Element extends Node {
 
 			@Override
 			public void tail(final Node node, final int depth) {
+				// make sure there is a space between block tags and immediately
+				// following text nodes <div>One</div>Two should be "One Two".
+				if (node instanceof Element) {
+					final Element element = (Element) node;
+					if (element.isBlock() && (node.nextSibling() instanceof TextNode)
+							&& !TextNode.lastCharIsWhitespace(accum)) {
+						accum.append(' ');
+					}
+				}
+
 			}
 		}, this);
 		return accum.toString().trim();
@@ -1335,7 +1349,7 @@ public class Element extends Node {
 	private static void appendNormalisedText(final StringBuilder accum, final TextNode textNode) {
 		final String text = textNode.getWholeText();
 
-		if (preserveWhitespace(textNode.parentNode)) {
+		if (preserveWhitespace(textNode.parentNode) || textNode instanceof CDataNode) {
 			accum.append(text);
 		} else {
 			StringUtil.appendNormalisedWhitespace(accum, text, TextNode.lastCharIsWhitespace(accum));
@@ -1430,6 +1444,12 @@ public class Element extends Node {
 				final Element element = (Element) childNode;
 				final String elementData = element.data();
 				sb.append(elementData);
+			} else if (childNode instanceof CDataNode) {
+				// this shouldn't really happen because the html parser won't see
+				// the cdata as anything special when parsing script.
+				// but incase another type gets through.
+				final CDataNode cDataNode = (CDataNode) childNode;
+				sb.append(cDataNode.getWholeText());
 			}
 		}
 		return sb.toString();

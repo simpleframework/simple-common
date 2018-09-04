@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -219,6 +221,12 @@ public class HttpConnection implements Connection {
 	@Override
 	public Connection data(final String key, final String value) {
 		req.data(KeyVal.create(key, value));
+		return this;
+	}
+
+	@Override
+	public Connection sslSocketFactory(final SSLSocketFactory sslSocketFactory) {
+		req.sslSocketFactory(sslSocketFactory);
 		return this;
 	}
 
@@ -523,9 +531,9 @@ public class HttpConnection implements Connection {
 			Validate.notEmpty(name, "Header name must not be empty");
 			final Map.Entry<String, List<String>> entry = scanHeaders(name); // remove
 																									// is
-																									// case
-																									// insensitive
-																									// too
+			// case
+			// insensitive
+			// too
 			if (entry != null) {
 				headers.remove(entry.getKey()); // ensures correct case
 			}
@@ -620,6 +628,7 @@ public class HttpConnection implements Connection {
 															// initialized in ctor
 		private boolean validateTSLCertificates = true;
 		private String postDataCharset = DataUtil.defaultCharset;
+		private SSLSocketFactory sslSocketFactory;
 
 		Request() {
 			timeoutMilliseconds = 30000; // 30 seconds
@@ -697,6 +706,16 @@ public class HttpConnection implements Connection {
 		@Override
 		public void validateTLSCertificates(final boolean value) {
 			validateTSLCertificates = value;
+		}
+
+		@Override
+		public SSLSocketFactory sslSocketFactory() {
+			return sslSocketFactory;
+		}
+
+		@Override
+		public void sslSocketFactory(final SSLSocketFactory sslSocketFactory) {
+			this.sslSocketFactory = sslSocketFactory;
 		}
 
 		@Override
@@ -858,20 +877,23 @@ public class HttpConnection implements Connection {
 
 					String location = res.header(LOCATION);
 					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
+						// broken
+						// Location:
+						// http:/temp/AAG_New/en/index.php
 						location = location.substring(6);
 					}
 					final URL redir = StringUtil.resolve(req.url(), location);
 					req.url(encodeUrl(redir));
 
 					for (final Map.Entry<String, String> cookie : res.cookies.entrySet()) { // add
-																													// response
-																													// cookies
-																													// to
-																													// request
-																													// (for
-																													// e.g.
-																													// login
-																													// posts)
+						// response
+						// cookies
+						// to
+						// request
+						// (for
+						// e.g.
+						// login
+						// posts)
 						req.cookie(cookie.getKey(), cookie.getValue());
 					}
 					return execute(req, res);
@@ -932,6 +954,8 @@ public class HttpConnection implements Connection {
 							: conn.getInputStream();
 					if (res.hasHeaderWithValue(CONTENT_ENCODING, "gzip")) {
 						res.bodyStream = new GZIPInputStream(res.bodyStream);
+					} else if (res.hasHeaderWithValue(CONTENT_ENCODING, "deflate")) {
+						res.bodyStream = new InflaterInputStream(res.bodyStream, new Inflater(true));
 					}
 					res.bodyStream = ConstrainableInputStream
 							.wrap(res.bodyStream, DataUtil.bufferSize, req.maxBodySize())
@@ -1067,7 +1091,11 @@ public class HttpConnection implements Connection {
 																	// status is read
 
 			if (conn instanceof HttpsURLConnection) {
-				if (!req.validateTLSCertificates()) {
+				final SSLSocketFactory socketFactory = req.sslSocketFactory();
+
+				if (socketFactory != null) {
+					((HttpsURLConnection) conn).setSSLSocketFactory(socketFactory);
+				} else if (!req.validateTLSCertificates()) {
 					initUnSecureTSL();
 					((HttpsURLConnection) conn).setSSLSocketFactory(sslSocketFactory);
 					((HttpsURLConnection) conn).setHostnameVerifier(getInsecureVerifier());

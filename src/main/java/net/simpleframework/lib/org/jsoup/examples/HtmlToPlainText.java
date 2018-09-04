@@ -52,15 +52,13 @@ public class HtmlToPlainText {
 
 		if (selector != null) {
 			final Elements elements = doc.select(selector); // get each element
-																			// that matches the CSS
-																			// selector
+																			// that
+			// matches the CSS selector
 			for (final Element element : elements) {
 				final String plainText = formatter.getPlainText(element); // format
 																								// that
-																								// element
-																								// to
-																								// plain
-																								// text
+				// element to
+				// plain text
 				System.out.println(plainText);
 			}
 		} else { // format the whole doc
@@ -90,8 +88,7 @@ public class HtmlToPlainText {
 		private static final int maxWidth = 80;
 		private int width = 0;
 		private final StringBuilder accum = new StringBuilder(); // holds the
-																					// accumulated
-																					// text
+		// accumulated text
 
 		// hit when the node is first seen
 		@Override
@@ -99,8 +96,6 @@ public class HtmlToPlainText {
 			final String name = node.nodeName();
 			if (node instanceof TextNode) {
 				append(((TextNode) node).text()); // TextNodes carry all
-																// user-readable text in the
-																// DOM.
 			} else if (name.equals("li")) {
 				append("\n * ");
 			} else if (name.equals("dt")) {
@@ -125,8 +120,8 @@ public class HtmlToPlainText {
 		private void append(final String text) {
 			if (text.startsWith("\n")) {
 				width = 0; // reset counter if starts with a newline. only from
-								// formats above, not in natural text
 			}
+			// formats above, not in natural text
 			if (text.equals(" ") && (accum.length() == 0
 					|| StringUtil.in(accum.substring(accum.length() - 1), " ", "\n"))) {
 				return; // don't accumulate long runs of empty spaces

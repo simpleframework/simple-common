@@ -52,14 +52,17 @@ public final class CharacterReader {
 		}
 
 		try {
-			readerPos += bufPos;
 			reader.skip(bufPos);
 			reader.mark(maxBufferLen);
-			bufLength = reader.read(charBuf);
+			final int read = reader.read(charBuf);
 			reader.reset();
-			bufPos = 0;
-			bufMark = 0;
-			bufSplitPoint = bufLength > readAheadLimit ? readAheadLimit : bufLength;
+			if (read != -1) {
+				bufLength = read;
+				readerPos += bufPos;
+				bufPos = 0;
+				bufMark = 0;
+				bufSplitPoint = bufLength > readAheadLimit ? readAheadLimit : bufLength;
+			}
 		} catch (final IOException e) {
 			throw new UncheckedIOException(e);
 		}
@@ -80,6 +83,11 @@ public final class CharacterReader {
 	 * @return true if nothing left to read.
 	 */
 	public boolean isEmpty() {
+		bufferUp();
+		return bufPos >= bufLength;
+	}
+
+	private boolean isEmptyNoBufferUp() {
 		return bufPos >= bufLength;
 	}
 
@@ -90,12 +98,12 @@ public final class CharacterReader {
 	 */
 	public char current() {
 		bufferUp();
-		return isEmpty() ? EOF : charBuf[bufPos];
+		return isEmptyNoBufferUp() ? EOF : charBuf[bufPos];
 	}
 
 	char consume() {
 		bufferUp();
-		final char val = isEmpty() ? EOF : charBuf[bufPos];
+		final char val = isEmptyNoBufferUp() ? EOF : charBuf[bufPos];
 		bufPos++;
 		return val;
 	}
@@ -311,7 +319,7 @@ public final class CharacterReader {
 				break;
 			}
 		}
-		while (!isEmpty()) {
+		while (!isEmptyNoBufferUp()) {
 			final char c = charBuf[bufPos];
 			if (c >= '0' && c <= '9') {
 				bufPos++;
