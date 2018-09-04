@@ -549,8 +549,8 @@ public class Enhancer extends AbstractClassGenerator {
 		preValidate();
 		final Object key = KEY_FACTORY.newInstance((superclass != null) ? superclass.getName() : null,
 				ReflectUtils.getNames(interfaces),
-				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes,
-				useFactory, interceptDuringConstruction, serialVersionUID);
+				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes, useFactory,
+				interceptDuringConstruction, serialVersionUID);
 		this.currentKey = key;
 		final Object result = super.create(key);
 		return result;
