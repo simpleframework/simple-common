@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.commons;
 
 import java.util.ArrayList;
@@ -41,10 +39,10 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**
- * A {@link net.simpleframework.lib.org.objectweb.asm.MethodVisitor} with
- * convenient methods to generate
- * code. For example, using this adapter, the class below
- * 
+ * A {@link MethodVisitor} with convenient methods to generate code. For
+ * example, using this
+ * adapter, the class below
+ *
  * <pre>
  * public class Example {
  * 	public static void main(String[] args) {
@@ -52,20 +50,20 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * 	}
  * }
  * </pre>
- * 
+ *
  * can be generated as follows:
- * 
+ *
  * <pre>
- * ClassWriter cw = new ClassWriter(true);
+ * ClassWriter cw = new ClassWriter(0);
  * cw.visit(V1_1, ACC_PUBLIC, &quot;Example&quot;, null, &quot;java/lang/Object&quot;, null);
- * 
+ *
  * Method m = Method.getMethod(&quot;void &lt;init&gt; ()&quot;);
  * GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC, m, null, null, cw);
  * mg.loadThis();
  * mg.invokeConstructor(Type.getType(Object.class), m);
  * mg.returnValue();
  * mg.endMethod();
- * 
+ *
  * m = Method.getMethod(&quot;void main (String[])&quot;);
  * mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
  * mg.getStatic(Type.getType(System.class), &quot;out&quot;, Type.getType(PrintStream.class));
@@ -73,10 +71,10 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * mg.invokeVirtual(Type.getType(PrintStream.class), Method.getMethod(&quot;void println (String)&quot;));
  * mg.returnValue();
  * mg.endMethod();
- * 
+ *
  * cw.visitEnd();
  * </pre>
- * 
+ *
  * @author Juozas Baliuka
  * @author Chris Nokleberg
  * @author Eric Bruneton
@@ -84,7 +82,7 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  */
 public class GeneratorAdapter extends LocalVariablesSorter {
 
-	private static final String CLDESC = "Ljava/lang/Class;";
+	private static final String CLASS_DESCRIPTOR = "Ljava/lang/Class;";
 
 	private static final Type BYTE_TYPE = Type.getObjectType("java/lang/Byte");
 
@@ -118,187 +116,153 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	private static final Method DOUBLE_VALUE = Method.getMethod("double doubleValue()");
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int ADD = Opcodes.IADD;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int SUB = Opcodes.ISUB;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int MUL = Opcodes.IMUL;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int DIV = Opcodes.IDIV;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int REM = Opcodes.IREM;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int NEG = Opcodes.INEG;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int SHL = Opcodes.ISHL;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int SHR = Opcodes.ISHR;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int USHR = Opcodes.IUSHR;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int AND = Opcodes.IAND;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int OR = Opcodes.IOR;
 
-	/**
-	 * Constant for the {@link #math math} method.
-	 */
+	/** Constant for the {@link #math} method. */
 	public static final int XOR = Opcodes.IXOR;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int EQ = Opcodes.IFEQ;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int NE = Opcodes.IFNE;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int LT = Opcodes.IFLT;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int GE = Opcodes.IFGE;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int GT = Opcodes.IFGT;
 
-	/**
-	 * Constant for the {@link #ifCmp ifCmp} method.
-	 */
+	/** Constant for the {@link #ifCmp} method. */
 	public static final int LE = Opcodes.IFLE;
 
-	/**
-	 * Access flags of the method visited by this adapter.
-	 */
+	/** The access flags of the visited method. */
 	private final int access;
 
-	/**
-	 * Return type of the method visited by this adapter.
-	 */
+	/** The name of the visited method. */
+	private final String name;
+
+	/** The return type of the visited method. */
 	private final Type returnType;
 
-	/**
-	 * Argument types of the method visited by this adapter.
-	 */
+	/** The argument types of the visited method. */
 	private final Type[] argumentTypes;
 
-	/**
-	 * Types of the local variables of the method visited by this adapter.
-	 */
+	/** The types of the local variables of the visited method. */
 	private final List<Type> localTypes = new ArrayList<>();
 
 	/**
-	 * Creates a new {@link GeneratorAdapter}. <i>Subclasses must not use this
-	 * constructor</i>. Instead, they must use the
+	 * Constructs a new {@link GeneratorAdapter}. <i>Subclasses must not use this
+	 * constructor</i>.
+	 * Instead, they must use the
 	 * {@link #GeneratorAdapter(int, MethodVisitor, int, String, String)}
 	 * version.
-	 * 
-	 * @param mv
+	 *
+	 * @param methodVisitor
 	 *        the method visitor to which this adapter delegates calls.
 	 * @param access
 	 *        the method's access flags (see {@link Opcodes}).
 	 * @param name
 	 *        the method's name.
-	 * @param desc
-	 *        the method's descriptor (see {@link Type Type}).
+	 * @param descriptor
+	 *        the method's descriptor (see {@link Type}).
 	 * @throws IllegalStateException
-	 *         If a subclass calls this constructor.
+	 *         if a subclass calls this constructor.
 	 */
-	public GeneratorAdapter(final MethodVisitor mv, final int access, final String name,
-			final String desc) {
-		this(Opcodes.ASM5, mv, access, name, desc);
+	public GeneratorAdapter(final MethodVisitor methodVisitor, final int access, final String name,
+			final String descriptor) {
+		this(Opcodes.ASM6, methodVisitor, access, name, descriptor);
 		if (getClass() != GeneratorAdapter.class) {
 			throw new IllegalStateException();
 		}
 	}
 
 	/**
-	 * Creates a new {@link GeneratorAdapter}.
-	 * 
+	 * Constructs a new {@link GeneratorAdapter}.
+	 *
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one
-	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
-	 * @param mv
+	 *        the ASM API version implemented by this visitor. Must be one of
+	 *        {@link
+	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link
+	 * 			Opcodes#ASM7_EXPERIMENTAL}.
+	 * @param methodVisitor
 	 *        the method visitor to which this adapter delegates calls.
 	 * @param access
 	 *        the method's access flags (see {@link Opcodes}).
 	 * @param name
 	 *        the method's name.
-	 * @param desc
-	 *        the method's descriptor (see {@link Type Type}).
+	 * @param descriptor
+	 *        the method's descriptor (see {@link Type}).
 	 */
-	protected GeneratorAdapter(final int api, final MethodVisitor mv, final int access,
-			final String name, final String desc) {
-		super(api, access, desc, mv);
+	protected GeneratorAdapter(final int api, final MethodVisitor methodVisitor, final int access,
+			final String name, final String descriptor) {
+		super(api, access, descriptor, methodVisitor);
 		this.access = access;
-		this.returnType = Type.getReturnType(desc);
-		this.argumentTypes = Type.getArgumentTypes(desc);
+		this.name = name;
+		this.returnType = Type.getReturnType(descriptor);
+		this.argumentTypes = Type.getArgumentTypes(descriptor);
 	}
 
 	/**
-	 * Creates a new {@link GeneratorAdapter}. <i>Subclasses must not use this
-	 * constructor</i>. Instead, they must use the
+	 * Constructs a new {@link GeneratorAdapter}. <i>Subclasses must not use this
+	 * constructor</i>.
+	 * Instead, they must use the
 	 * {@link #GeneratorAdapter(int, MethodVisitor, int, String, String)}
 	 * version.
-	 * 
+	 *
 	 * @param access
 	 *        access flags of the adapted method.
 	 * @param method
 	 *        the adapted method.
-	 * @param mv
+	 * @param methodVisitor
 	 *        the method visitor to which this adapter delegates calls.
 	 */
-	public GeneratorAdapter(final int access, final Method method, final MethodVisitor mv) {
-		this(mv, access, null, method.getDescriptor());
+	public GeneratorAdapter(final int access, final Method method,
+			final MethodVisitor methodVisitor) {
+		this(methodVisitor, access, method.getName(), method.getDescriptor());
 	}
 
 	/**
-	 * Creates a new {@link GeneratorAdapter}. <i>Subclasses must not use this
-	 * constructor</i>. Instead, they must use the
+	 * Constructs a new {@link GeneratorAdapter}. <i>Subclasses must not use this
+	 * constructor</i>.
+	 * Instead, they must use the
 	 * {@link #GeneratorAdapter(int, MethodVisitor, int, String, String)}
 	 * version.
-	 * 
+	 *
 	 * @param access
 	 *        access flags of the adapted method.
 	 * @param method
@@ -307,18 +271,18 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	 *        the signature of the adapted method (may be <tt>null</tt>).
 	 * @param exceptions
 	 *        the exceptions thrown by the adapted method (may be <tt>null</tt>).
-	 * @param cv
+	 * @param classVisitor
 	 *        the class visitor to which this adapter delegates calls.
 	 */
 	public GeneratorAdapter(final int access, final Method method, final String signature,
-			final Type[] exceptions, final ClassVisitor cv) {
-		this(access, method, cv.visitMethod(access, method.getName(), method.getDescriptor(),
-				signature, getInternalNames(exceptions)));
+			final Type[] exceptions, final ClassVisitor classVisitor) {
+		this(access, method, classVisitor.visitMethod(access, method.getName(),
+				method.getDescriptor(), signature, getInternalNames(exceptions)));
 	}
 
 	/**
 	 * Returns the internal names of the given types.
-	 * 
+	 *
 	 * @param types
 	 *        a set of types.
 	 * @return the internal names of the given types.
@@ -334,13 +298,29 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		return names;
 	}
 
-	// ------------------------------------------------------------------------
+	public int getAccess() {
+		return access;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Type getReturnType() {
+		return returnType;
+	}
+
+	public Type[] getArgumentTypes() {
+		return argumentTypes.clone();
+	}
+
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to push constants on the stack
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
@@ -350,7 +330,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
@@ -368,7 +348,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
@@ -382,13 +362,13 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
 	public void push(final float value) {
 		final int bits = Float.floatToIntBits(value);
-		if (bits == 0L || bits == 0x3f800000 || bits == 0x40000000) { // 0..2
+		if (bits == 0L || bits == 0x3F800000 || bits == 0x40000000) { // 0..2
 			mv.visitInsn(Opcodes.FCONST_0 + (int) value);
 		} else {
 			mv.visitLdcInsn(value);
@@ -397,13 +377,13 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
 	public void push(final double value) {
 		final long bits = Double.doubleToLongBits(value);
-		if (bits == 0L || bits == 0x3ff0000000000000L) { // +0.0d and 1.0d
+		if (bits == 0L || bits == 0x3FF0000000000000L) { // +0.0d and 1.0d
 			mv.visitInsn(Opcodes.DCONST_0 + (int) value);
 		} else {
 			mv.visitLdcInsn(value);
@@ -412,7 +392,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack. May be <tt>null</tt>.
 	 */
@@ -426,7 +406,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push the given value on the stack.
-	 * 
+	 *
 	 * @param value
 	 *        the value to be pushed on the stack.
 	 */
@@ -436,28 +416,28 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		} else {
 			switch (value.getSort()) {
 			case Type.BOOLEAN:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Boolean", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Boolean", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.CHAR:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Character", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Character", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.BYTE:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Byte", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Byte", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.SHORT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Short", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Short", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.INT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Integer", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Integer", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.FLOAT:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Float", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Float", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.LONG:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Long", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Long", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			case Type.DOUBLE:
-				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Double", "TYPE", CLDESC);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/Double", "TYPE", CLASS_DESCRIPTOR);
 				break;
 			default:
 				mv.visitLdcInsn(value);
@@ -467,22 +447,26 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push a handle on the stack.
-	 * 
+	 *
 	 * @param handle
 	 *        the handle to be pushed on the stack.
 	 */
 	public void push(final Handle handle) {
-		mv.visitLdcInsn(handle);
+		if (handle == null) {
+			mv.visitInsn(Opcodes.ACONST_NULL);
+		} else {
+			mv.visitLdcInsn(handle);
+		}
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to load and store method arguments
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Returns the index of the given method argument in the frame's local
 	 * variables array.
-	 * 
+	 *
 	 * @param arg
 	 *        the index of a method argument.
 	 * @return the index of the given method argument in the frame's local
@@ -498,7 +482,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to push a local variable on the stack.
-	 * 
+	 *
 	 * @param type
 	 *        the type of the local variable to be loaded.
 	 * @param index
@@ -511,7 +495,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to store the top stack value in a local
 	 * variable.
-	 * 
+	 *
 	 * @param type
 	 *        the type of the local variable to be stored.
 	 * @param index
@@ -521,9 +505,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), index);
 	}
 
-	/**
-	 * Generates the instruction to load 'this' on the stack.
-	 */
+	/** Generates the instruction to load 'this' on the stack. */
 	public void loadThis() {
 		if ((access & Opcodes.ACC_STATIC) != 0) {
 			throw new IllegalStateException("no 'this' pointer within static method");
@@ -533,7 +515,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to load the given method argument on the stack.
-	 * 
+	 *
 	 * @param arg
 	 *        the index of a method argument.
 	 */
@@ -544,7 +526,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instructions to load the given method arguments on the
 	 * stack.
-	 * 
+	 *
 	 * @param arg
 	 *        the index of the first method argument to be loaded.
 	 * @param count
@@ -553,9 +535,9 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	public void loadArgs(final int arg, final int count) {
 		int index = getArgIndex(arg);
 		for (int i = 0; i < count; ++i) {
-			final Type t = argumentTypes[arg + i];
-			loadInsn(t, index);
-			index += t.getSize();
+			final Type argumentType = argumentTypes[arg + i];
+			loadInsn(argumentType, index);
+			index += argumentType.getSize();
 		}
 	}
 
@@ -568,7 +550,8 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions to load all the method arguments on the stack,
-	 * as a single object array.
+	 * as a single object
+	 * array.
 	 */
 	public void loadArgArray() {
 		push(argumentTypes.length);
@@ -583,9 +566,9 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	}
 
 	/**
-	 * Generates the instruction to store the top stack value in the given
-	 * method argument.
-	 * 
+	 * Generates the instruction to store the top stack value in the given method
+	 * argument.
+	 *
 	 * @param arg
 	 *        the index of a method argument.
 	 */
@@ -593,16 +576,16 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		storeInsn(argumentTypes[arg], getArgIndex(arg));
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to load and store local variables
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Returns the type of the given local variable.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 * @return the type of the given local variable.
 	 */
 	public Type getLocalType(final int local) {
@@ -620,10 +603,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to load the given local variable on the stack.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 */
 	public void loadLocal(final int local) {
 		loadInsn(getLocalType(local), local);
@@ -631,10 +614,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to load the given local variable on the stack.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 * @param type
 	 *        the type of this local variable.
 	 */
@@ -646,10 +629,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to store the top stack value in the given local
 	 * variable.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 */
 	public void storeLocal(final int local) {
 		storeInsn(getLocalType(local), local);
@@ -658,10 +641,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to store the top stack value in the given local
 	 * variable.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 * @param type
 	 *        the type of this local variable.
 	 */
@@ -672,7 +655,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to load an element from an array.
-	 * 
+	 *
 	 * @param type
 	 *        the type of the array element to be loaded.
 	 */
@@ -682,7 +665,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to store an element in an array.
-	 * 
+	 *
 	 * @param type
 	 *        the type of the array element to be stored.
 	 */
@@ -690,76 +673,58 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		mv.visitInsn(type.getOpcode(Opcodes.IASTORE));
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to manage the stack
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
-	/**
-	 * Generates a POP instruction.
-	 */
+	/** Generates a POP instruction. */
 	public void pop() {
 		mv.visitInsn(Opcodes.POP);
 	}
 
-	/**
-	 * Generates a POP2 instruction.
-	 */
+	/** Generates a POP2 instruction. */
 	public void pop2() {
 		mv.visitInsn(Opcodes.POP2);
 	}
 
-	/**
-	 * Generates a DUP instruction.
-	 */
+	/** Generates a DUP instruction. */
 	public void dup() {
 		mv.visitInsn(Opcodes.DUP);
 	}
 
-	/**
-	 * Generates a DUP2 instruction.
-	 */
+	/** Generates a DUP2 instruction. */
 	public void dup2() {
 		mv.visitInsn(Opcodes.DUP2);
 	}
 
-	/**
-	 * Generates a DUP_X1 instruction.
-	 */
+	/** Generates a DUP_X1 instruction. */
 	public void dupX1() {
 		mv.visitInsn(Opcodes.DUP_X1);
 	}
 
-	/**
-	 * Generates a DUP_X2 instruction.
-	 */
+	/** Generates a DUP_X2 instruction. */
 	public void dupX2() {
 		mv.visitInsn(Opcodes.DUP_X2);
 	}
 
-	/**
-	 * Generates a DUP2_X1 instruction.
-	 */
+	/** Generates a DUP2_X1 instruction. */
 	public void dup2X1() {
 		mv.visitInsn(Opcodes.DUP2_X1);
 	}
 
-	/**
-	 * Generates a DUP2_X2 instruction.
-	 */
+	/** Generates a DUP2_X2 instruction. */
 	public void dup2X2() {
 		mv.visitInsn(Opcodes.DUP2_X2);
 	}
 
-	/**
-	 * Generates a SWAP instruction.
-	 */
+	/** Generates a SWAP instruction. */
 	public void swap() {
 		mv.visitInsn(Opcodes.SWAP);
 	}
 
 	/**
 	 * Generates the instructions to swap the top two stack values.
-	 * 
+	 *
 	 * @param prev
 	 *        type of the top - 1 stack value.
 	 * @param type
@@ -768,7 +733,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	public void swap(final Type prev, final Type type) {
 		if (type.getSize() == 1) {
 			if (prev.getSize() == 1) {
-				swap(); // same as dupX1(), pop();
+				swap(); // Same as dupX1 pop.
 			} else {
 				dupX2();
 				pop();
@@ -784,17 +749,18 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		}
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to do mathematical and logical operations
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Generates the instruction to do the specified mathematical or logical
 	 * operation.
-	 * 
+	 *
 	 * @param op
-	 *        a mathematical or logical operation. Must be one of ADD, SUB,
-	 *        MUL, DIV, REM, NEG, SHL, SHR, USHR, AND, OR, XOR.
+	 *        a mathematical or logical operation. Must be one of ADD, SUB, MUL,
+	 *        DIV, REM, NEG,
+	 *        SHL, SHR, USHR, AND, OR, XOR.
 	 * @param type
 	 *        the type of the operand(s) for this operation.
 	 */
@@ -813,7 +779,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to increment the given local variable.
-	 * 
+	 *
 	 * @param local
 	 *        the local variable to be incremented.
 	 * @param amount
@@ -826,7 +792,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instructions to cast a numerical value from one type to
 	 * another.
-	 * 
+	 *
 	 * @param from
 	 *        the type of the top stack value
 	 * @param to
@@ -834,6 +800,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	 */
 	public void cast(final Type from, final Type to) {
 		if (from != to) {
+			if (from.getSort() < Type.BOOLEAN || from.getSort() > Type.DOUBLE
+					|| to.getSort() < Type.BOOLEAN || to.getSort() > Type.DOUBLE) {
+				throw new IllegalArgumentException("Cannot cast from " + from + " to " + to);
+			}
 			if (from == Type.DOUBLE_TYPE) {
 				if (to == Type.FLOAT_TYPE) {
 					mv.visitInsn(Opcodes.D2F);
@@ -879,9 +849,9 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		}
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to do boxing and unboxing operations
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	private static Type getBoxedType(final Type type) {
 		switch (type.getSort()) {
@@ -901,14 +871,16 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 			return LONG_TYPE;
 		case Type.DOUBLE:
 			return DOUBLE_TYPE;
+		default:
+			return type;
 		}
-		return type;
 	}
 
 	/**
 	 * Generates the instructions to box the top stack value. This value is
-	 * replaced by its boxed equivalent on top of the stack.
-	 * 
+	 * replaced by its boxed
+	 * equivalent on top of the stack.
+	 *
 	 * @param type
 	 *        the type of the top stack value.
 	 */
@@ -919,8 +891,8 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		if (type == Type.VOID_TYPE) {
 			push((String) null);
 		} else {
-			final Type boxed = getBoxedType(type);
-			newInstance(boxed);
+			final Type boxedType = getBoxedType(type);
+			newInstance(boxedType);
 			if (type.getSize() == 2) {
 				// Pp -> Ppo -> oPpo -> ooPpo -> ooPp -> o
 				dupX2();
@@ -931,15 +903,15 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 				dupX1();
 				swap();
 			}
-			invokeConstructor(boxed, new Method("<init>", Type.VOID_TYPE, new Type[] { type }));
+			invokeConstructor(boxedType, new Method("<init>", Type.VOID_TYPE, new Type[] { type }));
 		}
 	}
 
 	/**
 	 * Generates the instructions to box the top stack value using Java 5's
-	 * valueOf() method. This value is replaced by its boxed equivalent on top
-	 * of the stack.
-	 * 
+	 * valueOf() method. This
+	 * value is replaced by its boxed equivalent on top of the stack.
+	 *
 	 * @param type
 	 *        the type of the top stack value.
 	 */
@@ -950,61 +922,65 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		if (type == Type.VOID_TYPE) {
 			push((String) null);
 		} else {
-			final Type boxed = getBoxedType(type);
-			invokeStatic(boxed, new Method("valueOf", boxed, new Type[] { type }));
+			final Type boxedType = getBoxedType(type);
+			invokeStatic(boxedType, new Method("valueOf", boxedType, new Type[] { type }));
 		}
 	}
 
 	/**
 	 * Generates the instructions to unbox the top stack value. This value is
-	 * replaced by its unboxed equivalent on top of the stack.
-	 * 
+	 * replaced by its unboxed
+	 * equivalent on top of the stack.
+	 *
 	 * @param type
 	 *        the type of the top stack value.
 	 */
 	public void unbox(final Type type) {
-		Type t = NUMBER_TYPE;
-		Method sig = null;
+		Type boxedType = NUMBER_TYPE;
+		Method unboxMethod;
 		switch (type.getSort()) {
 		case Type.VOID:
 			return;
 		case Type.CHAR:
-			t = CHARACTER_TYPE;
-			sig = CHAR_VALUE;
+			boxedType = CHARACTER_TYPE;
+			unboxMethod = CHAR_VALUE;
 			break;
 		case Type.BOOLEAN:
-			t = BOOLEAN_TYPE;
-			sig = BOOLEAN_VALUE;
+			boxedType = BOOLEAN_TYPE;
+			unboxMethod = BOOLEAN_VALUE;
 			break;
 		case Type.DOUBLE:
-			sig = DOUBLE_VALUE;
+			unboxMethod = DOUBLE_VALUE;
 			break;
 		case Type.FLOAT:
-			sig = FLOAT_VALUE;
+			unboxMethod = FLOAT_VALUE;
 			break;
 		case Type.LONG:
-			sig = LONG_VALUE;
+			unboxMethod = LONG_VALUE;
 			break;
 		case Type.INT:
 		case Type.SHORT:
 		case Type.BYTE:
-			sig = INT_VALUE;
+			unboxMethod = INT_VALUE;
+			break;
+		default:
+			unboxMethod = null;
 		}
-		if (sig == null) {
+		if (unboxMethod == null) {
 			checkCast(type);
 		} else {
-			checkCast(t);
-			invokeVirtual(t, sig);
+			checkCast(boxedType);
+			invokeVirtual(boxedType, unboxMethod);
 		}
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to jump to other instructions
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
-	 * Creates a new {@link Label}.
-	 * 
+	 * Constructs a new {@link Label}.
+	 *
 	 * @return a new {@link Label}.
 	 */
 	public Label newLabel() {
@@ -1013,7 +989,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Marks the current code position with the given label.
-	 * 
+	 *
 	 * @param label
 	 *        a label.
 	 */
@@ -1023,7 +999,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Marks the current code position with a new label.
-	 * 
+	 *
 	 * @return the label that was created to mark the current code position.
 	 */
 	public Label mark() {
@@ -1034,13 +1010,13 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions to jump to a label based on the comparison of
-	 * the top two stack values.
-	 * 
+	 * the top two stack
+	 * values.
+	 *
 	 * @param type
 	 *        the type of the top two stack values.
 	 * @param mode
-	 *        how these values must be compared. One of EQ, NE, LT, GE, GT,
-	 *        LE.
+	 *        how these values must be compared. One of EQ, NE, LT, GE, GT, LE.
 	 * @param label
 	 *        where to jump if the comparison result is <tt>true</tt>.
 	 */
@@ -1057,15 +1033,15 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 			break;
 		case Type.ARRAY:
 		case Type.OBJECT:
-			switch (mode) {
-			case EQ:
+			if (mode == EQ) {
 				mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
 				return;
-			case NE:
+			} else if (mode == NE) {
 				mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
 				return;
+			} else {
+				throw new IllegalArgumentException("Bad comparison for type " + type);
 			}
-			throw new IllegalArgumentException("Bad comparison for type " + type);
 		default:
 			int intOp = -1;
 			switch (mode) {
@@ -1087,6 +1063,8 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 			case GT:
 				intOp = Opcodes.IF_ICMPGT;
 				break;
+			default:
+				throw new IllegalArgumentException("Bad comparison mode " + mode);
 			}
 			mv.visitJumpInsn(intOp, label);
 			return;
@@ -1096,11 +1074,11 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions to jump to a label based on the comparison of
-	 * the top two integer stack values.
-	 * 
+	 * the top two integer
+	 * stack values.
+	 *
 	 * @param mode
-	 *        how these values must be compared. One of EQ, NE, LT, GE, GT,
-	 *        LE.
+	 *        how these values must be compared. One of EQ, NE, LT, GE, GT, LE.
 	 * @param label
 	 *        where to jump if the comparison result is <tt>true</tt>.
 	 */
@@ -1110,11 +1088,11 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions to jump to a label based on the comparison of
-	 * the top integer stack value with zero.
-	 * 
+	 * the top integer stack
+	 * value with zero.
+	 *
 	 * @param mode
-	 *        how these values must be compared. One of EQ, NE, LT, GE, GT,
-	 *        LE.
+	 *        how these values must be compared. One of EQ, NE, LT, GE, GT, LE.
 	 * @param label
 	 *        where to jump if the comparison result is <tt>true</tt>.
 	 */
@@ -1125,7 +1103,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to jump to the given label if the top stack
 	 * value is null.
-	 * 
+	 *
 	 * @param label
 	 *        where to jump if the condition is <tt>true</tt>.
 	 */
@@ -1136,7 +1114,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to jump to the given label if the top stack
 	 * value is not null.
-	 * 
+	 *
 	 * @param label
 	 *        where to jump if the condition is <tt>true</tt>.
 	 */
@@ -1146,7 +1124,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to jump to the given label.
-	 * 
+	 *
 	 * @param label
 	 *        where to jump if the condition is <tt>true</tt>.
 	 */
@@ -1156,10 +1134,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates a RET instruction.
-	 * 
+	 *
 	 * @param local
-	 *        a local variable identifier, as returned by
-	 *        {@link LocalVariablesSorter#newLocal(Type) newLocal()}.
+	 *        a local variable identifier, as returned by {@link
+	 * 			LocalVariablesSorter#newLocal(Type)}.
 	 */
 	public void ret(final int local) {
 		mv.visitVarInsn(Opcodes.RET, local);
@@ -1167,7 +1145,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions for a switch statement.
-	 * 
+	 *
 	 * @param keys
 	 *        the switch case keys.
 	 * @param generator
@@ -1185,74 +1163,73 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instructions for a switch statement.
-	 * 
+	 *
 	 * @param keys
 	 *        the switch case keys.
 	 * @param generator
 	 *        a generator to generate the code for the switch cases.
 	 * @param useTable
 	 *        <tt>true</tt> to use a TABLESWITCH instruction, or <tt>false</tt>
-	 *        to use a LOOKUPSWITCH instruction.
+	 *        to use a
+	 *        LOOKUPSWITCH instruction.
 	 */
 	public void tableSwitch(final int[] keys, final TableSwitchGenerator generator,
 			final boolean useTable) {
 		for (int i = 1; i < keys.length; ++i) {
 			if (keys[i] < keys[i - 1]) {
-				throw new IllegalArgumentException("keys must be sorted ascending");
+				throw new IllegalArgumentException("keys must be sorted in ascending order");
 			}
 		}
-		final Label def = newLabel();
-		final Label end = newLabel();
+		final Label defaultLabel = newLabel();
+		final Label endLabel = newLabel();
 		if (keys.length > 0) {
-			final int len = keys.length;
-			final int min = keys[0];
-			final int max = keys[len - 1];
-			final int range = max - min + 1;
+			final int numKeys = keys.length;
 			if (useTable) {
+				final int min = keys[0];
+				final int max = keys[numKeys - 1];
+				final int range = max - min + 1;
 				final Label[] labels = new Label[range];
-				Arrays.fill(labels, def);
-				for (int i = 0; i < len; ++i) {
+				Arrays.fill(labels, defaultLabel);
+				for (int i = 0; i < numKeys; ++i) {
 					labels[keys[i] - min] = newLabel();
 				}
-				mv.visitTableSwitchInsn(min, max, def, labels);
+				mv.visitTableSwitchInsn(min, max, defaultLabel, labels);
 				for (int i = 0; i < range; ++i) {
 					final Label label = labels[i];
-					if (label != def) {
+					if (label != defaultLabel) {
 						mark(label);
-						generator.generateCase(i + min, end);
+						generator.generateCase(i + min, endLabel);
 					}
 				}
 			} else {
-				final Label[] labels = new Label[len];
-				for (int i = 0; i < len; ++i) {
+				final Label[] labels = new Label[numKeys];
+				for (int i = 0; i < numKeys; ++i) {
 					labels[i] = newLabel();
 				}
-				mv.visitLookupSwitchInsn(def, keys, labels);
-				for (int i = 0; i < len; ++i) {
+				mv.visitLookupSwitchInsn(defaultLabel, keys, labels);
+				for (int i = 0; i < numKeys; ++i) {
 					mark(labels[i]);
-					generator.generateCase(keys[i], end);
+					generator.generateCase(keys[i], endLabel);
 				}
 			}
 		}
-		mark(def);
+		mark(defaultLabel);
 		generator.generateDefault();
-		mark(end);
+		mark(endLabel);
 	}
 
-	/**
-	 * Generates the instruction to return the top stack value to the caller.
-	 */
+	/** Generates the instruction to return the top stack value to the caller. */
 	public void returnValue() {
 		mv.visitInsn(returnType.getOpcode(Opcodes.IRETURN));
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to load and store fields
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Generates a get field or set field instruction.
-	 * 
+	 *
 	 * @param opcode
 	 *        the instruction's opcode.
 	 * @param ownerType
@@ -1270,7 +1247,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to push the value of a static field on the
 	 * stack.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the field is defined.
 	 * @param name
@@ -1284,7 +1261,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to store the top stack value in a static field.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the field is defined.
 	 * @param name
@@ -1299,7 +1276,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to push the value of a non static field on the
 	 * stack.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the field is defined.
 	 * @param name
@@ -1314,7 +1291,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to store the top stack value in a non static
 	 * field.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the field is defined.
 	 * @param name
@@ -1326,30 +1303,32 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		fieldInsn(Opcodes.PUTFIELD, owner, name, type);
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to invoke methods
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Generates an invoke method instruction.
-	 * 
+	 *
 	 * @param opcode
 	 *        the instruction's opcode.
 	 * @param type
 	 *        the class in which the method is defined.
 	 * @param method
 	 *        the method to be invoked.
+	 * @param isInterface
+	 *        whether the 'type' class is an interface or not.
 	 */
 	private void invokeInsn(final int opcode, final Type type, final Method method,
-			final boolean itf) {
+			final boolean isInterface) {
 		final String owner = type.getSort() == Type.ARRAY ? type.getDescriptor()
 				: type.getInternalName();
-		mv.visitMethodInsn(opcode, owner, method.getName(), method.getDescriptor(), itf);
+		mv.visitMethodInsn(opcode, owner, method.getName(), method.getDescriptor(), isInterface);
 	}
 
 	/**
 	 * Generates the instruction to invoke a normal method.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the method is defined.
 	 * @param method
@@ -1361,7 +1340,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to invoke a constructor.
-	 * 
+	 *
 	 * @param type
 	 *        the class in which the constructor is defined.
 	 * @param method
@@ -1373,7 +1352,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to invoke a static method.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the method is defined.
 	 * @param method
@@ -1385,7 +1364,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to invoke an interface method.
-	 * 
+	 *
 	 * @param owner
 	 *        the class in which the method is defined.
 	 * @param method
@@ -1397,32 +1376,33 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates an invokedynamic instruction.
-	 * 
+	 *
 	 * @param name
 	 *        the method's name.
-	 * @param desc
-	 *        the method's descriptor (see {@link Type Type}).
-	 * @param bsm
+	 * @param descriptor
+	 *        the method's descriptor (see {@link Type}).
+	 * @param bootstrapMethodHandle
 	 *        the bootstrap method.
-	 * @param bsmArgs
+	 * @param bootstrapMethodArguments
 	 *        the bootstrap method constant arguments. Each argument must be
 	 *        an {@link Integer}, {@link Float}, {@link Long}, {@link Double},
-	 *        {@link String}, {@link Type} or {@link Handle} value. This method
-	 *        is allowed to modify the content of the
-	 *        array so a caller should expect that this array may change.
+	 *        {@link String}, {@link
+	 * 			Type} or {@link Handle} value. This method is allowed to modify the
+	 *        content of the array so
+	 *        a caller should expect that this array may change.
 	 */
-	public void invokeDynamic(final String name, final String desc, final Handle bsm,
-			final Object... bsmArgs) {
-		mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	public void invokeDynamic(final String name, final String descriptor,
+			final Handle bootstrapMethodHandle, final Object... bootstrapMethodArguments) {
+		mv.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Instructions to create objects and arrays
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Generates a type dependent instruction.
-	 * 
+	 *
 	 * @param opcode
 	 *        the instruction's opcode.
 	 * @param type
@@ -1434,7 +1414,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to create a new object.
-	 * 
+	 *
 	 * @param type
 	 *        the class of the object to be created.
 	 */
@@ -1444,75 +1424,72 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Generates the instruction to create a new array.
-	 * 
+	 *
 	 * @param type
 	 *        the type of the array elements.
 	 */
 	public void newArray(final Type type) {
-		int typ;
+		int arrayType;
 		switch (type.getSort()) {
 		case Type.BOOLEAN:
-			typ = Opcodes.T_BOOLEAN;
+			arrayType = Opcodes.T_BOOLEAN;
 			break;
 		case Type.CHAR:
-			typ = Opcodes.T_CHAR;
+			arrayType = Opcodes.T_CHAR;
 			break;
 		case Type.BYTE:
-			typ = Opcodes.T_BYTE;
+			arrayType = Opcodes.T_BYTE;
 			break;
 		case Type.SHORT:
-			typ = Opcodes.T_SHORT;
+			arrayType = Opcodes.T_SHORT;
 			break;
 		case Type.INT:
-			typ = Opcodes.T_INT;
+			arrayType = Opcodes.T_INT;
 			break;
 		case Type.FLOAT:
-			typ = Opcodes.T_FLOAT;
+			arrayType = Opcodes.T_FLOAT;
 			break;
 		case Type.LONG:
-			typ = Opcodes.T_LONG;
+			arrayType = Opcodes.T_LONG;
 			break;
 		case Type.DOUBLE:
-			typ = Opcodes.T_DOUBLE;
+			arrayType = Opcodes.T_DOUBLE;
 			break;
 		default:
 			typeInsn(Opcodes.ANEWARRAY, type);
 			return;
 		}
-		mv.visitIntInsn(Opcodes.NEWARRAY, typ);
+		mv.visitIntInsn(Opcodes.NEWARRAY, arrayType);
 	}
 
-	// ------------------------------------------------------------------------
-	// Miscelaneous instructions
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
+	// Miscellaneous instructions
+	// -----------------------------------------------------------------------------------------------
 
-	/**
-	 * Generates the instruction to compute the length of an array.
-	 */
+	/** Generates the instruction to compute the length of an array. */
 	public void arrayLength() {
 		mv.visitInsn(Opcodes.ARRAYLENGTH);
 	}
 
-	/**
-	 * Generates the instruction to throw an exception.
-	 */
+	/** Generates the instruction to throw an exception. */
 	public void throwException() {
 		mv.visitInsn(Opcodes.ATHROW);
 	}
 
 	/**
-	 * Generates the instructions to create and throw an exception. The
-	 * exception class must have a constructor with a single String argument.
-	 * 
+	 * Generates the instructions to create and throw an exception. The exception
+	 * class must have a
+	 * constructor with a single String argument.
+	 *
 	 * @param type
 	 *        the class of the exception to be thrown.
-	 * @param msg
+	 * @param message
 	 *        the detailed message of the exception.
 	 */
-	public void throwException(final Type type, final String msg) {
+	public void throwException(final Type type, final String message) {
 		newInstance(type);
 		dup();
-		push(msg);
+		push(message);
 		invokeConstructor(type, Method.getMethod("void <init> (String)"));
 		throwException();
 	}
@@ -1520,7 +1497,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to check that the top stack value is of the
 	 * given type.
-	 * 
+	 *
 	 * @param type
 	 *        a class or interface type.
 	 */
@@ -1533,7 +1510,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 	/**
 	 * Generates the instruction to test if the top stack value is of the given
 	 * type.
-	 * 
+	 *
 	 * @param type
 	 *        a class or interface type.
 	 */
@@ -1541,9 +1518,7 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		typeInsn(Opcodes.INSTANCEOF, type);
 	}
 
-	/**
-	 * Generates the instruction to get the monitor of the top stack value.
-	 */
+	/** Generates the instruction to get the monitor of the top stack value. */
 	public void monitorEnter() {
 		mv.visitInsn(Opcodes.MONITORENTER);
 	}
@@ -1555,13 +1530,11 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 		mv.visitInsn(Opcodes.MONITOREXIT);
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Non instructions
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
-	/**
-	 * Marks the end of the visited method.
-	 */
+	/** Marks the end of the visited method. */
 	public void endMethod() {
 		if ((access & Opcodes.ACC_ABSTRACT) == 0) {
 			mv.visitMaxs(0, 0);
@@ -1571,22 +1544,21 @@ public class GeneratorAdapter extends LocalVariablesSorter {
 
 	/**
 	 * Marks the start of an exception handler.
-	 * 
+	 *
 	 * @param start
 	 *        beginning of the exception handler's scope (inclusive).
 	 * @param end
 	 *        end of the exception handler's scope (exclusive).
 	 * @param exception
-	 *        internal name of the type of exceptions handled by the
-	 *        handler.
+	 *        internal name of the type of exceptions handled by the handler.
 	 */
 	public void catchException(final Label start, final Label end, final Type exception) {
-		final Label doCatch = new Label();
+		final Label catchLabel = new Label();
 		if (exception == null) {
-			mv.visitTryCatchBlock(start, end, doCatch, null);
+			mv.visitTryCatchBlock(start, end, catchLabel, null);
 		} else {
-			mv.visitTryCatchBlock(start, end, doCatch, exception.getInternalName());
+			mv.visitTryCatchBlock(start, end, catchLabel, exception.getInternalName());
 		}
-		mark(doCatch);
+		mark(catchLabel);
 	}
 }

@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.util;
 
 import java.io.PrintWriter;
@@ -36,103 +34,106 @@ import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
+import net.simpleframework.lib.org.objectweb.asm.ModuleVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
  * A {@link ClassVisitor} that prints the classes it visits with a
- * {@link Printer}. This class visitor can be used in the middle of a class
- * visitor chain to trace the class that is visited at a given point in this
- * chain. This may be useful for debugging purposes.
+ * {@link Printer}. This class
+ * visitor can be used in the middle of a class visitor chain to trace the class
+ * that is visited at
+ * a given point in this chain. This may be useful for debugging purposes.
+ *
  * <p>
- * The trace printed when visiting the <tt>Hello</tt> class is the following:
- * <p>
- * <blockquote>
- * 
+ * When used with a {@link Textifier}, the trace printed when visiting the
+ * <tt>Hello</tt> class
+ * is the following:
+ *
  * <pre>
  * // class version 49.0 (49) // access flags 0x21 public class Hello {
- * 
+ *
  * // compiled from: Hello.java
- * 
- * // access flags 0x1 public &lt;init&gt; ()V ALOAD 0 INVOKESPECIAL
- * java/lang/Object &lt;init&gt; ()V RETURN MAXSTACK = 1 MAXLOCALS = 1
- * 
- * // access flags 0x9 public static main ([Ljava/lang/String;)V GETSTATIC
- * java/lang/System out Ljava/io/PrintStream; LDC &quot;hello&quot;
- * INVOKEVIRTUAL java/io/PrintStream println (Ljava/lang/String;)V RETURN
- * MAXSTACK = 2 MAXLOCALS = 1 }
+ *
+ * // access flags 0x1
+ * public &lt;init&gt; ()V
+ * ALOAD 0
+ * INVOKESPECIAL java/lang/Object &lt;init&gt; ()V
+ * RETURN
+ * MAXSTACK = 1 MAXLOCALS = 1
+ *
+ * // access flags 0x9
+ * public static main ([Ljava/lang/String;)V
+ * GETSTATIC java/lang/System out Ljava/io/PrintStream;
+ * LDC &quot;hello&quot;
+ * INVOKEVIRTUAL java/io/PrintStream println (Ljava/lang/String;)V
+ * RETURN
+ * MAXSTACK = 2 MAXLOCALS = 1
+ * }
  * </pre>
- * 
- * </blockquote> where <tt>Hello</tt> is defined by:
- * <p>
- * <blockquote>
- * 
+ *
+ * where <tt>Hello</tt> is defined by:
+ *
  * <pre>
  * public class Hello {
- * 
+ *
  * 	public static void main(String[] args) {
  * 		System.out.println(&quot;hello&quot;);
  * 	}
  * }
  * </pre>
- * 
- * </blockquote>
- * 
+ *
  * @author Eric Bruneton
  * @author Eugene Kuleshov
  */
 public final class TraceClassVisitor extends ClassVisitor {
 
-	/**
-	 * The print writer to be used to print the class. May be null.
-	 */
-	private final PrintWriter pw;
+	/** The print writer to be used to print the class. May be <tt>null</tt>. */
+	private final PrintWriter printWriter;
 
-	/**
-	 * The object that actually converts visit events into text.
-	 */
+	/** The printer to convert the visited class into text. */
 	public final Printer p;
 
 	/**
 	 * Constructs a new {@link TraceClassVisitor}.
-	 * 
-	 * @param pw
-	 *        the print writer to be used to print the class.
+	 *
+	 * @param printWriter
+	 *        the print writer to be used to print the class. May be
+	 *        <tt>null</tt>.
 	 */
-	public TraceClassVisitor(final PrintWriter pw) {
-		this(null, pw);
+	public TraceClassVisitor(final PrintWriter printWriter) {
+		this(null, printWriter);
 	}
 
 	/**
 	 * Constructs a new {@link TraceClassVisitor}.
-	 * 
-	 * @param cv
-	 *        the {@link ClassVisitor} to which this visitor delegates
-	 *        calls. May be <tt>null</tt>.
-	 * @param pw
-	 *        the print writer to be used to print the class.
+	 *
+	 * @param classVisitor
+	 *        the class visitor to which to delegate calls. May be <tt>null</tt>.
+	 * @param printWriter
+	 *        the print writer to be used to print the class. May be
+	 *        <tt>null</tt>.
 	 */
-	public TraceClassVisitor(final ClassVisitor cv, final PrintWriter pw) {
-		this(cv, new Textifier(), pw);
+	public TraceClassVisitor(final ClassVisitor classVisitor, final PrintWriter printWriter) {
+		this(classVisitor, new Textifier(), printWriter);
 	}
 
 	/**
 	 * Constructs a new {@link TraceClassVisitor}.
-	 * 
-	 * @param cv
-	 *        the {@link ClassVisitor} to which this visitor delegates
-	 *        calls. May be <tt>null</tt>.
-	 * @param p
-	 *        the object that actually converts visit events into text.
-	 * @param pw
-	 *        the print writer to be used to print the class. May be null if
-	 *        you simply want to use the result via {@link Printer#getText()},
-	 *        instead of printing it.
+	 *
+	 * @param classVisitor
+	 *        the class visitor to which to delegate calls. May be <tt>null</tt>.
+	 * @param printer
+	 *        the printer to convert the visited class into text.
+	 * @param printWriter
+	 *        the print writer to be used to print the class. May be
+	 *        <tt>null</tt>.
 	 */
-	public TraceClassVisitor(final ClassVisitor cv, final Printer p, final PrintWriter pw) {
-		super(Opcodes.ASM5, cv);
-		this.pw = pw;
-		this.p = p;
+	public TraceClassVisitor(final ClassVisitor classVisitor, final Printer printer,
+			final PrintWriter printWriter) {
+		super(Opcodes.ASM7_EXPERIMENTAL, classVisitor);
+		this.printWriter = printWriter;
+		this.p = printer;
 	}
 
 	@Override
@@ -149,31 +150,49 @@ public final class TraceClassVisitor extends ClassVisitor {
 	}
 
 	@Override
-	public void visitOuterClass(final String owner, final String name, final String desc) {
-		p.visitOuterClass(owner, name, desc);
-		super.visitOuterClass(owner, name, desc);
+	public ModuleVisitor visitModule(final String name, final int flags, final String version) {
+		final Printer modulePrinter = p.visitModule(name, flags, version);
+		return new TraceModuleVisitor(super.visitModule(name, flags, version), modulePrinter);
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final Printer p = this.p.visitClassAnnotation(desc, visible);
-		final AnnotationVisitor av = cv == null ? null : cv.visitAnnotation(desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+	public void visitNestHostExperimental(final String nestHost) {
+		p.visitNestHostExperimental(nestHost);
+		super.visitNestHostExperimental(nestHost);
+	}
+
+	@Override
+	public void visitOuterClass(final String owner, final String name, final String descriptor) {
+		p.visitOuterClass(owner, name, descriptor);
+		super.visitOuterClass(owner, name, descriptor);
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitClassAnnotation(descriptor, visible);
+		return new TraceAnnotationVisitor(super.visitAnnotation(descriptor, visible),
+				annotationPrinter);
 	}
 
 	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final Printer p = this.p.visitClassTypeAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = cv == null ? null
-				: cv.visitTypeAnnotation(typeRef, typePath, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+			final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitClassTypeAnnotation(typeRef, typePath, descriptor,
+				visible);
+		return new TraceAnnotationVisitor(
+				super.visitTypeAnnotation(typeRef, typePath, descriptor, visible), annotationPrinter);
 	}
 
 	@Override
-	public void visitAttribute(final Attribute attr) {
-		p.visitClassAttribute(attr);
-		super.visitAttribute(attr);
+	public void visitAttribute(final Attribute attribute) {
+		p.visitClassAttribute(attribute);
+		super.visitAttribute(attribute);
+	}
+
+	@Override
+	public void visitNestMemberExperimental(final String nestMember) {
+		p.visitNestMemberExperimental(nestMember);
+		super.visitNestMemberExperimental(nestMember);
 	}
 
 	@Override
@@ -184,29 +203,27 @@ public final class TraceClassVisitor extends ClassVisitor {
 	}
 
 	@Override
-	public FieldVisitor visitField(final int access, final String name, final String desc,
+	public FieldVisitor visitField(final int access, final String name, final String descriptor,
 			final String signature, final Object value) {
-		final Printer p = this.p.visitField(access, name, desc, signature, value);
-		final FieldVisitor fv = cv == null ? null
-				: cv.visitField(access, name, desc, signature, value);
-		return new TraceFieldVisitor(fv, p);
+		final Printer fieldPrinter = p.visitField(access, name, descriptor, signature, value);
+		return new TraceFieldVisitor(super.visitField(access, name, descriptor, signature, value),
+				fieldPrinter);
 	}
 
 	@Override
-	public MethodVisitor visitMethod(final int access, final String name, final String desc,
+	public MethodVisitor visitMethod(final int access, final String name, final String descriptor,
 			final String signature, final String[] exceptions) {
-		final Printer p = this.p.visitMethod(access, name, desc, signature, exceptions);
-		final MethodVisitor mv = cv == null ? null
-				: cv.visitMethod(access, name, desc, signature, exceptions);
-		return new TraceMethodVisitor(mv, p);
+		final Printer methodPrinter = p.visitMethod(access, name, descriptor, signature, exceptions);
+		return new TraceMethodVisitor(
+				super.visitMethod(access, name, descriptor, signature, exceptions), methodPrinter);
 	}
 
 	@Override
 	public void visitEnd() {
 		p.visitClassEnd();
-		if (pw != null) {
-			p.print(pw);
-			pw.flush();
+		if (printWriter != null) {
+			p.print(printWriter);
+			printWriter.flush();
 		}
 		super.visitEnd();
 	}

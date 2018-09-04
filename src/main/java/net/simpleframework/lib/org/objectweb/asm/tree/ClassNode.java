@@ -1,36 +1,33 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.tree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
@@ -38,54 +35,54 @@ import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
+import net.simpleframework.lib.org.objectweb.asm.ModuleVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
  * A node that represents a class.
- * 
+ *
  * @author Eric Bruneton
  */
 public class ClassNode extends ClassVisitor {
 
 	/**
-	 * The class version.
+	 * The class version. The minor version is stored in the 16 most significant
+	 * bits, and the major
+	 * version in the 16 least significant bits.
 	 */
 	public int version;
 
 	/**
 	 * The class's access flags (see
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Opcodes}). This
-	 * field also indicates if the class is deprecated.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.Opcodes}). This field
+	 * also indicates if
+	 * the class is deprecated.
 	 */
 	public int access;
 
 	/**
-	 * The internal name of the class (see
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Type#getInternalName()
-	 * getInternalName}).
+	 * The internal name of this class (see
+	 * {@link net.simpleframework.lib.org.objectweb.asm.Type#getInternalName}).
 	 */
 	public String name;
 
-	/**
-	 * The signature of the class. May be <tt>null</tt>.
-	 */
+	/** The signature of this class. May be <tt>null</tt>. */
 	public String signature;
 
 	/**
 	 * The internal of name of the super class (see
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Type#getInternalName()
-	 * getInternalName}). For
-	 * interfaces, the super class is {@link Object}. May be <tt>null</tt>, but
-	 * only for the {@link Object} class.
+	 * {@link net.simpleframework.lib.org.objectweb.asm.Type#getInternalName}).
+	 * For interfaces, the super class is {@link Object}. May be <tt>null</tt>,
+	 * but only for the
+	 * {@link Object} class.
 	 */
 	public String superName;
 
 	/**
-	 * The internal names of the class's interfaces (see
-	 * {@link net.simpleframework.lib.org.objectweb.asm.Type#getInternalName()
-	 * getInternalName}). This
-	 * list is a list of {@link String} objects.
+	 * The internal names of the interfaces directly implemented by this class
+	 * (see {@link
+	 * net.simpleframework.lib.org.objectweb.asm.Type#getInternalName}).
 	 */
 	public List<String> interfaces;
 
@@ -96,111 +93,91 @@ public class ClassNode extends ClassVisitor {
 	public String sourceFile;
 
 	/**
-	 * Debug information to compute the correspondence between source and
-	 * compiled elements of the class. May be <tt>null</tt>.
+	 * The correspondence between source and compiled elements of this class. May
+	 * be <tt>null</tt>.
 	 */
 	public String sourceDebug;
 
+	/** The module stored in this class. May be <tt>null</tt>. */
+	public ModuleNode module;
+
 	/**
-	 * The internal name of the enclosing class of the class. May be
+	 * The internal name of the enclosing class of this class. May be
 	 * <tt>null</tt>.
 	 */
 	public String outerClass;
 
 	/**
-	 * The name of the method that contains the class, or <tt>null</tt> if the
-	 * class is not enclosed in a method.
+	 * The name of the method that contains this class, or <tt>null</tt> if this
+	 * class is not enclosed
+	 * in a method.
 	 */
 	public String outerMethod;
 
 	/**
-	 * The descriptor of the method that contains the class, or <tt>null</tt> if
-	 * the class is not enclosed in a method.
+	 * The descriptor of the method that contains this class, or <tt>null</tt> if
+	 * this class is not
+	 * enclosed in a method.
 	 */
 	public String outerMethodDesc;
 
-	/**
-	 * The runtime visible annotations of this class. This list is a list of
-	 * {@link AnnotationNode} objects. May be <tt>null</tt>.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.tree.AnnotationNode
-	 * @label visible
-	 */
+	/** The runtime visible annotations of this class. May be <tt>null</tt>. */
 	public List<AnnotationNode> visibleAnnotations;
 
-	/**
-	 * The runtime invisible annotations of this class. This list is a list of
-	 * {@link AnnotationNode} objects. May be <tt>null</tt>.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.tree.AnnotationNode
-	 * @label invisible
-	 */
+	/** The runtime invisible annotations of this class. May be <tt>null</tt>. */
 	public List<AnnotationNode> invisibleAnnotations;
 
 	/**
-	 * The runtime visible type annotations of this class. This list is a list
-	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
-	 * 
-	 * @associates
-	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
-	 *             TypeAnnotationNode
-	 * @label visible
+	 * The runtime visible type annotations of this class. May be <tt>null</tt>.
 	 */
 	public List<TypeAnnotationNode> visibleTypeAnnotations;
 
 	/**
-	 * The runtime invisible type annotations of this class. This list is a list
-	 * of {@link TypeAnnotationNode} objects. May be <tt>null</tt>.
-	 * 
-	 * @associates
-	 * 				net.simpleframework.lib.org.objectweb.asm.tree.
-	 *             TypeAnnotationNode
-	 * @label invisible
+	 * The runtime invisible type annotations of this class. May be
+	 * <tt>null</tt>.
 	 */
 	public List<TypeAnnotationNode> invisibleTypeAnnotations;
 
-	/**
-	 * The non standard attributes of this class. This list is a list of
-	 * {@link Attribute} objects. May be <tt>null</tt>.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.Attribute
-	 */
+	/** The non standard attributes of this class. May be <tt>null</tt>. */
 	public List<Attribute> attrs;
 
-	/**
-	 * Informations about the inner classes of this class. This list is a list
-	 * of {@link InnerClassNode} objects.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.tree.InnerClassNode
-	 */
+	/** The inner classes of this class. */
 	public List<InnerClassNode> innerClasses;
 
 	/**
-	 * The fields of this class. This list is a list of {@link FieldNode}
-	 * objects.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.tree.FieldNode
+	 * <b>Experimental, use at your own risk. This field will be renamed when it
+	 * becomes stable, this
+	 * will break existing code using it</b>. The internal name of the nest host
+	 * class of this class.
+	 * May be <tt>null</tt>.
 	 */
-	public List<FieldNode> fields;
+	public String nestHostClassExperimental;
 
 	/**
-	 * The methods of this class. This list is a list of {@link MethodNode}
-	 * objects.
-	 * 
-	 * @associates net.simpleframework.lib.org.objectweb.asm.tree.MethodNode
+	 * <b>Experimental, use at your own risk. This field will be renamed when it
+	 * becomes stable, this
+	 * will break existing code using it</b>. The internal names of the nest
+	 * members of this class.
+	 * May be <tt>null</tt>.
 	 */
+	public List<String> nestMembersExperimental;
+
+	/** The fields of this class. */
+	public List<FieldNode> fields;
+
+	/** The methods of this class. */
 	public List<MethodNode> methods;
 
 	/**
 	 * Constructs a new {@link ClassNode}. <i>Subclasses must not use this
-	 * constructor</i>. Instead, they must use the {@link #ClassNode(int)}
-	 * version.
-	 * 
+	 * constructor</i>. Instead,
+	 * they must use the {@link #ClassNode(int)} version.
+	 *
 	 * @throws IllegalStateException
 	 *         If a subclass calls this constructor.
 	 */
 	public ClassNode() {
-		this(Opcodes.ASM5);
+		this(Opcodes.ASM6);
 		if (getClass() != ClassNode.class) {
 			throw new IllegalStateException();
 		}
@@ -208,10 +185,12 @@ public class ClassNode extends ClassVisitor {
 
 	/**
 	 * Constructs a new {@link ClassNode}.
-	 * 
+	 *
 	 * @param api
-	 *        the ASM API version implemented by this visitor. Must be one
-	 *        of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 *        the ASM API version implemented by this visitor. Must be one of
+	 *        {@link
+	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link
+	 * 			Opcodes#ASM7_EXPERIMENTAL}.
 	 */
 	public ClassNode(final int api) {
 		super(api);
@@ -221,9 +200,9 @@ public class ClassNode extends ClassVisitor {
 		this.methods = new ArrayList<>();
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Implementation of the ClassVisitor abstract class
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	@Override
 	public void visit(final int version, final int access, final String name, final String signature,
@@ -233,9 +212,7 @@ public class ClassNode extends ClassVisitor {
 		this.name = name;
 		this.signature = signature;
 		this.superName = superName;
-		if (interfaces != null) {
-			this.interfaces.addAll(Arrays.asList(interfaces));
-		}
+		this.interfaces = Util.asArrayList(interfaces);
 	}
 
 	@Override
@@ -245,171 +222,242 @@ public class ClassNode extends ClassVisitor {
 	}
 
 	@Override
-	public void visitOuterClass(final String owner, final String name, final String desc) {
-		outerClass = owner;
-		outerMethod = name;
-		outerMethodDesc = desc;
+	public ModuleVisitor visitModule(final String name, final int access, final String version) {
+		module = new ModuleNode(name, access, version);
+		return module;
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final AnnotationNode an = new AnnotationNode(desc);
+	public void visitNestHostExperimental(final String nestHost) {
+		this.nestHostClassExperimental = nestHost;
+	}
+
+	@Override
+	public void visitOuterClass(final String owner, final String name, final String descriptor) {
+		outerClass = owner;
+		outerMethod = name;
+		outerMethodDesc = descriptor;
+	}
+
+	@Override
+	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+		final AnnotationNode annotation = new AnnotationNode(descriptor);
 		if (visible) {
 			if (visibleAnnotations == null) {
 				visibleAnnotations = new ArrayList<>(1);
 			}
-			visibleAnnotations.add(an);
+			visibleAnnotations.add(annotation);
 		} else {
 			if (invisibleAnnotations == null) {
 				invisibleAnnotations = new ArrayList<>(1);
 			}
-			invisibleAnnotations.add(an);
+			invisibleAnnotations.add(annotation);
 		}
-		return an;
+		return annotation;
 	}
 
 	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final TypeAnnotationNode an = new TypeAnnotationNode(typeRef, typePath, desc);
+			final String descriptor, final boolean visible) {
+		final TypeAnnotationNode typeAnnotation = new TypeAnnotationNode(typeRef, typePath,
+				descriptor);
 		if (visible) {
 			if (visibleTypeAnnotations == null) {
 				visibleTypeAnnotations = new ArrayList<>(1);
 			}
-			visibleTypeAnnotations.add(an);
+			visibleTypeAnnotations.add(typeAnnotation);
 		} else {
 			if (invisibleTypeAnnotations == null) {
 				invisibleTypeAnnotations = new ArrayList<>(1);
 			}
-			invisibleTypeAnnotations.add(an);
+			invisibleTypeAnnotations.add(typeAnnotation);
 		}
-		return an;
+		return typeAnnotation;
 	}
 
 	@Override
-	public void visitAttribute(final Attribute attr) {
+	public void visitAttribute(final Attribute attribute) {
 		if (attrs == null) {
 			attrs = new ArrayList<>(1);
 		}
-		attrs.add(attr);
+		attrs.add(attribute);
+	}
+
+	@Override
+	public void visitNestMemberExperimental(final String nestMember) {
+		if (nestMembersExperimental == null) {
+			nestMembersExperimental = new ArrayList<>();
+		}
+		nestMembersExperimental.add(nestMember);
 	}
 
 	@Override
 	public void visitInnerClass(final String name, final String outerName, final String innerName,
 			final int access) {
-		final InnerClassNode icn = new InnerClassNode(name, outerName, innerName, access);
-		innerClasses.add(icn);
+		final InnerClassNode innerClass = new InnerClassNode(name, outerName, innerName, access);
+		innerClasses.add(innerClass);
 	}
 
 	@Override
-	public FieldVisitor visitField(final int access, final String name, final String desc,
+	public FieldVisitor visitField(final int access, final String name, final String descriptor,
 			final String signature, final Object value) {
-		final FieldNode fn = new FieldNode(access, name, desc, signature, value);
-		fields.add(fn);
-		return fn;
+		final FieldNode field = new FieldNode(access, name, descriptor, signature, value);
+		fields.add(field);
+		return field;
 	}
 
 	@Override
-	public MethodVisitor visitMethod(final int access, final String name, final String desc,
+	public MethodVisitor visitMethod(final int access, final String name, final String descriptor,
 			final String signature, final String[] exceptions) {
-		final MethodNode mn = new MethodNode(access, name, desc, signature, exceptions);
-		methods.add(mn);
-		return mn;
+		final MethodNode method = new MethodNode(access, name, descriptor, signature, exceptions);
+		methods.add(method);
+		return method;
 	}
 
 	@Override
 	public void visitEnd() {
+		// Nothing to do.
 	}
 
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 	// Accept method
-	// ------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------------
 
 	/**
 	 * Checks that this class node is compatible with the given ASM API version.
-	 * This methods checks that this node, and all its nodes recursively, do not
-	 * contain elements that were introduced in more recent versions of the ASM
-	 * API than the given version.
-	 * 
+	 * This method checks
+	 * that this node, and all its children recursively, do not contain elements
+	 * that were introduced
+	 * in more recent versions of the ASM API than the given version.
+	 *
 	 * @param api
-	 *        an ASM API version. Must be one of {@link Opcodes#ASM4} or
-	 *        {@link Opcodes#ASM5}.
+	 *        an ASM API version. Must be one of {@link Opcodes#ASM4},
+	 *        {@link Opcodes#ASM5},
+	 *        {@link Opcodes#ASM6} or {@link Opcodes#ASM7_EXPERIMENTAL}.
 	 */
 	public void check(final int api) {
-		if (api == Opcodes.ASM4) {
-			if (visibleTypeAnnotations != null && visibleTypeAnnotations.size() > 0) {
-				throw new RuntimeException();
+		if (api < Opcodes.ASM7_EXPERIMENTAL
+				&& (nestHostClassExperimental != null || nestMembersExperimental != null)) {
+			throw new UnsupportedClassVersionException();
+		}
+		if (api < Opcodes.ASM6 && module != null) {
+			throw new UnsupportedClassVersionException();
+		}
+		if (api < Opcodes.ASM5) {
+			if (visibleTypeAnnotations != null && !visibleTypeAnnotations.isEmpty()) {
+				throw new UnsupportedClassVersionException();
 			}
-			if (invisibleTypeAnnotations != null && invisibleTypeAnnotations.size() > 0) {
-				throw new RuntimeException();
+			if (invisibleTypeAnnotations != null && !invisibleTypeAnnotations.isEmpty()) {
+				throw new UnsupportedClassVersionException();
 			}
-			for (final FieldNode f : fields) {
-				f.check(api);
+		}
+		// Check the annotations.
+		if (visibleAnnotations != null) {
+			for (int i = visibleAnnotations.size() - 1; i >= 0; --i) {
+				visibleAnnotations.get(i).check(api);
 			}
-			for (final MethodNode m : methods) {
-				m.check(api);
+		}
+		if (invisibleAnnotations != null) {
+			for (int i = invisibleAnnotations.size() - 1; i >= 0; --i) {
+				invisibleAnnotations.get(i).check(api);
 			}
+		}
+		if (visibleTypeAnnotations != null) {
+			for (int i = visibleTypeAnnotations.size() - 1; i >= 0; --i) {
+				visibleTypeAnnotations.get(i).check(api);
+			}
+		}
+		if (invisibleTypeAnnotations != null) {
+			for (int i = invisibleTypeAnnotations.size() - 1; i >= 0; --i) {
+				invisibleTypeAnnotations.get(i).check(api);
+			}
+		}
+		for (int i = fields.size() - 1; i >= 0; --i) {
+			fields.get(i).check(api);
+		}
+		for (int i = methods.size() - 1; i >= 0; --i) {
+			methods.get(i).check(api);
 		}
 	}
 
 	/**
 	 * Makes the given class visitor visit this class.
-	 * 
-	 * @param cv
+	 *
+	 * @param classVisitor
 	 *        a class visitor.
 	 */
-	public void accept(final ClassVisitor cv) {
-		// visits header
-		final String[] interfaces = new String[this.interfaces.size()];
-		this.interfaces.toArray(interfaces);
-		cv.visit(version, access, name, signature, superName, interfaces);
-		// visits source
+	public void accept(final ClassVisitor classVisitor) {
+		// Visit the header.
+		final String[] interfacesArray = new String[this.interfaces.size()];
+		this.interfaces.toArray(interfacesArray);
+		classVisitor.visit(version, access, name, signature, superName, interfacesArray);
+		// Visit the source.
 		if (sourceFile != null || sourceDebug != null) {
-			cv.visitSource(sourceFile, sourceDebug);
+			classVisitor.visitSource(sourceFile, sourceDebug);
 		}
-		// visits outer class
+		// Visit the module.
+		if (module != null) {
+			module.accept(classVisitor);
+		}
+		// Visit the nest host class.
+		if (nestHostClassExperimental != null) {
+			classVisitor.visitNestHostExperimental(nestHostClassExperimental);
+		}
+		// Visit the outer class.
 		if (outerClass != null) {
-			cv.visitOuterClass(outerClass, outerMethod, outerMethodDesc);
+			classVisitor.visitOuterClass(outerClass, outerMethod, outerMethodDesc);
 		}
-		// visits attributes
-		int i, n;
-		n = visibleAnnotations == null ? 0 : visibleAnnotations.size();
-		for (i = 0; i < n; ++i) {
-			final AnnotationNode an = visibleAnnotations.get(i);
-			an.accept(cv.visitAnnotation(an.desc, true));
+		// Visit the annotations.
+		if (visibleAnnotations != null) {
+			for (int i = 0, n = visibleAnnotations.size(); i < n; ++i) {
+				final AnnotationNode annotation = visibleAnnotations.get(i);
+				annotation.accept(classVisitor.visitAnnotation(annotation.desc, true));
+			}
 		}
-		n = invisibleAnnotations == null ? 0 : invisibleAnnotations.size();
-		for (i = 0; i < n; ++i) {
-			final AnnotationNode an = invisibleAnnotations.get(i);
-			an.accept(cv.visitAnnotation(an.desc, false));
+		if (invisibleAnnotations != null) {
+			for (int i = 0, n = invisibleAnnotations.size(); i < n; ++i) {
+				final AnnotationNode annotation = invisibleAnnotations.get(i);
+				annotation.accept(classVisitor.visitAnnotation(annotation.desc, false));
+			}
 		}
-		n = visibleTypeAnnotations == null ? 0 : visibleTypeAnnotations.size();
-		for (i = 0; i < n; ++i) {
-			final TypeAnnotationNode an = visibleTypeAnnotations.get(i);
-			an.accept(cv.visitTypeAnnotation(an.typeRef, an.typePath, an.desc, true));
+		if (visibleTypeAnnotations != null) {
+			for (int i = 0, n = visibleTypeAnnotations.size(); i < n; ++i) {
+				final TypeAnnotationNode typeAnnotation = visibleTypeAnnotations.get(i);
+				typeAnnotation.accept(classVisitor.visitTypeAnnotation(typeAnnotation.typeRef,
+						typeAnnotation.typePath, typeAnnotation.desc, true));
+			}
 		}
-		n = invisibleTypeAnnotations == null ? 0 : invisibleTypeAnnotations.size();
-		for (i = 0; i < n; ++i) {
-			final TypeAnnotationNode an = invisibleTypeAnnotations.get(i);
-			an.accept(cv.visitTypeAnnotation(an.typeRef, an.typePath, an.desc, false));
+		if (invisibleTypeAnnotations != null) {
+			for (int i = 0, n = invisibleTypeAnnotations.size(); i < n; ++i) {
+				final TypeAnnotationNode typeAnnotation = invisibleTypeAnnotations.get(i);
+				typeAnnotation.accept(classVisitor.visitTypeAnnotation(typeAnnotation.typeRef,
+						typeAnnotation.typePath, typeAnnotation.desc, false));
+			}
 		}
-		n = attrs == null ? 0 : attrs.size();
-		for (i = 0; i < n; ++i) {
-			cv.visitAttribute(attrs.get(i));
+		// Visit the non standard attributes.
+		if (attrs != null) {
+			for (int i = 0, n = attrs.size(); i < n; ++i) {
+				classVisitor.visitAttribute(attrs.get(i));
+			}
 		}
-		// visits inner classes
-		for (i = 0; i < innerClasses.size(); ++i) {
-			innerClasses.get(i).accept(cv);
+		// Visit the nest members.
+		if (nestMembersExperimental != null) {
+			for (int i = 0, n = nestMembersExperimental.size(); i < n; ++i) {
+				classVisitor.visitNestMemberExperimental(nestMembersExperimental.get(i));
+			}
 		}
-		// visits fields
-		for (i = 0; i < fields.size(); ++i) {
-			fields.get(i).accept(cv);
+		// Visit the inner classes.
+		for (int i = 0, n = innerClasses.size(); i < n; ++i) {
+			innerClasses.get(i).accept(classVisitor);
 		}
-		// visits methods
-		for (i = 0; i < methods.size(); ++i) {
-			methods.get(i).accept(cv);
+		// Visit the fields.
+		for (int i = 0, n = fields.size(); i < n; ++i) {
+			fields.get(i).accept(classVisitor);
 		}
-		// visits end
-		cv.visitEnd();
+		// Visit the methods.
+		for (int i = 0, n = methods.size(); i < n; ++i) {
+			methods.get(i).accept(classVisitor);
+		}
+		classVisitor.visitEnd();
 	}
 }

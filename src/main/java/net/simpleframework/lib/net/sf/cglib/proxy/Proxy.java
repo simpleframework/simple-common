@@ -1,12 +1,12 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,12 +25,12 @@ import net.simpleframework.lib.net.sf.cglib.core.CodeGenerationException;
  * <code>java.lang.reflect.Proxy</code> under JDK 1.2. There are some known
  * subtle differences:
  * <ul>
- * <li>The exceptions returned by invoking <code>getExceptionTypes</code> on the
- * <code>Method</code> passed to the <code>invoke</code> method <b>are</b> the
- * exact set that can be thrown without resulting in an
+ * <li>The exceptions returned by invoking <code>getExceptionTypes</code>
+ * on the <code>Method</code> passed to the <code>invoke</code> method
+ * <b>are</b> the exact set that can be thrown without resulting in an
  * <code>UndeclaredThrowableException</code> being thrown.
- * <li>{@link UndeclaredThrowableException} is used instead of
- * <code>java.lang.reflect.UndeclaredThrowableException</code>.
+ * <li>{@link UndeclaredThrowableException} is used instead
+ * of <code>java.lang.reflect.UndeclaredThrowableException</code>.
  * </ul>
  * <p>
  * 

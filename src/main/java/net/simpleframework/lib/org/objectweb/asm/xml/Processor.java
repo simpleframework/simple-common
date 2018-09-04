@@ -1,32 +1,30 @@
-/***
- * ASM XML Adapter
- * Copyright (c) 2004-2011, Eugene Kuleshov
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
 import java.io.BufferedOutputStream;
@@ -69,43 +67,52 @@ import net.simpleframework.lib.org.objectweb.asm.ClassWriter;
 
 /**
  * Processor is a command line tool that can be used for bytecode waving
- * directed by XSL transformation.
+ * directed by XSL
+ * transformation.
+ *
  * <p>
  * In order to use a concrete XSLT engine, system property
  * <tt>javax.xml.transform.TransformerFactory</tt> must be set to one of the
  * following values.
- * 
+ *
  * <blockquote>
+ *
  * <table border="1" cellspacing="0" cellpadding="3">
+ * <caption>Possible TransformerFactory values</caption>
  * <tr>
  * <td>jd.xslt</td>
  * <td>jd.xml.xslt.trax.TransformerFactoryImpl</td>
  * </tr>
- * 
+ *
  * <tr>
  * <td>Saxon</td>
  * <td>net.sf.saxon.TransformerFactoryImpl</td>
  * </tr>
- * 
+ *
  * <tr>
  * <td>Caucho</td>
  * <td>com.caucho.xsl.Xsl</td>
  * </tr>
- * 
+ *
  * <tr>
  * <td>Xalan interpeter</td>
  * <td>org.apache.xalan.processor.TransformerFactory</td>
  * </tr>
- * 
+ *
  * <tr>
  * <td>Xalan xsltc</td>
  * <td>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</td>
  * </tr>
  * </table>
+ *
  * </blockquote>
- * 
+ *
+ * @deprecated This class is no longer maintained, will not support new Java
+ *             features, and will
+ *             eventually be deleted. Use the asm or asm.tree API instead.
  * @author Eugene Kuleshov
  */
+@Deprecated
 public class Processor {
 
 	public static final int BYTECODE = 1;
@@ -177,7 +184,6 @@ public class Processor {
 			zos.putNextEntry(outputEntry);
 			outDocHandler = new SAXWriter(osw, false);
 			break;
-
 		}
 
 		// configuring inputDocHandlerFactory
@@ -267,7 +273,6 @@ public class Processor {
 				reader.parse(
 						new InputSource(singleInputDocument ? (InputStream) new ProtectedInputStream(zis)
 								: new ByteArrayInputStream(readEntry(zis, ze))));
-
 			}
 		} catch (final Exception ex) {
 			update(ze.getName(), 0);
@@ -350,7 +355,7 @@ public class Processor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	protected void update(final Object arg, final int n) {
@@ -394,7 +399,6 @@ public class Processor {
 			} else {
 				showUsage();
 				return;
-
 			}
 		}
 
@@ -432,7 +436,8 @@ public class Processor {
 
 	/**
 	 * IputStream wrapper class used to protect input streams from being closed
-	 * by some stupid XML parsers.
+	 * by some stupid XML
+	 * parsers.
 	 */
 	private static final class ProtectedInputStream extends InputStream {
 		private final InputStream is;
@@ -462,24 +467,21 @@ public class Processor {
 	}
 
 	/**
-	 * A {@link ContentHandlerFactory ContentHandlerFactory} is used to create
-	 * {@link org.xml.sax.ContentHandler ContentHandler} instances for concrete
+	 * A {@link ContentHandlerFactory} is used to create {@link ContentHandler}
+	 * instances for concrete
 	 * context.
 	 */
 	private static interface ContentHandlerFactory {
 
 		/**
 		 * Creates an instance of the content handler.
-		 * 
+		 *
 		 * @return content handler
 		 */
 		ContentHandler createContentHandler();
-
 	}
 
-	/**
-	 * SAXWriterFactory
-	 */
+	/** SAXWriterFactory */
 	private static final class SAXWriterFactory implements ContentHandlerFactory {
 		private final Writer w;
 
@@ -494,12 +496,9 @@ public class Processor {
 		public final ContentHandler createContentHandler() {
 			return new SAXWriter(w, optimizeEmptyElements);
 		}
-
 	}
 
-	/**
-	 * ASMContentHandlerFactory
-	 */
+	/** ASMContentHandlerFactory */
 	private static final class ASMContentHandlerFactory implements ContentHandlerFactory {
 		final OutputStream os;
 
@@ -521,12 +520,9 @@ public class Processor {
 				}
 			};
 		}
-
 	}
 
-	/**
-	 * TransformerHandlerFactory
-	 */
+	/** TransformerHandlerFactory */
 	private static final class TransformerHandlerFactory implements ContentHandlerFactory {
 		private final SAXTransformerFactory saxtf;
 
@@ -553,9 +549,7 @@ public class Processor {
 		}
 	}
 
-	/**
-	 * SubdocumentHandlerFactory
-	 */
+	/** SubdocumentHandlerFactory */
 	private static final class SubdocumentHandlerFactory implements ContentHandlerFactory {
 		private final ContentHandler subdocumentHandler;
 
@@ -567,16 +561,17 @@ public class Processor {
 		public final ContentHandler createContentHandler() {
 			return subdocumentHandler;
 		}
-
 	}
 
 	/**
-	 * A {@link org.xml.sax.ContentHandler ContentHandler} and
-	 * {@link org.xml.sax.ext.LexicalHandler LexicalHandler} that serializes XML
-	 * from SAX 2.0 events into {@link java.io.Writer Writer}.
-	 * 
-	 * <i><blockquote> This implementation does not support namespaces, entity
-	 * definitions (uncluding DTD), CDATA and text elements. </blockquote></i>
+	 * A {@link ContentHandler} and {@link LexicalHandler } that serializes XML
+	 * from SAX 2.0 events
+	 * into {@link Writer}.
+	 *
+	 * <p>
+	 * <i>This implementation does not support namespaces, entity definitions
+	 * (uncluding DTD),
+	 * CDATA and </i>
 	 */
 	private static final class SAXWriter extends DefaultHandler implements LexicalHandler {
 		private static final char[] OFF = "                                                                                                        "
@@ -591,13 +586,13 @@ public class Processor {
 		private int ident = 0;
 
 		/**
-		 * Creates <code>SAXWriter</code>.
-		 * 
+		 * Constructs <code>SAXWriter</code>.
+		 *
 		 * @param w
 		 *        writer
 		 * @param optimizeEmptyElements
-		 *        if set to <code>true</code>, short XML syntax will be used
-		 *        for empty elements
+		 *        if set to <code>true</code>, short XML syntax will be used for
+		 *        empty elements
 		 */
 		SAXWriter(final Writer w, final boolean optimizeEmptyElements) {
 			this.w = w;
@@ -625,7 +620,6 @@ public class Processor {
 
 			} catch (final IOException ex) {
 				throw new SAXException(ex);
-
 			}
 		}
 
@@ -644,7 +638,6 @@ public class Processor {
 
 			} catch (final IOException ex) {
 				throw new SAXException(ex);
-
 			}
 		}
 
@@ -655,7 +648,6 @@ public class Processor {
 
 			} catch (final IOException ex) {
 				throw new SAXException(ex);
-
 			}
 		}
 
@@ -671,7 +663,6 @@ public class Processor {
 
 			} catch (final IOException ex) {
 				throw new SAXException(ex);
-
 			}
 		}
 
@@ -712,7 +703,7 @@ public class Processor {
 
 		/**
 		 * Encode string with escaping.
-		 * 
+		 *
 		 * @param str
 		 *        string to encode.
 		 * @return encoded string
@@ -744,7 +735,6 @@ public class Processor {
 					} else {
 						sb.append(ch);
 					}
-
 				}
 			}
 			return sb.toString();
@@ -769,16 +759,15 @@ public class Processor {
 			}
 			openElement = false;
 		}
-
 	}
 
 	/**
-	 * A {@link org.xml.sax.ContentHandler ContentHandler} that splits XML
-	 * documents into smaller chunks. Each chunk is processed by the nested
-	 * {@link org.xml.sax.ContentHandler ContentHandler} obtained from
-	 * {@link java.net.ContentHandlerFactory ContentHandlerFactory}. This is
-	 * useful for running XSLT engine against large XML document that will
-	 * hardly fit into the memory all together.
+	 * A {@link ContentHandler} that splits XML documents into smaller chunks.
+	 * Each chunk is processed
+	 * by the nested {@link ContentHandler}. This is useful for running XSLT
+	 * engine against large XML
+	 * document that will hardly fit into the memory all together.
+	 *
 	 * <p>
 	 * TODO use complete path for subdocumentRoot
 	 */
@@ -794,17 +783,15 @@ public class Processor {
 		private ContentHandler subdocumentHandler;
 
 		/**
-		 * Constructs a new {@link InputSlicingHandler SubdocumentHandler} object.
-		 * 
+		 * Constructs a new {@link InputSlicingHandler} object.
+		 *
 		 * @param subdocumentRoot
 		 *        name/path to the root element of the subdocument
 		 * @param rootHandler
-		 *        content handler for the entire document (subdocument
-		 *        envelope).
+		 *        content handler for the entire document (subdocument envelope).
 		 * @param subdocumentHandlerFactory
-		 *        a {@link ContentHandlerFactory ContentHandlerFactory} used
-		 *        to create {@link ContentHandler ContentHandler} instances
-		 *        for subdocuments.
+		 *        a {@link ContentHandlerFactory} used to create {@link
+		 * 			ContentHandler} instances for subdocuments.
 		 */
 		InputSlicingHandler(final String subdocumentRoot, final ContentHandler rootHandler,
 				final ContentHandlerFactory subdocumentHandlerFactory) {
@@ -853,7 +840,6 @@ public class Processor {
 		public final void endDocument() throws SAXException {
 			if (rootHandler != null) {
 				rootHandler.endDocument();
-
 			}
 		}
 
@@ -866,17 +852,17 @@ public class Processor {
 				rootHandler.characters(buff, offset, size);
 			}
 		}
-
 	}
 
 	/**
-	 * A {@link org.xml.sax.ContentHandler ContentHandler} that splits XML
-	 * documents into smaller chunks. Each chunk is processed by the nested
-	 * {@link org.xml.sax.ContentHandler ContentHandler} obtained from
-	 * {@link java.net.ContentHandlerFactory ContentHandlerFactory}. This is
-	 * useful for running XSLT engine against large XML document that will
-	 * hardly fit into the memory all together.
-	 * 
+	 * A {@link ContentHandler} that splits XML documents into smaller chunks.
+	 * Each chunk is processed
+	 * by the nested {@link ContentHandler} obtained from
+	 * {@link ContentHandlerFactory}. This is
+	 * useful for running XSLT engine against large XML document that will hardly
+	 * fit into the memory
+	 * all together.
+	 *
 	 * <p>
 	 * TODO use complete path for subdocumentRoot
 	 */
@@ -894,13 +880,11 @@ public class Processor {
 		private ContentHandler subdocumentHandler;
 
 		/**
-		 * Constructs a new {@link OutputSlicingHandler SubdocumentHandler}
-		 * object.
-		 * 
+		 * Constructs a new {@link OutputSlicingHandler} object.
+		 *
 		 * @param subdocumentHandlerFactory
-		 *        a {@link ContentHandlerFactory ContentHandlerFactory} used
-		 *        to create {@link ContentHandler ContentHandler} instances
-		 *        for subdocuments.
+		 *        a {@link ContentHandlerFactory} used to create {@link
+		 * 			ContentHandler} instances for subdocuments.
 		 * @param entryElement
 		 *        TODO.
 		 * @param isXml
@@ -968,7 +952,6 @@ public class Processor {
 				subdocumentHandler.characters(buff, offset, size);
 			}
 		}
-
 	}
 
 	private static interface EntryElement {
@@ -976,7 +959,6 @@ public class Processor {
 		OutputStream openEntry(String name) throws IOException;
 
 		void closeEntry() throws IOException;
-
 	}
 
 	private static final class SingleDocElement implements EntryElement {
@@ -995,7 +977,6 @@ public class Processor {
 		public void closeEntry() throws IOException {
 			os.flush();
 		}
-
 	}
 
 	private static final class ZipEntryElement implements EntryElement {
@@ -1017,7 +998,5 @@ public class Processor {
 			zos.flush();
 			zos.closeEntry();
 		}
-
 	}
-
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 package net.simpleframework.lib.net.sf.cglib.core;
 
+@Deprecated
 public class TinyBitSet {
 	private static int[] T = new int[256];
 	private int value = 0;
@@ -54,6 +55,11 @@ public class TinyBitSet {
 		return log2(topbit(value));
 	}
 
+	/**
+	 * If bit 31 is set then this method results in an infinite loop.
+	 *
+	 * @return the number of bits set to <code>true</code> in this TinyBitSet.
+	 */
 	public int cardinality() {
 		int w = value;
 		int c = 0;

@@ -1,12 +1,12 @@
 /*
  * Copyright 2002,2003,2004 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,31 +67,37 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * implementations.
  * <p>
  * The original and most general callback type is the {@link MethodInterceptor},
- * which in AOP terms enables "around advice"--that is, you can invoke custom
- * code both before and after the invocation of the "super" method. In addition
- * you can modify the arguments before calling the super method, or not call it
- * at all.
+ * which
+ * in AOP terms enables "around advice"--that is, you can invoke custom code
+ * both before
+ * and after the invocation of the "super" method. In addition you can modify
+ * the
+ * arguments before calling the super method, or not call it at all.
  * <p>
  * Although <code>MethodInterceptor</code> is generic enough to meet any
  * interception need, it is often overkill. For simplicity and performance,
- * additional specialized callback types, such as {@link LazyLoader} are also
- * available. Often a single callback will be used per enhanced class, but you
- * can control which callback is used on a per-method basis with a
- * {@link CallbackFilter}.
+ * additional
+ * specialized callback types, such as {@link LazyLoader} are also available.
+ * Often a single callback will be used per enhanced class, but you can control
+ * which callback is used on a per-method basis with a {@link CallbackFilter}.
  * <p>
  * The most common uses of this class are embodied in the static helper methods.
- * For advanced needs, such as customizing the <code>ClassLoader</code> to use,
- * you should create a new instance of <code>Enhancer</code>. Other classes
- * within CGLIB follow a similar pattern.
+ * For
+ * advanced needs, such as customizing the <code>ClassLoader</code> to use, you
+ * should create
+ * a new instance of <code>Enhancer</code>. Other classes within CGLIB follow a
+ * similar pattern.
  * <p>
  * All enhanced objects implement the {@link Factory} interface, unless
- * {@link #setUseFactory} is used to explicitly disable this feature. The
- * <code>Factory</code> interface provides an API to change the callbacks of an
- * existing object, as well as a faster and easier way to create new instances
- * of the same type.
+ * {@link #setUseFactory} is
+ * used to explicitly disable this feature. The <code>Factory</code> interface
+ * provides an API
+ * to change the callbacks of an existing object, as well as a faster and easier
+ * way to create
+ * new instances of the same type.
  * <p>
- * For an almost drop-in replacement for <code>java.lang.reflect.Proxy</code>,
- * see the {@link Proxy} class.
+ * For an almost drop-in replacement for
+ * <code>java.lang.reflect.Proxy</code>, see the {@link Proxy} class.
  */
 public class Enhancer extends AbstractClassGenerator {
 	private static final CallbackFilter ALL_ZERO = new CallbackFilter() {
@@ -104,8 +110,6 @@ public class Enhancer extends AbstractClassGenerator {
 	private static final Source SOURCE = new Source(Enhancer.class.getName());
 	private static final EnhancerKey KEY_FACTORY = (EnhancerKey) KeyFactory.create(EnhancerKey.class,
 			KeyFactory.HASH_ASM_TYPE, null);
-	private static final EnhancerFactoryKey FACTORY_KEY_FACTORY = (EnhancerFactoryKey) KeyFactory
-			.create(EnhancerFactoryKey.class);
 
 	private static final String BOUND_FIELD = "CGLIB$BOUND";
 	private static final String FACTORY_DATA_FIELD = "CGLIB$FACTORY_DATA";
@@ -114,6 +118,23 @@ public class Enhancer extends AbstractClassGenerator {
 	private static final String SET_THREAD_CALLBACKS_NAME = "CGLIB$SET_THREAD_CALLBACKS";
 	private static final String SET_STATIC_CALLBACKS_NAME = "CGLIB$SET_STATIC_CALLBACKS";
 	private static final String CONSTRUCTED_FIELD = "CGLIB$CONSTRUCTED";
+	/**
+	 * {@link net.simpleframework.lib.net.sf.cglib.core.AbstractClassGenerator.ClassLoaderData#generatedClasses}
+	 * requires to keep cache key
+	 * in a good shape (the keys should be up and running if the proxy class is
+	 * alive), and one of the cache keys is
+	 * {@link CallbackFilter}. That is why the generated class contains static
+	 * field that keeps strong reference to
+	 * the {@link #filter}.
+	 * <p>
+	 * This dance achieves two goals: ensures generated class is reusable and
+	 * available through generatedClasses
+	 * cache, and it enables to unload classloader and the related
+	 * {@link CallbackFilter} in case user does not need
+	 * that
+	 * </p>
+	 */
+	private static final String CALLBACK_FILTER_FIELD = "CGLIB$CALLBACK_FILTER";
 
 	private static final Type OBJECT_TYPE = TypeUtils.parseType("Object");
 	private static final Type FACTORY = TypeUtils
@@ -160,18 +181,12 @@ public class Enhancer extends AbstractClassGenerator {
 				boolean interceptDuringConstruction, Long serialVersionUID);
 	}
 
-	/** Internal interface, only public due to ClassLoader issues. */
-	public interface EnhancerFactoryKey {
-		Object newInstance(EnhancerKey key);
-	}
-
 	private Class[] interfaces;
 	private CallbackFilter filter;
 	private Callback[] callbacks;
 	private Type[] callbackTypes;
 	private boolean validateCallbackTypes;
 	private boolean classOnly;
-	private boolean factoryOnly;
 	private Class superclass;
 	private Class[] argumentTypes;
 	private Object[] arguments;
@@ -180,8 +195,8 @@ public class Enhancer extends AbstractClassGenerator {
 	private boolean interceptDuringConstruction = true;
 
 	/**
-	 * Create a new <code>Enhancer</code>. A new <code>Enhancer</code> object
-	 * should be used for each generated object, and should not
+	 * Create a new <code>Enhancer</code>. A new <code>Enhancer</code>
+	 * object should be used for each generated object, and should not
 	 * be shared across threads. To create additional instances of a
 	 * generated class, use the <code>Factory</code> interface.
 	 * 
@@ -194,8 +209,8 @@ public class Enhancer extends AbstractClassGenerator {
 	/**
 	 * Set the class which the generated class will extend. As a convenience,
 	 * if the supplied superclass is actually an interface,
-	 * <code>setInterfaces</code> will be called with the appropriate argument
-	 * instead.
+	 * <code>setInterfaces</code>
+	 * will be called with the appropriate argument instead.
 	 * A non-interface argument must not be declared as final, and must have an
 	 * accessible constructor.
 	 * 
@@ -340,7 +355,6 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Object create() {
 		classOnly = false;
-		factoryOnly = false;
 		argumentTypes = null;
 		return createHelper();
 	}
@@ -349,7 +363,8 @@ public class Enhancer extends AbstractClassGenerator {
 	 * Generate a new class if necessary and uses the specified
 	 * callbacks (if any) to create a new object instance.
 	 * Uses the constructor of the superclass matching the
-	 * <code>argumentTypes</code> parameter, with the given arguments.
+	 * <code>argumentTypes</code>
+	 * parameter, with the given arguments.
 	 * 
 	 * @param argumentTypes
 	 *        constructor signature
@@ -359,7 +374,6 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Object create(final Class[] argumentTypes, final Object[] arguments) {
 		classOnly = false;
-		factoryOnly = false;
 		if (argumentTypes == null || arguments == null || argumentTypes.length != arguments.length) {
 			throw new IllegalArgumentException("Arguments must be non-null and of equal length");
 		}
@@ -381,22 +395,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 */
 	public Class createClass() {
 		classOnly = true;
-		factoryOnly = false;
 		return (Class) createHelper();
-	}
-
-	/**
-	 * Generate a {@link Factory} implementation if necessary and return it.
-	 * This ignores any callbacks that have been set.
-	 * 
-	 * @see Factory#newInstance(Callback)
-	 * @see Factory#newInstance(Callback[])
-	 * @see Factory#newInstance(Class[], Object[], Callback[])
-	 */
-	public Factory createFactory() {
-		classOnly = false;
-		factoryOnly = true;
-		return (Factory) createHelper();
 	}
 
 	/**
@@ -464,12 +463,85 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
+	/**
+	 * The idea of the class is to cache relevant java.lang.reflect instances so
+	 * proxy-class can be instantiated faster that when using
+	 * {@link ReflectUtils#newInstance(Class, Class[], Object[])}
+	 * and {@link Enhancer#setThreadCallbacks(Class, Callback[])}
+	 */
 	static class EnhancerFactoryData {
 		public final Class generatedClass;
-		public volatile Factory factory;
+		private final Method setThreadCallbacks;
+		private final Class[] primaryConstructorArgTypes;
+		private final Constructor primaryConstructor;
 
-		public EnhancerFactoryData(final Class generatedClass) {
+		public EnhancerFactoryData(final Class generatedClass,
+				final Class[] primaryConstructorArgTypes, final boolean classOnly) {
 			this.generatedClass = generatedClass;
+			try {
+				setThreadCallbacks = getCallbacksSetter(generatedClass, SET_THREAD_CALLBACKS_NAME);
+				if (classOnly) {
+					this.primaryConstructorArgTypes = null;
+					this.primaryConstructor = null;
+				} else {
+					this.primaryConstructorArgTypes = primaryConstructorArgTypes;
+					this.primaryConstructor = ReflectUtils.getConstructor(generatedClass,
+							primaryConstructorArgTypes);
+				}
+			} catch (final NoSuchMethodException e) {
+				throw new CodeGenerationException(e);
+			}
+		}
+
+		/**
+		 * Creates proxy instance for given argument types, and assigns the
+		 * callbacks.
+		 * Ideally, for each proxy class, just one set of argument types should be
+		 * used,
+		 * otherwise it would have to spend time on constructor lookup.
+		 * Technically, it is a re-implementation of
+		 * {@link Enhancer#createUsingReflection(Class)},
+		 * with "cache {@link #setThreadCallbacks} and
+		 * {@link #primaryConstructor}"
+		 *
+		 * @see #createUsingReflection(Class)
+		 * @param argumentTypes
+		 *        constructor argument types
+		 * @param arguments
+		 *        constructor arguments
+		 * @param callbacks
+		 *        callbacks to set for the new instance
+		 * @return newly created proxy
+		 */
+		public Object newInstance(final Class[] argumentTypes, final Object[] arguments,
+				final Callback[] callbacks) {
+			setThreadCallbacks(callbacks);
+			try {
+				// Explicit reference equality is added here just in case
+				// Arrays.equals does not have one
+				if (primaryConstructorArgTypes == argumentTypes
+						|| Arrays.equals(primaryConstructorArgTypes, argumentTypes)) {
+					// If we have relevant Constructor instance at hand, just call it
+					// This skips "get constructors" machinery
+					return ReflectUtils.newInstance(primaryConstructor, arguments);
+				}
+				// Take a slow path if observing unexpected argument types
+				return ReflectUtils.newInstance(generatedClass, argumentTypes, arguments);
+			} finally {
+				// clear thread callbacks to allow them to be gc'd
+				setThreadCallbacks(null);
+			}
+
+		}
+
+		private void setThreadCallbacks(final Callback[] callbacks) {
+			try {
+				setThreadCallbacks.invoke(generatedClass, (Object) callbacks);
+			} catch (final IllegalAccessException e) {
+				throw new CodeGenerationException(e);
+			} catch (final InvocationTargetException e) {
+				throw new CodeGenerationException(e.getTargetException());
+			}
 		}
 	}
 
@@ -477,8 +549,8 @@ public class Enhancer extends AbstractClassGenerator {
 		preValidate();
 		final Object key = KEY_FACTORY.newInstance((superclass != null) ? superclass.getName() : null,
 				ReflectUtils.getNames(interfaces),
-				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes, useFactory,
-				interceptDuringConstruction, serialVersionUID);
+				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes,
+				useFactory, interceptDuringConstruction, serialVersionUID);
 		this.currentKey = key;
 		final Object result = super.create(key);
 		return result;
@@ -626,6 +698,9 @@ public class Enhancer extends AbstractClassGenerator {
 		for (int i = 0; i < callbackTypes.length; i++) {
 			e.declare_field(Opcodes.ACC_PRIVATE, getCallbackField(i), callbackTypes[i], null);
 		}
+		// This is declared private to avoid "public field" pollution
+		e.declare_field(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC, CALLBACK_FILTER_FIELD, OBJECT_TYPE,
+				null);
 
 		if (currentData == null) {
 			emitMethods(e, methods, actualMethods);
@@ -672,9 +747,23 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
+	/**
+	 * This method should not be called in regular flow.
+	 * Technically speaking {@link #wrapCachedClass(Class)} uses
+	 * {@link EnhancerFactoryData} as a cache value,
+	 * and the latter enables faster instantiation than plain old reflection
+	 * lookup and invoke.
+	 * This method is left intact for backward compatibility reasons: just in
+	 * case it was ever used.
+	 *
+	 * @param type
+	 *        class to instantiate
+	 * @return newly created proxy instance
+	 * @throws Exception
+	 *         if something goes wrong
+	 */
 	@Override
 	protected Object firstInstance(final Class type) throws Exception {
-		// Should not reach here
 		if (classOnly) {
 			return type;
 		} else {
@@ -684,43 +773,42 @@ public class Enhancer extends AbstractClassGenerator {
 
 	@Override
 	protected Object nextInstance(final Object instance) {
-		if (currentKey instanceof EnhancerFactoryKey) {
-			return instance;
-		}
-
 		final EnhancerFactoryData data = (EnhancerFactoryData) instance;
+
 		if (classOnly) {
 			return data.generatedClass;
 		}
-		Factory factory = data.factory;
-		if (factory == null) {
-			this.currentData = data;
-			final Object factoryKey = FACTORY_KEY_FACTORY.newInstance((EnhancerKey) currentKey);
-			this.currentKey = factoryKey;
-			factory = (Factory) super.create(factoryKey);
-			this.currentData = null;
-			data.factory = factory;
+
+		Class[] argumentTypes = this.argumentTypes;
+		Object[] arguments = this.arguments;
+		if (argumentTypes == null) {
+			argumentTypes = Constants.EMPTY_CLASS_ARRAY;
+			arguments = null;
 		}
-		if (factoryOnly) {
-			return factory;
-		}
-		return createUsingFactory(factory);
+		return data.newInstance(argumentTypes, arguments, callbacks);
 	}
 
 	@Override
 	protected Object wrapCachedClass(final Class klass) {
-		if (currentKey instanceof EnhancerFactoryKey) {
-			return new WeakReference(ReflectUtils.newInstance(klass));
+		Class[] argumentTypes = this.argumentTypes;
+		if (argumentTypes == null) {
+			argumentTypes = Constants.EMPTY_CLASS_ARRAY;
 		}
-		final EnhancerFactoryData factoryData = new EnhancerFactoryData(klass);
+		final EnhancerFactoryData factoryData = new EnhancerFactoryData(klass, argumentTypes,
+				classOnly);
 		Field factoryDataField = null;
 		try {
+			// The subsequent dance is performed just once for each class,
+			// so it does not matter much how fast it goes
 			factoryDataField = klass.getField(FACTORY_DATA_FIELD);
 			factoryDataField.set(null, factoryData);
+			final Field callbackFilterField = klass.getDeclaredField(CALLBACK_FILTER_FIELD);
+			callbackFilterField.setAccessible(true);
+			callbackFilterField.set(null, this.filter);
 		} catch (final NoSuchFieldException e) {
-			e.printStackTrace();
+			throw new CodeGenerationException(e);
 		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
+			throw new CodeGenerationException(e);
 		}
 		return new WeakReference<>(factoryData);
 	}
@@ -747,14 +835,16 @@ public class Enhancer extends AbstractClassGenerator {
 	 * <p>
 	 * Note that this method only registers the callbacks on the current thread.
 	 * If you want to register callbacks for instances created by multiple
-	 * threads, use {@link #registerStaticCallbacks}.
+	 * threads,
+	 * use {@link #registerStaticCallbacks}.
 	 * <p>
-	 * The registered callbacks are overwritten and subsequently cleared when
-	 * calling any of the <code>create</code> methods (such as {@link #create}),
-	 * or any {@link Factory} <code>newInstance</code> method. Otherwise they are
-	 * <i>not</i> cleared, and you should be careful to set them back to
-	 * <code>null</code> after creating new instances via reflection if memory
-	 * leakage is a concern.
+	 * The registered callbacks are overwritten and subsequently cleared
+	 * when calling any of the <code>create</code> methods (such as
+	 * {@link #create}), or any {@link Factory} <code>newInstance</code> method.
+	 * Otherwise they are <i>not</i> cleared, and you should be careful to set
+	 * them
+	 * back to <code>null</code> after creating new instances via reflection if
+	 * memory leakage is a concern.
 	 * 
 	 * @param generatedClass
 	 *        a class previously created by {@link Enhancer}
@@ -824,6 +914,18 @@ public class Enhancer extends AbstractClassGenerator {
 		return type.getDeclaredMethod(methodName, new Class[] { Callback[].class });
 	}
 
+	/**
+	 * Instantiates a proxy instance and assigns callback values.
+	 * Implementation detail: java.lang.reflect instances are not cached, so this
+	 * method should not
+	 * be used on a hot path.
+	 * This method is used when {@link #setUseCache(boolean)} is set to
+	 * {@code false}.
+	 *
+	 * @param type
+	 *        class to instantiate
+	 * @return newly created instance
+	 */
 	private Object createUsingReflection(final Class type) {
 		setThreadCallbacks(type, callbacks);
 		try {
@@ -843,18 +945,11 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 	}
 
-	private Object createUsingFactory(final Factory factory) {
-		if (argumentTypes != null) {
-			return factory.newInstance(argumentTypes, arguments, callbacks);
-		} else {
-			return factory.newInstance(callbacks);
-		}
-	}
-
 	/**
 	 * Helper method to create an intercepted object.
 	 * For finer control over the generated instance, use a new instance of
-	 * <code>Enhancer</code> instead of this static method.
+	 * <code>Enhancer</code>
+	 * instead of this static method.
 	 * 
 	 * @param type
 	 *        class to extend or interface to implement
@@ -871,9 +966,10 @@ public class Enhancer extends AbstractClassGenerator {
 	/**
 	 * Helper method to create an intercepted object.
 	 * For finer control over the generated instance, use a new instance of
-	 * <code>Enhancer</code> instead of this static method.
+	 * <code>Enhancer</code>
+	 * instead of this static method.
 	 * 
-	 * @param type
+	 * @param superclass
 	 *        class to extend or interface to implement
 	 * @param interfaces
 	 *        array of interfaces to implement, or null
@@ -892,9 +988,10 @@ public class Enhancer extends AbstractClassGenerator {
 	/**
 	 * Helper method to create an intercepted object.
 	 * For finer control over the generated instance, use a new instance of
-	 * <code>Enhancer</code> instead of this static method.
+	 * <code>Enhancer</code>
+	 * instead of this static method.
 	 * 
-	 * @param type
+	 * @param superclass
 	 *        class to extend or interface to implement
 	 * @param interfaces
 	 *        array of interfaces to implement, or null
@@ -1172,7 +1269,8 @@ public class Enhancer extends AbstractClassGenerator {
 			}
 		}
 
-		final Map bridgeToTarget = new BridgeMethodResolver(declToBridge).resolveAll();
+		final Map bridgeToTarget = new BridgeMethodResolver(declToBridge, getClassLoader())
+				.resolveAll();
 
 		final Set seenGen = new HashSet();
 		final CodeEmitter se = ce.getStaticHook();
@@ -1208,7 +1306,7 @@ public class Enhancer extends AbstractClassGenerator {
 			}
 
 			@Override
-			public void emitInvoke(final CodeEmitter e, final MethodInfo method) {
+			public void emitLoadArgsAndInvoke(final CodeEmitter e, final MethodInfo method) {
 				// If this is a bridge and we know the target was called from
 				// invokespecial,
 				// then we need to invoke_virtual w/ the bridge target instead of
@@ -1218,13 +1316,15 @@ public class Enhancer extends AbstractClassGenerator {
 				// any proxies on the target.
 				final Signature bridgeTarget = (Signature) bridgeToTarget.get(method.getSignature());
 				if (bridgeTarget != null) {
-					// TODO: this assumes that the target has wider or the same type
-					// parameters than the current.
-					// In reality this should always be true because otherwise we
-					// wouldn't
-					// have had a bridge doing an invokespecial.
-					// If it isn't true, we would need to checkcast each argument
-					// against the target's argument types
+					// checkcast each argument against the target's argument types
+					for (int i = 0; i < bridgeTarget.getArgumentTypes().length; i++) {
+						e.load_arg(i);
+						final Type target = bridgeTarget.getArgumentTypes()[i];
+						if (!target.equals(method.getSignature().getArgumentTypes()[i])) {
+							e.checkcast(target);
+						}
+					}
+
 					e.invoke_virtual_this(bridgeTarget);
 
 					final Type retType = method.getSignature().getReturnType();
@@ -1243,6 +1343,7 @@ public class Enhancer extends AbstractClassGenerator {
 						e.checkcast(retType);
 					}
 				} else {
+					e.load_args();
 					e.super_invoke(method.getSignature());
 				}
 			}

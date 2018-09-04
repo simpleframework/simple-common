@@ -1,12 +1,12 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,10 @@ package net.simpleframework.lib.net.sf.cglib.core;
 
 import java.lang.ref.WeakReference;
 import java.security.ProtectionDomain;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import net.simpleframework.lib.net.sf.cglib.core.internal.Function;
 import net.simpleframework.lib.net.sf.cglib.core.internal.LoadingCache;
@@ -38,15 +38,6 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	private static final ThreadLocal CURRENT = new ThreadLocal();
 
 	private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<>();
-	// private static final WeakLoadingCache<ClassLoader, ClassLoaderData> CACHE
-	// =
-	// new WeakLoadingCache<ClassLoader, ClassLoaderData>(
-	// new Function<ClassLoader, ClassLoaderData>() {
-	// public ClassLoaderData apply(ClassLoader key) {
-	// return new ClassLoaderData(key);
-	// }
-	// }
-	// );
 
 	private GeneratorStrategy strategy = DefaultGeneratorStrategy.INSTANCE;
 	private NamingPolicy namingPolicy = DefaultNamingPolicy.INSTANCE;
@@ -59,15 +50,42 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	private boolean attemptLoad;
 
 	protected static class ClassLoaderData {
-		private final ConcurrentMap<String, Boolean> reservedClassNames = new ConcurrentHashMap<>(1,
-				0.75f, 1);
+		private final Set<String> reservedClassNames = new HashSet<>();
+
+		/**
+		 * {@link AbstractClassGenerator} here holds "cache key" (e.g.
+		 * {@link net.simpleframework.lib.net.sf.cglib.proxy.Enhancer}
+		 * configuration), and the value is the generated class plus some
+		 * additional values
+		 * (see {@link #unwrapCachedValue(Object)}.
+		 * <p>
+		 * The generated classes can be reused as long as their classloader is
+		 * reachable.
+		 * </p>
+		 * <p>
+		 * Note: the only way to access a class is to find it through
+		 * generatedClasses cache, thus
+		 * the key should not expire as long as the class itself is alive (its
+		 * classloader is alive).
+		 * </p>
+		 */
 		private final LoadingCache<AbstractClassGenerator, Object, Object> generatedClasses;
+
+		/**
+		 * Note: ClassLoaderData object is stored as a value of
+		 * {@code WeakHashMap<ClassLoader, ...>} thus
+		 * this classLoader reference should be weak otherwise it would make
+		 * classLoader strongly reachable
+		 * and alive forever.
+		 * Reference queue is not required since the cleanup is handled by
+		 * {@link WeakHashMap}.
+		 */
 		private final WeakReference<ClassLoader> classLoader;
 
 		private final Predicate uniqueNamePredicate = new Predicate() {
 			@Override
-			public boolean evaluate(final Object arg) {
-				return allocateName((String) arg);
+			public boolean evaluate(final Object name) {
+				return reservedClassNames.contains(name);
 			}
 		};
 
@@ -97,17 +115,21 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 			return classLoader.get();
 		}
 
-		public boolean allocateName(final String name) {
-			return reservedClassNames.putIfAbsent(name, true) != null;
+		public void reserveName(final String name) {
+			reservedClassNames.add(name);
 		}
 
 		public Predicate getUniqueNamePredicate() {
 			return uniqueNamePredicate;
 		}
 
-		public Object get(final AbstractClassGenerator gen) {
-			final Object cachedValue = generatedClasses.get(gen);
-			return gen.unwrapCachedValue(cachedValue);
+		public Object get(final AbstractClassGenerator gen, final boolean useCache) {
+			if (!useCache) {
+				return gen.generate(ClassLoaderData.this);
+			} else {
+				final Object cachedValue = generatedClasses.get(gen);
+				return gen.unwrapCachedValue(cachedValue);
+			}
 		}
 	}
 
@@ -154,8 +176,9 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	 * will try to choose an appropriate default if this is unset.
 	 * <p>
 	 * Classes are cached per-<code>ClassLoader</code> using a
-	 * <code>WeakHashMap</code>, to allow the generated classes to be removed
-	 * when the associated loader is garbage collected.
+	 * <code>WeakHashMap</code>, to allow
+	 * the generated classes to be removed when the associated loader is garbage
+	 * collected.
 	 * 
 	 * @param classLoader
 	 *        the loader to generate the new class with, or null to use the
@@ -264,8 +287,8 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	 * Returns the protection domain to use when defining the class.
 	 * <p>
 	 * Default implementation returns <code>null</code> for using a default
-	 * protection domain. Sub-classes may override to use a more specific
-	 * protection domain.
+	 * protection domain. Sub-classes may
+	 * override to use a more specific protection domain.
 	 * </p>
 	 *
 	 * @return the protection domain (<code>null</code> for using a default)
@@ -277,13 +300,15 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 	protected Object create(final Object key) {
 		try {
 			final ClassLoader loader = getClassLoader();
-			final Map<ClassLoader, ClassLoaderData> cache = CACHE;
+			Map<ClassLoader, ClassLoaderData> cache = CACHE;
 			ClassLoaderData data = cache.get(loader);
 			if (data == null) {
 				synchronized (AbstractClassGenerator.class) {
+					cache = CACHE;
 					data = cache.get(loader);
 					if (data == null) {
-						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<>(cache);
+						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<>(
+								cache);
 						data = new ClassLoaderData(loader);
 						newCache.put(loader, data);
 						CACHE = newCache;
@@ -291,7 +316,7 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 				}
 			}
 			this.key = key;
-			final Object obj = data.get(this);
+			final Object obj = data.get(this, getUseCache());
 			if (obj instanceof Class) {
 				return firstInstance((Class) obj);
 			}
@@ -317,7 +342,11 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 						+ ". It seems that the loader has been expired from a weak reference somehow. "
 						+ "Please file an issue at cglib's issue tracker.");
 			}
-			this.setClassName(generateClassName(data.getUniqueNamePredicate()));
+			synchronized (classLoader) {
+				final String name = generateClassName(data.getUniqueNamePredicate());
+				data.reserveName(name);
+				this.setClassName(name);
+			}
 			if (attemptLoad) {
 				try {
 					gen = classLoader.loadClass(getClassName());

@@ -1,12 +1,12 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,10 +34,11 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * the rules laid out in <i>Effective Java</i> by Joshua Bloch.
  * <p>
  * To generate a <code>KeyFactory</code>, you need to supply an interface which
- * describes the structure of the key. The interface should have a single method
- * named <code>newInstance</code>, which returns an <code>Object</code>. The
- * arguments array can be <i>anything</i>--Objects, primitive values, or single
- * or multi-dimension arrays of either. For example:
+ * describes the structure of the key. The interface should have a
+ * single method named <code>newInstance</code>, which returns an
+ * <code>Object</code>. The arguments array can be
+ * <i>anything</i>--Objects, primitive values, or single or
+ * multi-dimension arrays of either. For example:
  * <p>
  * 
  * <pre>
@@ -47,17 +48,19 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * </pre>
  * <p>
  * Once you have made a <code>KeyFactory</code>, you generate a new key by
- * calling the <code>newInstance</code> method defined by your interface.
+ * calling
+ * the <code>newInstance</code> method defined by your interface.
  * <p>
  * 
  * <pre>
  * IntStringKey factory = (IntStringKey) KeyFactory.create(IntStringKey.class);
- * Object key1 = factory.newInstance(4, &quot;Hello&quot;);
- * Object key2 = factory.newInstance(4, &quot;World&quot;);
+ * Object key1 = factory.newInstance(4, "Hello");
+ * Object key2 = factory.newInstance(4, "World");
  * </pre>
  * <p>
- * <b>Note:</b> <code>hashCode</code> equality between two keys
- * <code>key1</code> and <code>key2</code> is only guaranteed if
+ * <b>Note:</b>
+ * <code>hashCode</code> equality between two keys <code>key1</code> and
+ * <code>key2</code> is only guaranteed if
  * <code>key1.equals(key2)</code> <i>and</i> the keys were produced by the same
  * factory.
  *

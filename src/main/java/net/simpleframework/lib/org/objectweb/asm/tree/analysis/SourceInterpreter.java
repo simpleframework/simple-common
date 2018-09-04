@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.tree.analysis;
 
 import java.util.HashSet;
@@ -43,15 +41,37 @@ import net.simpleframework.lib.org.objectweb.asm.tree.MethodInsnNode;
 
 /**
  * An {@link Interpreter} for {@link SourceValue} values.
- * 
+ *
  * @author Eric Bruneton
  */
 public class SourceInterpreter extends Interpreter<SourceValue> implements Opcodes {
 
+	/**
+	 * Constructs a new {@link SourceInterpreter} for the latest ASM API version.
+	 * <i>Subclasses must
+	 * not use this constructor</i>. Instead, they must use the
+	 * {@link #SourceInterpreter(int)}
+	 * version.
+	 */
 	public SourceInterpreter() {
-		super(ASM5);
+		super(ASM6);
+		if (getClass() != SourceInterpreter.class) {
+			throw new IllegalStateException();
+		}
 	}
 
+	/**
+	 * Constructs a new {@link SourceInterpreter}.
+	 *
+	 * @param api
+	 *        the ASM API version supported by this interpreter. Must be one of
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM4},
+	 *        {@link net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM5},
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM6} or
+	 *        {@link net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM7_EXPERIMENTAL}.
+	 */
 	protected SourceInterpreter(final int api) {
 		super(api);
 	}
@@ -75,8 +95,8 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements Opcod
 			size = 2;
 			break;
 		case LDC:
-			final Object cst = ((LdcInsnNode) insn).cst;
-			size = cst instanceof Long || cst instanceof Double ? 2 : 1;
+			final Object value = ((LdcInsnNode) insn).cst;
+			size = value instanceof Long || value instanceof Double ? 2 : 1;
 			break;
 		case GETSTATIC:
 			size = Type.getType(((FieldInsnNode) insn).desc).getSize();
@@ -159,10 +179,10 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements Opcod
 		final int opcode = insn.getOpcode();
 		if (opcode == MULTIANEWARRAY) {
 			size = 1;
+		} else if (opcode == INVOKEDYNAMIC) {
+			size = Type.getReturnType(((InvokeDynamicInsnNode) insn).desc).getSize();
 		} else {
-			final String desc = (opcode == INVOKEDYNAMIC) ? ((InvokeDynamicInsnNode) insn).desc
-					: ((MethodInsnNode) insn).desc;
-			size = Type.getReturnType(desc).getSize();
+			size = Type.getReturnType(((MethodInsnNode) insn).desc).getSize();
 		}
 		return new SourceValue(size, insn);
 	}
@@ -170,25 +190,33 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements Opcod
 	@Override
 	public void returnOperation(final AbstractInsnNode insn, final SourceValue value,
 			final SourceValue expected) {
+		// Nothing to do.
 	}
 
 	@Override
-	public SourceValue merge(final SourceValue d, final SourceValue w) {
-		if (d.insns instanceof SmallSet && w.insns instanceof SmallSet) {
-			final Set<AbstractInsnNode> s = ((SmallSet<AbstractInsnNode>) d.insns)
-					.union((SmallSet<AbstractInsnNode>) w.insns);
-			if (s == d.insns && d.size == w.size) {
-				return d;
+	public SourceValue merge(final SourceValue value1, final SourceValue value2) {
+		if (value1.insns instanceof SmallSet && value2.insns instanceof SmallSet) {
+			final Set<AbstractInsnNode> setUnion = ((SmallSet<AbstractInsnNode>) value1.insns)
+					.union((SmallSet<AbstractInsnNode>) value2.insns);
+			if (setUnion == value1.insns && value1.size == value2.size) {
+				return value1;
 			} else {
-				return new SourceValue(Math.min(d.size, w.size), s);
+				return new SourceValue(Math.min(value1.size, value2.size), setUnion);
 			}
 		}
-		if (d.size != w.size || !d.insns.containsAll(w.insns)) {
-			final HashSet<AbstractInsnNode> s = new HashSet<>();
-			s.addAll(d.insns);
-			s.addAll(w.insns);
-			return new SourceValue(Math.min(d.size, w.size), s);
+		if (value1.size != value2.size || !containsAll(value1.insns, value2.insns)) {
+			final HashSet<AbstractInsnNode> setUnion = new HashSet<>();
+			setUnion.addAll(value1.insns);
+			setUnion.addAll(value2.insns);
+			return new SourceValue(Math.min(value1.size, value2.size), setUnion);
 		}
-		return d;
+		return value1;
+	}
+
+	private static <E> boolean containsAll(final Set<E> self, final Set<E> other) {
+		if (self.size() < other.size()) {
+			return false;
+		}
+		return self.containsAll(other);
 	}
 }

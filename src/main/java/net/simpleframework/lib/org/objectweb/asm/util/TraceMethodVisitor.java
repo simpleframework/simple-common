@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.util;
 
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
@@ -40,20 +38,36 @@ import net.simpleframework.lib.org.objectweb.asm.TypePath;
 /**
  * A {@link MethodVisitor} that prints the methods it visits with a
  * {@link Printer}.
- * 
+ *
  * @author Eric Bruneton
  */
 public final class TraceMethodVisitor extends MethodVisitor {
 
+	/** The printer to convert the visited method into text. */
 	public final Printer p;
 
-	public TraceMethodVisitor(final Printer p) {
-		this(null, p);
+	/**
+	 * Constructs a new {@link TraceMethodVisitor}.
+	 *
+	 * @param printer
+	 *        the printer to convert the visited method into text.
+	 */
+	public TraceMethodVisitor(final Printer printer) {
+		this(null, printer);
 	}
 
-	public TraceMethodVisitor(final MethodVisitor mv, final Printer p) {
-		super(Opcodes.ASM5, mv);
-		this.p = p;
+	/**
+	 * Constructs a new {@link TraceMethodVisitor}.
+	 *
+	 * @param methodVisitor
+	 *        the method visitor to which to delegate calls. May be
+	 *        <tt>null</tt>.
+	 * @param printer
+	 *        the printer to convert the visited method into text.
+	 */
+	public TraceMethodVisitor(final MethodVisitor methodVisitor, final Printer printer) {
+		super(Opcodes.ASM7_EXPERIMENTAL, methodVisitor);
+		this.p = printer;
 	}
 
 	@Override
@@ -63,41 +77,45 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final Printer p = this.p.visitMethodAnnotation(desc, visible);
-		final AnnotationVisitor av = mv == null ? null : mv.visitAnnotation(desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitMethodAnnotation(descriptor, visible);
+		return new TraceAnnotationVisitor(super.visitAnnotation(descriptor, visible),
+				annotationPrinter);
 	}
 
 	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final Printer p = this.p.visitMethodTypeAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null
-				: mv.visitTypeAnnotation(typeRef, typePath, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+			final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitMethodTypeAnnotation(typeRef, typePath, descriptor,
+				visible);
+		return new TraceAnnotationVisitor(
+				super.visitTypeAnnotation(typeRef, typePath, descriptor, visible), annotationPrinter);
 	}
 
 	@Override
-	public void visitAttribute(final Attribute attr) {
-		p.visitMethodAttribute(attr);
-		super.visitAttribute(attr);
+	public void visitAttribute(final Attribute attribute) {
+		p.visitMethodAttribute(attribute);
+		super.visitAttribute(attribute);
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
-		final Printer p = this.p.visitAnnotationDefault();
-		final AnnotationVisitor av = mv == null ? null : mv.visitAnnotationDefault();
-		return new TraceAnnotationVisitor(av, p);
+		final Printer annotationPrinter = p.visitAnnotationDefault();
+		return new TraceAnnotationVisitor(super.visitAnnotationDefault(), annotationPrinter);
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
+	public void visitAnnotableParameterCount(final int parameterCount, final boolean visible) {
+		p.visitAnnotableParameterCount(parameterCount, visible);
+		super.visitAnnotableParameterCount(parameterCount, visible);
+	}
+
+	@Override
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String descriptor,
 			final boolean visible) {
-		final Printer p = this.p.visitParameterAnnotation(parameter, desc, visible);
-		final AnnotationVisitor av = mv == null ? null
-				: mv.visitParameterAnnotation(parameter, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+		final Printer annotationPrinter = p.visitParameterAnnotation(parameter, descriptor, visible);
+		return new TraceAnnotationVisitor(
+				super.visitParameterAnnotation(parameter, descriptor, visible), annotationPrinter);
 	}
 
 	@Override
@@ -139,43 +157,45 @@ public final class TraceMethodVisitor extends MethodVisitor {
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner, final String name,
-			final String desc) {
-		p.visitFieldInsn(opcode, owner, name, desc);
-		super.visitFieldInsn(opcode, owner, name, desc);
+			final String descriptor) {
+		p.visitFieldInsn(opcode, owner, name, descriptor);
+		super.visitFieldInsn(opcode, owner, name, descriptor);
 	}
 
+	/** @deprecated */
 	@Deprecated
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
-			final String desc) {
+			final String descriptor) {
 		if (api >= Opcodes.ASM5) {
-			super.visitMethodInsn(opcode, owner, name, desc);
+			super.visitMethodInsn(opcode, owner, name, descriptor);
 			return;
 		}
-		p.visitMethodInsn(opcode, owner, name, desc);
+		p.visitMethodInsn(opcode, owner, name, descriptor);
 		if (mv != null) {
-			mv.visitMethodInsn(opcode, owner, name, desc);
+			mv.visitMethodInsn(opcode, owner, name, descriptor);
 		}
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
-			final String desc, final boolean itf) {
+			final String descriptor, final boolean isInterface) {
 		if (api < Opcodes.ASM5) {
-			super.visitMethodInsn(opcode, owner, name, desc, itf);
+			super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
 			return;
 		}
-		p.visitMethodInsn(opcode, owner, name, desc, itf);
+		p.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
 		if (mv != null) {
-			mv.visitMethodInsn(opcode, owner, name, desc, itf);
+			mv.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
 		}
 	}
 
 	@Override
-	public void visitInvokeDynamicInsn(final String name, final String desc, final Handle bsm,
-			final Object... bsmArgs) {
-		p.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
-		super.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+	public void visitInvokeDynamicInsn(final String name, final String descriptor,
+			final Handle bootstrapMethodHandle, final Object... bootstrapMethodArguments) {
+		p.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+		super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle,
+				bootstrapMethodArguments);
 	}
 
 	@Override
@@ -191,9 +211,9 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	}
 
 	@Override
-	public void visitLdcInsn(final Object cst) {
-		p.visitLdcInsn(cst);
-		super.visitLdcInsn(cst);
+	public void visitLdcInsn(final Object value) {
+		p.visitLdcInsn(value);
+		super.visitLdcInsn(value);
 	}
 
 	@Override
@@ -216,18 +236,18 @@ public final class TraceMethodVisitor extends MethodVisitor {
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		p.visitMultiANewArrayInsn(desc, dims);
-		super.visitMultiANewArrayInsn(desc, dims);
+	public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
+		p.visitMultiANewArrayInsn(descriptor, numDimensions);
+		super.visitMultiANewArrayInsn(descriptor, numDimensions);
 	}
 
 	@Override
 	public AnnotationVisitor visitInsnAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final Printer p = this.p.visitInsnAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null
-				: mv.visitInsnAnnotation(typeRef, typePath, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+			final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitInsnAnnotation(typeRef, typePath, descriptor,
+				visible);
+		return new TraceAnnotationVisitor(
+				super.visitInsnAnnotation(typeRef, typePath, descriptor, visible), annotationPrinter);
 	}
 
 	@Override
@@ -239,29 +259,29 @@ public final class TraceMethodVisitor extends MethodVisitor {
 
 	@Override
 	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final Printer p = this.p.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
-		final AnnotationVisitor av = mv == null ? null
-				: mv.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+			final String descriptor, final boolean visible) {
+		final Printer annotationPrinter = p.visitTryCatchAnnotation(typeRef, typePath, descriptor,
+				visible);
+		return new TraceAnnotationVisitor(
+				super.visitTryCatchAnnotation(typeRef, typePath, descriptor, visible),
+				annotationPrinter);
 	}
 
 	@Override
-	public void visitLocalVariable(final String name, final String desc, final String signature,
-			final Label start, final Label end, final int index) {
-		p.visitLocalVariable(name, desc, signature, start, end, index);
-		super.visitLocalVariable(name, desc, signature, start, end, index);
+	public void visitLocalVariable(final String name, final String descriptor,
+			final String signature, final Label start, final Label end, final int index) {
+		p.visitLocalVariable(name, descriptor, signature, start, end, index);
+		super.visitLocalVariable(name, descriptor, signature, start, end, index);
 	}
 
 	@Override
 	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
-			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final Label[] start, final Label[] end, final int[] index, final String descriptor,
 			final boolean visible) {
-		final Printer p = this.p.visitLocalVariableAnnotation(typeRef, typePath, start, end, index,
-				desc, visible);
-		final AnnotationVisitor av = mv == null ? null
-				: mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
-		return new TraceAnnotationVisitor(av, p);
+		final Printer annotationPrinter = p.visitLocalVariableAnnotation(typeRef, typePath, start,
+				end, index, descriptor, visible);
+		return new TraceAnnotationVisitor(super.visitLocalVariableAnnotation(typeRef, typePath, start,
+				end, index, descriptor, visible), annotationPrinter);
 	}
 
 	@Override

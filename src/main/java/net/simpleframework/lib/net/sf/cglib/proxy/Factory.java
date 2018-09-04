@@ -1,12 +1,12 @@
 /*
  * Copyright 2002,2003 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,9 @@ package net.simpleframework.lib.net.sf.cglib.proxy;
  * All enhanced instances returned by the {@link Enhancer} class implement this
  * interface.
  * Using this interface for new instances is faster than going through the
- * <code>Enhancer</code> interface or using reflection. In addition, to
- * intercept methods called during
+ * <code>Enhancer</code>
+ * interface or using reflection. In addition, to intercept methods called
+ * during
  * object construction you <b>must</b> use these methods instead of reflection.
  * 
  * @author Juozas Baliuka <a href="mailto:baliuka@mwm.lt">baliuka@mwm.lt</a>

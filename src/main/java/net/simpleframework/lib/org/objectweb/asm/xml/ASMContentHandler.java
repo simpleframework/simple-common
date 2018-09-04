@@ -1,32 +1,30 @@
-/***
- * ASM XML Adapter
- * Copyright (c) 2004-2011, Eugene Kuleshov
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
 import java.util.ArrayList;
@@ -44,30 +42,32 @@ import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Handle;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
+import net.simpleframework.lib.org.objectweb.asm.ModuleVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
  * A {@link org.xml.sax.ContentHandler ContentHandler} that transforms XML
- * document into Java class file. This class can be feeded by any kind of SAX
- * 2.0 event producers, e.g. XML parser, XSLT or XPath engines, or custom code.
- * 
+ * document into Java class
+ * file. This class can be feeded by any kind of SAX 2.0 event producers, e.g.
+ * XML parser, XSLT or
+ * XPath engines, or custom code.
+ *
+ * @deprecated This class is no longer maintained, will not support new Java
+ *             features, and will
+ *             eventually be deleted. Use the asm or asm.tree API instead.
  * @see net.simpleframework.lib.org.objectweb.asm.xml.SAXClassAdapter
  * @see net.simpleframework.lib.org.objectweb.asm.xml.Processor
- * 
  * @author Eugene Kuleshov
  */
+@Deprecated
 public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
-	/**
-	 * Stack of the intermediate processing contexts.
-	 */
+	/** Stack of the intermediate processing contexts. */
 	private final ArrayList<Object> stack = new ArrayList<>();
 
-	/**
-	 * Complete name of the current element.
-	 */
+	/** Complete name of the current element. */
 	String match = "";
 
 	/**
@@ -76,14 +76,13 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 	 */
 	protected ClassVisitor cv;
 
-	/**
-	 * Map of the active {@link Label Label} instances for current method.
-	 */
+	/** Map of the active {@link Label Label} instances for current method. */
 	protected Map<Object, Label> labels;
 
 	private static final String BASE = "class";
 
 	private final RuleSet RULES = new RuleSet();
+
 	{
 		RULES.add(BASE, new ClassRule());
 		RULES.add(BASE + "/interfaces/interface", new InterfaceRule());
@@ -91,6 +90,20 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		RULES.add(BASE + "/outerclass", new OuterClassRule());
 		RULES.add(BASE + "/innerclass", new InnerClassRule());
 		RULES.add(BASE + "/source", new SourceRule());
+
+		final ModuleRule moduleRule = new ModuleRule();
+		RULES.add(BASE + "/module", moduleRule);
+		RULES.add(BASE + "/module/main-class", moduleRule);
+		RULES.add(BASE + "/module/packages", moduleRule);
+		RULES.add(BASE + "/module/requires", moduleRule);
+		RULES.add(BASE + "/module/exports", moduleRule);
+		RULES.add(BASE + "/module/exports/to", moduleRule);
+		RULES.add(BASE + "/module/opens", moduleRule);
+		RULES.add(BASE + "/module/opens/to", moduleRule);
+		RULES.add(BASE + "/module/uses", moduleRule);
+		RULES.add(BASE + "/module/provides", moduleRule);
+		RULES.add(BASE + "/module/provides/with", moduleRule);
+
 		RULES.add(BASE + "/field", new FieldRule());
 
 		RULES.add(BASE + "/method", new MethodRule());
@@ -122,6 +135,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 		RULES.add("*/annotation", new AnnotationRule());
 		RULES.add("*/typeAnnotation", new TypeAnnotationRule());
+		RULES.add("*/annotableParameterCount", new AnnotableParameterCountRule());
 		RULES.add("*/parameterAnnotation", new AnnotationParameterRule());
 		RULES.add("*/insnAnnotation", new InsnAnnotationRule());
 		RULES.add("*/tryCatchAnnotation", new TryCatchAnnotationRule());
@@ -145,10 +159,9 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		public static final int INSN_MULTIANEWARRAY = 9;
 	}
 
-	/**
-	 * Map of the opcode names to opcode and opcode group
-	 */
+	/** Map of the opcode names to opcode and opcode group */
 	static final HashMap<String, Opcode> OPCODES = new HashMap<>();
+
 	static {
 		addOpcode("NOP", NOP, OpcodeGroup.INSN);
 		addOpcode("ACONST_NULL", ACONST_NULL, OpcodeGroup.INSN);
@@ -311,6 +324,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 	}
 
 	static final HashMap<String, Integer> TYPES = new HashMap<>();
+
 	static {
 		final String[] types = SAXCodeAdapter.TYPES;
 		for (int i = 0; i < types.length; i++) {
@@ -320,7 +334,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Constructs a new {@link ASMContentHandler ASMContentHandler} object.
-	 * 
+	 *
 	 * @param cv
 	 *        class visitor that will be called to reconstruct the classfile
 	 *        using the XML stream.
@@ -331,20 +345,23 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Process notification of the start of an XML element being reached.
-	 * 
+	 *
 	 * @param ns
 	 *        - The Namespace URI, or the empty string if the element has no
-	 *        Namespace URI or if Namespace processing is not being
-	 *        performed.
-	 * @param lName
-	 *        - The local name (without prefix), or the empty string if
+	 *        Namespace URI or if
 	 *        Namespace processing is not being performed.
+	 * @param lName
+	 *        - The local name (without prefix), or the empty string if Namespace
+	 *        processing is
+	 *        not being performed.
 	 * @param qName
 	 *        - The qualified name (with prefix), or the empty string if
-	 *        qualified names are not available.
+	 *        qualified names are not
+	 *        available.
 	 * @param list
 	 *        - The attributes attached to the element. If there are no
-	 *        attributes, it shall be an empty Attributes object.
+	 *        attributes, it shall be
+	 *        an empty Attributes object.
 	 * @exception SAXException
 	 *            if a parsing error is to be reported
 	 */
@@ -372,18 +389,19 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Process notification of the end of an XML element being reached.
-	 * 
+	 *
 	 * @param ns
 	 *        - The Namespace URI, or the empty string if the element has no
-	 *        Namespace URI or if Namespace processing is not being
-	 *        performed.
-	 * @param lName
-	 *        - The local name (without prefix), or the empty string if
+	 *        Namespace URI or if
 	 *        Namespace processing is not being performed.
+	 * @param lName
+	 *        - The local name (without prefix), or the empty string if Namespace
+	 *        processing is
+	 *        not being performed.
 	 * @param qName
-	 *        - The qualified XML 1.0 name (with prefix), or the empty
-	 *        string if qualified names are not available.
-	 * 
+	 *        - The qualified XML 1.0 name (with prefix), or the empty string if
+	 *        qualified names
+	 *        are not available.
 	 * @exception SAXException
 	 *            if a parsing error is to be reported
 	 */
@@ -411,8 +429,9 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Return the top object on the stack without removing it. If there are no
-	 * objects on the stack, return <code>null</code>.
-	 * 
+	 * objects on the stack,
+	 * return <code>null</code>.
+	 *
 	 * @return the top object on the stack without removing it.
 	 */
 	final Object peek() {
@@ -422,8 +441,9 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Pop the top object off of the stack, and return it. If there are no
-	 * objects on the stack, return <code>null</code>.
-	 * 
+	 * objects on the stack,
+	 * return <code>null</code>.
+	 *
 	 * @return the top object off of the stack.
 	 */
 	final Object pop() {
@@ -433,7 +453,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 	/**
 	 * Push a new object onto the top of the object stack.
-	 * 
+	 *
 	 * @param object
 	 *        The new object
 	 */
@@ -485,9 +505,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * Rule
-	 */
+	/** Rule */
 	protected abstract class Rule {
 
 		public void begin(final String name, final Attributes attrs) throws SAXException {
@@ -546,7 +564,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 				final boolean itf = itfIndex != -1;
 				final int tag = Integer
-						.parseInt(val.substring(tagIndex + 1, itf ? val.length() - 1 : itfIndex));
+						.parseInt(val.substring(tagIndex + 1, itf ? itfIndex : val.length() - 1));
 				final String owner = val.substring(0, dotIndex);
 				final String name = val.substring(dotIndex + 1, descIndex);
 				final String desc = val.substring(descIndex, tagIndex - 1);
@@ -661,13 +679,20 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 			if (s.indexOf("mandated") != -1) {
 				access |= ACC_MANDATED;
 			}
+			if (s.indexOf("module") != -1) {
+				access |= ACC_MODULE;
+			}
+			if (s.indexOf("open") != -1) {
+				access |= ACC_OPEN;
+			}
+			if (s.indexOf("transitive") != -1) {
+				access |= ACC_TRANSITIVE;
+			}
 			return access;
 		}
 	}
 
-	/**
-	 * ClassRule
-	 */
+	/** ClassRule */
 	final class ClassRule extends Rule {
 
 		@Override
@@ -697,9 +722,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * InterfaceRule
-	 */
+	/** InterfaceRule */
 	final class InterfaceRule extends Rule {
 
 		@Override
@@ -710,9 +733,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * InterfacesRule
-	 */
+	/** InterfacesRule */
 	final class InterfacesRule extends Rule {
 
 		@Override
@@ -730,9 +751,86 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * OuterClassRule
-	 */
+	/** ModuleRule: module, requires, exports, opens, uses and provides */
+	final class ModuleRule extends Rule {
+		@Override
+		public final void begin(final String element, final Attributes attrs) throws SAXException {
+			if ("module".equals(element)) {
+				push(cv.visitModule(attrs.getValue("name"), getAccess(attrs.getValue("access")),
+						attrs.getValue("version")));
+			} else if ("main-class".equals(element)) {
+				final ModuleVisitor mv = (ModuleVisitor) peek();
+				mv.visitMainClass(attrs.getValue("name"));
+			} else if ("packages".equals(element)) {
+				final ModuleVisitor mv = (ModuleVisitor) peek();
+				mv.visitPackage(attrs.getValue("name"));
+			} else if ("requires".equals(element)) {
+				final ModuleVisitor mv = (ModuleVisitor) peek();
+				int access = getAccess(attrs.getValue("access"));
+				if ((access & Opcodes.ACC_STATIC) != 0) {
+					access = access & ~Opcodes.ACC_STATIC | Opcodes.ACC_STATIC_PHASE;
+				}
+				mv.visitRequire(attrs.getValue("module"), access, attrs.getValue("version"));
+			} else if ("exports".equals(element)) {
+				push(attrs.getValue("name"));
+				push(getAccess(attrs.getValue("access")));
+				final ArrayList<String> list = new ArrayList<>();
+				push(list);
+			} else if ("opens".equals(element)) {
+				push(attrs.getValue("name"));
+				push(getAccess(attrs.getValue("access")));
+				final ArrayList<String> list = new ArrayList<>();
+				push(list);
+			} else if ("to".equals(element)) {
+				@SuppressWarnings("unchecked")
+				final ArrayList<String> list = (ArrayList<String>) peek();
+				list.add(attrs.getValue("module"));
+			} else if ("uses".equals(element)) {
+				final ModuleVisitor mv = (ModuleVisitor) peek();
+				mv.visitUse(attrs.getValue("service"));
+			} else if ("provides".equals(element)) {
+				push(attrs.getValue("service"));
+				push(0); // see end() below
+				final ArrayList<String> list = new ArrayList<>();
+				push(list);
+			} else if ("with".equals(element)) {
+				@SuppressWarnings("unchecked")
+				final ArrayList<String> list = (ArrayList<String>) peek();
+				list.add(attrs.getValue("provider"));
+			}
+		}
+
+		@Override
+		public void end(final String element) {
+			final boolean exports = "exports".equals(element);
+			final boolean opens = "opens".equals(element);
+			final boolean provides = "provides".equals(element);
+			if (exports || opens || provides) {
+				@SuppressWarnings("unchecked")
+				final ArrayList<String> list = (ArrayList<String>) pop();
+				final int access = (Integer) pop();
+				final String name = (String) pop();
+				String[] tos = null;
+				if (!list.isEmpty()) {
+					tos = list.toArray(new String[list.size()]);
+				}
+				final ModuleVisitor mv = (ModuleVisitor) peek();
+				if (exports) {
+					mv.visitExport(name, access, tos);
+				} else {
+					if (opens) {
+						mv.visitOpen(name, access, tos);
+					} else {
+						mv.visitProvide(name, tos);
+					}
+				}
+			} else if ("module".equals(element)) {
+				((ModuleVisitor) pop()).visitEnd();
+			}
+		}
+	}
+
+	/** OuterClassRule */
 	final class OuterClassRule extends Rule {
 
 		@Override
@@ -744,9 +842,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * InnerClassRule
-	 */
+	/** InnerClassRule */
 	final class InnerClassRule extends Rule {
 
 		@Override
@@ -759,9 +855,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * FieldRule
-	 */
+	/** FieldRule */
 	final class FieldRule extends Rule {
 
 		@Override
@@ -780,9 +874,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * MethodRule
-	 */
+	/** MethodRule */
 	final class MethodRule extends Rule {
 
 		@Override
@@ -805,9 +897,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * ExceptionRule
-	 */
+	/** ExceptionRule */
 	final class ExceptionRule extends Rule {
 
 		@Override
@@ -818,9 +908,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * ExceptionsRule
-	 */
+	/** ExceptionsRule */
 	final class ExceptionsRule extends Rule {
 
 		@Override
@@ -837,9 +925,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * MethodParameterRule
-	 */
+	/** MethodParameterRule */
 	final class MethodParameterRule extends Rule {
 		@Override
 		public void begin(final String nm, final Attributes attrs) {
@@ -849,9 +935,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * TableSwitchRule
-	 */
+	/** TableSwitchRule */
 	final class TableSwitchRule extends Rule {
 
 		@Override
@@ -876,9 +960,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * TableSwitchLabelRule
-	 */
+	/** TableSwitchLabelRule */
 	final class TableSwitchLabelRule extends Rule {
 
 		@Override
@@ -889,9 +971,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * LookupSwitchRule
-	 */
+	/** LookupSwitchRule */
 	final class LookupSwitchRule extends Rule {
 
 		@Override
@@ -919,9 +999,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * LookupSwitchLabelRule
-	 */
+	/** LookupSwitchLabelRule */
 	final class LookupSwitchLabelRule extends Rule {
 
 		@Override
@@ -933,9 +1011,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * FrameRule
-	 */
+	/** FrameRule */
 	final class FrameRule extends Rule {
 
 		@Override
@@ -995,9 +1071,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * LabelRule
-	 */
+	/** LabelRule */
 	final class LabelRule extends Rule {
 
 		@Override
@@ -1006,9 +1080,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * TryCatchRule
-	 */
+	/** TryCatchRule */
 	final class TryCatchRule extends Rule {
 
 		@Override
@@ -1021,9 +1093,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * LineNumberRule
-	 */
+	/** LineNumberRule */
 	final class LineNumberRule extends Rule {
 
 		@Override
@@ -1034,9 +1104,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * LocalVarRule
-	 */
+	/** LocalVarRule */
 	final class LocalVarRule extends Rule {
 
 		@Override
@@ -1051,9 +1119,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * InvokeDynamicRule
-	 */
+	/** InvokeDynamicRule */
 	final class InvokeDynamicRule extends Rule {
 		@Override
 		public final void begin(final String element, final Attributes attrs) throws SAXException {
@@ -1073,9 +1139,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * InvokeDynamicBsmArgumentsRule
-	 */
+	/** InvokeDynamicBsmArgumentsRule */
 	final class InvokeDynamicBsmArgumentsRule extends Rule {
 		@Override
 		public final void begin(final String element, final Attributes attrs) throws SAXException {
@@ -1085,9 +1149,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * OpcodesRule
-	 */
+	/** OpcodesRule */
 	final class OpcodesRule extends Rule {
 
 		// public boolean match( String match, String element) {
@@ -1149,14 +1211,11 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 
 			default:
 				throw new Error("Internal error");
-
 			}
 		}
 	}
 
-	/**
-	 * MaxRule
-	 */
+	/** MaxRule */
 	final class MaxRule extends Rule {
 
 		@Override
@@ -1218,6 +1277,16 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 			if (av != null) {
 				av.visitEnd();
 			}
+		}
+	}
+
+	final class AnnotableParameterCountRule extends Rule {
+
+		@Override
+		public void begin(final String name, final Attributes attrs) {
+			final int parameterCount = Integer.parseInt(attrs.getValue("count"));
+			final boolean visible = Boolean.valueOf(attrs.getValue("visible")).booleanValue();
+			((MethodVisitor) peek()).visitAnnotableParameterCount(parameterCount, visible);
 		}
 	}
 
@@ -1392,9 +1461,7 @@ public class ASMContentHandler extends DefaultHandler implements Opcodes {
 		}
 	}
 
-	/**
-	 * Opcode
-	 */
+	/** Opcode */
 	static final class Opcode {
 
 		public final int opcode;

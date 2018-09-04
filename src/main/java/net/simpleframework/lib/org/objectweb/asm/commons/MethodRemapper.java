@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 
 package net.simpleframework.lib.org.objectweb.asm.commons;
 
@@ -38,125 +36,162 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
- * A {@link LocalVariablesSorter} for type mapping.
- * 
+ * A {@link MethodVisitor} that remaps types with a {@link Remapper}.
+ *
  * @author Eugene Kuleshov
  */
 public class MethodRemapper extends MethodVisitor {
 
+	/** The remapper used to remap the types in the visited field. */
 	protected final Remapper remapper;
 
-	public MethodRemapper(final MethodVisitor mv, final Remapper remapper) {
-		this(Opcodes.ASM5, mv, remapper);
+	/**
+	 * Constructs a new {@link MethodRemapper}. <i>Subclasses must not use this
+	 * constructor</i>.
+	 * Instead, they must use the
+	 * {@link #MethodRemapper(int,MethodVisitor,Remapper)} version.
+	 *
+	 * @param methodVisitor
+	 *        the method visitor this remapper must deleted to.
+	 * @param remapper
+	 *        the remapper to use to remap the types in the visited method.
+	 */
+	public MethodRemapper(final MethodVisitor methodVisitor, final Remapper remapper) {
+		this(Opcodes.ASM6, methodVisitor, remapper);
 	}
 
-	protected MethodRemapper(final int api, final MethodVisitor mv, final Remapper remapper) {
-		super(api, mv);
+	/**
+	 * Constructs a new {@link MethodRemapper}.
+	 *
+	 * @param api
+	 *        the ASM API version supported by this remapper. Must be one of
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM4},
+	 *        {@link net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM5} or
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM6}.
+	 * @param methodVisitor
+	 *        the method visitor this remapper must deleted to.
+	 * @param remapper
+	 *        the remapper to use to remap the types in the visited method.
+	 */
+	protected MethodRemapper(final int api, final MethodVisitor methodVisitor,
+			final Remapper remapper) {
+		super(api, methodVisitor);
 		this.remapper = remapper;
 	}
 
 	@Override
 	public AnnotationVisitor visitAnnotationDefault() {
-		final AnnotationVisitor av = super.visitAnnotationDefault();
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+		final AnnotationVisitor annotationVisitor = super.visitAnnotationDefault();
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
-	public AnnotationVisitor visitAnnotation(final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitAnnotation(remapper.mapDesc(desc), visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+	public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+		final AnnotationVisitor annotationVisitor = super.visitAnnotation(
+				remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
 	public AnnotationVisitor visitTypeAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitTypeAnnotation(typeRef, typePath,
-				remapper.mapDesc(desc), visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+			final String descriptor, final boolean visible) {
+		final AnnotationVisitor annotationVisitor = super.visitTypeAnnotation(typeRef, typePath,
+				remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
-	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
+	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String descriptor,
 			final boolean visible) {
-		final AnnotationVisitor av = super.visitParameterAnnotation(parameter, remapper.mapDesc(desc),
-				visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+		final AnnotationVisitor annotationVisitor = super.visitParameterAnnotation(parameter,
+				remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
 	public void visitFrame(final int type, final int nLocal, final Object[] local, final int nStack,
 			final Object[] stack) {
-		super.visitFrame(type, nLocal, remapEntries(nLocal, local), nStack,
-				remapEntries(nStack, stack));
+		super.visitFrame(type, nLocal, remapFrameTypes(nLocal, local), nStack,
+				remapFrameTypes(nStack, stack));
 	}
 
-	private Object[] remapEntries(final int n, final Object[] entries) {
-		for (int i = 0; i < n; i++) {
-			if (entries[i] instanceof String) {
-				final Object[] newEntries = new Object[n];
-				if (i > 0) {
-					System.arraycopy(entries, 0, newEntries, 0, i);
+	private Object[] remapFrameTypes(final int numTypes, final Object[] frameTypes) {
+		if (frameTypes == null) {
+			return frameTypes;
+		}
+		Object[] remappedFrameTypes = null;
+		for (int i = 0; i < numTypes; ++i) {
+			if (frameTypes[i] instanceof String) {
+				if (remappedFrameTypes == null) {
+					remappedFrameTypes = new Object[numTypes];
+					System.arraycopy(frameTypes, 0, remappedFrameTypes, 0, numTypes);
 				}
-				do {
-					final Object t = entries[i];
-					newEntries[i++] = t instanceof String ? remapper.mapType((String) t) : t;
-				} while (i < n);
-				return newEntries;
+				remappedFrameTypes[i] = remapper.mapType((String) frameTypes[i]);
 			}
 		}
-		return entries;
+		return remappedFrameTypes == null ? frameTypes : remappedFrameTypes;
 	}
 
 	@Override
 	public void visitFieldInsn(final int opcode, final String owner, final String name,
-			final String desc) {
+			final String descriptor) {
 		super.visitFieldInsn(opcode, remapper.mapType(owner),
-				remapper.mapFieldName(owner, name, desc), remapper.mapDesc(desc));
+				remapper.mapFieldName(owner, name, descriptor), remapper.mapDesc(descriptor));
 	}
 
+	/** @deprecated */
 	@Deprecated
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
-			final String desc) {
+			final String descriptor) {
 		if (api >= Opcodes.ASM5) {
-			super.visitMethodInsn(opcode, owner, name, desc);
+			super.visitMethodInsn(opcode, owner, name, descriptor);
 			return;
 		}
-		doVisitMethodInsn(opcode, owner, name, desc, opcode == Opcodes.INVOKEINTERFACE);
+		doVisitMethodInsn(opcode, owner, name, descriptor, opcode == Opcodes.INVOKEINTERFACE);
 	}
 
 	@Override
 	public void visitMethodInsn(final int opcode, final String owner, final String name,
-			final String desc, final boolean itf) {
+			final String descriptor, final boolean isInterface) {
 		if (api < Opcodes.ASM5) {
-			super.visitMethodInsn(opcode, owner, name, desc, itf);
+			super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
 			return;
 		}
-		doVisitMethodInsn(opcode, owner, name, desc, itf);
+		doVisitMethodInsn(opcode, owner, name, descriptor, isInterface);
 	}
 
 	private void doVisitMethodInsn(final int opcode, final String owner, final String name,
-			final String desc, final boolean itf) {
+			final String descriptor, final boolean isInterface) {
 		// Calling super.visitMethodInsn requires to call the correct version
-		// depending on this.api (otherwise infinite loops can occur). To
-		// simplify and to make it easier to automatically remove the backward
-		// compatibility code, we inline the code of the overridden method here.
-		// IMPORTANT: THIS ASSUMES THAT visitMethodInsn IS NOT OVERRIDDEN IN
-		// LocalVariableSorter.
+		// depending on this.api
+		// (otherwise infinite loops can occur). To simplify and to make it easier
+		// to automatically
+		// remove the backward compatibility code, we inline the code of the
+		// overridden method here.
 		if (mv != null) {
 			mv.visitMethodInsn(opcode, remapper.mapType(owner),
-					remapper.mapMethodName(owner, name, desc), remapper.mapMethodDesc(desc), itf);
+					remapper.mapMethodName(owner, name, descriptor), remapper.mapMethodDesc(descriptor),
+					isInterface);
 		}
 	}
 
 	@Override
-	public void visitInvokeDynamicInsn(final String name, final String desc, final Handle bsm,
-			final Object... bsmArgs) {
-		for (int i = 0; i < bsmArgs.length; i++) {
-			bsmArgs[i] = remapper.mapValue(bsmArgs[i]);
+	public void visitInvokeDynamicInsn(final String name, final String descriptor,
+			final Handle bootstrapMethodHandle, final Object... bootstrapMethodArguments) {
+		final Object[] remappedBootstrapMethodArguments = new Object[bootstrapMethodArguments.length];
+		for (int i = 0; i < bootstrapMethodArguments.length; ++i) {
+			remappedBootstrapMethodArguments[i] = remapper.mapValue(bootstrapMethodArguments[i]);
 		}
-		super.visitInvokeDynamicInsn(remapper.mapInvokeDynamicMethodName(name, desc),
-				remapper.mapMethodDesc(desc), (Handle) remapper.mapValue(bsm), bsmArgs);
+		super.visitInvokeDynamicInsn(remapper.mapInvokeDynamicMethodName(name, descriptor),
+				remapper.mapMethodDesc(descriptor), (Handle) remapper.mapValue(bootstrapMethodHandle),
+				remappedBootstrapMethodArguments);
 	}
 
 	@Override
@@ -165,21 +200,22 @@ public class MethodRemapper extends MethodVisitor {
 	}
 
 	@Override
-	public void visitLdcInsn(final Object cst) {
-		super.visitLdcInsn(remapper.mapValue(cst));
+	public void visitLdcInsn(final Object value) {
+		super.visitLdcInsn(remapper.mapValue(value));
 	}
 
 	@Override
-	public void visitMultiANewArrayInsn(final String desc, final int dims) {
-		super.visitMultiANewArrayInsn(remapper.mapDesc(desc), dims);
+	public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
+		super.visitMultiANewArrayInsn(remapper.mapDesc(descriptor), numDimensions);
 	}
 
 	@Override
 	public AnnotationVisitor visitInsnAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitInsnAnnotation(typeRef, typePath,
-				remapper.mapDesc(desc), visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+			final String descriptor, final boolean visible) {
+		final AnnotationVisitor annotationVisitor = super.visitInsnAnnotation(typeRef, typePath,
+				remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
@@ -190,25 +226,27 @@ public class MethodRemapper extends MethodVisitor {
 
 	@Override
 	public AnnotationVisitor visitTryCatchAnnotation(final int typeRef, final TypePath typePath,
-			final String desc, final boolean visible) {
-		final AnnotationVisitor av = super.visitTryCatchAnnotation(typeRef, typePath,
-				remapper.mapDesc(desc), visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+			final String descriptor, final boolean visible) {
+		final AnnotationVisitor annotationVisitor = super.visitTryCatchAnnotation(typeRef, typePath,
+				remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 
 	@Override
-	public void visitLocalVariable(final String name, final String desc, final String signature,
-			final Label start, final Label end, final int index) {
-		super.visitLocalVariable(name, remapper.mapDesc(desc), remapper.mapSignature(signature, true),
-				start, end, index);
+	public void visitLocalVariable(final String name, final String descriptor,
+			final String signature, final Label start, final Label end, final int index) {
+		super.visitLocalVariable(name, remapper.mapDesc(descriptor),
+				remapper.mapSignature(signature, true), start, end, index);
 	}
 
 	@Override
 	public AnnotationVisitor visitLocalVariableAnnotation(final int typeRef, final TypePath typePath,
-			final Label[] start, final Label[] end, final int[] index, final String desc,
+			final Label[] start, final Label[] end, final int[] index, final String descriptor,
 			final boolean visible) {
-		final AnnotationVisitor av = super.visitLocalVariableAnnotation(typeRef, typePath, start, end,
-				index, remapper.mapDesc(desc), visible);
-		return av == null ? av : new AnnotationRemapper(av, remapper);
+		final AnnotationVisitor annotationVisitor = super.visitLocalVariableAnnotation(typeRef,
+				typePath, start, end, index, remapper.mapDesc(descriptor), visible);
+		return annotationVisitor == null ? annotationVisitor
+				: new AnnotationRemapper(api, annotationVisitor, remapper);
 	}
 }

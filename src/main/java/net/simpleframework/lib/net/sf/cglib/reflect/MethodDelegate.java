@@ -1,12 +1,12 @@
 /*
  * Copyright 2003,2004 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,11 +38,11 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * <b>DOCUMENTATION FROM APACHE AVALON DELEGATE CLASS</b>
  *
  * <p>
- * Delegates are a typesafe pointer to another method. Since Java does not have
- * language support for such a construct, this utility will construct a proxy
- * that forwards method calls to any method with the same signature. This
- * utility is inspired in part by the C# delegate mechanism. We implemented it
- * in a Java-centric manner.
+ * Delegates are a typesafe pointer to another method. Since Java does not
+ * have language support for such a construct, this utility will construct
+ * a proxy that forwards method calls to any method with the same signature.
+ * This utility is inspired in part by the C# delegate mechanism. We
+ * implemented it in a Java-centric manner.
  * </p>
  *
  * <h2>Delegate</h2>
@@ -58,24 +58,25 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  * </pre>
  *
  * <p>
- * The interface above is an example of an interface that can become a delegate.
- * It has only one method, and the interface is public. In order to create a
- * delegate for that method, all we have to do is call
- * <code>MethodDelegate.create(this, "alternateMain", MainDelegate.class)</code>
- * . The following program will show how to use it:
+ * The interface above is an example of an interface that can become a
+ * delegate. It has only one method, and the interface is public. In
+ * order to create a delegate for that method, all we have to do is
+ * call
+ * <code>MethodDelegate.create(this, "alternateMain", MainDelegate.class)</code>.
+ * The following program will show how to use it:
  * </p>
  *
  * <pre>
  * public class Main {
  * 	public static int main(String[] args) {
  * 		Main newMain = new Main();
- * 		MainDelegate start = (MainDelegate) MethodDelegate.create(newMain, &quot;alternateMain&quot;,
+ * 		MainDelegate start = (MainDelegate) MethodDelegate.create(newMain, "alternateMain",
  * 				MainDelegate.class);
  * 		return start.main(args);
  * 	}
- * 
+ *
  * 	public int alternateMain(String[] args) {
- * 		for (int i = 0; i &lt; args.length; i++) {
+ * 		for (int i = 0; i < args.length; i++) {
  * 			System.out.println(args[i]);
  * 		}
  * 		return args.length;
@@ -85,34 +86,40 @@ import net.simpleframework.lib.org.objectweb.asm.Type;
  *
  * <p>
  * By themselves, delegates don't do much. Their true power lies in the fact
- * that they can be treated like objects, and passed to other methods. In fact
- * that is one of the key building blocks of building Intelligent Agents which
- * in tern are the foundation of artificial intelligence. In the above program,
- * we could have easily created the delegate to match the static
- * <code>main</code> method by substituting the delegate creation call with
- * this:
- * <code>MethodDelegate.createStatic(getClass(), "main", MainDelegate.class)</code>
- * .
+ * that
+ * they can be treated like objects, and passed to other methods. In fact that
+ * is
+ * one of the key building blocks of building Intelligent Agents which in tern
+ * are
+ * the foundation of artificial intelligence. In the above program, we could
+ * have
+ * easily created the delegate to match the static <code>main</code> method by
+ * substituting the delegate creation call with this:
+ * <code>MethodDelegate.createStatic(getClass(), "main", MainDelegate.class)</code>.
  * </p>
  * <p>
  * Another key use for Delegates is to register event listeners. It is much
- * easier to have all the code for your events separated out into methods
- * instead of individual classes. One of the ways Java gets around that is to
- * create anonymous classes. They are particularly troublesome because many
- * Debuggers do not know what to do with them. Anonymous classes tend to
- * duplicate alot of code as well. We can use any interface with one declared
- * method to forward events to any method that matches the signature (although
- * the method name can be different).
+ * easier
+ * to have all the code for your events separated out into methods instead of
+ * individual
+ * classes. One of the ways Java gets around that is to create anonymous
+ * classes.
+ * They are particularly troublesome because many Debuggers do not know what to
+ * do
+ * with them. Anonymous classes tend to duplicate alot of code as well. We can
+ * use any interface with one declared method to forward events to any method
+ * that
+ * matches the signature (although the method name can be different).
  * </p>
  *
- * <h3>Equality</h3> The criteria that we use to test if two delegates are equal
- * are:
+ * <h3>Equality</h3>
+ * The criteria that we use to test if two delegates are equal are:
  * <ul>
  * <li>
  * They both refer to the same instance. That is, the <code>instance</code>
  * parameter passed to the newDelegate method was the same for both. The
- * instances are compared with the identity equality operator,
- * <code>==</code>.</li>
+ * instances are compared with the identity equality operator, <code>==</code>.
+ * </li>
  * <li>They refer to the same method as resolved by
  * <code>Method.equals</code>.</li>
  * </ul>
@@ -151,7 +158,7 @@ abstract public class MethodDelegate {
 	@Override
 	public boolean equals(final Object obj) {
 		final MethodDelegate other = (MethodDelegate) obj;
-		return target == other.target && eqMethod.equals(other.eqMethod);
+		return (other != null && target == other.target) && eqMethod.equals(other.eqMethod);
 	}
 
 	@Override

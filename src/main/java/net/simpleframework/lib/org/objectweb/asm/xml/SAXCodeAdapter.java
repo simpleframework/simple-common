@@ -1,32 +1,30 @@
-/***
- * ASM XML Adapter
- * Copyright (c) 2004-2011, Eugene Kuleshov
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
 import java.util.HashMap;
@@ -46,12 +44,15 @@ import net.simpleframework.lib.org.objectweb.asm.util.Printer;
 /**
  * A {@link MethodVisitor} that generates SAX 2.0 events from the visited
  * method.
- * 
+ *
+ * @deprecated This class is no longer maintained, will not support new Java
+ *             features, and will
+ *             eventually be deleted. Use the asm or asm.tree API instead.
  * @see net.simpleframework.lib.org.objectweb.asm.xml.SAXClassAdapter
  * @see net.simpleframework.lib.org.objectweb.asm.xml.Processor
- * 
  * @author Eugene Kuleshov
  */
+@Deprecated
 public final class SAXCodeAdapter extends MethodVisitor {
 
 	static final String[] TYPES = { "top", "int", "float", "double", "long", "null",
@@ -65,12 +66,14 @@ public final class SAXCodeAdapter extends MethodVisitor {
 
 	/**
 	 * Constructs a new {@link SAXCodeAdapter SAXCodeAdapter} object.
-	 * 
+	 *
 	 * @param sa
 	 *        content handler that will be used to send SAX 2.0 events.
+	 * @param access
+	 *        the method access flags.
 	 */
 	public SAXCodeAdapter(final SAXAdapter sa, final int access) {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM6);
 		this.sa = sa;
 		this.access = access;
 		this.labelNames = new HashMap<>();
@@ -350,6 +353,14 @@ public final class SAXCodeAdapter extends MethodVisitor {
 	}
 
 	@Override
+	public void visitAnnotableParameterCount(final int parameterCount, final boolean visible) {
+		final AttributesImpl attrs = new AttributesImpl();
+		attrs.addAttribute("", "count", "count", "", Integer.toString(parameterCount));
+		attrs.addAttribute("", "visible", "visible", "", visible ? "true" : "false");
+		sa.addElement("annotableParameterCount", attrs);
+	}
+
+	@Override
 	public AnnotationVisitor visitParameterAnnotation(final int parameter, final String desc,
 			final boolean visible) {
 		return new SAXAnnotationAdapter(sa, "parameterAnnotation", visible ? 1 : -1, parameter, desc);
@@ -398,5 +409,4 @@ public final class SAXCodeAdapter extends MethodVisitor {
 		}
 		return name;
 	}
-
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ public class ClassEmitter extends ClassTransformer {
 	}
 
 	public ClassEmitter() {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM6);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class ClassEmitter extends ClassTransformer {
 				TypeUtils.toInternalNames(exceptions));
 		if (sig.equals(Constants.SIG_STATIC) && !TypeUtils.isInterface(getAccess())) {
 			rawStaticInit = v;
-			final MethodVisitor wrapped = new MethodVisitor(Opcodes.ASM5, v) {
+			final MethodVisitor wrapped = new MethodVisitor(Opcodes.ASM6, v) {
 				@Override
 				public void visitMaxs(final int maxStack, final int maxLocals) {
 					// ignore

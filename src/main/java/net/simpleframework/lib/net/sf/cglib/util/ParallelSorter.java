@@ -1,12 +1,12 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,24 +25,25 @@ import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 /**
  * For the efficient sorting of multiple arrays in parallel.
  * <p>
- * Given two arrays of equal length and varying types, the standard technique
- * for sorting them in parallel is to create a new temporary object for each
- * row, store the objects in a temporary array, sort the array using a custom
- * comparator, and the extract the original values back into their respective
- * arrays. This is wasteful in both time and memory.
+ * Given two arrays of equal length and varying types, the standard
+ * technique for sorting them in parallel is to create a new temporary
+ * object for each row, store the objects in a temporary array, sort the
+ * array using a custom comparator, and the extract the original values
+ * back into their respective arrays. This is wasteful in both time and
+ * memory.
  * <p>
- * This class generates bytecode customized to the particular set of arrays you
- * need to sort, in such a way that both arrays are sorted in-place,
- * simultaneously.
+ * This class generates bytecode customized to the particular set of
+ * arrays you need to sort, in such a way that both arrays are sorted
+ * in-place, simultaneously.
  * <p>
- * Two sorting algorithms are provided. Quicksort is best when you only need to
- * sort by a single column, as it requires very few comparisons and swaps.
- * Mergesort is best used when sorting multiple columns, as it is a "stable"
- * sort--that is, it does not affect the relative order of equal objects from
- * previous sorts.
+ * Two sorting algorithms are provided.
+ * Quicksort is best when you only need to sort by a single column, as
+ * it requires very few comparisons and swaps. Mergesort is best used
+ * when sorting multiple columns, as it is a "stable" sort--that is, it
+ * does not affect the relative order of equal objects from previous sorts.
  * <p>
- * The mergesort algorithm here is an "in-place" variant, which while slower,
- * does not require a temporary array.
+ * The mergesort algorithm here is an "in-place" variant, which while
+ * slower, does not require a temporary array.
  *
  * @author Chris Nokleberg
  */

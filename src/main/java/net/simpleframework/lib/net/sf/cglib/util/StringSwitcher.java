@@ -1,12 +1,12 @@
 /*
  * Copyright 2003 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,7 +82,8 @@ abstract public class StringSwitcher {
 	 * @param s
 	 *        the key
 	 * @return the associated integer value, or <code>-1</code> if the key is
-	 *         unknown (unless <code>fixedInput</code> was specified when this
+	 *         unknown (unless
+	 *         <code>fixedInput</code> was specified when this
 	 *         <code>StringSwitcher</code> was created,
 	 *         in which case the return value for an unknown key is undefined)
 	 */

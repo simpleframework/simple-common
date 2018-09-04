@@ -1,32 +1,30 @@
-/***
- * ASM: a very small and fast Java bytecode manipulation framework
- * Copyright (c) 2000-2011 INRIA, France Telecom
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.tree.analysis;
 
 import java.util.List;
@@ -40,16 +38,37 @@ import net.simpleframework.lib.org.objectweb.asm.tree.MethodInsnNode;
 /**
  * An extended {@link BasicInterpreter} that checks that bytecode instructions
  * are correctly used.
- * 
+ *
  * @author Eric Bruneton
  * @author Bing Ran
  */
 public class BasicVerifier extends BasicInterpreter {
 
+	/**
+	 * Constructs a new {@link BasicVerifier} for the latest ASM API version.
+	 * <i>Subclasses must not
+	 * use this constructor</i>. Instead, they must use the
+	 * {@link #BasicVerifier(int)} version.
+	 */
 	public BasicVerifier() {
-		super(ASM5);
+		super(ASM6);
+		if (getClass() != BasicVerifier.class) {
+			throw new IllegalStateException();
+		}
 	}
 
+	/**
+	 * Constructs a new {@link BasicVerifier}.
+	 *
+	 * @param api
+	 *        the ASM API version supported by this interpreter. Must be one of
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM4},
+	 *        {@link net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM5},
+	 *        {@link
+	 * 			net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM6} or
+	 *        {@link net.simpleframework.lib.org.objectweb.asm.Opcodes#ASM7_EXPERIMENTAL}.
+	 */
 	protected BasicVerifier(final int api) {
 		super(api);
 	}
@@ -145,16 +164,12 @@ public class BasicVerifier extends BasicInterpreter {
 		case GETFIELD:
 			expected = newValue(Type.getObjectType(((FieldInsnNode) insn).owner));
 			break;
-		case CHECKCAST:
-			if (!value.isReference()) {
-				throw new AnalyzerException(insn, null, "an object reference", value);
-			}
-			return super.unaryOperation(insn, value);
 		case ARRAYLENGTH:
 			if (!isArrayValue(value)) {
 				throw new AnalyzerException(insn, null, "an array reference", value);
 			}
 			return super.unaryOperation(insn, value);
+		case CHECKCAST:
 		case ARETURN:
 		case ATHROW:
 		case INSTANCEOF:
@@ -170,7 +185,7 @@ public class BasicVerifier extends BasicInterpreter {
 			expected = newValue(Type.getType(((FieldInsnNode) insn).desc));
 			break;
 		default:
-			throw new Error("Internal error.");
+			throw new AssertionError();
 		}
 		if (!isSubTypeOf(value, expected)) {
 			throw new AnalyzerException(insn, null, expected, value);
@@ -284,12 +299,12 @@ public class BasicVerifier extends BasicInterpreter {
 			expected2 = BasicValue.REFERENCE_VALUE;
 			break;
 		case PUTFIELD:
-			final FieldInsnNode fin = (FieldInsnNode) insn;
-			expected1 = newValue(Type.getObjectType(fin.owner));
-			expected2 = newValue(Type.getType(fin.desc));
+			final FieldInsnNode fieldInsn = (FieldInsnNode) insn;
+			expected1 = newValue(Type.getObjectType(fieldInsn.owner));
+			expected2 = newValue(Type.getType(fieldInsn.desc));
 			break;
 		default:
-			throw new Error("Internal error.");
+			throw new AssertionError();
 		}
 		if (!isSubTypeOf(value1, expected1)) {
 			throw new AnalyzerException(insn, "First argument", expected1, value1);
@@ -346,7 +361,7 @@ public class BasicVerifier extends BasicInterpreter {
 			expected3 = BasicValue.REFERENCE_VALUE;
 			break;
 		default:
-			throw new Error("Internal error.");
+			throw new AssertionError();
 		}
 		if (!isSubTypeOf(value1, expected1)) {
 			throw new AnalyzerException(insn, "First argument", "a " + expected1 + " array reference",
@@ -378,14 +393,15 @@ public class BasicVerifier extends BasicInterpreter {
 					throw new AnalyzerException(insn, "Method owner", newValue(owner), values.get(0));
 				}
 			}
-			final String desc = (opcode == INVOKEDYNAMIC) ? ((InvokeDynamicInsnNode) insn).desc
+			final String methodDescriptor = (opcode == INVOKEDYNAMIC)
+					? ((InvokeDynamicInsnNode) insn).desc
 					: ((MethodInsnNode) insn).desc;
-			final Type[] args = Type.getArgumentTypes(desc);
+			final Type[] args = Type.getArgumentTypes(methodDescriptor);
 			while (i < values.size()) {
 				final BasicValue expected = newValue(args[j++]);
-				final BasicValue encountered = values.get(i++);
-				if (!isSubTypeOf(encountered, expected)) {
-					throw new AnalyzerException(insn, "Argument " + j, expected, encountered);
+				final BasicValue actual = values.get(i++);
+				if (!isSubTypeOf(actual, expected)) {
+					throw new AnalyzerException(insn, "Argument " + j, expected, actual);
 				}
 			}
 		}
@@ -400,15 +416,46 @@ public class BasicVerifier extends BasicInterpreter {
 		}
 	}
 
+	/**
+	 * Returns whether the given value corresponds to an array reference.
+	 *
+	 * @param value
+	 *        a value.
+	 * @return whether 'value' corresponds to an array reference.
+	 */
 	protected boolean isArrayValue(final BasicValue value) {
 		return value.isReference();
 	}
 
+	/**
+	 * Returns the value corresponding to the type of the elements of the given
+	 * array reference value.
+	 *
+	 * @param objectArrayValue
+	 *        a value corresponding to array of object (or array) references.
+	 * @return the value corresponding to the type of the elements of
+	 *         'objectArrayValue'.
+	 * @throws AnalyzerException
+	 *         if objectArrayValue does not correspond to an array type.
+	 */
 	protected BasicValue getElementValue(final BasicValue objectArrayValue)
 			throws AnalyzerException {
 		return BasicValue.REFERENCE_VALUE;
 	}
 
+	/**
+	 * Returns whether the type corresponding to the first argument is a subtype
+	 * of the type
+	 * corresponding to the second argument.
+	 *
+	 * @param value
+	 *        a value.
+	 * @param expected
+	 *        another value.
+	 * @return whether the type corresponding to 'value' is a subtype of the type
+	 *         corresponding to
+	 *         'expected'.
+	 */
 	protected boolean isSubTypeOf(final BasicValue value, final BasicValue expected) {
 		return value.equals(expected);
 	}

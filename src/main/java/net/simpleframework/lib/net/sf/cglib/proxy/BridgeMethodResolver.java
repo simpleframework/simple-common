@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package net.simpleframework.lib.net.sf.cglib.proxy;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,9 +39,11 @@ import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 class BridgeMethodResolver {
 
 	private final Map/* <Class, Set<Signature> */ declToBridge;
+	private final ClassLoader classLoader;
 
-	public BridgeMethodResolver(final Map declToBridge) {
+	public BridgeMethodResolver(final Map declToBridge, final ClassLoader classLoader) {
 		this.declToBridge = declToBridge;
+		this.classLoader = classLoader;
 	}
 
 	/**
@@ -54,8 +57,17 @@ class BridgeMethodResolver {
 			final Class owner = (Class) entry.getKey();
 			final Set bridges = (Set) entry.getValue();
 			try {
-				new ClassReader(owner.getName()).accept(new BridgedFinder(bridges, resolved),
-						ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+				final InputStream is = classLoader
+						.getResourceAsStream(owner.getName().replace('.', '/') + ".class");
+				if (is == null) {
+					return resolved;
+				}
+				try {
+					new ClassReader(is).accept(new BridgedFinder(bridges, resolved),
+							ClassReader.SKIP_FRAMES | ClassReader.SKIP_DEBUG);
+				} finally {
+					is.close();
+				}
 			} catch (final IOException ignored) {
 			}
 		}
@@ -64,14 +76,14 @@ class BridgeMethodResolver {
 
 	private static class BridgedFinder extends ClassVisitor {
 		private final Map/* <Signature, Signature> */ resolved;
-		private final Set/* <Signature> */ eligableMethods;
+		private final Set/* <Signature> */ eligibleMethods;
 
 		private Signature currentMethod = null;
 
-		BridgedFinder(final Set eligableMethods, final Map resolved) {
-			super(Opcodes.ASM5);
+		BridgedFinder(final Set eligibleMethods, final Map resolved) {
+			super(Opcodes.ASM6);
 			this.resolved = resolved;
-			this.eligableMethods = eligableMethods;
+			this.eligibleMethods = eligibleMethods;
 		}
 
 		@Override
@@ -83,9 +95,9 @@ class BridgeMethodResolver {
 		public MethodVisitor visitMethod(final int access, final String name, final String desc,
 				final String signature, final String[] exceptions) {
 			final Signature sig = new Signature(name, desc);
-			if (eligableMethods.remove(sig)) {
+			if (eligibleMethods.remove(sig)) {
 				currentMethod = sig;
-				return new MethodVisitor(Opcodes.ASM5) {
+				return new MethodVisitor(Opcodes.ASM6) {
 					@Override
 					public void visitMethodInsn(final int opcode, final String owner, final String name,
 							final String desc, final boolean itf) {

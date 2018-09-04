@@ -1,32 +1,30 @@
-/***
- * ASM XML Adapter
- * Copyright (c) 2004-2011, Eugene Kuleshov
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- */
+// ASM: a very small and fast Java bytecode manipulation framework
+// Copyright (c) 2000-2011 INRIA, France Telecom
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions
+// are met:
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+// 3. Neither the name of the copyright holders nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
 package net.simpleframework.lib.org.objectweb.asm.xml;
 
 import org.xml.sax.ContentHandler;
@@ -36,54 +34,59 @@ import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
+import net.simpleframework.lib.org.objectweb.asm.ModuleVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 /**
  * A {@link net.simpleframework.lib.org.objectweb.asm.ClassVisitor ClassVisitor}
- * that generates SAX 2.0
- * events from the visited class. It can feed any kind of
- * {@link org.xml.sax.ContentHandler ContentHandler}, e.g. XML serializer, XSLT
- * or XQuery engines.
- * 
+ * that generates SAX 2.0 events from the
+ * visited class. It can feed any kind of {@link org.xml.sax.ContentHandler
+ * ContentHandler}, e.g.
+ * XML serializer, XSLT or XQuery engines.
+ *
+ * @deprecated This class is no longer maintained, will not support new Java
+ *             features, and will
+ *             eventually be deleted. Use the asm or asm.tree API instead.
  * @see net.simpleframework.lib.org.objectweb.asm.xml.Processor
  * @see net.simpleframework.lib.org.objectweb.asm.xml.ASMContentHandler
- * 
  * @author Eugene Kuleshov
  */
+@Deprecated
 public final class SAXClassAdapter extends ClassVisitor {
 
 	SAXAdapter sa;
 
 	private final boolean singleDocument;
 
-	/**
-	 * Pseudo access flag used to distinguish class access flags.
-	 */
+	/** Pseudo access flag used to distinguish class access flags. */
 	private static final int ACCESS_CLASS = 262144;
 
-	/**
-	 * Pseudo access flag used to distinguish field access flags.
-	 */
+	/** Pseudo access flag used to distinguish field access flags. */
 	private static final int ACCESS_FIELD = 524288;
 
-	/**
-	 * Pseudo access flag used to distinguish inner class flags.
-	 */
+	/** Pseudo access flag used to distinguish inner class flags. */
 	private static final int ACCESS_INNER = 1048576;
+
+	/** Pseudo access flag used to distinguish module flags. */
+	static final int ACCESS_MODULE = 2097152;
+
+	/** Pseudo access flag used to distinguish module requires flags. */
+	static final int ACCESS_MODULE_REQUIRES = 4194304;
 
 	/**
 	 * Constructs a new {@link SAXClassAdapter SAXClassAdapter} object.
-	 * 
+	 *
 	 * @param h
 	 *        content handler that will be used to send SAX 2.0 events.
 	 * @param singleDocument
-	 *        if <tt>true</tt> adapter will not produce
-	 *        {@link ContentHandler#startDocument() startDocument()} and
-	 *        {@link ContentHandler#endDocument() endDocument()} events.
+	 *        if <tt>true</tt> adapter will not produce {@link
+	 * 			ContentHandler#startDocument() startDocument()} and
+	 *        {@link ContentHandler#endDocument()
+	 *        endDocument()} events.
 	 */
 	public SAXClassAdapter(final ContentHandler h, final boolean singleDocument) {
-		super(Opcodes.ASM5);
+		super(Opcodes.ASM6);
 		this.sa = new SAXAdapter(h);
 		this.singleDocument = singleDocument;
 		if (!singleDocument) {
@@ -102,6 +105,20 @@ public final class SAXClassAdapter extends ClassVisitor {
 		}
 
 		sa.addElement("source", att);
+	}
+
+	@Override
+	public ModuleVisitor visitModule(final String name, final int access, final String version) {
+		final AttributesImpl att = new AttributesImpl();
+		att.addAttribute("", "name", "name", "", name);
+		final StringBuilder sb = new StringBuilder();
+		appendAccess(access | ACCESS_MODULE, sb);
+		att.addAttribute("", "access", "access", "", sb.toString());
+		if (version != null) {
+			att.addAttribute("", "version", "version", "", encode(version));
+		}
+		sa.addStart("module", att);
+		return new SAXModuleAdapter(sa);
 	}
 
 	@Override
@@ -272,14 +289,26 @@ public final class SAXClassAdapter extends ClassVisitor {
 			sb.append("protected ");
 		}
 		if ((access & Opcodes.ACC_FINAL) != 0) {
-			sb.append("final ");
+			if ((access & ACCESS_MODULE) == 0) {
+				sb.append("final ");
+			} else {
+				sb.append("transitive ");
+			}
 		}
 		if ((access & Opcodes.ACC_STATIC) != 0) {
 			sb.append("static ");
 		}
 		if ((access & Opcodes.ACC_SUPER) != 0) {
 			if ((access & ACCESS_CLASS) == 0) {
-				sb.append("synchronized ");
+				if ((access & ACCESS_MODULE_REQUIRES) != 0) {
+					sb.append("transitive ");
+				} else {
+					if ((access & ACCESS_MODULE) == 0) {
+						sb.append("synchronized ");
+					} else {
+						sb.append("open ");
+					}
+				}
 			} else {
 				sb.append("super ");
 			}
@@ -288,7 +317,11 @@ public final class SAXClassAdapter extends ClassVisitor {
 			if ((access & ACCESS_FIELD) == 0) {
 				sb.append("bridge ");
 			} else {
-				sb.append("volatile ");
+				if ((access & ACCESS_MODULE_REQUIRES) == 0) {
+					sb.append("volatile ");
+				} else {
+					sb.append("static ");
+				}
 			}
 		}
 		if ((access & Opcodes.ACC_TRANSIENT) != 0) {
@@ -323,7 +356,11 @@ public final class SAXClassAdapter extends ClassVisitor {
 			sb.append("deprecated ");
 		}
 		if ((access & Opcodes.ACC_MANDATED) != 0) {
-			sb.append("mandated ");
+			if ((access & ACCESS_CLASS) == 0) {
+				sb.append("module ");
+			} else {
+				sb.append("mandated ");
+			}
 		}
 	}
 }
