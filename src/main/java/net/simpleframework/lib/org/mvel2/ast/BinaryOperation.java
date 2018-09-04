@@ -77,9 +77,18 @@ public class BinaryOperation extends BooleanNode {
 				break;
 			}
 
-			if (!left.getEgressType().isAssignableFrom(right.getEgressType())
-					&& !right.getEgressType().isAssignableFrom(left.getEgressType())) {
-				if (right.isLiteral() && canConvert(left.getEgressType(), right.getEgressType())) {
+			final boolean leftIsAssignableFromRight = left.getEgressType()
+					.isAssignableFrom(right.getEgressType());
+			final boolean rightIsAssignableFromLeft = right.getEgressType()
+					.isAssignableFrom(left.getEgressType());
+
+			if (!leftIsAssignableFromRight && !rightIsAssignableFromLeft) {
+
+				// Convert literals only when passing from String to Character
+				final boolean requiresConversion = right.getEgressType() == String.class;
+
+				if (right.isLiteral() && requiresConversion
+						&& canConvert(left.getEgressType(), right.getEgressType())) {
 					final Class targetType = isAritmeticOperation(operation) ? egressType
 							: left.getEgressType();
 					this.right = new LiteralNode(

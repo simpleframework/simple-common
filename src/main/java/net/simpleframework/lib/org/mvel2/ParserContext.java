@@ -413,9 +413,6 @@ public class ParserContext implements Serializable {
 	}
 
 	public boolean hasProtoImport(final String name) {
-		if (parserConfiguration.getImports() == null) {
-			return false;
-		}
 		final Object o = parserConfiguration.getImports().get(name);
 		return o != null && o instanceof Proto;
 	}
@@ -479,7 +476,8 @@ public class ParserContext implements Serializable {
 	 * </pre>
 	 * 
 	 * ... doing this allows the <tt>System.currentTimeMillis()</tt> method to be
-	 * executed in a script simply by writing <tt>time()</tt>.
+	 * executed in a script simply by writing
+	 * <tt>time()</tt>.
 	 *
 	 * @param name
 	 *        The alias to use
@@ -524,9 +522,7 @@ public class ParserContext implements Serializable {
 			scope.addAll(variables.keySet());
 			scope.addAll(inputs.keySet());
 
-			if (parserConfiguration.getImports() != null) {
-				scope.addAll(parserConfiguration.getImports().keySet());
-			}
+			scope.addAll(parserConfiguration.getImports().keySet());
 
 			if (inputs.containsKey("this")) {
 				final Class<?> ctxType = inputs.get("this");
@@ -925,20 +921,6 @@ public class ParserContext implements Serializable {
 		return globalFunctions != null && globalFunctions.size() != 0;
 	}
 
-	public void addTypeParameters(final String name, final Class type) {
-		if (typeParameters == null) {
-			typeParameters = new HashMap<>();
-		}
-
-		final Map<String, Type> newPkg = new HashMap<>();
-
-		for (final Type t : type.getTypeParameters()) {
-			newPkg.put(t.toString(), Object.class);
-		}
-
-		typeParameters.put(name, newPkg);
-	}
-
 	public void addTypeParameters(Map<String, Map<String, Type>> typeParameters) {
 		if (typeParameters == null) {
 			return;
@@ -1179,11 +1161,6 @@ public class ParserContext implements Serializable {
 
 	public ParserContext withInputs(final Map<String, Class> inputs) {
 		setInputs(inputs);
-		return this;
-	}
-
-	public ParserContext withTypeParameter(final String name, final Class type) {
-		addTypeParameters(name, type);
 		return this;
 	}
 

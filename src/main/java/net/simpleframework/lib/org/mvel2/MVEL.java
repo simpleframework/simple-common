@@ -50,7 +50,7 @@ import net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes.GetterAccess
  */
 public class MVEL {
 	public static final String NAME = "MVEL (MVFLEX Expression Language)";
-	public static final String VERSION = "2.1";
+	public static final String VERSION = "2.3";
 	public static final String VERSION_SUB = "0";
 	public static final String CODENAME = "liberty";
 	static boolean DEBUG_FILE = getBoolean("mvel2.debug.fileoutput");
@@ -908,9 +908,10 @@ public class MVEL {
 	 * </pre>
 	 * <p/>
 	 * The above example demonstrates a compiled expression being reused ina
-	 * tight, closed, loop. Doing this greatly improves performance as re-parsing
-	 * of the expression is not required, and the runtime can dynamically
-	 * compileShared the expression to bytecode of necessary.
+	 * tight, closed, loop. Doing this greatly
+	 * improves performance as re-parsing of the expression is not required, and
+	 * the runtime can dynamically compileShared
+	 * the expression to bytecode of necessary.
 	 *
 	 * @param expression
 	 *        A String contaiing the expression to be compiled.
@@ -964,7 +965,8 @@ public class MVEL {
 	 * accepts a Map of imports and Interceptors. See
 	 * {@link #compileExpression(String, Map)} for information on
 	 * imports. The imports parameter in this method is <em>optional</em> and it
-	 * is safe to pass a <tt>null</tt> value.<br/>
+	 * is safe to pass a <tt>null</tt>
+	 * value.<br/>
 	 * {@link net.simpleframework.lib.org.mvel2.integration.Interceptor
 	 * Interceptors} are markers within an expression that allow external hooks
 	 * to be tied into the expression.
@@ -1000,9 +1002,10 @@ public class MVEL {
 	 * </pre>
 	 * <p/>
 	 * The above example demonstrates inserting an interceptor into a piece of
-	 * code. The <tt>@log</tt> interceptor wraps the subsequent statement. In
-	 * this case, the interceptor is fired before the <tt>for</tt> loop and after
-	 * the <tt>for</tt> loop finishes.
+	 * code. The <tt>@log</tt> interceptor
+	 * wraps the subsequent statement. In this case, the interceptor is fired
+	 * before the <tt>for</tt> loop and
+	 * after the <tt>for</tt> loop finishes.
 	 *
 	 * @param expression
 	 *        A String containing the expression to be evaluated.

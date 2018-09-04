@@ -186,6 +186,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected int fields;
 
+	protected static final int OP_NOT_LITERAL = -3;
 	protected static final int OP_OVERFLOW = -2;
 	protected static final int OP_TERMINATE = -1;
 	protected static final int OP_RESET_FRAME = 0;
@@ -204,7 +205,8 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected ASTNode lastNode;
 
-	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(15);
+	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(
+			15);
 
 	public static HashMap<String, Object> LITERALS;
 	public static HashMap<String, Object> CLASS_LITERALS;
@@ -1480,7 +1482,7 @@ public class AbstractParser implements Parser, Serializable {
 			}
 		}
 
-		if (pCtx != null && pCtx.hasImports() && isArrayType(expr, st, end)) {
+		if (pCtx != null && isArrayType(expr, st, end)) {
 			if (pCtx.hasImport(new String(expr, st, cursor - st - 2))) {
 				lastWasIdentifier = true;
 				final TypeDescriptor typeDescriptor = new TypeDescriptor(expr, st, cursor - st, fields);
@@ -2689,6 +2691,10 @@ public class AbstractParser implements Parser, Serializable {
 						}
 
 						default:
+							if (compileMode && !tk.isLiteral()) {
+								stk.push(operator, tk);
+								return OP_NOT_LITERAL;
+							}
 							stk.push(operator, tk.getReducedValue(ctx, ctx, variableFactory));
 						}
 					}

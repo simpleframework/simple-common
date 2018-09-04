@@ -95,6 +95,14 @@ public class PropertyTools {
 		final String getter = ReflectionUtil.getGetter(property);
 
 		Method candidate = null;
+
+		if (Collection.class.isAssignableFrom(clazz) && "isEmpty".equals(isGet)) {
+			try {
+				return Collection.class.getMethod("isEmpty");
+			} catch (final NoSuchMethodException ignore) {
+			}
+		}
+
 		for (final Method meth : clazz.getMethods()) {
 			if ((meth.getModifiers() & PUBLIC) != 0 && (meth.getModifiers() & STATIC) == 0
 					&& meth.getParameterTypes().length == 0

@@ -20,6 +20,7 @@
 package net.simpleframework.lib.org.mvel2.optimizers.impl.refl.nodes;
 
 import net.simpleframework.lib.org.mvel2.ast.Function;
+import net.simpleframework.lib.org.mvel2.ast.FunctionInstance;
 import net.simpleframework.lib.org.mvel2.compiler.Accessor;
 import net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory;
 
@@ -36,7 +37,12 @@ public class DynamicFunctionAccessor extends BaseAccessor {
 			final VariableResolverFactory variableFactory) {
 		Object[] parms = null;
 
-		final Function function = (Function) ctx;
+		Function function;
+		if (ctx instanceof FunctionInstance) {
+			function = ((FunctionInstance) ctx).getFunction();
+		} else {
+			function = (Function) ctx;
+		}
 
 		if (parameters != null && parameters.length != 0) {
 			parms = new Object[parameters.length];

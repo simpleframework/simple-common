@@ -97,8 +97,8 @@ public class AbstractOptimizer extends AbstractParser {
 						} catch (final ClassNotFoundException cnfe) {
 							try {
 								return findInnerClass(test, classLoader, cnfe);
-							} catch (final ClassNotFoundException e) { /* ignore */
-							}
+							} catch (final ClassNotFoundException e) {
+								/* ignore */ }
 							final Class cls = forNameWithInner(new String(expr, start, i - start),
 									classLoader);
 							final String name = new String(expr, i + 1, end - i - 1);

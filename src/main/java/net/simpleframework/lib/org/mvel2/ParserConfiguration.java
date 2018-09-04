@@ -24,10 +24,10 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -42,27 +42,18 @@ import net.simpleframework.lib.org.mvel2.util.MethodStub;
  * The resusable parser configuration object.
  */
 public class ParserConfiguration implements Serializable {
-	private static final int MAX_NEGATIVE_CACHE_SIZE;
 
-	protected Map<String, Object> imports;
+	protected final Map<String, Object> imports = new ConcurrentHashMap<>();
 	protected HashSet<String> packageImports;
 	protected Map<String, Interceptor> interceptors;
 	protected transient ClassLoader classLoader;
 
-	private transient Set<String> nonValidImports;
+	private final transient Set<String> nonValidImports = Collections
+			.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
 	private boolean allowNakedMethCall = MVEL.COMPILER_OPT_ALLOW_NAKED_METH_CALL;
 
 	private boolean allowBootstrapBypass = true;
-
-	static {
-		final String negCacheSize = System.getProperty("mvel2.compiler.max_neg_cache_size");
-		if (negCacheSize != null) {
-			MAX_NEGATIVE_CACHE_SIZE = Integer.parseInt(negCacheSize);
-		} else {
-			MAX_NEGATIVE_CACHE_SIZE = 1000;
-		}
-	}
 
 	public ParserConfiguration() {
 	}
@@ -89,7 +80,7 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public Class getImport(final String name) {
-		if (imports != null && imports.containsKey(name) && imports.get(name) instanceof Class) {
+		if (imports.containsKey(name) && imports.get(name) instanceof Class) {
 			return (Class) imports.get(name);
 		}
 		return (Class) (AbstractParser.LITERALS.get(name) instanceof Class
@@ -98,12 +89,11 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public MethodStub getStaticImport(final String name) {
-		return imports != null ? (MethodStub) imports.get(name) : null;
+		return (MethodStub) imports.get(name);
 	}
 
 	public Object getStaticOrClassImport(final String name) {
-		return (imports != null && imports.containsKey(name) ? imports.get(name)
-				: AbstractParser.LITERALS.get(name));
+		return imports.containsKey(name) ? imports.get(name) : AbstractParser.LITERALS.get(name);
 	}
 
 	public void addPackageImport(final String packageName) {
@@ -119,7 +109,6 @@ public class ParserConfiguration implements Serializable {
 	private boolean addClassMemberStaticImports(final String packageName) {
 		try {
 			final Class c = Class.forName(packageName);
-			initImports();
 			if (c.isEnum()) {
 
 				// noinspection unchecked
@@ -149,8 +138,6 @@ public class ParserConfiguration implements Serializable {
 			return;
 		}
 
-		initImports();
-
 		Object o;
 
 		for (final Map.Entry<String, Object> entry : imports.entrySet()) {
@@ -169,7 +156,7 @@ public class ParserConfiguration implements Serializable {
 		if (!Character.isJavaIdentifierStart(className.charAt(0))) {
 			return false;
 		}
-		if (nonValidImports != null && nonValidImports.contains(className)) {
+		if (nonValidImports.contains(className)) {
 			return false;
 		}
 
@@ -197,28 +184,19 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public boolean hasImport(final String name) {
-		return (imports != null && imports.containsKey(name))
-				|| AbstractParser.CLASS_LITERALS.containsKey(name) || checkForDynamicImport(name);
-	}
-
-	private void initImports() {
-		if (this.imports == null) {
-			this.imports = new ConcurrentHashMap<>();
-		}
+		return (imports.containsKey(name)) || AbstractParser.CLASS_LITERALS.containsKey(name)
+				|| checkForDynamicImport(name);
 	}
 
 	public void addImport(final Class cls) {
-		initImports();
 		addImport(cls.getSimpleName(), cls);
 	}
 
 	public void addImport(final String name, final Class cls) {
-		initImports();
 		this.imports.put(name, cls);
 	}
 
 	public void addImport(final String name, final Proto proto) {
-		initImports();
 		this.imports.put(name, proto);
 	}
 
@@ -227,7 +205,6 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public void addImport(final String name, final MethodStub method) {
-		initImports();
 		this.imports.put(name, method);
 	}
 
@@ -267,8 +244,7 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public boolean hasImports() {
-		return !(imports != null && imports.isEmpty())
-				|| (packageImports != null && packageImports.size() != 0);
+		return !imports.isEmpty() || (packageImports != null && packageImports.size() != 0);
 	}
 
 	public ClassLoader getClassLoader() {
@@ -281,7 +257,6 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	public void setAllImports(final Map<String, Object> imports) {
-		initImports();
 		this.imports.clear();
 		if (imports != null) {
 			this.imports.putAll(imports);
@@ -295,21 +270,11 @@ public class ParserConfiguration implements Serializable {
 	}
 
 	private void cacheNegativeHitForDynamicImport(final String negativeHit) {
-		if (nonValidImports == null) {
-			nonValidImports = new LinkedHashSet<>();
-		} else if (nonValidImports.size() > 1000) {
-			final Iterator<String> i = nonValidImports.iterator();
-			i.next();
-			i.remove();
-		}
-
 		nonValidImports.add(negativeHit);
 	}
 
 	public void flushCaches() {
-		if (nonValidImports != null) {
-			nonValidImports.clear();
-		}
+		nonValidImports.clear();
 	}
 
 	public boolean isAllowNakedMethCall() {

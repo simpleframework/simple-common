@@ -85,6 +85,10 @@ public class MethodAccessor extends InvokableAccessor {
 
 	private Object executeOverrideTarget(final Method o, final Object ctx, final Object elCtx,
 			final VariableResolverFactory vars) {
+		// this local field is required to make sure exception block works with
+		// the same coercionNeeded value
+		// and it is not changed by another thread while setter is invoked
+		final boolean attemptedCoercion = coercionNeeded;
 		if (!coercionNeeded) {
 			try {
 				try {
@@ -94,7 +98,7 @@ public class MethodAccessor extends InvokableAccessor {
 						return o.invoke(ctx, executeAll(elCtx, vars, o));
 					}
 				} catch (final IllegalArgumentException e) {
-					if (coercionNeeded) {
+					if (attemptedCoercion) {
 						throw e;
 					}
 

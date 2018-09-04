@@ -60,6 +60,10 @@ public class FieldAccessorNH implements AccessorNode {
 	@Override
 	public Object setValue(final Object ctx, final Object elCtx,
 			final VariableResolverFactory variableFactory, Object value) {
+		// this local field is required to make sure exception block works with
+		// the same coercionRequired value
+		// and it is not changed by another thread while setter is invoked
+		final boolean attemptedCoercion = coercionRequired;
 		try {
 			if (nextNode != null) {
 				return nextNode.setValue(ctx, elCtx, variableFactory, value);
@@ -71,7 +75,7 @@ public class FieldAccessorNH implements AccessorNode {
 				return value;
 			}
 		} catch (final IllegalArgumentException e) {
-			if (!coercionRequired) {
+			if (!attemptedCoercion) {
 				coercionRequired = true;
 				return setValue(ctx, elCtx, variableFactory, value);
 			}

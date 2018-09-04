@@ -187,10 +187,9 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		} else if (javaVersion.startsWith("1.5")) {
 			OPCODES_VERSION = Opcodes.V1_5;
 		} else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")
-				|| javaVersion.startsWith("1.8")) {
+				|| javaVersion.startsWith("1.8") || javaVersion.startsWith("9")
+				|| javaVersion.startsWith("10") || javaVersion.startsWith("11")) {
 			OPCODES_VERSION = Opcodes.V1_6;
-		} else if (javaVersion.startsWith("1.8")) {
-			OPCODES_VERSION = Opcodes.V1_8;
 		} else {
 			OPCODES_VERSION = Opcodes.V1_2;
 		}
@@ -278,7 +277,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		synchronized (Runtime.getRuntime()) {
 			cw.visit(OPCODES_VERSION, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 					className = "ASMAccessorImpl_" + valueOf(cw.hashCode()).replaceAll("\\-", "_")
-							+ (System.currentTimeMillis() / 10) + ((int) Math.random() * 100),
+							+ (System.currentTimeMillis() / 10) + ((int) (Math.random() * 100)),
 					null, "java/lang/Object", new String[] { NAMESPACE + "compiler/Accessor" });
 		}
 
@@ -308,7 +307,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		synchronized (Runtime.getRuntime()) {
 			cw.visit(OPCODES_VERSION, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER,
 					className = "ASMAccessorImpl_" + valueOf(cw.hashCode()).replaceAll("\\-", "_")
-							+ (System.currentTimeMillis() / 10) + ((int) Math.random() * 100),
+							+ (System.currentTimeMillis() / 10) + ((int) (Math.random() * 100)),
 					null, "java/lang/Object", new String[] { NAMESPACE + "compiler/Accessor" });
 		}
 
@@ -3021,6 +3020,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 		this.ctx = ctx;
 		this.thisRef = thisRef;
 		this.variableFactory = factory;
+		this.pCtx = pCtx;
 
 		_initJIT();
 

@@ -19,6 +19,7 @@
 package net.simpleframework.lib.org.mvel2.util;
 
 import static net.simpleframework.lib.org.mvel2.Operator.PTABLE;
+import static net.simpleframework.lib.org.mvel2.Operator.TERNARY;
 import static net.simpleframework.lib.org.mvel2.util.ASTBinaryTree.buildTree;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.__resolveType;
 import static net.simpleframework.lib.org.mvel2.util.ParseTools.boxPrimitive;
@@ -342,6 +343,14 @@ public class CompilerTools {
 		case Operator.SOUNDEX:
 			optimizedAst.addTokenNode(new Soundslike(tk, astLinkedList.nextNode(), pCtx));
 			break;
+
+		case TERNARY:
+			if (pCtx.isStrongTyping() && tk.getEgressType() != Boolean.class
+					&& tk.getEgressType() != Boolean.TYPE) {
+				throw new RuntimeException(
+						"Condition of ternary operator is not of type boolean. Found "
+								+ tk.getEgressType());
+			}
 
 		default:
 			optimizedAst.addTokenNode(tk, tkOp);

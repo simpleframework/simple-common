@@ -405,7 +405,7 @@ public class ReflectiveAccessorOptimizer extends AbstractOptimizer implements Ac
 					if (cursor < end) {
 						if (nullSafe) {
 							final int os = expr[cursor] == '.' ? 1 : 0;
-							addAccessorNode(new NullSafe(expr, cursor + os, length - cursor - os, pCtx));
+							addAccessorNode(new NullSafe(expr, cursor + os, end - cursor - os, pCtx));
 							if (curr == null) {
 								break;
 							}
@@ -837,17 +837,16 @@ public class ReflectiveAccessorOptimizer extends AbstractOptimizer implements Ac
 			}
 
 			return ((CharSequence) ctx).charAt((Integer) idx);
-		} else {
+		} else if (ctx instanceof Class) {
 			final TypeDescriptor tDescr = new TypeDescriptor(expr, this.start, length, 0);
 			if (tDescr.isArray()) {
 				final Class cls = getClassReference((Class) ctx, tDescr, variableFactory, pCtx);
 				rootNode = new StaticReferenceAccessor(cls);
 				return cls;
 			}
-
-			throw new CompileException("illegal use of []: unknown type: " + ctx.getClass().getName(),
-					this.expr, this.start);
 		}
+		throw new CompileException("illegal use of []: unknown type: " + ctx.getClass().getName(),
+				this.expr, this.start);
 	}
 
 	private Object getCollectionPropertyAO(Object ctx, final String prop) throws Exception {

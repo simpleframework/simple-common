@@ -59,8 +59,7 @@ public class CompiledExpression implements Serializable, ExecutableStatement {
 				: egressType;
 		this.literalOnly = literalOnly;
 		this.parserConfiguration = parserConfiguration;
-		this.importInjectionRequired = parserConfiguration.getImports() != null
-				&& !parserConfiguration.getImports().isEmpty();
+		this.importInjectionRequired = !parserConfiguration.getImports().isEmpty();
 	}
 
 	public ASTNode getFirstNode() {

@@ -12,9 +12,10 @@ import java.util.Set;
  * which records index positions for use by the optimizing facilities.
  * <p/>
  * This wrapper also ensures that the Map is only additive. You cannot remove an
- * element once it's been added. While this may seem like an odd limitation, it
- * is consistent with the language semantics. (ie. it's not possible to delete a
- * variable at runtime once it's been declared).
+ * element once it's been added.
+ * While this may seem like an odd limitation, it is consistent with the
+ * language semantics. (ie. it's not possible
+ * to delete a variable at runtime once it's been declared).
  *
  * @author Mike Brock
  */

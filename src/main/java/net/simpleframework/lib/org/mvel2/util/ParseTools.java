@@ -266,7 +266,7 @@ public class ParseTools {
 					}
 
 					final boolean isVarArgs = meth.isVarArgs();
-					if (parmTypes.length != arguments.length && !isVarArgs) {
+					if (isArgsNumberNotCompatible(arguments, parmTypes, isVarArgs)) {
 						continue;
 					}
 
@@ -309,6 +309,12 @@ public class ParseTools {
 		return bestCandidate;
 	}
 
+	private static boolean isArgsNumberNotCompatible(final Class[] arguments,
+			final Class<?>[] parmTypes, final boolean isVarArgs) {
+		return (isVarArgs && parmTypes.length - 1 > arguments.length)
+				|| (!isVarArgs && parmTypes.length != arguments.length);
+	}
+
 	private static boolean isMoreSpecialized(final Method newCandidate, final Method oldCandidate) {
 		return oldCandidate.getReturnType().isAssignableFrom(newCandidate.getReturnType())
 				&& oldCandidate.getDeclaringClass().isAssignableFrom(newCandidate.getDeclaringClass());
@@ -327,19 +333,21 @@ public class ParseTools {
 
 			if (arguments[i] == null) {
 				if (!actualParamType.isPrimitive()) {
-					score += 6;
+					score += 7;
 				} else {
 					score = 0;
 					break;
 				}
 			} else if (actualParamType == arguments[i]) {
-				score += 7;
+				score += 8;
 			} else if (actualParamType.isPrimitive()
 					&& boxPrimitive(actualParamType) == arguments[i]) {
-				score += 6;
+				score += 7;
 			} else if (arguments[i].isPrimitive() && unboxPrimitive(arguments[i]) == actualParamType) {
-				score += 6;
+				score += 7;
 			} else if (actualParamType.isAssignableFrom(arguments[i])) {
+				score += 6;
+			} else if (isPrimitiveSubtype(arguments[i], actualParamType)) {
 				score += 5;
 			} else if (isNumericallyCoercible(arguments[i], actualParamType)) {
 				score += 4;
@@ -448,7 +456,8 @@ public class ParseTools {
 		if (ref != null && (parms = ref.get()) != null) {
 			return parms;
 		} else {
-			CONSTRUCTOR_PARMS_CACHE.put(cns, new WeakReference<>(parms = cns.getParameterTypes()));
+			CONSTRUCTOR_PARMS_CACHE.put(cns,
+					new WeakReference<>(parms = cns.getParameterTypes()));
 			return parms;
 		}
 	}
@@ -474,8 +483,8 @@ public class ParseTools {
 
 		for (final Constructor construct : getConstructors(cls)) {
 			final boolean isVarArgs = construct.isVarArgs();
-			if ((parmTypes = getConstructors(construct)).length != arguments.length
-					&& !construct.isVarArgs()) {
+			parmTypes = getConstructors(construct);
+			if (isArgsNumberNotCompatible(arguments, parmTypes, isVarArgs)) {
 				continue;
 			} else if (arguments.length == 0 && parmTypes.length == 0) {
 				return construct;
@@ -539,7 +548,8 @@ public class ParseTools {
 		if (ref != null && (cns = ref.get()) != null) {
 			return cns;
 		} else {
-			CLASS_CONSTRUCTOR_CACHE.put(cls, new WeakReference<>(cns = cls.getConstructors()));
+			CLASS_CONSTRUCTOR_CACHE.put(cls,
+					new WeakReference<>(cns = cls.getConstructors()));
 			return cns;
 		}
 	}
@@ -1099,6 +1109,22 @@ public class ParseTools {
 		return code;
 	}
 
+	private static boolean isPrimitiveSubtype(final Class argument, final Class<?> actualParamType) {
+		if (!actualParamType.isPrimitive()) {
+			return false;
+		}
+		final Class<?> primitiveArgument = unboxPrimitive(argument);
+		if (!primitiveArgument.isPrimitive()) {
+			return false;
+		}
+		return (actualParamType == double.class && primitiveArgument == float.class)
+				|| (actualParamType == float.class && primitiveArgument == long.class)
+				|| (actualParamType == long.class && primitiveArgument == int.class)
+				|| (actualParamType == int.class && primitiveArgument == char.class)
+				|| (actualParamType == int.class && primitiveArgument == short.class)
+				|| (actualParamType == short.class && primitiveArgument == byte.class);
+	}
+
 	public static boolean isNumericallyCoercible(final Class target, final Class parm) {
 		Class boxedTarget = target.isPrimitive() ? boxPrimitive(target) : target;
 
@@ -1320,13 +1346,15 @@ public class ParseTools {
 	 * This is an important aspect of the core parser tools. This method is used
 	 * throughout the core parser
 	 * and sub-lexical parsers to capture a balanced capture between opening and
-	 * terminating tokens such as: <em>( [ { ' " </em> <br>
+	 * terminating tokens such as:
+	 * <em>( [ { ' " </em>
+	 * <br>
 	 * <br>
 	 * For example: ((foo + bar + (bar - foo)) * 20;<br>
 	 * <br>
 	 * <p/>
-	 * If a balanced capture is performed from position 2, we get
-	 * "(foo + bar + (bar - foo))" back.<br>
+	 * If a balanced capture is performed from position 2, we get "(foo + bar +
+	 * (bar - foo))" back.<br>
 	 * If a balanced capture is performed from position 15, we get "(bar - foo)"
 	 * back.<br>
 	 * Etc.
@@ -2316,8 +2344,8 @@ public class ParseTools {
 			className = className.substring(0, lastDotPos) + "$" + className.substring(lastDotPos + 1);
 			try {
 				return Class.forName(className, true, classLoader);
-			} catch (final ClassNotFoundException e) { /* ignore */
-			}
+			} catch (final ClassNotFoundException e) {
+				/* ignore */ }
 		}
 		throw cnfe;
 	}

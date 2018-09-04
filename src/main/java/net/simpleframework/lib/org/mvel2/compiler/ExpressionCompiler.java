@@ -313,9 +313,13 @@ public class ExpressionCompiler extends AbstractParser {
 			}
 
 			if (!verifyOnly) {
-				return new CompiledExpression(finalizePayload(astBuild, secondPassOptimization, pCtx),
-						pCtx.getSourceFile(), returnType, pCtx.getParserConfiguration(),
-						literalOnly == 1);
+				try {
+					return new CompiledExpression(
+							finalizePayload(astBuild, secondPassOptimization, pCtx), pCtx.getSourceFile(),
+							returnType, pCtx.getParserConfiguration(), literalOnly == 1);
+				} catch (final RuntimeException e) {
+					throw new CompileException(e.getMessage(), expr, st, e);
+				}
 			} else {
 				try {
 					returnType = CompilerTools.getReturnType(astBuild, pCtx.isStrongTyping());
@@ -343,7 +347,7 @@ public class ExpressionCompiler extends AbstractParser {
 
 	private boolean compileReduce(final int opCode, final ASTLinkedList astBuild) {
 		switch (arithmeticFunctionReduction(opCode)) {
-		case -1:
+		case OP_TERMINATE:
 			/**
 			 * The reduction failed because we encountered a non-literal,
 			 * so we must now back out and cleanup.
@@ -355,7 +359,7 @@ public class ExpressionCompiler extends AbstractParser {
 			astBuild.addTokenNode((OperatorNode) splitAccumulator.pop(),
 					verify(pCtx, (ASTNode) splitAccumulator.pop()));
 			return false;
-		case -2:
+		case OP_OVERFLOW:
 			/**
 			 * Back out completely, pull everything back off the stack and add the
 			 * instructions
@@ -368,6 +372,13 @@ public class ExpressionCompiler extends AbstractParser {
 			astBuild.addTokenNode(new LiteralNode(stk.pop(), pCtx), operator);
 			astBuild.addTokenNode(rightValue, (OperatorNode) splitAccumulator.pop());
 			astBuild.addTokenNode(verify(pCtx, (ASTNode) splitAccumulator.pop()));
+			return true;
+		case OP_NOT_LITERAL:
+			final ASTNode tkLA2 = (ASTNode) stk.pop();
+			final Integer tkOp2 = (Integer) stk.pop();
+			astBuild.addTokenNode(new LiteralNode(getStackValueResult(), pCtx));
+			astBuild.addTokenNode(new OperatorNode(tkOp2, expr, st, pCtx), verify(pCtx, tkLA2));
+			return true;
 		}
 		return true;
 	}

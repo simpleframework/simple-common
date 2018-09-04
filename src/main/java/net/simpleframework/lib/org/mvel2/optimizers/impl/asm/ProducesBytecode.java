@@ -23,8 +23,9 @@ import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 
 /**
  * A {@link net.simpleframework.lib.org.mvel2.integration.PropertyHandler} that
- * implements this class advertises the to the {@link ASMAccessorOptimizer} that
- * it is able to generate bytecode for it's custom resolvers.<br/>
+ * implements this class advertises the to the
+ * {@link ASMAccessorOptimizer} that it is able to generate bytecode for it's
+ * custom resolvers.<br/>
  * <br/>
  * The two methods defined by this interface (one for get, and one for set
  * accessors) are passed an

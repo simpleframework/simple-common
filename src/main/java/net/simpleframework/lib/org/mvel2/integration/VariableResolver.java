@@ -24,8 +24,7 @@ import java.io.Serializable;
  * A variable resolver is responsible for physically accessing a variable, for
  * either read or write. VariableResolver's
  * are obtained via a
- * {@link net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory}
- * .
+ * {@link net.simpleframework.lib.org.mvel2.integration.VariableResolverFactory}.
  */
 public interface VariableResolver extends Serializable {
 	/**

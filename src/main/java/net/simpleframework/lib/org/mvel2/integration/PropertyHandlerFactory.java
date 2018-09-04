@@ -55,14 +55,9 @@ public class PropertyHandlerFactory {
 		}
 	}
 
-	public static void registerPropertyHandler(Class clazz, final PropertyHandler propertyHandler) {
-		do {
-			propertyHandlerClass.put(clazz, propertyHandler);
-
-			for (final Class c : clazz.getInterfaces()) {
-				propertyHandlerClass.put(c, propertyHandler);
-			}
-		} while ((clazz = clazz.getSuperclass()) != null && clazz != Object.class);
+	public static void registerPropertyHandler(final Class clazz,
+			final PropertyHandler propertyHandler) {
+		propertyHandlerClass.put(clazz, propertyHandler);
 	}
 
 	public static void setNullPropertyHandler(final PropertyHandler handler) {
