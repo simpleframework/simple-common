@@ -31,7 +31,7 @@ public interface IDataQuery<T> extends IDataQueryListenerManager<T> {
 
 	int getCount();
 
-	void setCount(int count);
+	IDataQuery<T> setCount(int count);
 
 	int getFetchSize();
 

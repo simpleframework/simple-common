@@ -37,8 +37,9 @@ public abstract class AbstractDataQuery<T> extends ObjectEx implements IDataQuer
 	}
 
 	@Override
-	public void setCount(final int count) {
+	public IDataQuery<T> setCount(final int count) {
 		this.count = count;
+		return this;
 	}
 
 	@Override
