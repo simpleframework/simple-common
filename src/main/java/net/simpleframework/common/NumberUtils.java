@@ -59,12 +59,12 @@ public abstract class NumberUtils {
 
 	public static String formatPercent(final double number, final int fraction) {
 		final NumberFormat nt = NumberFormat.getPercentInstance();
-		nt.setMinimumFractionDigits(fraction);
+		nt.setMaximumFractionDigits(fraction);
 		return nt.format(number);
 	}
 
 	public static String formatPercent(final double number) {
-		return formatPercent(number, 1);
+		return formatPercent(number, 2);
 	}
 
 	public static long randomLong(final long min, final long max) {
