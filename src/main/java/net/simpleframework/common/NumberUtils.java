@@ -26,6 +26,9 @@ public abstract class NumberUtils {
 	}
 
 	public static double toDouble(final Number number, final int scale) {
+		if (number == null) {
+			return 0;
+		}
 		return new BigDecimal(number.doubleValue()).setScale(scale, RoundingMode.HALF_DOWN)
 				.doubleValue();
 	}
@@ -35,6 +38,9 @@ public abstract class NumberUtils {
 	}
 
 	public static float toFloat(final Number number, final int scale) {
+		if (number == null) {
+			return 0;
+		}
 		return new BigDecimal(number.doubleValue()).setScale(scale, RoundingMode.HALF_DOWN)
 				.floatValue();
 	}
