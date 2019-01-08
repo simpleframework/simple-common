@@ -7,7 +7,8 @@ import java.util.Date;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class TimePeriod implements Serializable {
@@ -33,6 +34,8 @@ public class TimePeriod implements Serializable {
 	private String dateFormat = "yyyy-MM-dd";
 
 	private Date from, to;
+	/* 字段名 */
+	private String fieldName;
 
 	public TimePeriod(final String timePeriod) {
 		if (StringUtils.hasText(timePeriod)) {
@@ -133,6 +136,15 @@ public class TimePeriod implements Serializable {
 			cal.add(Calendar.YEAR, -1);
 		}
 		return cal.getTime();
+	}
+
+	public String getFieldName() {
+		return fieldName;
+	}
+
+	public TimePeriod setFieldName(final String fieldName) {
+		this.fieldName = fieldName;
+		return this;
 	}
 
 	@Override
