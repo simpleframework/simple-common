@@ -146,13 +146,8 @@ public abstract class ObjectEx {
 		return ObjectFactory.original(getClass());
 	}
 
-	private transient Log log;
-
 	protected Log getLog() {
-		if (log == null) {
-			log = LogFactory.getLogger(getClass());
-		}
-		return log;
+		return LogFactory.getLogger(getClass());
 	}
 
 	public static void oprintln() {
