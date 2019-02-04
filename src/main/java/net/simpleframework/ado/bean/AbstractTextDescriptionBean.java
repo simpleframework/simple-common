@@ -17,7 +17,7 @@ public abstract class AbstractTextDescriptionBean extends AbstractDescriptionBea
 
 	@Override
 	public String getText() {
-		return text;
+		return text != null ? text.trim() : null;
 	}
 
 	@Override
