@@ -137,11 +137,11 @@ public abstract class StringUtils {
 	}
 
 	public static String encodeHex(final byte[] binaryData) {
-		return Hex.byte2HexStr(binaryData);
+		return Hex.encode(binaryData);
 	}
 
 	public static byte[] decodeHex(final String encoded) {
-		return Hex.hexStr2Bytes(encoded);
+		return Hex.decode(encoded);
 	}
 
 	public static String decodeHexString(final String s) {
