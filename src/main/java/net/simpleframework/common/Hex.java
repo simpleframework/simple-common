@@ -1,84 +1,281 @@
 package net.simpleframework.common;
 
 public class Hex {
-	static private final int BASE_LENGTH = 128;
-	static private final int LOOKUP_LENGTH = 16;
-	static final private byte[] HEX_NUMBER_TABLE = new byte[BASE_LENGTH];
-	static final private char[] UPPER_CHARS = new char[LOOKUP_LENGTH];
-	static final private char[] LOWER_CHARS = new char[LOOKUP_LENGTH];
 
-	static {
-		for (int i = 0; i < BASE_LENGTH; i++) {
-			HEX_NUMBER_TABLE[i] = -1;
-		}
-		for (int i = '9'; i >= '0'; i--) {
-			HEX_NUMBER_TABLE[i] = (byte) (i - '0');
-		}
-		for (int i = 'F'; i >= 'A'; i--) {
-			HEX_NUMBER_TABLE[i] = (byte) (i - 'A' + 10);
-		}
-		for (int i = 'f'; i >= 'a'; i--) {
-			HEX_NUMBER_TABLE[i] = (byte) (i - 'a' + 10);
-		}
+	/**
+	 * 用于建立十六进制字符的输出的小写字符数组
+	 */
+	private static final char[] DIGITS_LOWER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'a', 'b', 'c', 'd', 'e', 'f' };
 
-		for (int i = 0; i < 10; i++) {
-			UPPER_CHARS[i] = (char) ('0' + i);
-			LOWER_CHARS[i] = (char) ('0' + i);
+	/**
+	 * 用于建立十六进制字符的输出的大写字符数组
+	 */
+	private static final char[] DIGITS_UPPER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			'A', 'B', 'C', 'D', 'E', 'F' };
+
+	/**
+	 * 字符串转换成十六进制字符串
+	 *
+	 * @param String
+	 *        str 待转换的ASCII字符串
+	 * @return String 每个Byte之间空格分隔，如: [61 6C 6B]
+	 */
+	public static String str2HexStr(final String str) {
+
+		final char[] chars = "0123456789ABCDEF".toCharArray();
+		final StringBuilder sb = new StringBuilder("");
+		final byte[] bs = str.getBytes();
+		int bit;
+
+		for (int i = 0; i < bs.length; i++) {
+			bit = (bs[i] & 0x0f0) >> 4;
+			sb.append(chars[bit]);
+			bit = bs[i] & 0x0f;
+			sb.append(chars[bit]);
+			sb.append(' ');
 		}
-		for (int i = 10; i <= 15; i++) {
-			UPPER_CHARS[i] = (char) ('A' + i - 10);
-			LOWER_CHARS[i] = (char) ('a' + i - 10);
-		}
+		return sb.toString().trim();
 	}
 
-	public static String encode(final byte[] bytes) {
-		return encode(bytes, true);
-	}
+	/**
+	 * 十六进制转换字符串
+	 *
+	 * @param String
+	 *        str Byte字符串(Byte之间无分隔符 如:[616C6B])
+	 * @return String 对应的字符串
+	 */
+	public static String hexStr2Str(final String hexStr) {
+		final String str = "0123456789ABCDEF";
+		final char[] hexs = hexStr.toCharArray();
+		final byte[] bytes = new byte[hexStr.length() / 2];
+		int n;
 
-	public static String encode(final byte[] bytes, final boolean upperCase) {
-		if (bytes == null) {
-			return null;
-		}
-
-		final char[] chars = upperCase ? UPPER_CHARS : LOWER_CHARS;
-
-		final char[] hex = new char[bytes.length * 2];
 		for (int i = 0; i < bytes.length; i++) {
-			final int b = bytes[i] & 0xFF;
-			hex[i * 2] = chars[b >> 4];
-			hex[i * 2 + 1] = chars[b & 0xf];
+			n = str.indexOf(hexs[2 * i]) * 16;
+			n += str.indexOf(hexs[2 * i + 1]);
+			bytes[i] = (byte) (n & 0xff);
 		}
-		return new String(hex);
+		return new String(bytes);
 	}
 
-	static public byte[] decode(final String encoded) {
-		if (encoded == null) {
-			return null;
+	/**
+	 * bytes转换成十六进制字符串
+	 *
+	 * @param byte[]
+	 *        b byte数组
+	 * @return String 每个Byte值之间空格分隔
+	 */
+	public static String byte2HexStr(final byte[] b) {
+		String stmp = "";
+		final StringBuilder sb = new StringBuilder("");
+		for (int n = 0; n < b.length; n++) {
+			stmp = Integer.toHexString(b[n] & 0xFF);
+			sb.append((stmp.length() == 1) ? "0" + stmp : stmp);
+			// sb.append(" ");
+		}
+		return sb.toString().toUpperCase().trim();
+	}
+
+	/**
+	 * bytes字符串转换为Byte值
+	 *
+	 * @param String
+	 *        src Byte字符串，每个Byte之间没有分隔符
+	 * @return byte[]
+	 */
+	public static byte[] hexStr2Bytes(final String src) {
+		int m = 0, n = 0;
+		final int l = src.length() / 2;
+		System.out.println(l);
+		final byte[] ret = new byte[l];
+		for (int i = 0; i < l; i++) {
+			m = i * 2 + 1;
+			n = m + 1;
+			ret[i] = Byte.decode("0x" + src.substring(i * 2, m) + src.substring(m, n));
+		}
+		return ret;
+	}
+
+	/**
+	 * String的字符串转换成unicode的String
+	 *
+	 * @param String
+	 *        strText 全角字符串
+	 * @return String 每个unicode之间无分隔符
+	 * @throws Exception
+	 */
+	public static String strToUnicode(final String strText) throws Exception {
+		char c;
+		final StringBuilder str = new StringBuilder();
+		int intAsc;
+		String strHex;
+		for (int i = 0; i < strText.length(); i++) {
+			c = strText.charAt(i);
+			intAsc = c;
+			strHex = Integer.toHexString(intAsc);
+			if (intAsc > 128)
+				str.append("\\u" + strHex);
+			else
+				// 低位在前面补00
+				str.append("\\u00" + strHex);
+		}
+		return str.toString();
+	}
+
+	/**
+	 * unicode的String转换成String的字符串
+	 *
+	 * @param String
+	 *        hex 16进制值字符串 （一个unicode为2byte）
+	 * @return String 全角字符串
+	 */
+	public static String unicodeToString(final String hex) {
+		final int t = hex.length() / 6;
+		final StringBuilder str = new StringBuilder();
+		for (int i = 0; i < t; i++) {
+			final String s = hex.substring(i * 6, (i + 1) * 6);
+			// 高位需要补上00再转
+			final String s1 = s.substring(2, 4) + "00";
+			// 低位直接转
+			final String s2 = s.substring(4);
+			// 将16进制的string转为int
+			final int n = Integer.valueOf(s1, 16) + Integer.valueOf(s2, 16);
+			// 将int转换为字符
+			final char[] chars = Character.toChars(n);
+			str.append(new String(chars));
+		}
+		return str.toString();
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符数组
+	 *
+	 * @param data
+	 *        byte[]
+	 * @return 十六进制char[]
+	 */
+	public static char[] encodeHex(final byte[] data) {
+		return encodeHex(data, true);
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符数组
+	 *
+	 * @param data
+	 *        byte[]
+	 * @param toLowerCase
+	 *        <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @return 十六进制char[]
+	 */
+	public static char[] encodeHex(final byte[] data, final boolean toLowerCase) {
+		return encodeHex(data, toLowerCase ? DIGITS_LOWER : DIGITS_UPPER);
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符数组
+	 *
+	 * @param data
+	 *        byte[]
+	 * @param toDigits
+	 *        用于控制输出的char[]
+	 * @return 十六进制char[]
+	 */
+	protected static char[] encodeHex(final byte[] data, final char[] toDigits) {
+		final int l = data.length;
+		final char[] out = new char[l << 1];
+		// two characters form the hex value.
+		for (int i = 0, j = 0; i < l; i++) {
+			out[j++] = toDigits[(0xF0 & data[i]) >>> 4];
+			out[j++] = toDigits[0x0F & data[i]];
+		}
+		return out;
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符串
+	 *
+	 * @param data
+	 *        byte[]
+	 * @return 十六进制String
+	 */
+	public static String encodeHexStr(final byte[] data) {
+		return encodeHexStr(data, true);
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符串
+	 *
+	 * @param data
+	 *        byte[]
+	 * @param toLowerCase
+	 *        <code>true</code> 传换成小写格式 ， <code>false</code> 传换成大写格式
+	 * @return 十六进制String
+	 */
+	public static String encodeHexStr(final byte[] data, final boolean toLowerCase) {
+		return encodeHexStr(data, toLowerCase ? DIGITS_LOWER : DIGITS_UPPER);
+	}
+
+	/**
+	 * 将字节数组转换为十六进制字符串
+	 *
+	 * @param data
+	 *        byte[]
+	 * @param toDigits
+	 *        用于控制输出的char[]
+	 * @return 十六进制String
+	 */
+	protected static String encodeHexStr(final byte[] data, final char[] toDigits) {
+		return new String(encodeHex(data, toDigits));
+	}
+
+	/**
+	 * 将十六进制字符数组转换为字节数组
+	 *
+	 * @param data
+	 *        十六进制char[]
+	 * @return byte[]
+	 * @throws RuntimeException
+	 *         如果源十六进制字符数组是一个奇怪的长度，将抛出运行时异常
+	 */
+	public static byte[] decodeHex(final char[] data) {
+
+		final int len = data.length;
+
+		if ((len & 0x01) != 0) {
+			throw new RuntimeException("Odd number of characters.");
 		}
 
-		final int lengthData = encoded.length();
-		if (lengthData % 2 != 0) {
-			return null;
+		final byte[] out = new byte[len >> 1];
+
+		// two characters form the hex value.
+		for (int i = 0, j = 0; j < len; i++) {
+			int f = toDigit(data[j], j) << 4;
+			j++;
+			f = f | toDigit(data[j], j);
+			j++;
+			out[i] = (byte) (f & 0xFF);
 		}
 
-		final char[] binaryData = encoded.toCharArray();
-		final int lengthDecode = lengthData / 2;
-		final byte[] decodedData = new byte[lengthDecode];
-		byte temp1, temp2;
-		char tempChar;
-		for (int i = 0; i < lengthDecode; i++) {
-			tempChar = binaryData[i * 2];
-			temp1 = (tempChar < BASE_LENGTH) ? HEX_NUMBER_TABLE[tempChar] : -1;
-			if (temp1 == -1) {
-				return null;
-			}
-			tempChar = binaryData[i * 2 + 1];
-			temp2 = (tempChar < BASE_LENGTH) ? HEX_NUMBER_TABLE[tempChar] : -1;
-			if (temp2 == -1) {
-				return null;
-			}
-			decodedData[i] = (byte) ((temp1 << 4) | temp2);
+		return out;
+	}
+
+	/**
+	 * 将十六进制字符转换成一个整数
+	 *
+	 * @param ch
+	 *        十六进制char
+	 * @param index
+	 *        十六进制字符在字符数组中的位置
+	 * @return 一个整数
+	 * @throws RuntimeException
+	 *         当ch不是一个合法的十六进制字符时，抛出运行时异常
+	 */
+	protected static int toDigit(final char ch, final int index) {
+		final int digit = Character.digit(ch, 16);
+		if (digit == -1) {
+			throw new RuntimeException("Illegal hexadecimal character " + ch + " at index " + index);
 		}
-		return decodedData;
+		return digit;
 	}
 }
