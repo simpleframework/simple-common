@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.Normalizer;
 
 /**
  * HTML Tag capabilities.
@@ -15,6 +16,9 @@ public class Tag {
 																						// tags
 
 	private final String tagName;
+	private final String normalName; // always the lower case version of this
+												// tag,
+	// regardless of case preservation mode
 	private boolean isBlock = true; // block or inline
 	private boolean formatAsBlock = true; // should be formatted as a block
 	private boolean canContainInline = true; // only pcdata if not
@@ -30,6 +34,7 @@ public class Tag {
 
 	private Tag(final String tagName) {
 		this.tagName = tagName;
+		normalName = Normalizer.lowerCase(tagName);
 	}
 
 	/**
@@ -39,6 +44,15 @@ public class Tag {
 	 */
 	public String getName() {
 		return tagName;
+	}
+
+	/**
+	 * Get this tag's normalized (lowercased) name.
+	 * 
+	 * @return the tag's normal name.
+	 */
+	public String normalName() {
+		return normalName;
 	}
 
 	/**
@@ -276,7 +290,7 @@ public class Tag {
 			"pre", "div", "blockquote", "hr", "address", "figure", "figcaption", "form", "fieldset",
 			"ins", "del", "dl", "dt", "dd", "li", "table", "caption", "thead", "tfoot", "tbody",
 			"colgroup", "col", "tr", "th", "td", "video", "audio", "canvas", "details", "menu",
-			"plaintext", "template", "article", "main", "svg", "math" };
+			"plaintext", "template", "article", "main", "svg", "math", "center" };
 	private static final String[] inlineTags = { "object", "base", "font", "tt", "i", "b", "u",
 			"big", "small", "em", "strong", "dfn", "code", "samp", "kbd", "var", "cite", "abbr",
 			"time", "acronym", "mark", "ruby", "rt", "rp", "a", "img", "br", "wbr", "map", "q", "sub",

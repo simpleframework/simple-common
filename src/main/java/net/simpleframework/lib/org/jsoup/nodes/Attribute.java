@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 
 /**
  * A single key + value attribute. (Only used for presentation.)
@@ -47,11 +48,12 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 *        added to said Attributes)
 	 * @see #createFromEncoded
 	 */
-	public Attribute(final String key, final String val, final Attributes parent) {
+	public Attribute(String key, final String val, final Attributes parent) {
 		Validate.notNull(key);
-		this.key = key.trim();
+		key = key.trim();
 		Validate.notEmpty(key); // trimming could potentially make empty, so
 										// validate here
+		this.key = key;
 		this.val = val;
 		this.parent = parent;
 	}
@@ -93,7 +95,7 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 */
 	@Override
 	public String getValue() {
-		return val;
+		return Attributes.checkNotNull(val);
 	}
 
 	/**
@@ -104,15 +106,16 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 */
 	@Override
 	public String setValue(final String val) {
-		final String oldVal = parent.get(this.key);
+		String oldVal = this.val;
 		if (parent != null) {
+			oldVal = parent.get(this.key); // trust the container more
 			final int i = parent.indexOfKey(this.key);
 			if (i != Attributes.NotFound) {
 				parent.vals[i] = val;
 			}
 		}
 		this.val = val;
-		return oldVal;
+		return Attributes.checkNotNull(oldVal);
 	}
 
 	/**
@@ -122,14 +125,14 @@ public class Attribute implements Map.Entry<String, String>, Cloneable {
 	 * @return HTML
 	 */
 	public String html() {
-		final StringBuilder accum = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 
 		try {
-			html(accum, (new Document("")).outputSettings());
+			html(sb, (new Document("")).outputSettings());
 		} catch (final IOException exception) {
 			throw new SerializationException(exception);
 		}
-		return accum.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	protected static void html(final String key, final String val, final Appendable accum,

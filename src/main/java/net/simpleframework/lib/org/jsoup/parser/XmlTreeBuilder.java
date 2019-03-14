@@ -4,7 +4,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import net.simpleframework.lib.org.jsoup.Jsoup;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.CDataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Comment;
@@ -32,22 +31,20 @@ public class XmlTreeBuilder extends TreeBuilder {
 		return ParseSettings.preserveCase;
 	}
 
-	Document parse(final Reader input, final String baseUri) {
-		return parse(input, baseUri, ParseErrorList.noTracking(), ParseSettings.preserveCase);
-	}
-
-	Document parse(final String input, final String baseUri) {
-		return parse(new StringReader(input), baseUri, ParseErrorList.noTracking(),
-				ParseSettings.preserveCase);
-	}
-
 	@Override
-	protected void initialiseParse(final Reader input, final String baseUri,
-			final ParseErrorList errors, final ParseSettings settings) {
-		super.initialiseParse(input, baseUri, errors, settings);
+	protected void initialiseParse(final Reader input, final String baseUri, final Parser parser) {
+		super.initialiseParse(input, baseUri, parser);
 		stack.add(doc); // place the document onto the stack. differs from
 								// HtmlTreeBuilder (not on stack)
 		doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+	}
+
+	Document parse(final Reader input, final String baseUri) {
+		return parse(input, baseUri, new Parser(this));
+	}
+
+	Document parse(final String input, final String baseUri) {
+		return parse(new StringReader(input), baseUri, new Parser(this));
 	}
 
 	@Override
@@ -102,21 +99,18 @@ public class XmlTreeBuilder extends TreeBuilder {
 	void insert(final Token.Comment commentToken) {
 		final Comment comment = new Comment(commentToken.getData());
 		Node insert = comment;
-		if (commentToken.bogus) { // xml declarations are emitted as bogus
-											// comments (which is right for html, but not
-											// xml)
+		if (commentToken.bogus && comment.isXmlDeclaration()) {
+			// xml declarations are emitted as bogus comments (which is right for
+			// html, but not xml)
 			// so we do a bit of a hack and parse the data as an element to pull
 			// the attributes out
-			final String data = comment.getData();
-			if (data.length() > 1 && (data.startsWith("!") || data.startsWith("?"))) {
-				final Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">",
-						baseUri, Parser.xmlParser());
-				if (doc.childNodeSize() > 0) {
-					final Element el = doc.child(0);
-					insert = new XmlDeclaration(settings.normalizeTag(el.tagName()),
-							data.startsWith("!"));
-					insert.attributes().addAll(el.attributes());
-				} // else, we couldn't parse it as a decl, so leave as a comment
+			final XmlDeclaration decl = comment.asXmlDeclaration(); // else, we
+																						// couldn't
+			// parse it as a
+			// decl, so leave as
+			// a comment
+			if (decl != null) {
+				insert = decl;
 			}
 		}
 		insertNode(insert);
@@ -166,10 +160,15 @@ public class XmlTreeBuilder extends TreeBuilder {
 		}
 	}
 
-	List<Node> parseFragment(final String inputFragment, final String baseUri,
-			final ParseErrorList errors, final ParseSettings settings) {
-		initialiseParse(new StringReader(inputFragment), baseUri, errors, settings);
+	List<Node> parseFragment(final String inputFragment, final String baseUri, final Parser parser) {
+		initialiseParse(new StringReader(inputFragment), baseUri, parser);
 		runParser();
 		return doc.childNodes();
+	}
+
+	@Override
+	List<Node> parseFragment(final String inputFragment, final Element context, final String baseUri,
+			final Parser parser) {
+		return parseFragment(inputFragment, baseUri, parser);
 	}
 }

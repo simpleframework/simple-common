@@ -170,6 +170,10 @@ enum TokeniserState {
 			case '/':
 				t.transition(SelfClosingStartTag);
 				break;
+			case '<': // NOTE: out of spec, but clear author intent
+				t.error(this);
+				r.unconsume();
+				// intended fall through to next >
 			case '>':
 				t.emitTagPending();
 				t.transition(Data);
@@ -600,6 +604,11 @@ enum TokeniserState {
 			case '/':
 				t.transition(SelfClosingStartTag);
 				break;
+			case '<': // NOTE: out of spec, but clear (spec has this as a part of
+							// the attribute name)
+				t.error(this);
+				r.unconsume();
+				// intended fall through as if >
 			case '>':
 				t.emitTagPending();
 				t.transition(Data);
@@ -616,7 +625,6 @@ enum TokeniserState {
 				break;
 			case '"':
 			case '\'':
-			case '<':
 			case '=':
 				t.error(this);
 				t.tagPending.newAttribute();

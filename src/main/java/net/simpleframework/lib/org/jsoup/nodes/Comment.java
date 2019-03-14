@@ -2,6 +2,9 @@ package net.simpleframework.lib.org.jsoup.nodes;
 
 import java.io.IOException;
 
+import net.simpleframework.lib.org.jsoup.Jsoup;
+import net.simpleframework.lib.org.jsoup.parser.Parser;
+
 /**
  * A comment node.
  * 
@@ -64,5 +67,34 @@ public class Comment extends LeafNode {
 	@Override
 	public String toString() {
 		return outerHtml();
+	}
+
+	/**
+	 * Check if this comment looks like an XML Declaration.
+	 * 
+	 * @return true if it looks like, maybe, it's an XML Declaration.
+	 */
+	public boolean isXmlDeclaration() {
+		final String data = getData();
+		return (data.length() > 1 && (data.startsWith("!") || data.startsWith("?")));
+	}
+
+	/**
+	 * Attempt to cast this comment to an XML Declaration note.
+	 * 
+	 * @return an XML declaration if it could be parsed as one, null otherwise.
+	 */
+	public XmlDeclaration asXmlDeclaration() {
+		final String data = getData();
+		final Document doc = Jsoup.parse("<" + data.substring(1, data.length() - 1) + ">", baseUri(),
+				Parser.xmlParser());
+		XmlDeclaration decl = null;
+		if (doc.children().size() > 0) {
+			final Element el = doc.child(0);
+			decl = new XmlDeclaration(NodeUtils.parser(doc).settings().normalizeTag(el.tagName()),
+					data.startsWith("!"));
+			decl.attributes().addAll(el.attributes());
+		}
+		return decl;
 	}
 }

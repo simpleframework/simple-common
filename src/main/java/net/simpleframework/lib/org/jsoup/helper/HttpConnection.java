@@ -22,9 +22,6 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,19 +33,15 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import net.simpleframework.lib.org.jsoup.Connection;
 import net.simpleframework.lib.org.jsoup.HttpStatusException;
 import net.simpleframework.lib.org.jsoup.UncheckedIOException;
 import net.simpleframework.lib.org.jsoup.UnsupportedMimeTypeException;
 import net.simpleframework.lib.org.jsoup.internal.ConstrainableInputStream;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
@@ -68,9 +61,9 @@ public class HttpConnection implements Connection {
 	 */
 	public static final String DEFAULT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36";
 	private static final String USER_AGENT = "User-Agent";
-	private static final String CONTENT_TYPE = "Content-Type";
-	private static final String MULTIPART_FORM_DATA = "multipart/form-data";
-	private static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded";
+	public static final String CONTENT_TYPE = "Content-Type";
+	public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+	public static final String FORM_URL_ENCODED = "application/x-www-form-urlencoded";
 	private static final int HTTP_TEMP_REDIR = 307; // http/1.1 temporary
 																	// redirect, not in Java's
 																	// set.
@@ -86,6 +79,11 @@ public class HttpConnection implements Connection {
 		final Connection con = new HttpConnection();
 		con.url(url);
 		return con;
+	}
+
+	public HttpConnection() {
+		req = new Request();
+		res = new Response();
 	}
 
 	/**
@@ -127,11 +125,6 @@ public class HttpConnection implements Connection {
 
 	private Connection.Request req;
 	private Connection.Response res;
-
-	private HttpConnection() {
-		req = new Request();
-		res = new Response();
-	}
 
 	@Override
 	public Connection url(final URL url) {
@@ -209,12 +202,6 @@ public class HttpConnection implements Connection {
 	@Override
 	public Connection ignoreContentType(final boolean ignoreContentType) {
 		req.ignoreContentType(ignoreContentType);
-		return this;
-	}
-
-	@Override
-	public Connection validateTLSCertificates(final boolean value) {
-		req.validateTLSCertificates(value);
 		return this;
 	}
 
@@ -626,7 +613,6 @@ public class HttpConnection implements Connection {
 		private Parser parser;
 		private boolean parserDefined = false; // called parser(...) vs
 															// initialized in ctor
-		private boolean validateTSLCertificates = true;
 		private String postDataCharset = DataUtil.defaultCharset;
 		private SSLSocketFactory sslSocketFactory;
 
@@ -696,16 +682,6 @@ public class HttpConnection implements Connection {
 		@Override
 		public boolean ignoreHttpErrors() {
 			return ignoreHttpErrors;
-		}
-
-		@Override
-		public boolean validateTLSCertificates() {
-			return validateTSLCertificates;
-		}
-
-		@Override
-		public void validateTLSCertificates(final boolean value) {
-			validateTSLCertificates = value;
 		}
 
 		@Override
@@ -789,12 +765,12 @@ public class HttpConnection implements Connection {
 	public static class Response extends HttpConnection.Base<Connection.Response>
 			implements Connection.Response {
 		private static final int MAX_REDIRECTS = 20;
-		private static SSLSocketFactory sslSocketFactory;
 		private static final String LOCATION = "Location";
 		private int statusCode;
 		private String statusMessage;
 		private ByteBuffer byteData;
 		private InputStream bodyStream;
+		private HttpURLConnection conn;
 		private String charset;
 		private String contentType;
 		private boolean executed = false;
@@ -831,6 +807,7 @@ public class HttpConnection implements Connection {
 		static Response execute(final Connection.Request req, final Response previousResponse)
 				throws IOException {
 			Validate.notNull(req, "Request must not be null");
+			Validate.notNull(req.url(), "URL must be specified to connect");
 			final String protocol = req.url().getProtocol();
 			if (!protocol.equals("http") && !protocol.equals("https")) {
 				throw new MalformedURLException("Only http & https protocols supported");
@@ -876,7 +853,7 @@ public class HttpConnection implements Connection {
 					}
 
 					String location = res.header(LOCATION);
-					if (location != null && location.startsWith("http:/") && location.charAt(6) != '/') {
+					if (location.startsWith("http:/") && location.charAt(6) != '/') {
 						// broken
 						// Location:
 						// http:/temp/AAG_New/en/index.php
@@ -1090,18 +1067,9 @@ public class HttpConnection implements Connection {
 																	// connection is made and
 																	// status is read
 
-			if (conn instanceof HttpsURLConnection) {
-				final SSLSocketFactory socketFactory = req.sslSocketFactory();
-
-				if (socketFactory != null) {
-					((HttpsURLConnection) conn).setSSLSocketFactory(socketFactory);
-				} else if (!req.validateTLSCertificates()) {
-					initUnSecureTSL();
-					((HttpsURLConnection) conn).setSSLSocketFactory(sslSocketFactory);
-					((HttpsURLConnection) conn).setHostnameVerifier(getInsecureVerifier());
-				}
+			if (req.sslSocketFactory() != null && conn instanceof HttpsURLConnection) {
+				((HttpsURLConnection) conn).setSSLSocketFactory(req.sslSocketFactory());
 			}
-
 			if (req.method().hasBody()) {
 				conn.setDoOutput(true);
 			}
@@ -1120,6 +1088,10 @@ public class HttpConnection implements Connection {
 		 * Call on completion of stream read, to close the body (or error) stream
 		 */
 		private void safeClose() {
+			if (conn != null) {
+				conn.disconnect();
+				conn = null;
+			}
 			if (bodyStream != null) {
 				try {
 					bodyStream.close();
@@ -1131,71 +1103,10 @@ public class HttpConnection implements Connection {
 			}
 		}
 
-		/**
-		 * Instantiate Hostname Verifier that does nothing.
-		 * This is used for connections with disabled SSL certificates validation.
-		 *
-		 *
-		 * @return Hostname Verifier that does nothing and accepts all hostnames
-		 */
-		private static HostnameVerifier getInsecureVerifier() {
-			return new HostnameVerifier() {
-				@Override
-				public boolean verify(final String urlHostName, final SSLSession session) {
-					return true;
-				}
-			};
-		}
-
-		/**
-		 * Initialise Trust manager that does not validate certificate chains and
-		 * add it to current SSLContext.
-		 * <p/>
-		 * please not that this method will only perform action if
-		 * sslSocketFactory is not yet
-		 * instantiated.
-		 *
-		 * @throws IOException
-		 *         on SSL init errors
-		 */
-		private static synchronized void initUnSecureTSL() throws IOException {
-			if (sslSocketFactory == null) {
-				// Create a trust manager that does not validate certificate chains
-				final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-
-					@Override
-					public void checkClientTrusted(final X509Certificate[] chain,
-							final String authType) {
-					}
-
-					@Override
-					public void checkServerTrusted(final X509Certificate[] chain,
-							final String authType) {
-					}
-
-					@Override
-					public X509Certificate[] getAcceptedIssuers() {
-						return null;
-					}
-				} };
-
-				// Install the all-trusting trust manager
-				final SSLContext sslContext;
-				try {
-					sslContext = SSLContext.getInstance("SSL");
-					sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-					// Create an ssl socket factory with our all-trusting manager
-					sslSocketFactory = sslContext.getSocketFactory();
-				} catch (NoSuchAlgorithmException | KeyManagementException e) {
-					throw new IOException("Can't create unsecure trust manager");
-				}
-			}
-
-		}
-
 		// set up url, method, header, cookies
 		private void setupFromConnection(final HttpURLConnection conn,
-				final Connection.Response previousResponse) throws IOException {
+				final HttpConnection.Response previousResponse) throws IOException {
+			this.conn = conn;
 			method = Method.valueOf(conn.getRequestMethod());
 			url = conn.getURL();
 			statusCode = conn.getResponseCode();
@@ -1213,6 +1124,7 @@ public class HttpConnection implements Connection {
 						cookie(prevCookie.getKey(), prevCookie.getValue());
 					}
 				}
+				previousResponse.safeClose();
 			}
 		}
 
@@ -1279,8 +1191,16 @@ public class HttpConnection implements Connection {
 			if (req.hasHeader(CONTENT_TYPE)) {
 				// no-op; don't add content type as already set (e.g. for
 				// requestBody())
-				// todo - if content type already set, we could add charset or
-				// boundary if those aren't included
+				// todo - if content type already set, we could add charset
+
+				// if user has set content type to multipart/form-data, auto add
+				// boundary.
+				if (req.header(CONTENT_TYPE).contains(MULTIPART_FORM_DATA)
+						&& !req.header(CONTENT_TYPE).contains("boundary")) {
+					bound = DataUtil.mimeBoundary();
+					req.header(CONTENT_TYPE, MULTIPART_FORM_DATA + "; boundary=" + bound);
+				}
+
 			} else if (needsMultipart(req)) {
 				bound = DataUtil.mimeBoundary();
 				req.header(CONTENT_TYPE, MULTIPART_FORM_DATA + "; boundary=" + bound);
@@ -1345,7 +1265,7 @@ public class HttpConnection implements Connection {
 		}
 
 		private static String getRequestCookieString(final Connection.Request req) {
-			final StringBuilder sb = StringUtil.stringBuilder();
+			final StringBuilder sb = StringUtil.borrowBuilder();
 			boolean first = true;
 			for (final Map.Entry<String, String> cookie : req.cookies().entrySet()) {
 				if (!first) {
@@ -1357,13 +1277,13 @@ public class HttpConnection implements Connection {
 				// todo: spec says only ascii, no escaping / encoding defined.
 				// validate on set? or escape somehow here?
 			}
-			return sb.toString();
+			return StringUtil.releaseBuilder(sb);
 		}
 
 		// for get url reqs, serialise the data map into the url
 		private static void serialiseRequestUrl(final Connection.Request req) throws IOException {
 			final URL in = req.url();
-			final StringBuilder url = StringUtil.stringBuilder();
+			final StringBuilder url = StringUtil.borrowBuilder();
 			boolean first = true;
 			// reconstitute the query, ready for appends
 			url.append(in.getProtocol()).append("://").append(in.getAuthority()) // includes
@@ -1385,7 +1305,7 @@ public class HttpConnection implements Connection {
 				url.append(URLEncoder.encode(keyVal.key(), DataUtil.defaultCharset)).append('=')
 						.append(URLEncoder.encode(keyVal.value(), DataUtil.defaultCharset));
 			}
-			req.url(new URL(url.toString()));
+			req.url(new URL(StringUtil.releaseBuilder(url)));
 			req.data().clear(); // moved into url as get params
 		}
 	}
@@ -1393,14 +1313,12 @@ public class HttpConnection implements Connection {
 	private static boolean needsMultipart(final Connection.Request req) {
 		// multipart mode, for files. add the header if we see something with an
 		// inputstream, and return a non-null boundary
-		boolean needsMulti = false;
 		for (final Connection.KeyVal keyVal : req.data()) {
 			if (keyVal.hasInputStream()) {
-				needsMulti = true;
-				break;
+				return true;
 			}
 		}
-		return needsMulti;
+		return false;
 	}
 
 	public static class KeyVal implements Connection.KeyVal {

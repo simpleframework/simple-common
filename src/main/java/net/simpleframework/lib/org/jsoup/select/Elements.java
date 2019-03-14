@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.FormElement;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
@@ -249,14 +250,14 @@ public class Elements extends ArrayList<Element> {
 	 * @see #eachText()
 	 */
 	public String text() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		for (final Element element : this) {
 			if (sb.length() != 0) {
 				sb.append(" ");
 			}
 			sb.append(element.text());
 		}
-		return sb.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	/**
@@ -303,14 +304,14 @@ public class Elements extends ArrayList<Element> {
 	 * @see #outerHtml()
 	 */
 	public String html() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		for (final Element element : this) {
 			if (sb.length() != 0) {
 				sb.append("\n");
 			}
 			sb.append(element.html());
 		}
-		return sb.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	/**
@@ -321,14 +322,14 @@ public class Elements extends ArrayList<Element> {
 	 * @see #html()
 	 */
 	public String outerHtml() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		for (final Element element : this) {
 			if (sb.length() != 0) {
 				sb.append("\n");
 			}
 			sb.append(element.outerHtml());
 		}
-		return sb.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	/**
@@ -660,7 +661,7 @@ public class Elements extends ArrayList<Element> {
 	}
 
 	/**
-	 * Get all of the following element siblings of each element in this list.
+	 * Get each of the following element siblings of each element in this list.
 	 * 
 	 * @return all following element siblings.
 	 */
@@ -669,8 +670,8 @@ public class Elements extends ArrayList<Element> {
 	}
 
 	/**
-	 * Get all of the following element siblings of each element in this list,
-	 * filtered by the query.
+	 * Get each of the following element siblings of each element in this list,
+	 * that match the query.
 	 * 
 	 * @param query
 	 *        CSS query to match siblings against
@@ -702,7 +703,7 @@ public class Elements extends ArrayList<Element> {
 	}
 
 	/**
-	 * Get all of the previous element siblings of each element in this list.
+	 * Get each of the previous element siblings of each element in this list.
 	 * 
 	 * @return all previous element siblings.
 	 */
@@ -711,8 +712,8 @@ public class Elements extends ArrayList<Element> {
 	}
 
 	/**
-	 * Get all of the previous element siblings of each element in this list,
-	 * filtered by the query.
+	 * Get each of the previous element siblings of each element in this list,
+	 * that match the query.
 	 * 
 	 * @param query
 	 *        CSS query to match siblings against

@@ -1,7 +1,7 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 
 /**
  * A character queue with parsing helpers.
@@ -372,7 +372,7 @@ public class TokenQueue {
 	 * @return unescaped string
 	 */
 	public static String unescape(final String in) {
-		final StringBuilder out = StringUtil.stringBuilder();
+		final StringBuilder out = StringUtil.borrowBuilder();
 		char last = 0;
 		for (final char c : in.toCharArray()) {
 			if (c == ESC) {
@@ -384,7 +384,7 @@ public class TokenQueue {
 			}
 			last = c;
 		}
-		return out.toString();
+		return StringUtil.releaseBuilder(out);
 	}
 
 	/**

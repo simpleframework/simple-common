@@ -3,8 +3,8 @@ package net.simpleframework.lib.org.jsoup.examples;
 import java.io.IOException;
 
 import net.simpleframework.lib.org.jsoup.Jsoup;
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.Node;

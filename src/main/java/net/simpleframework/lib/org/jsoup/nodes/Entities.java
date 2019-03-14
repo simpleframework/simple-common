@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.CharacterReader;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 
@@ -174,13 +174,13 @@ public class Entities {
 		if (string == null) {
 			return "";
 		}
-		final StringBuilder accum = new StringBuilder(string.length() * 2);
+		final StringBuilder accum = StringUtil.borrowBuilder();
 		try {
 			escape(accum, string, out, false, false, false);
 		} catch (final IOException e) {
 			throw new SerializationException(e); // doesn't happen
 		}
-		return accum.toString();
+		return StringUtil.releaseBuilder(accum);
 	}
 
 	/**
@@ -267,11 +267,7 @@ public class Entities {
 					}
 					break;
 				default:
-					// ckan77
-					final String name = base.nameForCodepoint(c);
-					if (!emptyName.equals(name)) {
-						accum.append('&').append(name).append(';');
-					} else if (canEncode(coreCharset, c, encoder)) {
+					if (canEncode(coreCharset, c, encoder)) {
 						accum.append(c);
 					} else {
 						appendEncoded(accum, escapeMode, codePoint);

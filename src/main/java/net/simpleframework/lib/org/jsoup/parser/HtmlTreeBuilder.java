@@ -1,14 +1,14 @@
 package net.simpleframework.lib.org.jsoup.parser;
 
-import static net.simpleframework.lib.org.jsoup.helper.StringUtil.inSorted;
+import static net.simpleframework.lib.org.jsoup.internal.StringUtil.inSorted;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.CDataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Comment;
 import net.simpleframework.lib.org.jsoup.nodes.DataNode;
@@ -72,9 +72,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	@Override
-	protected void initialiseParse(final Reader input, final String baseUri,
-			final ParseErrorList errors, final ParseSettings settings) {
-		super.initialiseParse(input, baseUri, errors, settings);
+	protected void initialiseParse(final Reader input, final String baseUri, final Parser parser) {
+		super.initialiseParse(input, baseUri, parser);
 
 		// this is a bit mucky. todo - probably just create new parser objects to
 		// ensure all reset.
@@ -92,11 +91,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		fragmentParsing = false;
 	}
 
+	@Override
 	List<Node> parseFragment(final String inputFragment, final Element context, final String baseUri,
-			final ParseErrorList errors, final ParseSettings settings) {
+			final Parser parser) {
 		// context may be null
 		state = HtmlTreeBuilderState.Initial;
-		initialiseParse(new StringReader(inputFragment), baseUri, errors, settings);
+		initialiseParse(new StringReader(inputFragment), baseUri, parser);
 		contextElement = context;
 		fragmentParsing = true;
 		Element root = null;
@@ -211,9 +211,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	void error(final HtmlTreeBuilderState state) {
-		if (errors.canAddError()) {
-			errors.add(new ParseError(reader.pos(), "Unexpected token [%s] when in state [%s]",
-					currentToken.tokenType(), state));
+		if (parser.getErrors().canAddError()) {
+			parser.getErrors().add(new ParseError(reader.pos(),
+					"Unexpected token [%s] when in state [%s]", currentToken.tokenType(), state));
 		}
 	}
 
@@ -288,9 +288,9 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	void insert(final Token.Character characterToken) {
-		Node node;
-		// characters in script and style go in as datanodes, not text nodes
-		final String tagName = currentElement().tagName();
+		final Node node;
+		final Element el = currentElement();
+		final String tagName = el.tagName();
 		final String data = characterToken.getData();
 
 		if (characterToken.isCData()) {
@@ -300,9 +300,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		} else {
 			node = new TextNode(data);
 		}
-		currentElement().appendChild(node); // doesn't use insertNode, because we
-														// don't foster these; and will always
-														// have a stack.
+		el.appendChild(node); // doesn't use insertNode, because we don't foster
+										// these; and will always have a stack.
 	}
 
 	private void insertNode(final Node node) {
@@ -354,7 +353,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	Element getFromStack(final String elName) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
-			if (next.nodeName().equals(elName)) {
+			if (next.normalName().equals(elName)) {
 				return next;
 			}
 		}
@@ -376,7 +375,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
 			stack.remove(pos);
-			if (next.nodeName().equals(elName)) {
+			if (next.normalName().equals(elName)) {
 				break;
 			}
 		}
@@ -387,7 +386,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
 			stack.remove(pos);
-			if (inSorted(next.nodeName(), elNames)) {
+			if (inSorted(next.normalName(), elNames)) {
 				break;
 			}
 		}
@@ -396,7 +395,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	void popStackToBefore(final String elName) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
-			if (next.nodeName().equals(elName)) {
+			if (next.normalName().equals(elName)) {
 				break;
 			} else {
 				stack.remove(pos);
@@ -419,7 +418,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	private void clearStackToContext(final String... nodeNames) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element next = stack.get(pos);
-			if (StringUtil.in(next.nodeName(), nodeNames) || next.nodeName().equals("html")) {
+			if (StringUtil.in(next.normalName(), nodeNames) || next.normalName().equals("html")) {
 				break;
 			} else {
 				stack.remove(pos);
@@ -463,7 +462,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 				last = true;
 				node = contextElement;
 			}
-			final String name = node.nodeName();
+			final String name = node.normalName();
 			if ("select".equals(name)) {
 				transition(HtmlTreeBuilderState.InSelect);
 				break; // frag
@@ -521,7 +520,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		// don't walk too far up the tree
 
 		for (int pos = bottom; pos >= top; pos--) {
-			final String elName = stack.get(pos).nodeName();
+			final String elName = stack.get(pos).normalName();
 			if (inSorted(elName, targetNames)) {
 				return true;
 			}
@@ -566,7 +565,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	boolean inSelectScope(final String targetName) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
 			final Element el = stack.get(pos);
-			final String elName = el.nodeName();
+			final String elName = el.normalName();
 			if (elName.equals(targetName)) {
 				return true;
 			}
@@ -610,10 +609,6 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		return pendingTableCharacters;
 	}
 
-	void setPendingTableCharacters(final List<String> pendingTableCharacters) {
-		this.pendingTableCharacters = pendingTableCharacters;
-	}
-
 	/**
 	 * 11.2.5.2 Closing elements that have implied end tags
 	 * <p/>
@@ -630,8 +625,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	 *        element was not in the above list.
 	 */
 	void generateImpliedEndTags(final String excludeTag) {
-		while ((excludeTag != null && !currentElement().nodeName().equals(excludeTag))
-				&& inSorted(currentElement().nodeName(), TagSearchEndTags)) {
+		while ((excludeTag != null && !currentElement().normalName().equals(excludeTag))
+				&& inSorted(currentElement().normalName(), TagSearchEndTags)) {
 			pop();
 		}
 	}
@@ -643,7 +638,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	boolean isSpecial(final Element el) {
 		// todo: mathml's mi, mo, mn
 		// todo: svg's foreigObject, desc, title
-		final String name = el.nodeName();
+		final String name = el.normalName();
 		return inSorted(name, TagSearchSpecial);
 	}
 
@@ -685,7 +680,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	private boolean isSameFormattingElement(final Element a, final Element b) {
 		// same if: same namespace, tag, and attributes. Element.equals only
 		// checks tag, might in future check children
-		return a.nodeName().equals(b.nodeName()) &&
+		return a.normalName().equals(b.normalName()) &&
 		// a.namespace().equals(b.namespace()) &&
 				a.attributes().equals(b.attributes());
 		// todo: namespaces
@@ -723,8 +718,10 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			// 8. create new element from element, 9 insert into current node, onto
 			// stack
 			skip = false; // can only skip increment from 4.
-			final Element newEl = insertStartTag(entry.nodeName()); // todo: avoid
-			// fostering here?
+			final Element newEl = insertStartTag(entry.normalName()); // todo:
+																							// avoid
+			// fostering
+			// here?
 			// newEl.namespace(entry.namespace()); // todo: namespaces
 			newEl.attributes().addAll(entry.attributes());
 
@@ -766,7 +763,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			final Element next = formattingElements.get(pos);
 			if (next == null) {
 				break;
-			} else if (next.nodeName().equals(nodeName)) {
+			} else if (next.normalName().equals(nodeName)) {
 				return next;
 			}
 		}

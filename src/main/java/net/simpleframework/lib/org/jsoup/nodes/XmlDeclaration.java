@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 
 /**
  * An XML Declaration.
@@ -67,13 +68,13 @@ public class XmlDeclaration extends LeafNode {
 	 * @return XML declaration
 	 */
 	public String getWholeDeclaration() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		try {
 			getWholeDeclaration(sb, new Document.OutputSettings());
 		} catch (final IOException e) {
 			throw new SerializationException(e);
 		}
-		return sb.toString().trim();
+		return StringUtil.releaseBuilder(sb).trim();
 	}
 
 	private void getWholeDeclaration(final Appendable accum, final Document.OutputSettings out)

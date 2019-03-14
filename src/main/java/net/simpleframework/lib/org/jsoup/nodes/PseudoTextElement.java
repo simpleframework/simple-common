@@ -1,7 +1,5 @@
 package net.simpleframework.lib.org.jsoup.nodes;
 
-import java.io.IOException;
-
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 
 /**
@@ -17,12 +15,10 @@ public class PseudoTextElement extends Element {
 	}
 
 	@Override
-	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
-			throws IOException {
+	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out) {
 	}
 
 	@Override
-	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out)
-			throws IOException {
+	void outerHtmlTail(final Appendable accum, final int depth, final Document.OutputSettings out) {
 	}
 }

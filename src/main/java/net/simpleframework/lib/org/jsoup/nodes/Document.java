@@ -5,9 +5,10 @@ import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.ParseSettings;
+import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 import net.simpleframework.lib.org.jsoup.select.Elements;
 
@@ -18,6 +19,7 @@ import net.simpleframework.lib.org.jsoup.select.Elements;
  */
 public class Document extends Element {
 	private OutputSettings outputSettings = new OutputSettings();
+	private Parser parser; // the parser used to parse this document
 	private QuirksMode quirksMode = QuirksMode.noQuirks;
 	private final String location;
 	private boolean updateMetaCharset = false;
@@ -47,6 +49,7 @@ public class Document extends Element {
 		Validate.notNull(baseUri);
 
 		final Document doc = new Document(baseUri);
+		doc.parser = doc.parser();
 		final Element html = doc.appendElement("html");
 		html.appendElement("head");
 		html.appendElement("body");
@@ -658,6 +661,30 @@ public class Document extends Element {
 
 	public Document quirksMode(final QuirksMode quirksMode) {
 		this.quirksMode = quirksMode;
+		return this;
+	}
+
+	/**
+	 * Get the parser that was used to parse this document.
+	 * 
+	 * @return the parser
+	 */
+	public Parser parser() {
+		return parser;
+	}
+
+	/**
+	 * Set the parser used to create this document. This parser is then used when
+	 * further parsing within this document
+	 * is required.
+	 * 
+	 * @param parser
+	 *        the configured parser to use when further parsing is required for
+	 *        this document.
+	 * @return this document, for chaining.
+	 */
+	public Document parser(final Parser parser) {
+		this.parser = parser;
 		return this;
 	}
 }

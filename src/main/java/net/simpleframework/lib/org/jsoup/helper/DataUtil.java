@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -19,8 +18,11 @@ import java.util.regex.Pattern;
 
 import net.simpleframework.lib.org.jsoup.UncheckedIOException;
 import net.simpleframework.lib.org.jsoup.internal.ConstrainableInputStream;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
+import net.simpleframework.lib.org.jsoup.nodes.Comment;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
+import net.simpleframework.lib.org.jsoup.nodes.Node;
 import net.simpleframework.lib.org.jsoup.nodes.XmlDeclaration;
 import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.select.Elements;
@@ -181,11 +183,21 @@ public final class DataUtil {
 			}
 
 			// look for <?xml encoding='ISO-8859-1'?>
-			if (foundCharset == null && doc.childNodeSize() > 0
-					&& doc.childNode(0) instanceof XmlDeclaration) {
-				final XmlDeclaration prolog = (XmlDeclaration) doc.childNode(0);
-				if (prolog.name().equals("xml")) {
-					foundCharset = prolog.attr("encoding");
+			if (foundCharset == null && doc.childNodeSize() > 0) {
+				final Node first = doc.childNode(0);
+				XmlDeclaration decl = null;
+				if (first instanceof XmlDeclaration) {
+					decl = (XmlDeclaration) first;
+				} else if (first instanceof Comment) {
+					final Comment comment = (Comment) first;
+					if (comment.isXmlDeclaration()) {
+						decl = comment.asXmlDeclaration();
+					}
+				}
+				if (decl != null) {
+					if (decl.name().equalsIgnoreCase("xml")) {
+						foundCharset = decl.attr("encoding");
+					}
 				}
 			}
 			foundCharset = validateCharset(foundCharset);
@@ -230,7 +242,13 @@ public final class DataUtil {
 				// stream as we go)
 				throw e.ioException();
 			}
-			doc.outputSettings().charset(charsetName);
+			final Charset charset = Charset.forName(charsetName);
+			doc.outputSettings().charset(charset);
+			if (!charset.canEncode()) {
+				// some charsets can read but not encode; switch to an encodable
+				// charset and update the meta el
+				doc.charset(Charset.forName(defaultCharset));
+			}
 		}
 		input.close();
 		return doc;
@@ -257,24 +275,6 @@ public final class DataUtil {
 		final ConstrainableInputStream input = ConstrainableInputStream.wrap(inStream, bufferSize,
 				maxSize);
 		return input.readToByteBuffer(maxSize);
-	}
-
-	static ByteBuffer readToByteBuffer(final InputStream inStream) throws IOException {
-		return readToByteBuffer(inStream, 0);
-	}
-
-	static ByteBuffer readFileToByteBuffer(final File file) throws IOException {
-		RandomAccessFile randomAccessFile = null;
-		try {
-			randomAccessFile = new RandomAccessFile(file, "r");
-			final byte[] bytes = new byte[(int) randomAccessFile.length()];
-			randomAccessFile.readFully(bytes);
-			return ByteBuffer.wrap(bytes);
-		} finally {
-			if (randomAccessFile != null) {
-				randomAccessFile.close();
-			}
-		}
 	}
 
 	static ByteBuffer emptyByteBuffer() {
@@ -326,12 +326,12 @@ public final class DataUtil {
 	 * Creates a random string, suitable for use as a mime boundary
 	 */
 	static String mimeBoundary() {
-		final StringBuilder mime = new StringBuilder(boundaryLength);
+		final StringBuilder mime = StringUtil.borrowBuilder();
 		final Random rand = new Random();
 		for (int i = 0; i < boundaryLength; i++) {
 			mime.append(mimeBoundaryChars[rand.nextInt(mimeBoundaryChars.length)]);
 		}
-		return mime.toString();
+		return StringUtil.releaseBuilder(mime);
 	}
 
 	private static BomCharset detectCharsetFromBom(final ByteBuffer byteData) {

@@ -14,11 +14,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Node;
  * in {@link net.simpleframework.lib.org.jsoup.Jsoup}.
  */
 public class Parser {
-	private static final int DEFAULT_MAX_ERRORS = 0; // by default, error
-																		// tracking is disabled.
-
 	private TreeBuilder treeBuilder;
-	private int maxErrors = DEFAULT_MAX_ERRORS;
 	private ParseErrorList errors;
 	private ParseSettings settings;
 
@@ -31,16 +27,20 @@ public class Parser {
 	public Parser(final TreeBuilder treeBuilder) {
 		this.treeBuilder = treeBuilder;
 		settings = treeBuilder.defaultSettings();
+		errors = ParseErrorList.noTracking();
 	}
 
 	public Document parseInput(final String html, final String baseUri) {
-		errors = isTrackErrors() ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
-		return treeBuilder.parse(new StringReader(html), baseUri, errors, settings);
+		return treeBuilder.parse(new StringReader(html), baseUri, this);
 	}
 
 	public Document parseInput(final Reader inputHtml, final String baseUri) {
-		errors = isTrackErrors() ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
-		return treeBuilder.parse(inputHtml, baseUri, errors, settings);
+		return treeBuilder.parse(inputHtml, baseUri, this);
+	}
+
+	public List<Node> parseFragmentInput(final String fragment, final Element context,
+			final String baseUri) {
+		return treeBuilder.parseFragment(fragment, context, baseUri, this);
 	}
 
 	// gets & sets
@@ -62,6 +62,7 @@ public class Parser {
 	 */
 	public Parser setTreeBuilder(final TreeBuilder treeBuilder) {
 		this.treeBuilder = treeBuilder;
+		treeBuilder.parser = this;
 		return this;
 	}
 
@@ -71,7 +72,7 @@ public class Parser {
 	 * @return current track error state.
 	 */
 	public boolean isTrackErrors() {
-		return maxErrors > 0;
+		return errors.getMaxSize() > 0;
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class Parser {
 	 * @return this, for chaining
 	 */
 	public Parser setTrackErrors(final int maxErrors) {
-		this.maxErrors = maxErrors;
+		errors = maxErrors > 0 ? ParseErrorList.tracking(maxErrors) : ParseErrorList.noTracking();
 		return this;
 	}
 
@@ -92,7 +93,7 @@ public class Parser {
 	 * @return list of parse errors, up to the size of the maximum errors
 	 *         tracked.
 	 */
-	public List<ParseError> getErrors() {
+	public ParseErrorList getErrors() {
 		return errors;
 	}
 
@@ -119,8 +120,7 @@ public class Parser {
 	 */
 	public static Document parse(final String html, final String baseUri) {
 		final TreeBuilder treeBuilder = new HtmlTreeBuilder();
-		return treeBuilder.parse(new StringReader(html), baseUri, ParseErrorList.noTracking(),
-				treeBuilder.defaultSettings());
+		return treeBuilder.parse(new StringReader(html), baseUri, new Parser(treeBuilder));
 	}
 
 	/**
@@ -143,8 +143,7 @@ public class Parser {
 	public static List<Node> parseFragment(final String fragmentHtml, final Element context,
 			final String baseUri) {
 		final HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
-		return treeBuilder.parseFragment(fragmentHtml, context, baseUri, ParseErrorList.noTracking(),
-				treeBuilder.defaultSettings());
+		return treeBuilder.parseFragment(fragmentHtml, context, baseUri, new Parser(treeBuilder));
 	}
 
 	/**
@@ -169,8 +168,9 @@ public class Parser {
 	public static List<Node> parseFragment(final String fragmentHtml, final Element context,
 			final String baseUri, final ParseErrorList errorList) {
 		final HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder();
-		return treeBuilder.parseFragment(fragmentHtml, context, baseUri, errorList,
-				treeBuilder.defaultSettings());
+		final Parser parser = new Parser(treeBuilder);
+		parser.errors = errorList;
+		return treeBuilder.parseFragment(fragmentHtml, context, baseUri, parser);
 	}
 
 	/**
@@ -185,8 +185,7 @@ public class Parser {
 	 */
 	public static List<Node> parseXmlFragment(final String fragmentXml, final String baseUri) {
 		final XmlTreeBuilder treeBuilder = new XmlTreeBuilder();
-		return treeBuilder.parseFragment(fragmentXml, baseUri, ParseErrorList.noTracking(),
-				treeBuilder.defaultSettings());
+		return treeBuilder.parseFragment(fragmentXml, baseUri, new Parser(treeBuilder));
 	}
 
 	/**
@@ -204,11 +203,8 @@ public class Parser {
 		final Document doc = Document.createShell(baseUri);
 		final Element body = doc.body();
 		final List<Node> nodeList = parseFragment(bodyHtml, body, baseUri);
-		final Node[] nodes = nodeList.toArray(new Node[nodeList.size()]); // the
-																								// node
-		// list gets
-		// modified
-		// when
+		final Node[] nodes = nodeList.toArray(new Node[0]); // the node list gets
+		// modified when
 		// re-parented
 		for (int i = nodes.length - 1; i > 0; i--) {
 			nodes[i].remove();

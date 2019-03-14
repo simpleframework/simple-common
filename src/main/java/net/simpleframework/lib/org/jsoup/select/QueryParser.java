@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.TokenQueue;
 
 /**
@@ -148,7 +148,7 @@ public class QueryParser {
 	}
 
 	private String consumeSubQuery() {
-		final StringBuilder sq = new StringBuilder();
+		final StringBuilder sq = StringUtil.borrowBuilder();
 		while (!tq.isEmpty()) {
 			if (tq.matches("(")) {
 				sq.append("(").append(tq.chompBalanced('(', ')')).append(")");
@@ -160,7 +160,7 @@ public class QueryParser {
 				sq.append(tq.consume());
 			}
 		}
-		return sq.toString();
+		return StringUtil.releaseBuilder(sq);
 	}
 
 	private void findElements() {

@@ -25,7 +25,7 @@ public final class CharacterReader {
 	private int bufSplitPoint;
 	private int bufPos;
 	private int readerPos;
-	private int bufMark;
+	private int bufMark = -1;
 	private final String[] stringCache = new String[512]; // holds reused strings
 																			// in this doc, to
 																			// lessen garbage
@@ -47,20 +47,21 @@ public final class CharacterReader {
 	}
 
 	private void bufferUp() {
-		if (bufPos < bufSplitPoint) {
+		final int pos = bufPos;
+		if (pos < bufSplitPoint) {
 			return;
 		}
 
 		try {
-			reader.skip(bufPos);
+			reader.skip(pos);
 			reader.mark(maxBufferLen);
 			final int read = reader.read(charBuf);
 			reader.reset();
 			if (read != -1) {
 				bufLength = read;
-				readerPos += bufPos;
+				readerPos += pos;
 				bufPos = 0;
-				bufMark = 0;
+				bufMark = -1;
 				bufSplitPoint = bufLength > readAheadLimit ? readAheadLimit : bufLength;
 			}
 		} catch (final IOException e) {
@@ -109,6 +110,10 @@ public final class CharacterReader {
 	}
 
 	void unconsume() {
+		if (bufPos < 1) {
+			throw new UncheckedIOException(new IOException("No buffer left to unconsume"));
+		}
+
 		bufPos--;
 	}
 
@@ -120,10 +125,17 @@ public final class CharacterReader {
 	}
 
 	void mark() {
+		// extra buffer up, to get as much rewind capacity as possible
+		bufSplitPoint = 0;
+		bufferUp();
 		bufMark = bufPos;
 	}
 
 	void rewindToMark() {
+		if (bufMark == -1) {
+			throw new UncheckedIOException(new IOException("Mark invalid"));
+		}
+
 		bufPos = bufMark;
 	}
 
@@ -217,73 +229,92 @@ public final class CharacterReader {
 	 */
 	public String consumeToAny(final char... chars) {
 		bufferUp();
-		final int start = bufPos;
+		int pos = bufPos;
+		final int start = pos;
 		final int remaining = bufLength;
 		final char[] val = charBuf;
+		final int charLen = chars.length;
+		int i;
 
-		OUTER: while (bufPos < remaining) {
-			for (final char c : chars) {
-				if (val[bufPos] == c) {
+		OUTER: while (pos < remaining) {
+			for (i = 0; i < charLen; i++) {
+				if (val[pos] == chars[i]) {
 					break OUTER;
 				}
 			}
-			bufPos++;
+			pos++;
 		}
 
-		return bufPos > start ? cacheString(charBuf, stringCache, start, bufPos - start) : "";
+		bufPos = pos;
+		return pos > start ? cacheString(charBuf, stringCache, start, pos - start) : "";
 	}
 
 	String consumeToAnySorted(final char... chars) {
 		bufferUp();
-		final int start = bufPos;
+		int pos = bufPos;
+		final int start = pos;
 		final int remaining = bufLength;
 		final char[] val = charBuf;
 
-		while (bufPos < remaining) {
-			if (Arrays.binarySearch(chars, val[bufPos]) >= 0) {
+		while (pos < remaining) {
+			if (Arrays.binarySearch(chars, val[pos]) >= 0) {
 				break;
 			}
-			bufPos++;
+			pos++;
 		}
-
-		return bufPos > start ? cacheString(charBuf, stringCache, start, bufPos - start) : "";
+		bufPos = pos;
+		return bufPos > start ? cacheString(charBuf, stringCache, start, pos - start) : "";
 	}
 
 	String consumeData() {
 		// &, <, null
-		bufferUp();
-		final int start = bufPos;
+		// bufferUp(); // no need to bufferUp, just called consume()
+		int pos = bufPos;
+		final int start = pos;
 		final int remaining = bufLength;
 		final char[] val = charBuf;
 
-		while (bufPos < remaining) {
-			final char c = val[bufPos];
-			if (c == '&' || c == '<' || c == TokeniserState.nullChar) {
-				break;
+		OUTER: while (pos < remaining) {
+			switch (val[pos]) {
+			case '&':
+			case '<':
+			case TokeniserState.nullChar:
+				break OUTER;
+			default:
+				pos++;
 			}
-			bufPos++;
 		}
-
-		return bufPos > start ? cacheString(charBuf, stringCache, start, bufPos - start) : "";
+		bufPos = pos;
+		return pos > start ? cacheString(charBuf, stringCache, start, pos - start) : "";
 	}
 
 	String consumeTagName() {
 		// '\t', '\n', '\r', '\f', ' ', '/', '>', nullChar
+		// NOTE: out of spec, added '<' to fix common author bugs
 		bufferUp();
-		final int start = bufPos;
+		int pos = bufPos;
+		final int start = pos;
 		final int remaining = bufLength;
 		final char[] val = charBuf;
 
-		while (bufPos < remaining) {
-			final char c = val[bufPos];
-			if (c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == ' ' || c == '/' || c == '>'
-					|| c == TokeniserState.nullChar) {
-				break;
+		OUTER: while (pos < remaining) {
+			switch (val[pos]) {
+			case '\t':
+			case '\n':
+			case '\r':
+			case '\f':
+			case ' ':
+			case '/':
+			case '>':
+			case '<':
+			case TokeniserState.nullChar:
+				break OUTER;
 			}
-			bufPos++;
+			pos++;
 		}
 
-		return bufPos > start ? cacheString(charBuf, stringCache, start, bufPos - start) : "";
+		bufPos = pos;
+		return pos > start ? cacheString(charBuf, stringCache, start, pos - start) : "";
 	}
 
 	String consumeToEnd() {

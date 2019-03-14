@@ -15,6 +15,7 @@ import java.util.Set;
 
 import net.simpleframework.lib.org.jsoup.SerializationException;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 
 /**
  * The attributes of an Element.
@@ -352,16 +353,15 @@ public class Attributes implements Iterable<Attribute>, Cloneable {
 	 *         constructed.
 	 */
 	public String html() {
-		final StringBuilder accum = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		try {
-			html(accum, (new Document("")).outputSettings()); // output settings a
-																				// bit funky, but
-																				// this html()
-																				// seldom used
+			html(sb, (new Document("")).outputSettings()); // output settings a bit
+																			// funky, but this
+																			// html() seldom used
 		} catch (final IOException e) { // ought never happen
 			throw new SerializationException(e);
 		}
-		return accum.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	final void html(final Appendable accum, final Document.OutputSettings out) throws IOException {

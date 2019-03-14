@@ -2,8 +2,8 @@ package net.simpleframework.lib.org.jsoup.nodes;
 
 import java.io.IOException;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 
 /**
  * A text node.

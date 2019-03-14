@@ -16,10 +16,9 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import net.simpleframework.lib.org.jsoup.helper.ChangeNotifyingArrayList;
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.parser.ParseSettings;
-import net.simpleframework.lib.org.jsoup.parser.Parser;
 import net.simpleframework.lib.org.jsoup.parser.Tag;
 import net.simpleframework.lib.org.jsoup.select.Collector;
 import net.simpleframework.lib.org.jsoup.select.Elements;
@@ -139,12 +138,25 @@ public class Element extends Node {
 	}
 
 	/**
-	 * Get the name of the tag for this element. E.g. {@code div}
+	 * Get the name of the tag for this element. E.g. {@code div}. If you are
+	 * using {@link ParseSettings#preserveCase
+	 * case preserving parsing}, this will return the source's original case.
 	 * 
 	 * @return the tag name
 	 */
 	public String tagName() {
 		return tag.getName();
+	}
+
+	/**
+	 * Get the normalized name of this Element's tag. This will always be the
+	 * lowercased version of the tag, regardless
+	 * of the tag case preserving setting of the parser.
+	 * 
+	 * @return
+	 */
+	public String normalName() {
+		return tag.normalName();
 	}
 
 	/**
@@ -158,9 +170,12 @@ public class Element extends Node {
 	 */
 	public Element tagName(final String tagName) {
 		Validate.notEmpty(tagName, "Tag name must not be empty.");
-		tag = Tag.valueOf(tagName, ParseSettings.preserveCase); // preserve the
-																					// requested tag
-																					// case
+		tag = Tag.valueOf(tagName, NodeUtils.parser(this).settings()); // maintains
+																							// the case
+																							// option
+																							// of the
+																							// original
+																							// parse
 		return this;
 	}
 
@@ -537,7 +552,7 @@ public class Element extends Node {
 		Validate.isTrue(index >= 0 && index <= currentSize, "Insert position out of bounds.");
 
 		final ArrayList<Node> nodes = new ArrayList<>(children);
-		final Node[] nodeArray = nodes.toArray(new Node[nodes.size()]);
+		final Node[] nodeArray = nodes.toArray(new Node[0]);
 		addChildren(index, nodeArray);
 		return this;
 	}
@@ -577,7 +592,8 @@ public class Element extends Node {
 	 *         {@code parent.appendElement("h1").attr("id", "header").text("Welcome");}
 	 */
 	public Element appendElement(final String tagName) {
-		final Element child = new Element(Tag.valueOf(tagName), baseUri());
+		final Element child = new Element(Tag.valueOf(tagName, NodeUtils.parser(this).settings()),
+				baseUri());
 		appendChild(child);
 		return child;
 	}
@@ -591,7 +607,8 @@ public class Element extends Node {
 	 *         {@code parent.prependElement("h1").attr("id", "header").text("Welcome");}
 	 */
 	public Element prependElement(final String tagName) {
-		final Element child = new Element(Tag.valueOf(tagName), baseUri());
+		final Element child = new Element(Tag.valueOf(tagName, NodeUtils.parser(this).settings()),
+				baseUri());
 		prependChild(child);
 		return child;
 	}
@@ -635,9 +652,8 @@ public class Element extends Node {
 	 */
 	public Element append(final String html) {
 		Validate.notNull(html);
-
-		final List<Node> nodes = Parser.parseFragment(html, this, baseUri());
-		addChildren(nodes.toArray(new Node[nodes.size()]));
+		final List<Node> nodes = NodeUtils.parser(this).parseFragmentInput(html, this, baseUri());
+		addChildren(nodes.toArray(new Node[0]));
 		return this;
 	}
 
@@ -652,9 +668,8 @@ public class Element extends Node {
 	 */
 	public Element prepend(final String html) {
 		Validate.notNull(html);
-
-		final List<Node> nodes = Parser.parseFragment(html, this, baseUri());
-		addChildren(0, nodes.toArray(new Node[nodes.size()]));
+		final List<Node> nodes = NodeUtils.parser(this).parseFragmentInput(html, this, baseUri());
+		addChildren(0, nodes.toArray(new Node[0]));
 		return this;
 	}
 
@@ -829,6 +844,16 @@ public class Element extends Node {
 	}
 
 	/**
+	 * Get each of the sibling elements that come after this element.
+	 *
+	 * @return each of the element siblings after this element, or an empty list
+	 *         if there are no next sibling elements
+	 */
+	public Elements nextElementSiblings() {
+		return nextElementSiblings(true);
+	}
+
+	/**
 	 * Gets the previous element sibling of this element.
 	 * 
 	 * @return the previous element, or null if there is no previous element
@@ -846,6 +871,24 @@ public class Element extends Node {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Get each of the element siblings before this element.
+	 *
+	 * @return the previous element siblings, or an empty list if there are none.
+	 */
+	public Elements previousElementSiblings() {
+		return nextElementSiblings(false);
+	}
+
+	private Elements nextElementSiblings(final boolean next) {
+		final Elements els = new Elements();
+		if (parentNode == null) {
+			return els;
+		}
+		els.add(this);
+		return next ? els.nextAll() : els.prevAll();
 	}
 
 	/**
@@ -887,7 +930,8 @@ public class Element extends Node {
 
 	private static <E extends Element> int indexInList(final Element search,
 			final List<E> elements) {
-		for (int i = 0; i < elements.size(); i++) {
+		final int size = elements.size();
+		for (int i = 0; i < size; i++) {
 			if (elements.get(i) == search) {
 				return i;
 			}
@@ -1251,7 +1295,7 @@ public class Element extends Node {
 	 * @see #textNodes()
 	 */
 	public String text() {
-		final StringBuilder accum = new StringBuilder();
+		final StringBuilder accum = StringUtil.borrowBuilder();
 		NodeTraversor.traverse(new NodeVisitor() {
 			@Override
 			public void head(final Node node, final int depth) {
@@ -1281,7 +1325,8 @@ public class Element extends Node {
 
 			}
 		}, this);
-		return accum.toString().trim();
+
+		return StringUtil.releaseBuilder(accum).trim();
 	}
 
 	/**
@@ -1293,7 +1338,7 @@ public class Element extends Node {
 	 * @see #text()
 	 */
 	public String wholeText() {
-		final StringBuilder accum = new StringBuilder();
+		final StringBuilder accum = StringUtil.borrowBuilder();
 		NodeTraversor.traverse(new NodeVisitor() {
 			@Override
 			public void head(final Node node, final int depth) {
@@ -1307,7 +1352,8 @@ public class Element extends Node {
 			public void tail(final Node node, final int depth) {
 			}
 		}, this);
-		return accum.toString();
+
+		return StringUtil.releaseBuilder(accum);
 	}
 
 	/**
@@ -1330,9 +1376,9 @@ public class Element extends Node {
 	 * @see #textNodes()
 	 */
 	public String ownText() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 		ownText(sb);
-		return sb.toString().trim();
+		return StringUtil.releaseBuilder(sb).trim();
 	}
 
 	private void ownText(final StringBuilder accum) {
@@ -1365,7 +1411,7 @@ public class Element extends Node {
 	static boolean preserveWhitespace(final Node node) {
 		// looks only at this element and five levels up, to prevent recursion &
 		// needless stack searches
-		if (node != null && node instanceof Element) {
+		if (node instanceof Element) {
 			Element el = (Element) node;
 			int i = 0;
 			do {
@@ -1431,7 +1477,7 @@ public class Element extends Node {
 	 * @see #dataNodes()
 	 */
 	public String data() {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = StringUtil.borrowBuilder();
 
 		for (final Node childNode : childNodes) {
 			if (childNode instanceof DataNode) {
@@ -1452,7 +1498,7 @@ public class Element extends Node {
 				sb.append(cDataNode.getWholeText());
 			}
 		}
-		return sb.toString();
+		return StringUtil.releaseBuilder(sb);
 	}
 
 	/**
@@ -1710,24 +1756,17 @@ public class Element extends Node {
 	 * @see #outerHtml()
 	 */
 	public String html() {
-		final StringBuilder accum = StringUtil.stringBuilder();
+		final StringBuilder accum = StringUtil.borrowBuilder();
 		html(accum);
-		return getOutputSettings().prettyPrint() ? accum.toString().trim() : accum.toString();
+		final String html = StringUtil.releaseBuilder(accum);
+		return NodeUtils.outputSettings(this).prettyPrint() ? html.trim() : html;
 	}
 
-	private void html(final StringBuilder accum) {
-		for (final Node node : childNodes) {
-			node.outerHtml(accum);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public <T extends Appendable> T html(final T appendable) {
-		for (final Node node : childNodes) {
-			node.outerHtml(appendable);
+		final int size = childNodes.size();
+		for (int i = 0; i < size; i++) {
+			childNodes.get(i).outerHtml(appendable);
 		}
 
 		return appendable;
@@ -1745,11 +1784,6 @@ public class Element extends Node {
 		empty();
 		append(html);
 		return this;
-	}
-
-	@Override
-	public String toString() {
-		return outerHtml();
 	}
 
 	@Override

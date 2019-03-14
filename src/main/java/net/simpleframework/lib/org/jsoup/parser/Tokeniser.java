@@ -2,8 +2,8 @@ package net.simpleframework.lib.org.jsoup.parser;
 
 import java.util.Arrays;
 
-import net.simpleframework.lib.org.jsoup.helper.StringUtil;
 import net.simpleframework.lib.org.jsoup.helper.Validate;
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Entities;
 
 /**
@@ -208,7 +208,7 @@ final class Tokeniser {
 			if (!found) {
 				reader.rewindToMark();
 				if (looksLegit) {
-					characterReferenceError(String.format("invalid named referenece '%s'", nameRef));
+					characterReferenceError(String.format("invalid named reference '%s'", nameRef));
 				}
 				return null;
 			}
@@ -313,7 +313,7 @@ final class Tokeniser {
 	 * @return unescaped string from reader
 	 */
 	String unescapeEntities(final boolean inAttribute) {
-		final StringBuilder builder = StringUtil.stringBuilder();
+		final StringBuilder builder = StringUtil.borrowBuilder();
 		while (!reader.isEmpty()) {
 			builder.append(reader.consumeTo('&'));
 			if (reader.matches('&')) {
@@ -330,6 +330,6 @@ final class Tokeniser {
 
 			}
 		}
-		return builder.toString();
+		return StringUtil.releaseBuilder(builder);
 	}
 }

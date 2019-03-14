@@ -280,9 +280,7 @@ public class Whitelist {
 		Validate.isTrue(attributes.length > 0, "No attribute names supplied.");
 
 		final TagName tagName = TagName.valueOf(tag);
-		if (!tagNames.contains(tagName)) {
-			tagNames.add(tagName);
-		}
+		tagNames.add(tagName);
 		final Set<AttributeKey> attributeSet = new HashSet<>();
 		for (final String key : attributes) {
 			Validate.notEmpty(key);
@@ -385,9 +383,7 @@ public class Whitelist {
 		Validate.notEmpty(value);
 
 		final TagName tagName = TagName.valueOf(tag);
-		if (!tagNames.contains(tagName)) {
-			tagNames.add(tagName);
-		}
+		tagNames.add(tagName);
 		final AttributeKey attrKey = AttributeKey.valueOf(attribute);
 		final AttributeValue attrVal = AttributeValue.valueOf(value);
 
@@ -724,13 +720,10 @@ public class Whitelist {
 			}
 			final TypedValue other = (TypedValue) obj;
 			if (value == null) {
-				if (other.value != null) {
-					return false;
-				}
-			} else if (!value.equals(other.value)) {
-				return false;
+				return other.value == null;
+			} else {
+				return value.equals(other.value);
 			}
-			return true;
 		}
 
 		@Override

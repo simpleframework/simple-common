@@ -2,16 +2,19 @@ package net.simpleframework.lib.org.jsoup.parser;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
+import net.simpleframework.lib.org.jsoup.nodes.Node;
 
 /**
  * @author Jonathan Hedley
  */
 abstract class TreeBuilder {
+	protected Parser parser;
 	CharacterReader reader;
 	Tokeniser tokeniser;
 	protected Document doc; // current doc we are building into
@@ -19,7 +22,6 @@ abstract class TreeBuilder {
 	protected String baseUri; // current base uri, for creating new elements
 	protected Token currentToken; // currentToken is used only for error
 											// tracking.
-	protected ParseErrorList errors; // null when not tracking errors
 	protected ParseSettings settings;
 
 	private final Token.StartTag start = new Token.StartTag(); // start tag to
@@ -28,27 +30,29 @@ abstract class TreeBuilder {
 
 	abstract ParseSettings defaultSettings();
 
-	protected void initialiseParse(final Reader input, final String baseUri,
-			final ParseErrorList errors, final ParseSettings settings) {
+	protected void initialiseParse(final Reader input, final String baseUri, final Parser parser) {
 		Validate.notNull(input, "String input must not be null");
 		Validate.notNull(baseUri, "BaseURI must not be null");
 
 		doc = new Document(baseUri);
-		this.settings = settings;
+		doc.parser(parser);
+		this.parser = parser;
+		settings = parser.settings();
 		reader = new CharacterReader(input);
-		this.errors = errors;
 		currentToken = null;
-		tokeniser = new Tokeniser(reader, errors);
+		tokeniser = new Tokeniser(reader, parser.getErrors());
 		stack = new ArrayList<>(32);
 		this.baseUri = baseUri;
 	}
 
-	Document parse(final Reader input, final String baseUri, final ParseErrorList errors,
-			final ParseSettings settings) {
-		initialiseParse(input, baseUri, errors, settings);
+	Document parse(final Reader input, final String baseUri, final Parser parser) {
+		initialiseParse(input, baseUri, parser);
 		runParser();
 		return doc;
 	}
+
+	abstract List<Node> parseFragment(String inputFragment, Element context, String baseUri,
+			Parser parser);
 
 	protected void runParser() {
 		while (true) {

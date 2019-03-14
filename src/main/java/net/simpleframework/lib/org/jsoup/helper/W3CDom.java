@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import net.simpleframework.lib.org.jsoup.internal.StringUtil;
 import net.simpleframework.lib.org.jsoup.nodes.Attribute;
 import net.simpleframework.lib.org.jsoup.nodes.Attributes;
 import net.simpleframework.lib.org.jsoup.select.NodeTraversor;
@@ -112,8 +113,12 @@ public class W3CDom {
 
 				final String prefix = updateNamespaces(sourceEl);
 				final String namespace = namespacesStack.peek().get(prefix);
+				final String tagName = sourceEl.tagName();
 
-				final Element el = doc.createElementNS(namespace, sourceEl.tagName());
+				final Element el = namespace == null && tagName.contains(":")
+						? doc.createElementNS("", tagName)
+						: // doesn't have a real namespace defined
+						doc.createElementNS(namespace, tagName);
 				copyAttributes(sourceEl, el);
 				if (dest == null) { // sets up the root
 					doc.appendChild(el);
