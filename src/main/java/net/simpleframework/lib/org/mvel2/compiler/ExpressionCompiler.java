@@ -124,7 +124,7 @@ public class ExpressionCompiler extends AbstractParser {
 
 			fields |= COMPILE_IMMEDIATE;
 
-			while ((tk = nextToken()) != null) {
+			main_loop: while ((tk = nextToken()) != null) {
 				/**
 				 * If this is a debug symbol, just add it and continue.
 				 */
@@ -210,7 +210,9 @@ public class ExpressionCompiler extends AbstractParser {
 										stk.push(tkLA2.getLiteralValue(), op = tkOp2.getOperator());
 
 										if (isArithmeticOperator(op)) {
-											compileReduce(op, astBuild);
+											if (!compileReduce(op, astBuild)) {
+												continue main_loop;
+											}
 										} else {
 											reduce();
 										}
@@ -372,13 +374,13 @@ public class ExpressionCompiler extends AbstractParser {
 			astBuild.addTokenNode(new LiteralNode(stk.pop(), pCtx), operator);
 			astBuild.addTokenNode(rightValue, (OperatorNode) splitAccumulator.pop());
 			astBuild.addTokenNode(verify(pCtx, (ASTNode) splitAccumulator.pop()));
-			return true;
+			return false;
 		case OP_NOT_LITERAL:
 			final ASTNode tkLA2 = (ASTNode) stk.pop();
 			final Integer tkOp2 = (Integer) stk.pop();
 			astBuild.addTokenNode(new LiteralNode(getStackValueResult(), pCtx));
 			astBuild.addTokenNode(new OperatorNode(tkOp2, expr, st, pCtx), verify(pCtx, tkLA2));
-			return true;
+			return false;
 		}
 		return true;
 	}

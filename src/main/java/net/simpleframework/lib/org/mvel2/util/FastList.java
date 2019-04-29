@@ -198,16 +198,16 @@ public class FastList<E> extends AbstractList<E> implements Externalizable {
 	@Override
 	public ListIterator<E> listIterator() {
 		return new ListIterator<E>() {
-			private int i = 0;
+			private int i = -1;
 
 			@Override
 			public boolean hasNext() {
-				return i < size;
+				return i < size - 1;
 			}
 
 			@Override
 			public E next() {
-				return elements[i++];
+				return elements[++i];
 			}
 
 			@Override
@@ -217,7 +217,7 @@ public class FastList<E> extends AbstractList<E> implements Externalizable {
 
 			@Override
 			public E previous() {
-				return elements[i--];
+				return elements[--i];
 			}
 
 			@Override

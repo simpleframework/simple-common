@@ -205,7 +205,8 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected ASTNode lastNode;
 
-	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(15);
+	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(
+			15);
 
 	public static HashMap<String, Object> LITERALS;
 	public static HashMap<String, Object> CLASS_LITERALS;
@@ -2592,7 +2593,6 @@ public class AbstractParser implements Parser, Serializable {
 				 * need to stop if this is not a literal.
 				 */
 				if (compileMode && !tk.isLiteral()) {
-
 					splitAccumulator.push(tk, new OperatorNode(operator2, expr, st, pCtx));
 					return OP_OVERFLOW;
 				}
@@ -2614,8 +2614,13 @@ public class AbstractParser implements Parser, Serializable {
 						 * This operator is of higher precedence, or the same level
 						 * precedence. push to the RHS.
 						 */
+						final ASTNode nextToken = nextToken();
+						if (compileMode && !nextToken.isLiteral()) {
+							splitAccumulator.push(nextToken, new OperatorNode(operator2, expr, st, pCtx));
+							return OP_OVERFLOW;
+						}
 						dStack.push(operator = operator2,
-								nextToken().getReducedValue(ctx, ctx, variableFactory));
+								nextToken.getReducedValue(ctx, ctx, variableFactory));
 
 						continue;
 					} else if (tk != null && operator2 != -1 && operator2 != END_OF_STMT) {

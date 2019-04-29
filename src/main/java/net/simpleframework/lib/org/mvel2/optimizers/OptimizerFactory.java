@@ -43,10 +43,10 @@ public class OptimizerFactory {
 		try {
 			if (OptimizerFactory.class.getClassLoader() != null) {
 				OptimizerFactory.class.getClassLoader()
-						.loadClass("net.simpleframework.lib.org.mvel2.asm.ClassWriter");
+						.loadClass("net.simpleframework.lib.org.objectweb.asm.ClassWriter");
 			} else {
 				ClassLoader.getSystemClassLoader()
-						.loadClass("net.simpleframework.lib.org.mvel2.asm.ClassWriter");
+						.loadClass("net.simpleframework.lib.org.objectweb.asm.ClassWriter");
 			}
 			accessorCompilers.put("ASM", new ASMAccessorOptimizer());
 		} catch (final ClassNotFoundException e) {

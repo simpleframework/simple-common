@@ -220,7 +220,8 @@ public class Proto extends ASTNode {
 
 		public ProtoContextFactory(final SimpleIndexHashMapWrapper variables) {
 			super(variables);
-			variableResolvers = new SimpleIndexHashMapWrapper<>(variables, true);
+			variableResolvers = new SimpleIndexHashMapWrapper<>(variables,
+					true);
 		}
 
 		@Override

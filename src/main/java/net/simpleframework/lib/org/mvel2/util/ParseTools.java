@@ -456,7 +456,8 @@ public class ParseTools {
 		if (ref != null && (parms = ref.get()) != null) {
 			return parms;
 		} else {
-			CONSTRUCTOR_PARMS_CACHE.put(cns, new WeakReference<>(parms = cns.getParameterTypes()));
+			CONSTRUCTOR_PARMS_CACHE.put(cns,
+					new WeakReference<>(parms = cns.getParameterTypes()));
 			return parms;
 		}
 	}
@@ -547,7 +548,8 @@ public class ParseTools {
 		if (ref != null && (cns = ref.get()) != null) {
 			return cns;
 		} else {
-			CLASS_CONSTRUCTOR_CACHE.put(cls, new WeakReference<>(cns = cls.getConstructors()));
+			CLASS_CONSTRUCTOR_CACHE.put(cls,
+					new WeakReference<>(cns = cls.getConstructors()));
 			return cns;
 		}
 	}
@@ -2329,7 +2331,7 @@ public class ParseTools {
 	public static Class forNameWithInner(final String className, final ClassLoader classLoader)
 			throws ClassNotFoundException {
 		try {
-			return Class.forName(className, true, classLoader);
+			return classLoader.loadClass(className);
 		} catch (final ClassNotFoundException cnfe) {
 			return findInnerClass(className, classLoader, cnfe);
 		}
@@ -2341,7 +2343,7 @@ public class ParseTools {
 				.lastIndexOf('.')) {
 			className = className.substring(0, lastDotPos) + "$" + className.substring(lastDotPos + 1);
 			try {
-				return Class.forName(className, true, classLoader);
+				return classLoader.loadClass(className);
 			} catch (final ClassNotFoundException e) {
 				/* ignore */ }
 		}
