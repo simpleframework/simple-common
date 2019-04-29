@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import net.simpleframework.lib.net.sf.cglib.core.Constants;
 import net.simpleframework.lib.net.sf.cglib.core.Signature;
 import net.simpleframework.lib.org.objectweb.asm.ClassReader;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
@@ -30,10 +31,17 @@ import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 /**
- * Uses bytecode reflection to figure out the targets of all bridge methods
- * that use invokespecial, so that we can later rewrite them to use
- * invokevirtual.
- * 
+ * Uses bytecode reflection to figure out the targets of all bridge methods that
+ * use invokespecial
+ * and invokeinterface, so that we can later rewrite them to use invokevirtual.
+ *
+ * <p>
+ * For interface bridges, using invokesuper will fail since the method being
+ * bridged to is in a
+ * superinterface, not a superclass. Starting in Java 8, javac emits default
+ * bridge methods in
+ * interfaces, which use invokeinterface to bridge to the target method.
+ *
  * @author sberlin@gmail.com (Sam Berlin)
  */
 class BridgeMethodResolver {
@@ -81,7 +89,7 @@ class BridgeMethodResolver {
 		private Signature currentMethod = null;
 
 		BridgedFinder(final Set eligibleMethods, final Map resolved) {
-			super(Opcodes.ASM6);
+			super(Constants.ASM_API);
 			this.resolved = resolved;
 			this.eligibleMethods = eligibleMethods;
 		}
@@ -97,11 +105,12 @@ class BridgeMethodResolver {
 			final Signature sig = new Signature(name, desc);
 			if (eligibleMethods.remove(sig)) {
 				currentMethod = sig;
-				return new MethodVisitor(Opcodes.ASM6) {
+				return new MethodVisitor(Constants.ASM_API) {
 					@Override
 					public void visitMethodInsn(final int opcode, final String owner, final String name,
 							final String desc, final boolean itf) {
-						if (opcode == Opcodes.INVOKESPECIAL && currentMethod != null) {
+						if ((opcode == Opcodes.INVOKESPECIAL
+								|| (itf && opcode == Opcodes.INVOKEINTERFACE)) && currentMethod != null) {
 							final Signature target = new Signature(name, desc);
 							// If the target signature is the same as the current,
 							// we shouldn't change our bridge becaues invokespecial

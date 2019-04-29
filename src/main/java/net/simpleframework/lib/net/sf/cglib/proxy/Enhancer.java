@@ -634,7 +634,7 @@ public class Enhancer extends AbstractClassGenerator {
 		}
 		CollectionUtils.filter(methods, new RejectModifierPredicate(Opcodes.ACC_STATIC));
 		CollectionUtils.filter(methods, new VisibilityPredicate(superclass, true));
-		CollectionUtils.filter(methods, new DuplicatesPredicate());
+		CollectionUtils.filter(methods, new DuplicatesPredicate(methods));
 		CollectionUtils.filter(methods, new RejectModifierPredicate(Opcodes.ACC_FINAL));
 	}
 

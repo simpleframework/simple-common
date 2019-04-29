@@ -69,9 +69,9 @@ public class ReflectUtils {
 					@Override
 					public Object run() throws Exception {
 						final Class loader = Class.forName("java.lang.ClassLoader"); // JVM
-						// crash
-						// w/o
-						// this
+																											// crash
+																											// w/o
+																											// this
 						final Method defineClass = loader.getDeclaredMethod("defineClass",
 								new Class[] { String.class, byte[].class, Integer.TYPE, Integer.TYPE,
 										ProtectionDomain.class });

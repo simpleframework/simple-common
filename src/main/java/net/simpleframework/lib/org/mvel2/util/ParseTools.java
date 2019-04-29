@@ -456,8 +456,7 @@ public class ParseTools {
 		if (ref != null && (parms = ref.get()) != null) {
 			return parms;
 		} else {
-			CONSTRUCTOR_PARMS_CACHE.put(cns,
-					new WeakReference<>(parms = cns.getParameterTypes()));
+			CONSTRUCTOR_PARMS_CACHE.put(cns, new WeakReference<>(parms = cns.getParameterTypes()));
 			return parms;
 		}
 	}
@@ -548,8 +547,7 @@ public class ParseTools {
 		if (ref != null && (cns = ref.get()) != null) {
 			return cns;
 		} else {
-			CLASS_CONSTRUCTOR_CACHE.put(cls,
-					new WeakReference<>(cns = cls.getConstructors()));
+			CLASS_CONSTRUCTOR_CACHE.put(cls, new WeakReference<>(cns = cls.getConstructors()));
 			return cns;
 		}
 	}

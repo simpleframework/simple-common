@@ -220,6 +220,7 @@ public class Label {
 	 * and {@link #FORWARD_REFERENCE_HANDLE_MASK}.
 	 * </ul>
 	 *
+	 * <p>
 	 * For instance, for an ifnull instruction at bytecode offset x,
 	 * 'sourceInsnBytecodeOffset' is
 	 * equal to x, and 'reference' is of type
@@ -565,7 +566,7 @@ public class Label {
 	 *        the bytecode of the method.
 	 * @param bytecodeOffset
 	 *        the bytecode offset of this label.
-	 * @return <tt>true</tt> if a blank that was left for this label was too
+	 * @return {@literal true} if a blank that was left for this label was too
 	 *         small to store the
 	 *         offset. In such a case the corresponding jump instruction is
 	 *         replaced with an equivalent

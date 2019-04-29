@@ -39,13 +39,16 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 
 	private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<>();
 
+	private static final boolean DEFAULT_USE_CACHE = Boolean
+			.parseBoolean(System.getProperty("cglib.useCache", "true"));
+
 	private GeneratorStrategy strategy = DefaultGeneratorStrategy.INSTANCE;
 	private NamingPolicy namingPolicy = DefaultNamingPolicy.INSTANCE;
 	private final Source source;
 	private ClassLoader classLoader;
 	private String namePrefix;
 	private Object key;
-	private boolean useCache = true;
+	private boolean useCache = DEFAULT_USE_CACHE;
 	private String className;
 	private boolean attemptLoad;
 

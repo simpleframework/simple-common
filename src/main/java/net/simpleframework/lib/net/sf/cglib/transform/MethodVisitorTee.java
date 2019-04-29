@@ -15,12 +15,12 @@
  */
 package net.simpleframework.lib.net.sf.cglib.transform;
 
+import net.simpleframework.lib.net.sf.cglib.core.Constants;
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.Handle;
 import net.simpleframework.lib.org.objectweb.asm.Label;
 import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
-import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 public class MethodVisitorTee extends MethodVisitor {
@@ -28,7 +28,7 @@ public class MethodVisitorTee extends MethodVisitor {
 	private final MethodVisitor mv2;
 
 	public MethodVisitorTee(final MethodVisitor mv1, final MethodVisitor mv2) {
-		super(Opcodes.ASM6);
+		super(Constants.ASM_API);
 		this.mv1 = mv1;
 		this.mv2 = mv2;
 	}

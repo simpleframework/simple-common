@@ -15,14 +15,14 @@
  */
 package net.simpleframework.lib.net.sf.cglib.transform;
 
+import net.simpleframework.lib.net.sf.cglib.core.Constants;
 import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
-import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 
 public class ClassTransformerTee extends ClassTransformer {
 	private final ClassVisitor branch;
 
 	public ClassTransformerTee(final ClassVisitor branch) {
-		super(Opcodes.ASM6);
+		super(Constants.ASM_API);
 		this.branch = branch;
 	}
 

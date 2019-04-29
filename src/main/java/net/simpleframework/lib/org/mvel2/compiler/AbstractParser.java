@@ -205,8 +205,7 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected ASTNode lastNode;
 
-	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(
-			15);
+	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(15);
 
 	public static HashMap<String, Object> LITERALS;
 	public static HashMap<String, Object> CLASS_LITERALS;

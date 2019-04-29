@@ -35,7 +35,7 @@ package net.simpleframework.lib.org.objectweb.asm;
  *
  * @author Eric Bruneton
  */
-public class TypePath {
+public final class TypePath {
 
 	/**
 	 * A type path step that steps into the element type of an array type. See
@@ -142,9 +142,9 @@ public class TypePath {
 	 * @param typePath
 	 *        a type path in string form, in the format used by
 	 *        {@link #toString()}. May be
-	 *        <tt>null</tt> or empty.
-	 * @return the corresponding TypePath object, or <tt>null</tt> if the path is
-	 *         empty.
+	 *        {@literal null} or empty.
+	 * @return the corresponding TypePath object, or {@literal null} if the path
+	 *         is empty.
 	 */
 	public static TypePath fromString(final String typePath) {
 		if (typePath == null || typePath.length() == 0) {
@@ -222,7 +222,7 @@ public class TypePath {
 	 * ByteVector.
 	 *
 	 * @param typePath
-	 *        a TypePath instance, or <tt>null</tt> for empty paths.
+	 *        a TypePath instance, or {@literal null} for empty paths.
 	 * @param output
 	 *        where the type path must be put.
 	 */

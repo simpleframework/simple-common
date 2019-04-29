@@ -535,8 +535,7 @@ public class PropertyAccessor {
 					.get(cls);
 
 			if (nestedMap == null) {
-				READ_PROPERTY_RESOLVER_CACHE.put(cls,
-						nestedMap = new WeakHashMap<>());
+				READ_PROPERTY_RESOLVER_CACHE.put(cls, nestedMap = new WeakHashMap<>());
 			}
 
 			nestedMap.put(property, new WeakReference<>(member));
@@ -558,8 +557,7 @@ public class PropertyAccessor {
 		synchronized (WRITE_PROPERTY_RESOLVER_CACHE) {
 			WeakHashMap<Integer, WeakReference<Member>> map = WRITE_PROPERTY_RESOLVER_CACHE.get(cls);
 			if (map == null) {
-				WRITE_PROPERTY_RESOLVER_CACHE.put(cls,
-						map = new WeakHashMap<>());
+				WRITE_PROPERTY_RESOLVER_CACHE.put(cls, map = new WeakHashMap<>());
 			}
 			map.put(property, new WeakReference<>(member));
 		}
@@ -592,8 +590,7 @@ public class PropertyAccessor {
 		synchronized (METHOD_RESOLVER_CACHE) {
 			WeakHashMap<Integer, WeakReference<Object[]>> map = METHOD_RESOLVER_CACHE.get(cls);
 			if (map == null) {
-				METHOD_RESOLVER_CACHE.put(cls,
-						map = new WeakHashMap<>());
+				METHOD_RESOLVER_CACHE.put(cls, map = new WeakHashMap<>());
 			}
 			map.put(property,
 					new WeakReference<>(new Object[] { member, member.getParameterTypes() }));

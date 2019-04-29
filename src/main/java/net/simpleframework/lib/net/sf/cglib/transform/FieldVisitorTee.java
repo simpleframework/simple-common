@@ -15,17 +15,17 @@
  */
 package net.simpleframework.lib.net.sf.cglib.transform;
 
+import net.simpleframework.lib.net.sf.cglib.core.Constants;
 import net.simpleframework.lib.org.objectweb.asm.AnnotationVisitor;
 import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.FieldVisitor;
-import net.simpleframework.lib.org.objectweb.asm.Opcodes;
 import net.simpleframework.lib.org.objectweb.asm.TypePath;
 
 public class FieldVisitorTee extends FieldVisitor {
 	private final FieldVisitor fv1, fv2;
 
 	public FieldVisitorTee(final FieldVisitor fv1, final FieldVisitor fv2) {
-		super(Opcodes.ASM6);
+		super(Constants.ASM_API);
 		this.fv1 = fv1;
 		this.fv2 = fv2;
 	}
