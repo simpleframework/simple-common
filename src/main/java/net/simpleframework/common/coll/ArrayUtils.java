@@ -10,15 +10,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import net.simpleframework.common.StringUtils;
+
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class ArrayUtils {
 
 	public static Object[] removeDuplicatesAndNulls(final Object[] array) {
+		return removeDuplicatesAndNulls(array, true);
+	}
+
+	public static Object[] removeDuplicatesAndNulls(final Object[] array, final boolean strBlank) {
 		if (array == null) {
 			return null;
 		}
@@ -26,6 +33,9 @@ public abstract class ArrayUtils {
 		final HashSet<Class<?>> clsSet = new HashSet<>();
 		for (final Object element : array) {
 			if (element == null) {
+				continue;
+			}
+			if (strBlank && element instanceof String && !StringUtils.hasText((String) element)) {
 				continue;
 			}
 			oSet.add(element);
