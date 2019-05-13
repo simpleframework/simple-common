@@ -163,7 +163,11 @@ public final class DataUtil {
 		if (charsetName == null) { // determine from meta. safe first parse as
 											// UTF-8
 			final String docData = Charset.forName(defaultCharset).decode(firstBytes).toString();
-			doc = parser.parseInput(docData, baseUri);
+			try {
+				doc = parser.parseInput(docData, baseUri);
+			} catch (final UncheckedIOException e) {
+				throw e.ioException();
+			}
 
 			// look for <meta http-equiv="Content-Type"
 			// content="text/html;charset=gb2312"> or HTML5 <meta charset="gb2312">
