@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -17,7 +18,8 @@ import net.simpleframework.lib.org.mvel2.DataConversion;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class Convert {
@@ -131,8 +133,23 @@ public abstract class Convert {
 				return (T) val;
 			}
 			try {
-				return val instanceof Number ? enumClazz.getEnumConstants()[((Number) val).intValue()]
-						: Enum.valueOf(enumClazz, toString(val));
+				if (val instanceof Number) {
+					final int iVal = ((Number) val).intValue();
+					final T[] arr = enumClazz.getEnumConstants();
+					try {
+						final Method method = enumClazz.getMethod("intValue");
+						method.setAccessible(true);
+						for (final T t : arr) {
+							if (iVal == Convert.toInt(method.invoke(t))) {
+								return t;
+							}
+						}
+					} catch (final Exception e) {
+						return arr[iVal];
+					}
+				} else {
+					return Enum.valueOf(enumClazz, toString(val));
+				}
 			} catch (final Throwable e) {
 				log.warn("Conversion error: " + enumClazz + ", val: " + val);
 			}
