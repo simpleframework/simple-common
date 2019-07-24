@@ -15,12 +15,22 @@ public enum ETimePeriod {
 		public String toString() {
 			return $m("ETimePeriod.none");
 		}
+
+		@Override
+		public int intValue() {
+			return 0;
+		}
 	},
 
 	day {
 		@Override
 		public String toString() {
 			return $m("ETimePeriod.day");
+		}
+
+		@Override
+		public int intValue() {
+			return 1;
 		}
 	},
 
@@ -29,12 +39,22 @@ public enum ETimePeriod {
 		public String toString() {
 			return $m("ETimePeriod.day2");
 		}
+
+		@Override
+		public int intValue() {
+			return 2;
+		}
 	},
 
 	week {
 		@Override
 		public String toString() {
 			return $m("ETimePeriod.week");
+		}
+
+		@Override
+		public int intValue() {
+			return 3;
 		}
 	},
 
@@ -43,12 +63,22 @@ public enum ETimePeriod {
 		public String toString() {
 			return $m("ETimePeriod.month");
 		}
+
+		@Override
+		public int intValue() {
+			return 4;
+		}
 	},
 
 	month3 {
 		@Override
 		public String toString() {
 			return $m("ETimePeriod.month3");
+		}
+
+		@Override
+		public int intValue() {
+			return 5;
 		}
 	},
 
@@ -57,6 +87,11 @@ public enum ETimePeriod {
 		public String toString() {
 			return $m("ETimePeriod.year");
 		}
+
+		@Override
+		public int intValue() {
+			return 6;
+		}
 	},
 
 	custom {
@@ -64,5 +99,12 @@ public enum ETimePeriod {
 		public String toString() {
 			return $m("ETimePeriod.custom");
 		}
-	}
+
+		@Override
+		public int intValue() {
+			return 7;
+		}
+	};
+
+	public abstract int intValue();
 }

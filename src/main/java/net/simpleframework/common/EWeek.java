@@ -20,6 +20,11 @@ public enum EWeek {
 		public int week() {
 			return Calendar.MONDAY;
 		}
+
+		@Override
+		public int intValue() {
+			return 0;
+		}
 	},
 	Tue {
 		@Override
@@ -30,6 +35,11 @@ public enum EWeek {
 		@Override
 		public int week() {
 			return Calendar.TUESDAY;
+		}
+
+		@Override
+		public int intValue() {
+			return 1;
 		}
 	},
 	Wed {
@@ -42,6 +52,11 @@ public enum EWeek {
 		public int week() {
 			return Calendar.WEDNESDAY;
 		}
+
+		@Override
+		public int intValue() {
+			return 2;
+		}
 	},
 	Thu {
 		@Override
@@ -52,6 +67,11 @@ public enum EWeek {
 		@Override
 		public int week() {
 			return Calendar.THURSDAY;
+		}
+
+		@Override
+		public int intValue() {
+			return 3;
 		}
 	},
 	Fri {
@@ -64,6 +84,11 @@ public enum EWeek {
 		public int week() {
 			return Calendar.FRIDAY;
 		}
+
+		@Override
+		public int intValue() {
+			return 4;
+		}
 	},
 	Sat {
 		@Override
@@ -74,6 +99,11 @@ public enum EWeek {
 		@Override
 		public int week() {
 			return Calendar.SATURDAY;
+		}
+
+		@Override
+		public int intValue() {
+			return 5;
 		}
 	},
 	Sun {
@@ -86,9 +116,16 @@ public enum EWeek {
 		public int week() {
 			return Calendar.SUNDAY;
 		}
+
+		@Override
+		public int intValue() {
+			return 6;
+		}
 	};
 
 	public abstract int week();
+
+	public abstract int intValue();
 
 	public static EWeek getEWeek(final int week) {
 		for (final EWeek oWeek : values()) {
