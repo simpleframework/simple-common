@@ -2,6 +2,7 @@ package net.simpleframework.common.coll;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.Set;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class CollectionUtils {
@@ -64,5 +66,14 @@ public abstract class CollectionUtils {
 		@Override
 		public void remove() {
 		}
+	}
+
+	public static <T extends Enum<T>> void sortEnum(final List<T> l) {
+		Collections.sort(l, new Comparator<T>() {
+			@Override
+			public int compare(final T o1, final T o2) {
+				return o1.compareTo(o2);
+			}
+		});
 	}
 }
