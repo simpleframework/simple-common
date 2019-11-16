@@ -136,11 +136,14 @@ public abstract class HttpUtils implements HtmlConst {
 		if (url == null) {
 			return false;
 		}
-		int colonPos;
-		if ((colonPos = url.indexOf(':')) == -1) {
+		if (url.startsWith("//")) {
+			return true;
+		}
+		int pos;
+		if ((pos = url.indexOf(':')) == -1) {
 			return false;
 		}
-		for (int i = 0; i < colonPos; i++) {
+		for (int i = 0; i < pos; i++) {
 			if (VALID_SCHEME_CHARS.indexOf(url.charAt(i)) == -1) {
 				return false;
 			}
@@ -149,6 +152,9 @@ public abstract class HttpUtils implements HtmlConst {
 	}
 
 	public static String stripAbsoluteUrl(final String url) {
+		if (url == null) {
+			return "";
+		}
 		final int s = url.indexOf("://");
 		final int e = s == -1 ? url.indexOf("/") : url.indexOf("/", s + 3);
 		if (e == -1) {
