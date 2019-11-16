@@ -155,7 +155,7 @@ public abstract class HttpUtils implements HtmlConst {
 		if (url == null) {
 			return "";
 		}
-		final int s = url.indexOf("://");
+		final int s = url.indexOf("//");
 		final int e = s == -1 ? url.indexOf("/") : url.indexOf("/", s + 3);
 		if (e == -1) {
 			return "";
