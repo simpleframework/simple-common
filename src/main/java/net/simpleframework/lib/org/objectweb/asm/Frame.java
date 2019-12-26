@@ -119,11 +119,11 @@ package net.simpleframework.lib.org.objectweb.asm;
  * correspond to any valid
  * abstract type value). Input frames can only contain CONSTANT_KIND,
  * REFERENCE_KIND or
- * UNINITIALIZED_KIND abstract types of positive or null array dimension. In all
- * cases the type
- * table contains only internal type names (array type descriptors are forbidden
- * - array dimensions
- * must be represented through the DIM field).
+ * UNINITIALIZED_KIND abstract types of positive or {@literal null} array
+ * dimension. In all cases
+ * the type table contains only internal type names (array type descriptors are
+ * forbidden - array
+ * dimensions must be represented through the DIM field).
  *
  * <p>
  * The LONG and DOUBLE types are always represented by using two slots (LONG +
@@ -1416,13 +1416,14 @@ class Frame {
 	 *        be merged.
 	 *        This type should be of {@link #CONSTANT_KIND},
 	 *        {@link #REFERENCE_KIND} or {@link
-	 *        #UNINITIALIZED_KIND} kind, with positive or null array dimensions.
+	 *        #UNINITIALIZED_KIND} kind, with positive or {@literal null} array
+	 *        dimensions.
 	 * @param dstTypes
 	 *        an array of abstract types. These types should be of
 	 *        {@link #CONSTANT_KIND},
 	 *        {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with
-	 *        positive or null array
-	 *        dimensions.
+	 *        positive or {@literal
+	 *     null} array dimensions.
 	 * @param dstIndex
 	 *        the index of the type that must be merged in dstTypes.
 	 * @return {@literal true} if the type array has been modified by this

@@ -136,8 +136,8 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * @param previousAnnotation
 	 *        the previously visited annotation of the
 	 *        Runtime[In]Visible[Type]Annotations attribute to which this
-	 *        annotation belongs, or null in
-	 *        other cases (e.g. nested or array annotations).
+	 *        annotation belongs, or
+	 *        {@literal null} in other cases (e.g. nested or array annotations).
 	 */
 	AnnotationWriter(final SymbolTable symbolTable, final boolean useNamedValues,
 			final ByteVector annotation, final AnnotationWriter previousAnnotation) {
@@ -164,8 +164,10 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * @param previousAnnotation
 	 *        the previously visited annotation of the
 	 *        Runtime[In]Visible[Type]Annotations attribute to which this
-	 *        annotation belongs, or null in
-	 *        other cases (e.g. nested or array annotations).
+	 *        annotation belongs, or
+	 *        {@literal null} in other cases (e.g. nested or array annotations).
+	 * @return a new {@link AnnotationWriter} for the given annotation
+	 *         descriptor.
 	 */
 	static AnnotationWriter create(final SymbolTable symbolTable, final String descriptor,
 			final AnnotationWriter previousAnnotation) {
@@ -202,8 +204,10 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * @param previousAnnotation
 	 *        the previously visited annotation of the
 	 *        Runtime[In]Visible[Type]Annotations attribute to which this
-	 *        annotation belongs, or null in
-	 *        other cases (e.g. nested or array annotations).
+	 *        annotation belongs, or
+	 *        {@literal null} in other cases (e.g. nested or array annotations).
+	 * @return a new {@link AnnotationWriter} for the given type annotation
+	 *         reference and descriptor.
 	 */
 	static AnnotationWriter create(final SymbolTable symbolTable, final int typeRef,
 			final TypePath typePath, final String descriptor,
@@ -377,7 +381,7 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 * to the constant pool of the class (if not null).
 	 *
 	 * @param attributeName
-	 *        one of "Runtime[In]Visible[Type]Annotations", or null.
+	 *        one of "Runtime[In]Visible[Type]Annotations", or {@literal null}.
 	 * @return the size in bytes of a Runtime[In]Visible[Type]Annotations
 	 *         attribute containing this
 	 *         annotation and all its predecessors. This includes the size of the

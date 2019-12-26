@@ -73,7 +73,7 @@ public abstract class MethodVisitor {
 
 	/**
 	 * The method visitor to which this visitor must delegate method calls. May
-	 * be null.
+	 * be {@literal null}.
 	 */
 	protected MethodVisitor mv;
 
@@ -120,7 +120,7 @@ public abstract class MethodVisitor {
 	 * Visits a parameter of this method.
 	 *
 	 * @param name
-	 *        parameter name or null if none is provided.
+	 *        parameter name or {@literal null} if none is provided.
 	 * @param access
 	 *        the parameter's access flags, only {@code ACC_FINAL},
 	 *        {@code ACC_SYNTHETIC}

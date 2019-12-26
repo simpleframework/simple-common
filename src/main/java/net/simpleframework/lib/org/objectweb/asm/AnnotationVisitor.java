@@ -49,7 +49,8 @@ public abstract class AnnotationVisitor {
 
 	/**
 	 * The annotation visitor to which this visitor must delegate method calls.
-	 * May be null.
+	 * May be {@literal
+	 * null}.
 	 */
 	protected AnnotationVisitor av;
 
@@ -76,7 +77,7 @@ public abstract class AnnotationVisitor {
 	 *        {@link Opcodes#ASM7}.
 	 * @param annotationVisitor
 	 *        the annotation visitor to which this visitor must delegate method
-	 *        calls. May be null.
+	 *        calls. May be {@literal null}.
 	 */
 	public AnnotationVisitor(final int api, final AnnotationVisitor annotationVisitor) {
 		if (api != Opcodes.ASM7 && api != Opcodes.ASM6 && api != Opcodes.ASM5

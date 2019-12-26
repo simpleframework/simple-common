@@ -48,7 +48,7 @@ public abstract class ModuleVisitor {
 
 	/**
 	 * The module visitor to which this visitor must delegate method calls. May
-	 * be null.
+	 * be {@literal null}.
 	 */
 	protected ModuleVisitor mv;
 

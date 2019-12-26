@@ -243,7 +243,7 @@ public class ClassReader {
 		// Check the class' major_version. This field is after the magic and
 		// minor_version fields, which
 		// use 4 and 2 bytes respectively.
-		if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V13) {
+		if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V14) {
 			throw new IllegalArgumentException(
 					"Unsupported class file major version " + readShort(classFileOffset + 6));
 		}
@@ -800,7 +800,9 @@ public class ClassReader {
 	 *        attribute_info's attribute_name_index and attribute_length fields),
 	 *        or 0.
 	 * @param moduleMainClass
-	 *        the string corresponding to the ModuleMainClass attribute, or null.
+	 *        the string corresponding to the ModuleMainClass attribute, or
+	 *        {@literal
+	 *     null}.
 	 */
 	private void readModuleAttributes(final ClassVisitor classVisitor, final Context context,
 			final int moduleOffset, final int modulePackagesOffset, final String moduleMainClass) {
@@ -2738,7 +2740,7 @@ public class ClassReader {
 	 *
 	 * @param typeAnnotationOffsets
 	 *        the offset of each 'type_annotation' entry in a
-	 *        Runtime[In]VisibleTypeAnnotations attribute, or null.
+	 *        Runtime[In]VisibleTypeAnnotations attribute, or {@literal null}.
 	 * @param typeAnnotationIndex
 	 *        the index a 'type_annotation' entry in typeAnnotationOffsets.
 	 * @return bytecode offset corresponding to the specified JVMS

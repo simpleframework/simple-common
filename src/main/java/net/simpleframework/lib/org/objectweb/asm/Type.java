@@ -344,7 +344,8 @@ public final class Type {
 			}
 			if (methodDescriptor.charAt(currentOffset++) == 'L') {
 				// Skip the argument descriptor content.
-				currentOffset = methodDescriptor.indexOf(';', currentOffset) + 1;
+				final int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
+				currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
 			}
 			++numArgumentTypes;
 		}
@@ -362,7 +363,8 @@ public final class Type {
 			}
 			if (methodDescriptor.charAt(currentOffset++) == 'L') {
 				// Skip the argument descriptor content.
-				currentOffset = methodDescriptor.indexOf(';', currentOffset) + 1;
+				final int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
+				currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
 			}
 			argumentTypes[currentArgumentTypeIndex++] = getTypeInternal(methodDescriptor,
 					currentArgumentTypeOffset, currentOffset);
@@ -443,7 +445,8 @@ public final class Type {
 			}
 			if (methodDescriptor.charAt(currentOffset++) == 'L') {
 				// Skip the argument descriptor content.
-				currentOffset = methodDescriptor.indexOf(';', currentOffset) + 1;
+				final int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
+				currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
 			}
 		}
 		return currentOffset + 1;
@@ -825,7 +828,8 @@ public final class Type {
 				}
 				if (methodDescriptor.charAt(currentOffset++) == 'L') {
 					// Skip the argument descriptor content.
-					currentOffset = methodDescriptor.indexOf(';', currentOffset) + 1;
+					final int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
+					currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
 				}
 				argumentsSize += 1;
 			}

@@ -52,7 +52,7 @@ public abstract class ClassVisitor {
 
 	/**
 	 * The class visitor to which this visitor must delegate method calls. May be
-	 * null.
+	 * {@literal null}.
 	 */
 	protected ClassVisitor cv;
 
