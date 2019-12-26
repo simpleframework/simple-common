@@ -2171,9 +2171,9 @@ final class MethodWriter extends MethodVisitor {
 	 *
 	 * @param type
 	 *        a frame element type described using the same format as in {@link
-	 * 			MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP},
+	 *        MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP},
 	 *        {@link Opcodes#INTEGER}, {@link
-	 * 			Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
+	 *        Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
 	 *        {@link Opcodes#NULL}, or
 	 *        {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a
 	 *        class, or a Label designating

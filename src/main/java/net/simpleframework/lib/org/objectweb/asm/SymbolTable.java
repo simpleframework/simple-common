@@ -505,7 +505,7 @@ final class SymbolTable {
 	 *        parameter must be
 	 *        an {@link Integer}, {@link Byte}, {@link Character}, {@link Short},
 	 *        {@link Boolean}, {@link
-	 * 			Float}, {@link Long}, {@link Double}, {@link String}, {@link Type}
+	 *        Float}, {@link Long}, {@link Double}, {@link String}, {@link Type}
 	 *        or {@link Handle}.
 	 * @return a new or already existing Symbol with the given value.
 	 */
@@ -900,10 +900,10 @@ final class SymbolTable {
 	 * @param referenceKind
 	 *        one of {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
 	 *        {@link
-	 * 			Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
+	 *        Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
 	 *        {@link Opcodes#H_INVOKEVIRTUAL}, {@link
-	 * 			Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
-	 * 			Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
+	 *        Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
+	 *        Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
 	 * @param owner
 	 *        the internal name of a class of interface.
 	 * @param name
@@ -951,10 +951,10 @@ final class SymbolTable {
 	 * @param referenceKind
 	 *        one of {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
 	 *        {@link
-	 * 			Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
+	 *        Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC},
 	 *        {@link Opcodes#H_INVOKEVIRTUAL}, {@link
-	 * 			Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
-	 * 			Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
+	 *        Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
+	 *        Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
 	 * @param owner
 	 *        the internal name of a class of interface.
 	 * @param name
@@ -1039,7 +1039,7 @@ final class SymbolTable {
 	 *
 	 * @param tag
 	 *        one of {@link Symbol#CONSTANT_DYNAMIC_TAG} or {@link
-	 * 			Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
+	 *        Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
 	 * @param name
 	 *        a method name.
 	 * @param descriptor
@@ -1073,7 +1073,7 @@ final class SymbolTable {
 	 *
 	 * @param tag
 	 *        one of {@link Symbol#CONSTANT_DYNAMIC_TAG} or {@link
-	 * 			Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
+	 *        Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
 	 * @param index
 	 *        the constant pool index of the new Symbol.
 	 * @param name
@@ -1127,9 +1127,9 @@ final class SymbolTable {
 	 * @param tag
 	 *        one of {@link Symbol#CONSTANT_CLASS_TAG},
 	 *        {@link Symbol#CONSTANT_STRING_TAG}, {@link
-	 * 			Symbol#CONSTANT_METHOD_TYPE_TAG},
+	 *        Symbol#CONSTANT_METHOD_TYPE_TAG},
 	 *        {@link Symbol#CONSTANT_MODULE_TAG} or {@link
-	 * 			Symbol#CONSTANT_PACKAGE_TAG}.
+	 *        Symbol#CONSTANT_PACKAGE_TAG}.
 	 * @param value
 	 *        an internal class name, an arbitrary string, a method descriptor, a
 	 *        module or a
@@ -1160,9 +1160,9 @@ final class SymbolTable {
 	 * @param tag
 	 *        one of {@link Symbol#CONSTANT_CLASS_TAG},
 	 *        {@link Symbol#CONSTANT_STRING_TAG}, {@link
-	 * 			Symbol#CONSTANT_METHOD_TYPE_TAG},
+	 *        Symbol#CONSTANT_METHOD_TYPE_TAG},
 	 *        {@link Symbol#CONSTANT_MODULE_TAG} or {@link
-	 * 			Symbol#CONSTANT_PACKAGE_TAG}.
+	 *        Symbol#CONSTANT_PACKAGE_TAG}.
 	 * @param value
 	 *        an internal class name, an arbitrary string, a method descriptor, a
 	 *        module or a
@@ -1322,7 +1322,7 @@ final class SymbolTable {
 	 *        an internal class name.
 	 * @param bytecodeOffset
 	 *        the bytecode offset of the NEW instruction that created this {@link
-	 * 			Frame#ITEM_UNINITIALIZED} type value.
+	 *        Frame#ITEM_UNINITIALIZED} type value.
 	 * @return the index of a new or already existing type Symbol with the given
 	 *         value.
 	 */

@@ -62,7 +62,7 @@ public abstract class ClassVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 */
 	public ClassVisitor(final int api) {
@@ -75,7 +75,7 @@ public abstract class ClassVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 * @param classVisitor
 	 *        the class visitor to which this visitor must delegate method calls.
@@ -118,7 +118,7 @@ public abstract class ClassVisitor {
 	 *        {@link Object} class.
 	 * @param interfaces
 	 *        the internal names of the class's interfaces (see {@link
-	 * 			Type#getInternalName()}). May be {@literal null}.
+	 *        Type#getInternalName()}). May be {@literal null}.
 	 */
 	public void visit(final int version, final int access, final String name, final String signature,
 			final String superName, final String[] interfaces) {
@@ -242,7 +242,7 @@ public abstract class ClassVisitor {
 	 *        a reference to the annotated type. The sort of this type reference
 	 *        must be
 	 *        {@link TypeReference#CLASS_TYPE_PARAMETER}, {@link
-	 * 			TypeReference#CLASS_TYPE_PARAMETER_BOUND} or
+	 *        TypeReference#CLASS_TYPE_PARAMETER_BOUND} or
 	 *        {@link TypeReference#CLASS_EXTENDS}. See
 	 *        {@link TypeReference}.
 	 * @param typePath
@@ -316,7 +316,7 @@ public abstract class ClassVisitor {
 	 * @param outerName
 	 *        the internal name of the class to which the inner class belongs
 	 *        (see {@link
-	 * 			Type#getInternalName()}). May be {@literal null} for not member
+	 *        Type#getInternalName()}). May be {@literal null} for not member
 	 *        classes.
 	 * @param innerName
 	 *        the (simple) name of the inner class inside its enclosing class.
@@ -354,7 +354,7 @@ public abstract class ClassVisitor {
 	 *        {@literal null} if the
 	 *        field does not have an initial value, must be an {@link Integer}, a
 	 *        {@link Float}, a {@link
-	 * 			Long}, a {@link Double} or a {@link String} (for {@code int},
+	 *        Long}, a {@link Double} or a {@link String} (for {@code int},
 	 *        {@code float}, {@code long}
 	 *        or {@code String} fields respectively). <i>This parameter is only
 	 *        used for static
@@ -395,7 +395,7 @@ public abstract class ClassVisitor {
 	 *        return type and exceptions do not use generic types.
 	 * @param exceptions
 	 *        the internal names of the method's exception classes (see {@link
-	 * 			Type#getInternalName()}). May be {@literal null}.
+	 *        Type#getInternalName()}). May be {@literal null}.
 	 * @return an object to visit the byte code of the method, or {@literal null}
 	 *         if this class
 	 *         visitor is not interested in visiting the code of this method.

@@ -317,7 +317,7 @@ abstract class JSONParserBase {
 			case '}':
 			case ']':
 				throw new ParseException(pos, ERROR_UNEXPECTED_CHAR, c);
-				// start object
+			// start object
 			case '{':
 				return readObject(mapper);
 			// start Array
@@ -426,7 +426,7 @@ abstract class JSONParserBase {
 			case '}':
 			case ']':
 				throw new ParseException(pos, ERROR_UNEXPECTED_CHAR, c);
-				// start object
+			// start object
 			case '{':
 				return readObject(mapper.startObject(lastKey));
 			// start Array

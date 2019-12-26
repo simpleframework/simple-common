@@ -83,7 +83,7 @@ public abstract class MethodVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 */
 	public MethodVisitor(final int api) {
@@ -96,7 +96,7 @@ public abstract class MethodVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 * @param methodVisitor
 	 *        the method visitor to which this visitor must delegate method
@@ -179,11 +179,11 @@ public abstract class MethodVisitor {
 	 *        a reference to the annotated type. The sort of this type reference
 	 *        must be
 	 *        {@link TypeReference#METHOD_TYPE_PARAMETER}, {@link
-	 * 			TypeReference#METHOD_TYPE_PARAMETER_BOUND},
+	 *        TypeReference#METHOD_TYPE_PARAMETER_BOUND},
 	 *        {@link TypeReference#METHOD_RETURN}, {@link
-	 * 			TypeReference#METHOD_RECEIVER},
+	 *        TypeReference#METHOD_RECEIVER},
 	 *        {@link TypeReference#METHOD_FORMAL_PARAMETER} or {@link
-	 * 			TypeReference#THROWS}. See {@link TypeReference}.
+	 *        TypeReference#THROWS}. See {@link TypeReference}.
 	 * @param typePath
 	 *        the path to the annotated type argument, wildcard bound, array
 	 *        element type, or
@@ -353,7 +353,7 @@ public abstract class MethodVisitor {
 	 *        expanded
 	 *        frames, or {@link Opcodes#F_FULL}, {@link Opcodes#F_APPEND},
 	 *        {@link Opcodes#F_CHOP}, {@link
-	 * 			Opcodes#F_SAME} or {@link Opcodes#F_APPEND},
+	 *        Opcodes#F_SAME} or {@link Opcodes#F_APPEND},
 	 *        {@link Opcodes#F_SAME1} for compressed frames.
 	 * @param numLocal
 	 *        the number of local variables in the visited frame.
@@ -362,7 +362,7 @@ public abstract class MethodVisitor {
 	 *        modified. Primitive
 	 *        types are represented by {@link Opcodes#TOP},
 	 *        {@link Opcodes#INTEGER}, {@link
-	 * 			Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
+	 *        Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
 	 *        {@link Opcodes#NULL} or
 	 *        {@link Opcodes#UNINITIALIZED_THIS} (long and double are represented
 	 *        by a single element).
@@ -442,7 +442,7 @@ public abstract class MethodVisitor {
 	 *        <br>
 	 *        When opcode is NEWARRAY, operand value should be one of
 	 *        {@link Opcodes#T_BOOLEAN}, {@link
-	 * 			Opcodes#T_CHAR}, {@link Opcodes#T_FLOAT}, {@link Opcodes#T_DOUBLE},
+	 *        Opcodes#T_CHAR}, {@link Opcodes#T_FLOAT}, {@link Opcodes#T_DOUBLE},
 	 *        {@link Opcodes#T_BYTE},
 	 *        {@link Opcodes#T_SHORT}, {@link Opcodes#T_INT} or
 	 *        {@link Opcodes#T_LONG}.
@@ -529,7 +529,7 @@ public abstract class MethodVisitor {
 	 *        INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC or INVOKEINTERFACE.
 	 * @param owner
 	 *        the internal name of the method's owner class (see {@link
-	 * 			Type#getInternalName()}).
+	 *        Type#getInternalName()}).
 	 * @param name
 	 *        the method's name.
 	 * @param descriptor
@@ -555,7 +555,7 @@ public abstract class MethodVisitor {
 	 *        INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC or INVOKEINTERFACE.
 	 * @param owner
 	 *        the internal name of the method's owner class (see {@link
-	 * 			Type#getInternalName()}).
+	 *        Type#getInternalName()}).
 	 * @param name
 	 *        the method's name.
 	 * @param descriptor
@@ -591,7 +591,7 @@ public abstract class MethodVisitor {
 	 *        the bootstrap method constant arguments. Each argument must be
 	 *        an {@link Integer}, {@link Float}, {@link Long}, {@link Double},
 	 *        {@link String}, {@link
-	 * 			Type}, {@link Handle} or {@link ConstantDynamic} value. This method
+	 *        Type}, {@link Handle} or {@link ConstantDynamic} value. This method
 	 *        is allowed to modify
 	 *        the content of the array so a caller should expect that this array
 	 *        may change.
@@ -687,9 +687,9 @@ public abstract class MethodVisitor {
 	 * @param value
 	 *        the constant to be loaded on the stack. This parameter must be a
 	 *        non null {@link
-	 * 			Integer}, a {@link Float}, a {@link Long}, a {@link Double}, a
+	 *        Integer}, a {@link Float}, a {@link Long}, a {@link Double}, a
 	 *        {@link String}, a {@link
-	 * 			Type} of OBJECT or ARRAY sort for {@code .class} constants, for
+	 *        Type} of OBJECT or ARRAY sort for {@code .class} constants, for
 	 *        classes whose version is
 	 *        49, a {@link Type} of METHOD sort for MethodType, a {@link Handle}
 	 *        for MethodHandle
@@ -787,13 +787,13 @@ public abstract class MethodVisitor {
 	 *        a reference to the annotated type. The sort of this type reference
 	 *        must be
 	 *        {@link TypeReference#INSTANCEOF}, {@link TypeReference#NEW}, {@link
-	 * 			TypeReference#CONSTRUCTOR_REFERENCE},
+	 *        TypeReference#CONSTRUCTOR_REFERENCE},
 	 *        {@link TypeReference#METHOD_REFERENCE}, {@link
-	 * 			TypeReference#CAST},
+	 *        TypeReference#CAST},
 	 *        {@link TypeReference#CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT}, {@link
-	 * 			TypeReference#METHOD_INVOCATION_TYPE_ARGUMENT}, {@link
-	 * 			TypeReference#CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT}, or {@link
-	 * 			TypeReference#METHOD_REFERENCE_TYPE_ARGUMENT}. See
+	 *        TypeReference#METHOD_INVOCATION_TYPE_ARGUMENT}, {@link
+	 *        TypeReference#CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT}, or {@link
+	 *        TypeReference#METHOD_REFERENCE_TYPE_ARGUMENT}. See
 	 *        {@link TypeReference}.
 	 * @param typePath
 	 *        the path to the annotated type argument, wildcard bound, array
@@ -924,7 +924,7 @@ public abstract class MethodVisitor {
 	 *        must be
 	 *        {@link TypeReference#LOCAL_VARIABLE} or
 	 *        {@link TypeReference#RESOURCE_VARIABLE}. See {@link
-	 * 			TypeReference}.
+	 *        TypeReference}.
 	 * @param typePath
 	 *        the path to the annotated type argument, wildcard bound, array
 	 *        element type, or

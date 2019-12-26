@@ -58,7 +58,7 @@ public abstract class FieldVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 */
 	public FieldVisitor(final int api) {
@@ -71,7 +71,7 @@ public abstract class FieldVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 * @param fieldVisitor
 	 *        the field visitor to which this visitor must delegate method calls.

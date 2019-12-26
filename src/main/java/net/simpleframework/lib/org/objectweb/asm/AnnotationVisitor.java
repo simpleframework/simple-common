@@ -59,7 +59,7 @@ public abstract class AnnotationVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 */
 	public AnnotationVisitor(final int api) {
@@ -72,7 +72,7 @@ public abstract class AnnotationVisitor {
 	 * @param api
 	 *        the ASM API version implemented by this visitor. Must be one of
 	 *        {@link
-	 * 			Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
+	 *        Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or
 	 *        {@link Opcodes#ASM7}.
 	 * @param annotationVisitor
 	 *        the annotation visitor to which this visitor must delegate method
@@ -95,7 +95,7 @@ public abstract class AnnotationVisitor {
 	 * @param value
 	 *        the actual value, whose type must be {@link Byte}, {@link Boolean},
 	 *        {@link
-	 * 			Character}, {@link Short}, {@link Integer} , {@link Long},
+	 *        Character}, {@link Short}, {@link Integer} , {@link Long},
 	 *        {@link Float}, {@link Double},
 	 *        {@link String} or {@link Type} of {@link Type#OBJECT} or
 	 *        {@link Type#ARRAY} sort. This

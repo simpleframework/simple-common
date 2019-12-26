@@ -68,13 +68,13 @@ public final class Handle {
 	 * @param tag
 	 *        the kind of field or method designated by this Handle. Must be
 	 *        {@link
-	 * 			Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
+	 *        Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
 	 *        {@link Opcodes#H_PUTFIELD}, {@link
-	 * 			Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
+	 *        Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
 	 *        {@link Opcodes#H_INVOKESTATIC},
 	 *        {@link Opcodes#H_INVOKESPECIAL}, {@link Opcodes#H_NEWINVOKESPECIAL}
 	 *        or {@link
-	 * 			Opcodes#H_INVOKEINTERFACE}.
+	 *        Opcodes#H_INVOKEINTERFACE}.
 	 * @param owner
 	 *        the internal name of the class that owns the field or method
 	 *        designated by this
@@ -85,7 +85,7 @@ public final class Handle {
 	 *        the descriptor of the field or method designated by this handle.
 	 * @deprecated this constructor has been superseded by
 	 *             {@link #Handle(int, String, String, String,
-	 * 				boolean)}.
+	 *             boolean)}.
 	 */
 	@Deprecated
 	public Handle(final int tag, final String owner, final String name, final String descriptor) {
@@ -98,13 +98,13 @@ public final class Handle {
 	 * @param tag
 	 *        the kind of field or method designated by this Handle. Must be
 	 *        {@link
-	 * 			Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
+	 *        Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC},
 	 *        {@link Opcodes#H_PUTFIELD}, {@link
-	 * 			Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
+	 *        Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
 	 *        {@link Opcodes#H_INVOKESTATIC},
 	 *        {@link Opcodes#H_INVOKESPECIAL}, {@link Opcodes#H_NEWINVOKESPECIAL}
 	 *        or {@link
-	 * 			Opcodes#H_INVOKEINTERFACE}.
+	 *        Opcodes#H_INVOKEINTERFACE}.
 	 * @param owner
 	 *        the internal name of the class that owns the field or method
 	 *        designated by this
@@ -132,8 +132,8 @@ public final class Handle {
 	 *         {@link Opcodes#H_PUTFIELD},
 	 *         {@link Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL},
 	 *         {@link
-	 * 			Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
-	 * 			Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
+	 *         Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
+	 *         Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
 	 */
 	public int getTag() {
 		return tag;

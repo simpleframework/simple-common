@@ -340,9 +340,9 @@ class Frame {
 	 *        the type table to use to lookup and store type {@link Symbol}.
 	 * @param type
 	 *        a frame element type described using the same format as in {@link
-	 * 			MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP},
+	 *        MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP},
 	 *        {@link Opcodes#INTEGER}, {@link
-	 * 			Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
+	 *        Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE},
 	 *        {@link Opcodes#NULL}, or
 	 *        {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a
 	 *        class, or a Label designating
@@ -508,13 +508,13 @@ class Frame {
 	 * @param local
 	 *        the local variable types, described using the same format as in
 	 *        {@link
-	 * 			MethodVisitor#visitFrame}.
+	 *        MethodVisitor#visitFrame}.
 	 * @param numStack
 	 *        the number of operand stack elements.
 	 * @param stack
 	 *        the operand stack types, described using the same format as in
 	 *        {@link
-	 * 			MethodVisitor#visitFrame}.
+	 *        MethodVisitor#visitFrame}.
 	 */
 	final void setInputFrameFromApiFormat(final SymbolTable symbolTable, final int numLocal,
 			final Object[] local, final int numStack, final Object[] stack) {
@@ -1416,7 +1416,7 @@ class Frame {
 	 *        be merged.
 	 *        This type should be of {@link #CONSTANT_KIND},
 	 *        {@link #REFERENCE_KIND} or {@link
-	 * 			#UNINITIALIZED_KIND} kind, with positive or null array dimensions.
+	 *        #UNINITIALIZED_KIND} kind, with positive or null array dimensions.
 	 * @param dstTypes
 	 *        an array of abstract types. These types should be of
 	 *        {@link #CONSTANT_KIND},
@@ -1525,7 +1525,7 @@ class Frame {
 	 * @param methodWriter
 	 *        the {@link MethodWriter} that should visit the input frame of this
 	 *        {@link
-	 * 			Frame}.
+	 *        Frame}.
 	 */
 	final void accept(final MethodWriter methodWriter) {
 		// Compute the number of locals, ignoring TOP types that are just after a
@@ -1581,7 +1581,7 @@ class Frame {
 	 *        the type table to use to lookup and store type {@link Symbol}.
 	 * @param abstractType
 	 *        an abstract type, restricted to {@link Frame#CONSTANT_KIND}, {@link
-	 * 			Frame#REFERENCE_KIND} or {@link Frame#UNINITIALIZED_KIND} types.
+	 *        Frame#REFERENCE_KIND} or {@link Frame#UNINITIALIZED_KIND} types.
 	 * @param output
 	 *        where the abstract type must be put.
 	 * @see <a href=

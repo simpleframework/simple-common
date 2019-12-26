@@ -529,7 +529,7 @@ public class Label {
 	 *        reference stored at referenceHandle.
 	 * @param referenceType
 	 *        either {@link #FORWARD_REFERENCE_TYPE_SHORT} or {@link
-	 * 			#FORWARD_REFERENCE_TYPE_WIDE}.
+	 *        #FORWARD_REFERENCE_TYPE_WIDE}.
 	 * @param referenceHandle
 	 *        the offset in the bytecode where the forward reference value must
 	 *        be

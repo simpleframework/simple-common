@@ -865,9 +865,9 @@ public class ClassWriter extends ClassVisitor {
 	 *
 	 * @param tag
 	 *        the kind of this handle. Must be {@link Opcodes#H_GETFIELD}, {@link
-	 * 			Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
+	 *        Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
 	 *        {@link Opcodes#H_PUTSTATIC}, {@link
-	 * 			Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC},
+	 *        Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC},
 	 *        {@link Opcodes#H_INVOKESPECIAL},
 	 *        {@link Opcodes#H_NEWINVOKESPECIAL} or
 	 *        {@link Opcodes#H_INVOKEINTERFACE}.
@@ -880,7 +880,7 @@ public class ClassWriter extends ClassVisitor {
 	 * @return the index of a new or already existing method type reference item.
 	 * @deprecated this method is superseded by
 	 *             {@link #newHandle(int, String, String, String,
-	 * 				boolean)}.
+	 *             boolean)}.
 	 */
 	@Deprecated
 	public int newHandle(final int tag, final String owner, final String name,
@@ -897,9 +897,9 @@ public class ClassWriter extends ClassVisitor {
 	 *
 	 * @param tag
 	 *        the kind of this handle. Must be {@link Opcodes#H_GETFIELD}, {@link
-	 * 			Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
+	 *        Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
 	 *        {@link Opcodes#H_PUTSTATIC}, {@link
-	 * 			Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC},
+	 *        Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC},
 	 *        {@link Opcodes#H_INVOKESPECIAL},
 	 *        {@link Opcodes#H_NEWINVOKESPECIAL} or
 	 *        {@link Opcodes#H_INVOKEINTERFACE}.

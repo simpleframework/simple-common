@@ -112,7 +112,7 @@ public final class TypePath {
 	 *        an index between 0 and {@link #getLength()}, exclusive.
 	 * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE},
 	 *         {@link #WILDCARD_BOUND}, or {@link
-	 * 			#TYPE_ARGUMENT}.
+	 *         #TYPE_ARGUMENT}.
 	 */
 	public int getStep(final int index) {
 		// Returns the type_path_kind of the path element of the given index.

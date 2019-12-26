@@ -725,7 +725,7 @@ public final class Type {
 	 *
 	 * @return {@link #VOID}, {@link #BOOLEAN}, {@link #CHAR}, {@link #BYTE},
 	 *         {@link #SHORT}, {@link
-	 * 			#INT}, {@link #FLOAT}, {@link #LONG}, {@link #DOUBLE},
+	 *         #INT}, {@link #FLOAT}, {@link #LONG}, {@link #DOUBLE},
 	 *         {@link #ARRAY}, {@link #OBJECT} or
 	 *         {@link #METHOD}.
 	 */

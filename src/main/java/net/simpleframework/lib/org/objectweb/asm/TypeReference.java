@@ -243,9 +243,9 @@ public class TypeReference {
 	 * @param sort
 	 *        one of {@link #FIELD}, {@link #METHOD_RETURN},
 	 *        {@link #METHOD_RECEIVER}, {@link
-	 * 			#LOCAL_VARIABLE}, {@link #RESOURCE_VARIABLE}, {@link #INSTANCEOF},
+	 *        #LOCAL_VARIABLE}, {@link #RESOURCE_VARIABLE}, {@link #INSTANCEOF},
 	 *        {@link #NEW}, {@link
-	 * 			#CONSTRUCTOR_REFERENCE}, or {@link #METHOD_REFERENCE}.
+	 *        #CONSTRUCTOR_REFERENCE}, or {@link #METHOD_REFERENCE}.
 	 * @return a type reference of the given sort.
 	 */
 	public static TypeReference newTypeReference(final int sort) {
@@ -344,9 +344,9 @@ public class TypeReference {
 	 * @param sort
 	 *        one of {@link #CAST},
 	 *        {@link #CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT}, {@link
-	 * 			#METHOD_INVOCATION_TYPE_ARGUMENT},
+	 *        #METHOD_INVOCATION_TYPE_ARGUMENT},
 	 *        {@link #CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT}, or {@link
-	 * 			#METHOD_REFERENCE_TYPE_ARGUMENT}.
+	 *        #METHOD_REFERENCE_TYPE_ARGUMENT}.
 	 * @param argIndex
 	 *        the type argument index.
 	 * @return a reference to the type of the given type argument.
@@ -360,19 +360,19 @@ public class TypeReference {
 	 *
 	 * @return one of {@link #CLASS_TYPE_PARAMETER},
 	 *         {@link #METHOD_TYPE_PARAMETER}, {@link
-	 * 			#CLASS_EXTENDS}, {@link #CLASS_TYPE_PARAMETER_BOUND},
+	 *         #CLASS_EXTENDS}, {@link #CLASS_TYPE_PARAMETER_BOUND},
 	 *         {@link #METHOD_TYPE_PARAMETER_BOUND},
 	 *         {@link #FIELD}, {@link #METHOD_RETURN}, {@link #METHOD_RECEIVER},
 	 *         {@link
-	 * 			#METHOD_FORMAL_PARAMETER}, {@link #THROWS},
+	 *         #METHOD_FORMAL_PARAMETER}, {@link #THROWS},
 	 *         {@link #LOCAL_VARIABLE}, {@link
-	 * 			#RESOURCE_VARIABLE}, {@link #EXCEPTION_PARAMETER},
+	 *         #RESOURCE_VARIABLE}, {@link #EXCEPTION_PARAMETER},
 	 *         {@link #INSTANCEOF}, {@link #NEW},
 	 *         {@link #CONSTRUCTOR_REFERENCE}, {@link #METHOD_REFERENCE},
 	 *         {@link #CAST}, {@link
-	 * 			#CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT},
+	 *         #CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT},
 	 *         {@link #METHOD_INVOCATION_TYPE_ARGUMENT}, {@link
-	 * 			#CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT}, or
+	 *         #CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT}, or
 	 *         {@link #METHOD_REFERENCE_TYPE_ARGUMENT}.
 	 */
 	public int getSort() {
@@ -493,7 +493,7 @@ public class TypeReference {
 	 *
 	 * @param targetTypeAndInfo
 	 *        a target_type and a target_info structures encoded as in {@link
-	 * 			#targetTypeAndInfo}. LOCAL_VARIABLE and RESOURCE_VARIABLE target
+	 *        #targetTypeAndInfo}. LOCAL_VARIABLE and RESOURCE_VARIABLE target
 	 *        types are not supported.
 	 * @param output
 	 *        where the type reference must be put.

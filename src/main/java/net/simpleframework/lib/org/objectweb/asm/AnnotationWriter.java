@@ -188,7 +188,7 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 *        a reference to the annotated type. The sort of this type reference
 	 *        must be
 	 *        {@link TypeReference#CLASS_TYPE_PARAMETER}, {@link
-	 * 			TypeReference#CLASS_TYPE_PARAMETER_BOUND} or
+	 *        TypeReference#CLASS_TYPE_PARAMETER_BOUND} or
 	 *        {@link TypeReference#CLASS_EXTENDS}. See
 	 *        {@link TypeReference}.
 	 * @param typePath
@@ -420,12 +420,12 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 *        The last runtime visible type annotation of this a
 	 *        field, method or class. The previous ones can be accessed with the
 	 *        {@link
-	 * 			#previousAnnotation} field. May be {@literal null}.
+	 *        #previousAnnotation} field. May be {@literal null}.
 	 * @param lastRuntimeInvisibleTypeAnnotation
 	 *        The last runtime invisible type annotation of a
 	 *        field, method or class field. The previous ones can be accessed
 	 *        with the {@link
-	 * 			#previousAnnotation} field. May be {@literal null}.
+	 *        #previousAnnotation} field. May be {@literal null}.
 	 * @return the size in bytes of a Runtime[In]Visible[Type]Annotations
 	 *         attribute containing the
 	 *         given annotations and all their predecessors. This includes the
@@ -517,12 +517,12 @@ final class AnnotationWriter extends AnnotationVisitor {
 	 *        The last runtime visible type annotation of this a
 	 *        field, method or class. The previous ones can be accessed with the
 	 *        {@link
-	 * 			#previousAnnotation} field. May be {@literal null}.
+	 *        #previousAnnotation} field. May be {@literal null}.
 	 * @param lastRuntimeInvisibleTypeAnnotation
 	 *        The last runtime invisible type annotation of a
 	 *        field, method or class field. The previous ones can be accessed
 	 *        with the {@link
-	 * 			#previousAnnotation} field. May be {@literal null}.
+	 *        #previousAnnotation} field. May be {@literal null}.
 	 * @param output
 	 *        where the attributes must be put.
 	 */

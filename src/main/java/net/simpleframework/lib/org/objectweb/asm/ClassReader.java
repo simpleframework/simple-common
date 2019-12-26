@@ -480,7 +480,7 @@ public class ClassReader {
 	 *        the visitor that must visit this class.
 	 * @param parsingOptions
 	 *        the options to use to parse this class. One or more of {@link
-	 * 			#SKIP_CODE}, {@link #SKIP_DEBUG}, {@link #SKIP_FRAMES} or
+	 *        #SKIP_CODE}, {@link #SKIP_DEBUG}, {@link #SKIP_FRAMES} or
 	 *        {@link #EXPAND_FRAMES}.
 	 */
 	public void accept(final ClassVisitor classVisitor, final int parsingOptions) {
@@ -508,7 +508,7 @@ public class ClassReader {
 	 *        the reader and the writer</i>.
 	 * @param parsingOptions
 	 *        the options to use to parse this class. One or more of {@link
-	 * 			#SKIP_CODE}, {@link #SKIP_DEBUG}, {@link #SKIP_FRAMES} or
+	 *        #SKIP_CODE}, {@link #SKIP_DEBUG}, {@link #SKIP_FRAMES} or
 	 *        {@link #EXPAND_FRAMES}.
 	 */
 	public void accept(final ClassVisitor classVisitor, final Attribute[] attributePrototypes,
@@ -3465,7 +3465,7 @@ public class ClassReader {
 	 *        the buffer to be used to read strings in the constant pool.
 	 * @param codeAttributeOffset
 	 *        the start offset of the enclosing Code attribute in {@link
-	 * 			#classFileBuffer}, or -1 if the attribute to be read is not a code
+	 *        #classFileBuffer}, or -1 if the attribute to be read is not a code
 	 *        attribute. The 6
 	 *        attribute header bytes (attribute_name_index and attribute_length)
 	 *        are not taken into
