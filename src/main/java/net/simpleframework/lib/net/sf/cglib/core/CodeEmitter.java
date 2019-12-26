@@ -536,7 +536,7 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	public void super_invoke(final Signature sig) {
-		emit_invoke(Opcodes.INVOKESPECIAL, ce.getSuperType(), sig);
+		emit_invoke(Opcodes.INVOKESPECIAL, ce.getSuperType(), sig, false);
 	}
 
 	public void invoke_constructor(final Type type) {
@@ -551,25 +551,31 @@ public class CodeEmitter extends LocalVariablesSorter {
 		invoke_constructor(ce.getClassType());
 	}
 
-	private void emit_invoke(final int opcode, final Type type, final Signature sig) {
+	private void emit_invoke(final int opcode, final Type type, final Signature sig,
+			final boolean isInterface) {
 		if (sig.getName().equals(Constants.CONSTRUCTOR_NAME)
 				&& ((opcode == Opcodes.INVOKEVIRTUAL) || (opcode == Opcodes.INVOKESTATIC))) {
 			// TODO: error
 		}
 		mv.visitMethodInsn(opcode, type.getInternalName(), sig.getName(), sig.getDescriptor(),
-				opcode == Opcodes.INVOKEINTERFACE);
+				isInterface);
 	}
 
 	public void invoke_interface(final Type owner, final Signature sig) {
-		emit_invoke(Opcodes.INVOKEINTERFACE, owner, sig);
+		emit_invoke(Opcodes.INVOKEINTERFACE, owner, sig, true);
 	}
 
 	public void invoke_virtual(final Type owner, final Signature sig) {
-		emit_invoke(Opcodes.INVOKEVIRTUAL, owner, sig);
+		emit_invoke(Opcodes.INVOKEVIRTUAL, owner, sig, false);
 	}
 
+	@Deprecated
 	public void invoke_static(final Type owner, final Signature sig) {
-		emit_invoke(Opcodes.INVOKESTATIC, owner, sig);
+		invoke_static(owner, sig, false);
+	}
+
+	public void invoke_static(final Type owner, final Signature sig, final boolean isInterface) {
+		emit_invoke(Opcodes.INVOKESTATIC, owner, sig, isInterface);
 	}
 
 	public void invoke_virtual_this(final Signature sig) {
@@ -581,7 +587,7 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	public void invoke_constructor(final Type type, final Signature sig) {
-		emit_invoke(Opcodes.INVOKESPECIAL, type, sig);
+		emit_invoke(Opcodes.INVOKESPECIAL, type, sig, false);
 	}
 
 	public void invoke_constructor_this(final Signature sig) {
@@ -923,10 +929,10 @@ public class CodeEmitter extends LocalVariablesSorter {
 		final Signature sig = method.getSignature();
 		if (sig.getName().equals(Constants.CONSTRUCTOR_NAME)) {
 			invoke_constructor(type, sig);
+		} else if (TypeUtils.isStatic(method.getModifiers())) {
+			invoke_static(type, sig, TypeUtils.isInterface(classInfo.getModifiers()));
 		} else if (TypeUtils.isInterface(classInfo.getModifiers())) {
 			invoke_interface(type, sig);
-		} else if (TypeUtils.isStatic(method.getModifiers())) {
-			invoke_static(type, sig);
 		} else {
 			invoke_virtual(virtualType, sig);
 		}

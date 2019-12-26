@@ -549,8 +549,8 @@ public class Enhancer extends AbstractClassGenerator {
 		preValidate();
 		final Object key = KEY_FACTORY.newInstance((superclass != null) ? superclass.getName() : null,
 				ReflectUtils.getNames(interfaces),
-				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes, useFactory,
-				interceptDuringConstruction, serialVersionUID);
+				filter == ALL_ZERO ? null : new WeakCacheKey<>(filter), callbackTypes,
+				useFactory, interceptDuringConstruction, serialVersionUID);
 		this.currentKey = key;
 		final Object result = super.create(key);
 		return result;
@@ -671,12 +671,12 @@ public class Enhancer extends AbstractClassGenerator {
 
 		final ClassEmitter e = new ClassEmitter(v);
 		if (currentData == null) {
-			e.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), Type.getType(sc),
+			e.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), Type.getType(sc),
 					(useFactory ? TypeUtils.add(TypeUtils.getTypes(interfaces), FACTORY)
 							: TypeUtils.getTypes(interfaces)),
 					Constants.SOURCE_FILE);
 		} else {
-			e.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), null,
+			e.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), null,
 					new Type[] { FACTORY }, Constants.SOURCE_FILE);
 		}
 		final List constructorInfo = CollectionUtils.transform(constructors,

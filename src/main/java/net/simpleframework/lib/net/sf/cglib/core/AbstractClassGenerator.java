@@ -310,7 +310,8 @@ abstract public class AbstractClassGenerator<T> implements ClassGenerator {
 					cache = CACHE;
 					data = cache.get(loader);
 					if (data == null) {
-						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<>(cache);
+						final Map<ClassLoader, ClassLoaderData> newCache = new WeakHashMap<>(
+								cache);
 						data = new ClassLoaderData(loader);
 						newCache.put(loader, data);
 						CACHE = newCache;

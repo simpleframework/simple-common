@@ -106,7 +106,7 @@ abstract public class ConstructorDelegate {
 			}
 
 			final ClassEmitter ce = new ClassEmitter(v);
-			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), CONSTRUCTOR_DELEGATE,
+			ce.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), CONSTRUCTOR_DELEGATE,
 					new Type[] { Type.getType(iface) }, Constants.SOURCE_FILE);
 			final Type declaring = Type.getType(constructor.getDeclaringClass());
 			EmitUtils.null_constructor(ce);

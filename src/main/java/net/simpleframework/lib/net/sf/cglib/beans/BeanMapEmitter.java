@@ -55,7 +55,7 @@ class BeanMapEmitter extends ClassEmitter {
 			final int require) {
 		super(v);
 
-		begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, className, BEAN_MAP, null,
+		begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, className, BEAN_MAP, null,
 				Constants.SOURCE_FILE);
 		EmitUtils.null_constructor(this);
 		EmitUtils.factory_method(this, NEW_INSTANCE);

@@ -42,7 +42,8 @@ public class DebuggingClassWriter extends ClassVisitor {
 		if (debugLocation != null) {
 			System.err.println("CGLIB debugging enabled, writing to '" + debugLocation + "'");
 			try {
-				final Class clazz = Class.forName("org.objectweb.asm.util.TraceClassVisitor");
+				final Class clazz = Class
+						.forName("net.simpleframework.lib.org.objectweb.asm.util.TraceClassVisitor");
 				traceCtor = clazz.getConstructor(new Class[] { ClassVisitor.class, PrintWriter.class });
 			} catch (final Throwable ignore) {
 			}

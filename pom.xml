@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -16,7 +17,7 @@
       <artifactId>pinyin4j</artifactId>
       <optional>true</optional>
     </dependency>
-    
+
     <!-- 邮件 -->
     <dependency>
       <groupId>javax.mail</groupId>
@@ -35,11 +36,17 @@
       <artifactId>hessian</artifactId>
       <optional>true</optional>
     </dependency>
-    
+
     <dependency>
       <groupId>com.esotericsoftware</groupId>
       <artifactId>kryo</artifactId>
       <optional>true</optional>
+      <exclusions>
+        <exclusion>
+          <groupId>com.esotericsoftware</groupId>
+          <artifactId>reflectasm</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

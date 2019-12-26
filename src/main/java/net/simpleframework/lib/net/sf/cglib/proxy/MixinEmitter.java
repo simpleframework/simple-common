@@ -48,7 +48,7 @@ class MixinEmitter extends ClassEmitter {
 			final int[] route) {
 		super(v);
 
-		begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, className, MIXIN,
+		begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, className, MIXIN,
 				TypeUtils.getTypes(getInterfaces(classes)), Constants.SOURCE_FILE);
 		EmitUtils.null_constructor(this);
 		EmitUtils.factory_method(this, NEW_INSTANCE);

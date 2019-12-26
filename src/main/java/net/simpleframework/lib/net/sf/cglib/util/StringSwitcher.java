@@ -154,7 +154,7 @@ abstract public class StringSwitcher {
 		@Override
 		public void generateClass(final ClassVisitor v) throws Exception {
 			final ClassEmitter ce = new ClassEmitter(v);
-			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), STRING_SWITCHER, null,
+			ce.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), STRING_SWITCHER, null,
 					Constants.SOURCE_FILE);
 			EmitUtils.null_constructor(ce);
 			final CodeEmitter e = ce.begin_method(Opcodes.ACC_PUBLIC, INT_VALUE, null);

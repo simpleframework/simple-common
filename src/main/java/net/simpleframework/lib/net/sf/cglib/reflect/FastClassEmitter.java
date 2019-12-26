@@ -72,7 +72,7 @@ class FastClassEmitter extends ClassEmitter {
 		super(v);
 
 		final Type base = Type.getType(type);
-		begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, className, FAST_CLASS, null,
+		begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, className, FAST_CLASS, null,
 				Constants.SOURCE_FILE);
 
 		// constructor

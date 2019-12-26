@@ -84,7 +84,7 @@ public class ImmutableBean {
 		public void generateClass(final ClassVisitor v) {
 			final Type targetType = Type.getType(target);
 			final ClassEmitter ce = new ClassEmitter(v);
-			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), targetType, null,
+			ce.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), targetType, null,
 					Constants.SOURCE_FILE);
 
 			ce.declare_field(Opcodes.ACC_FINAL | Opcodes.ACC_PRIVATE, FIELD_NAME, targetType, null);

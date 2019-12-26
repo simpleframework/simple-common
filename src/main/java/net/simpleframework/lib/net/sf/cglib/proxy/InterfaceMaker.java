@@ -121,7 +121,8 @@ public class InterfaceMaker extends AbstractClassGenerator {
 	@Override
 	public void generateClass(final ClassVisitor v) throws Exception {
 		final ClassEmitter ce = new ClassEmitter(v);
-		ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC | Opcodes.ACC_INTERFACE, getClassName(), null,
+		ce.begin_class(Opcodes.V1_8,
+				Opcodes.ACC_PUBLIC | Opcodes.ACC_INTERFACE | Opcodes.ACC_ABSTRACT, getClassName(), null,
 				null, Constants.SOURCE_FILE);
 		for (final Iterator it = signatures.keySet().iterator(); it.hasNext();) {
 			final Signature sig = (Signature) it.next();

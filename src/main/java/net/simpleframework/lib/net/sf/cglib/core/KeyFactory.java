@@ -260,7 +260,7 @@ abstract public class KeyFactory {
 			}
 
 			final Type[] parameterTypes = TypeUtils.getTypes(newInstance.getParameterTypes());
-			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), KEY_FACTORY,
+			ce.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), KEY_FACTORY,
 					new Type[] { Type.getType(keyInterface) }, Constants.SOURCE_FILE);
 			EmitUtils.null_constructor(ce);
 			EmitUtils.factory_method(ce, ReflectUtils.getSignature(newInstance));

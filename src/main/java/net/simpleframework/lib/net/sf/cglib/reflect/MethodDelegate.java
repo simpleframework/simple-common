@@ -249,7 +249,7 @@ abstract public class MethodDelegate {
 
 			final ClassEmitter ce = new ClassEmitter(v);
 			CodeEmitter e;
-			ce.begin_class(Opcodes.V1_2, Opcodes.ACC_PUBLIC, getClassName(), METHOD_DELEGATE,
+			ce.begin_class(Opcodes.V1_8, Opcodes.ACC_PUBLIC, getClassName(), METHOD_DELEGATE,
 					new Type[] { Type.getType(iface) }, Constants.SOURCE_FILE);
 			ce.declare_field(Constants.PRIVATE_FINAL_STATIC, "eqMethod", Constants.TYPE_STRING, null);
 			EmitUtils.null_constructor(ce);
