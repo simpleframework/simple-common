@@ -188,7 +188,8 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 			OPCODES_VERSION = Opcodes.V1_5;
 		} else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")
 				|| javaVersion.startsWith("1.8") || javaVersion.startsWith("9")
-				|| javaVersion.startsWith("10") || javaVersion.startsWith("11")) {
+				|| javaVersion.startsWith("10") || javaVersion.startsWith("11")
+				|| javaVersion.startsWith("12")) {
 			OPCODES_VERSION = Opcodes.V1_6;
 		} else {
 			OPCODES_VERSION = Opcodes.V1_2;
@@ -1181,9 +1182,15 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 				returnType = ((Method) member).getReturnType();
 
-				assert debug("INVOKEVIRTUAL " + member.getName() + ":" + returnType);
-				mv.visitMethodInsn(INVOKEVIRTUAL, getInternalName(member.getDeclaringClass()),
-						member.getName(), getMethodDescriptor((Method) member));
+				if (member.getDeclaringClass().isInterface()) {
+					assert debug("INVOKEINTERFACE " + member.getName() + ":" + returnType);
+					mv.visitMethodInsn(INVOKEINTERFACE, getInternalName(member.getDeclaringClass()),
+							member.getName(), getMethodDescriptor((Method) member));
+				} else {
+					assert debug("INVOKEVIRTUAL " + member.getName() + ":" + returnType);
+					mv.visitMethodInsn(INVOKEVIRTUAL, getInternalName(member.getDeclaringClass()),
+							member.getName(), getMethodDescriptor((Method) member));
+				}
 			} catch (final IllegalAccessException e) {
 				final Method iFaceMeth = determineActualTargetMethod((Method) member);
 				if (iFaceMeth == null) {
@@ -1462,7 +1469,7 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 
 		final ExecutableStatement compiled = (ExecutableStatement) subCompileExpression(
 				tk.toCharArray(), pCtx);
-		final Object item = compiled.getValue(ctx, variableFactory);
+		final Object item = compiled.getValue(this.ctx, variableFactory);
 
 		++cursor;
 
@@ -2639,14 +2646,6 @@ public class ASMAccessorOptimizer extends AbstractOptimizer implements AccessorO
 	}
 
 	private Object addSubstatement(final ExecutableStatement stmt) {
-		if (stmt instanceof ExecutableAccessor) {
-			final ExecutableAccessor ea = (ExecutableAccessor) stmt;
-			if (ea.getNode().isIdentifier() && !ea.getNode().isDeepProperty()) {
-				loadVariableByName(ea.getNode().getName());
-				return null;
-			}
-		}
-
 		compiledInputs.add(stmt);
 
 		assert debug("ALOAD 0");

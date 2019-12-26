@@ -205,7 +205,8 @@ public class AbstractParser implements Parser, Serializable {
 
 	protected ASTNode lastNode;
 
-	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(15);
+	private static final WeakHashMap<String, char[]> EX_PRECACHE = new WeakHashMap<>(
+			15);
 
 	public static HashMap<String, Object> LITERALS;
 	public static HashMap<String, Object> CLASS_LITERALS;
@@ -1874,8 +1875,8 @@ public class AbstractParser implements Parser, Serializable {
 			}
 			skipWhitespace();
 
-			return expr[cursor] == 'e' && expr[cursor + 1] == 'l' && expr[cursor + 2] == 's'
-					&& expr[cursor + 3] == 'e'
+			return (cursor + 4) < end && expr[cursor] == 'e' && expr[cursor + 1] == 'l'
+					&& expr[cursor + 2] == 's' && expr[cursor + 3] == 'e'
 					&& (isWhitespace(expr[cursor + 4]) || expr[cursor + 4] == '{');
 		}
 		return false;

@@ -514,7 +514,6 @@ public class ParserContext implements Serializable {
 		}
 
 		if (variableVisibility == null) {
-			initVariableVisibility();
 			pushVariableScope();
 
 			final Set<String> scope = getVariableScope();

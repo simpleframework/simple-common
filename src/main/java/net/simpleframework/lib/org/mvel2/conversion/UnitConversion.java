@@ -18,18 +18,23 @@
 
 package net.simpleframework.lib.org.mvel2.conversion;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.simpleframework.lib.org.mvel2.ConversionHandler;
 import net.simpleframework.lib.org.mvel2.Unit;
 
 public class UnitConversion implements ConversionHandler {
+	private static final Logger LOG = Logger.getLogger(UnitConversion.class.getName());
+
 	@Override
 	public Object convertFrom(final Object in) {
 		try {
 			return Unit.class.newInstance().convertFrom(in);
 		} catch (final InstantiationException e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "", e);
 		} catch (final IllegalAccessException e) {
-			e.printStackTrace();
+			LOG.log(Level.SEVERE, "", e);
 		}
 		return null;
 	}
@@ -40,9 +45,9 @@ public class UnitConversion implements ConversionHandler {
 			try {
 				return Unit.class.newInstance().canConvertFrom(cls);
 			} catch (final InstantiationException e) {
-				e.printStackTrace();
+				LOG.log(Level.SEVERE, "", e);
 			} catch (final IllegalAccessException e) {
-				e.printStackTrace();
+				LOG.log(Level.SEVERE, "", e);
 			}
 		}
 		return false;

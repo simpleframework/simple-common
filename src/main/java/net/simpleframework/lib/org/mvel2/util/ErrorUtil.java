@@ -1,5 +1,8 @@
 package net.simpleframework.lib.org.mvel2.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.simpleframework.lib.org.mvel2.CompileException;
 import net.simpleframework.lib.org.mvel2.ErrorDetail;
 
@@ -7,6 +10,8 @@ import net.simpleframework.lib.org.mvel2.ErrorDetail;
  * @author Mike Brock .
  */
 public class ErrorUtil {
+	private static final Logger LOG = Logger.getLogger(ErrorUtil.class.getName());
+
 	public static CompileException rewriteIfNeeded(final CompileException caught, final char[] outer,
 			final int outerCursor) {
 		if (outer != caught.getExpr()) {
@@ -25,7 +30,7 @@ public class ErrorUtil {
 
 				caught.setCursor(newCursor);
 			} catch (final Throwable t) {
-				t.printStackTrace();
+				LOG.log(Level.WARNING, "", t);
 			}
 		}
 		return caught;

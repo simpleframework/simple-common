@@ -28,6 +28,8 @@ import static net.simpleframework.lib.org.mvel2.Operator.TERNARY;
 import static net.simpleframework.lib.org.mvel2.Operator.TERNARY_ELSE;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.simpleframework.lib.org.mvel2.ast.ASTNode;
 import net.simpleframework.lib.org.mvel2.ast.Substatement;
@@ -44,6 +46,8 @@ import net.simpleframework.lib.org.mvel2.util.ExecutionStack;
  */
 @SuppressWarnings({ "CaughtExceptionImmediatelyRethrown" })
 public class MVELInterpretedRuntime extends AbstractParser {
+	private static final Logger LOG = Logger.getLogger(MVELInterpretedRuntime.class.getName());
+
 	public Object parse() {
 		try {
 			stk = new ExecutionStack();
@@ -52,10 +56,10 @@ public class MVELInterpretedRuntime extends AbstractParser {
 			cursor = start;
 			return parseAndExecuteInterpreted();
 		} catch (final ArrayIndexOutOfBoundsException e) {
-			e.printStackTrace();
+			LOG.log(Level.WARNING, "", e);
 			throw new CompileException("unexpected end of statement", expr, length);
 		} catch (final NullPointerException e) {
-			e.printStackTrace();
+			LOG.log(Level.WARNING, "", e);
 
 			if (cursor >= length) {
 				throw new CompileException("unexpected end of statement", expr, length);
@@ -392,6 +396,7 @@ public class MVELInterpretedRuntime extends AbstractParser {
 	MVELInterpretedRuntime(final String expression, final VariableResolverFactory resolverFactory) {
 		setExpression(expression);
 		this.variableFactory = resolverFactory;
+		this.pCtx.initializeTables();
 	}
 
 	MVELInterpretedRuntime(final String expression, final Object ctx) {

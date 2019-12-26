@@ -20,6 +20,8 @@ package net.simpleframework.lib.org.mvel2.optimizers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.simpleframework.lib.org.mvel2.optimizers.dynamic.DynamicOptimizer;
 import net.simpleframework.lib.org.mvel2.optimizers.impl.asm.ASMAccessorOptimizer;
@@ -29,6 +31,7 @@ public class OptimizerFactory {
 	public static String DYNAMIC = "dynamic";
 	public static String SAFE_REFLECTIVE = "reflective";
 
+	private static final Logger LOG = Logger.getLogger(OptimizerFactory.class.getName());
 	private static String defaultOptimizer;
 	private static final Map<String, AccessorOptimizer> accessorCompilers = new HashMap<>();
 
@@ -52,10 +55,10 @@ public class OptimizerFactory {
 		} catch (final ClassNotFoundException e) {
 			defaultOptimizer = SAFE_REFLECTIVE;
 		} catch (final Throwable e) {
-			e.printStackTrace();
-			System.err
-					.println("[MVEL] Notice: Possible incorrect version of ASM present (3.0 required).  "
-							+ "Disabling JIT compiler.  Reflective Optimizer will be used.");
+			LOG.log(Level.WARNING,
+					"[MVEL] Notice: Possible incorrect version of ASM present (3.0 required).  "
+							+ "Disabling JIT compiler.  Reflective Optimizer will be used.",
+					e);
 			defaultOptimizer = SAFE_REFLECTIVE;
 		}
 

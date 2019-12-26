@@ -456,7 +456,8 @@ public class ParseTools {
 		if (ref != null && (parms = ref.get()) != null) {
 			return parms;
 		} else {
-			CONSTRUCTOR_PARMS_CACHE.put(cns, new WeakReference<>(parms = cns.getParameterTypes()));
+			CONSTRUCTOR_PARMS_CACHE.put(cns,
+					new WeakReference<>(parms = cns.getParameterTypes()));
 			return parms;
 		}
 	}
@@ -547,7 +548,8 @@ public class ParseTools {
 		if (ref != null && (cns = ref.get()) != null) {
 			return cns;
 		} else {
-			CLASS_CONSTRUCTOR_CACHE.put(cls, new WeakReference<>(cns = cls.getConstructors()));
+			CLASS_CONSTRUCTOR_CACHE.put(cls,
+					new WeakReference<>(cns = cls.getConstructors()));
 			return cns;
 		}
 	}
@@ -1082,6 +1084,7 @@ public class ParseTools {
 
 		typeCodes.put(BigDecimal.class, DataTypes.BIG_DECIMAL);
 		typeCodes.put(BigInteger.class, DataTypes.BIG_INTEGER);
+		typeCodes.put(InternalNumber.class, DataTypes.BIG_DECIMAL);
 
 		typeCodes.put(int.class, DataTypes.INTEGER);
 		typeCodes.put(double.class, DataTypes.DOUBLE);
