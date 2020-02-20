@@ -196,11 +196,11 @@ public abstract class HttpUtils implements HtmlConst {
 	public static boolean loc(final HttpServletRequest httpRequest,
 			final HttpServletResponse httpResponse, final String url) throws IOException {
 		if (!httpResponse.isCommitted()) {
-			if (isAbsoluteUrl(url)) {
-				httpResponse.sendRedirect(url);
+			if (url.startsWith("//")) {
+				httpResponse.sendRedirect(getProto(httpRequest) + ":" + url);
 			} else {
-				if (url.startsWith("//")) {
-					httpResponse.sendRedirect(getProto(httpRequest) + ":" + url);
+				if (isAbsoluteUrl(url)) {
+					httpResponse.sendRedirect(url);
 				} else {
 					httpResponse.sendRedirect(wrapContextPath(httpRequest, url));
 				}
