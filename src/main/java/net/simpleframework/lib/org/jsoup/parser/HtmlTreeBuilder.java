@@ -107,7 +107,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			}
 
 			// initialise the tokeniser state:
-			final String contextTag = context.tagName();
+			final String contextTag = context.normalName();
 			if (StringUtil.in(contextTag, "title", "textarea")) {
 				tokeniser.transition(TokeniserState.Rcdata);
 			} else if (StringUtil.in(contextTag, "iframe", "noembed", "noframes", "style", "xmp")) {
@@ -218,6 +218,14 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	}
 
 	Element insert(final Token.StartTag startTag) {
+		// cleanup duplicate attributes:
+		if (startTag.attributes != null && !startTag.attributes.isEmpty()) {
+			final int dupes = startTag.attributes.deduplicate(settings);
+			if (dupes > 0) {
+				error("Duplicate attribute");
+			}
+		}
+
 		// handle empty unknown tags
 		// when the spec expects an empty tag, will directly hit insertEmpty, so
 		// won't generate this fake end tag.
@@ -238,14 +246,14 @@ public class HtmlTreeBuilder extends TreeBuilder {
 			return el;
 		}
 
-		final Element el = new Element(Tag.valueOf(startTag.name(), settings), baseUri,
+		final Element el = new Element(Tag.valueOf(startTag.name(), settings), null,
 				settings.normalizeAttributes(startTag.attributes));
 		insert(el);
 		return el;
 	}
 
 	Element insertStartTag(final String startTagName) {
-		final Element el = new Element(Tag.valueOf(startTagName, settings), baseUri);
+		final Element el = new Element(Tag.valueOf(startTagName, settings), null);
 		insert(el);
 		return el;
 	}
@@ -257,7 +265,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
 	Element insertEmpty(final Token.StartTag startTag) {
 		final Tag tag = Tag.valueOf(startTag.name(), settings);
-		final Element el = new Element(tag, baseUri, startTag.attributes);
+		final Element el = new Element(tag, null, settings.normalizeAttributes(startTag.attributes));
 		insertNode(el);
 		if (startTag.isSelfClosing()) {
 			if (tag.isKnownTag()) {
@@ -273,7 +281,8 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
 	FormElement insertForm(final Token.StartTag startTag, final boolean onStack) {
 		final Tag tag = Tag.valueOf(startTag.name(), settings);
-		final FormElement el = new FormElement(tag, baseUri, startTag.attributes);
+		final FormElement el = new FormElement(tag, null,
+				settings.normalizeAttributes(startTag.attributes));
 		setFormElement(el);
 		insertNode(el);
 		if (onStack) {
@@ -289,8 +298,12 @@ public class HtmlTreeBuilder extends TreeBuilder {
 
 	void insert(final Token.Character characterToken) {
 		final Node node;
-		final Element el = currentElement();
-		final String tagName = el.tagName();
+		Element el = currentElement();
+		if (el == null) {
+			el = doc; // allows for whitespace to be inserted into the doc root
+		}
+		// object (not on the stack)
+		final String tagName = el.normalName();
 		final String data = characterToken.getData();
 
 		if (characterToken.isCData()) {
@@ -307,7 +320,7 @@ public class HtmlTreeBuilder extends TreeBuilder {
 	private void insertNode(final Node node) {
 		// if the stack hasn't been set up yet, elements (doctype, comments) go
 		// into the doc
-		if (stack.size() == 0) {
+		if (stack.isEmpty()) {
 			doc.appendChild(node);
 		} else if (isFosterInserts()) {
 			insertInFosterParent(node);
@@ -371,14 +384,15 @@ public class HtmlTreeBuilder extends TreeBuilder {
 		return false;
 	}
 
-	void popStackToClose(final String elName) {
+	Element popStackToClose(final String elName) {
 		for (int pos = stack.size() - 1; pos >= 0; pos--) {
-			final Element next = stack.get(pos);
+			final Element el = stack.get(pos);
 			stack.remove(pos);
-			if (next.normalName().equals(elName)) {
-				break;
+			if (el.normalName().equals(elName)) {
+				return el;
 			}
 		}
+		return null;
 	}
 
 	// elnames is sorted, comes from Constants

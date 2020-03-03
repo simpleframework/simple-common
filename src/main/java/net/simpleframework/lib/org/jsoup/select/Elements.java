@@ -9,9 +9,12 @@ import java.util.List;
 
 import net.simpleframework.lib.org.jsoup.helper.Validate;
 import net.simpleframework.lib.org.jsoup.internal.StringUtil;
+import net.simpleframework.lib.org.jsoup.nodes.Comment;
+import net.simpleframework.lib.org.jsoup.nodes.DataNode;
 import net.simpleframework.lib.org.jsoup.nodes.Element;
 import net.simpleframework.lib.org.jsoup.nodes.FormElement;
 import net.simpleframework.lib.org.jsoup.nodes.Node;
+import net.simpleframework.lib.org.jsoup.nodes.TextNode;
 
 /**
  * A list of {@link Element}s, with methods that act on every element in the
@@ -809,13 +812,57 @@ public class Elements extends ArrayList<Element> {
 	 *         no forms.
 	 */
 	public List<FormElement> forms() {
-		final ArrayList<FormElement> forms = new ArrayList<>();
+		return nodesOfType(FormElement.class);
+	}
+
+	/**
+	 * Get {@link Comment} nodes that are direct child nodes of the selected
+	 * elements.
+	 * 
+	 * @return Comment nodes, or an empty list if none.
+	 */
+	public List<Comment> comments() {
+		return nodesOfType(Comment.class);
+	}
+
+	/**
+	 * Get {@link TextNode} nodes that are direct child nodes of the selected
+	 * elements.
+	 * 
+	 * @return TextNode nodes, or an empty list if none.
+	 */
+	public List<TextNode> textNodes() {
+		return nodesOfType(TextNode.class);
+	}
+
+	/**
+	 * Get {@link DataNode} nodes that are direct child nodes of the selected
+	 * elements. DataNode nodes contain the
+	 * content of tags such as {@code script}, {@code style} etc and are distinct
+	 * from {@link TextNode}s.
+	 * 
+	 * @return Comment nodes, or an empty list if none.
+	 */
+	public List<DataNode> dataNodes() {
+		return nodesOfType(DataNode.class);
+	}
+
+	private <T extends Node> List<T> nodesOfType(final Class<T> tClass) {
+		final ArrayList<T> nodes = new ArrayList<>();
 		for (final Element el : this) {
-			if (el instanceof FormElement) {
-				forms.add((FormElement) el);
+			if (el.getClass().isInstance(tClass)) { // Handles FormElements
+				nodes.add(tClass.cast(el));
+			} else if (Node.class.isAssignableFrom(tClass)) { // check if child
+																				// nodes match
+				for (int i = 0; i < el.childNodeSize(); i++) {
+					final Node node = el.childNode(i);
+					if (tClass.isInstance(node)) {
+						nodes.add(tClass.cast(node));
+					}
+				}
 			}
 		}
-		return forms;
+		return nodes;
 	}
 
 }

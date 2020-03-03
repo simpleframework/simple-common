@@ -29,7 +29,9 @@ public class QueryParser {
 	 * @param query
 	 *        CSS query
 	 */
-	private QueryParser(final String query) {
+	private QueryParser(String query) {
+		Validate.notEmpty(query);
+		query = query.trim();
 		this.query = query;
 		this.tq = new TokenQueue(query);
 	}
@@ -40,6 +42,7 @@ public class QueryParser {
 	 * @param query
 	 *        CSS query
 	 * @return Evaluator
+	 * @see Selector selector query syntax
 	 */
 	public static Evaluator parse(final String query) {
 		try {
@@ -240,14 +243,18 @@ public class QueryParser {
 	}
 
 	private void byTag() {
-		String tagName = tq.consumeElementSelector();
-
+		// todo - these aren't dealing perfectly with case sensitivity. For case
+		// sensitive parsers, we should also make
+		// the tag in the selector case-sensitive (and also attribute names). But
+		// for now, normalize (lower-case) for
+		// consistency - both the selector and the element tag
+		String tagName = normalize(tq.consumeElementSelector());
 		Validate.notEmpty(tagName);
 
 		// namespaces: wildcard match equals(tagName) or ending in ":"+tagName
 		if (tagName.startsWith("*|")) {
-			evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(normalize(tagName)),
-					new Evaluator.TagEndsWith(normalize(tagName.replace("*|", ":")))));
+			evals.add(new CombiningEvaluator.Or(new Evaluator.Tag(tagName),
+					new Evaluator.TagEndsWith(tagName.replace("*|", ":"))));
 		} else {
 			// namespaces: if element name is "abc:def", selector must be
 			// "abc|def", so flip:
@@ -255,7 +262,7 @@ public class QueryParser {
 				tagName = tagName.replace("|", ":");
 			}
 
-			evals.add(new Evaluator.Tag(tagName.trim()));
+			evals.add(new Evaluator.Tag(tagName));
 		}
 	}
 

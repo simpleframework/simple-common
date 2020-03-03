@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.Buffer;
@@ -59,7 +60,7 @@ public class HttpConnection implements Connection {
 	 * vs in jsoup, which would otherwise default to {@code Java}. So by default,
 	 * use a desktop UA.
 	 */
-	public static final String DEFAULT_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36";
+	public static final String DEFAULT_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36";
 	private static final String USER_AGENT = "User-Agent";
 	public static final String CONTENT_TYPE = "Content-Type";
 	public static final String MULTIPART_FORM_DATA = "multipart/form-data";
@@ -108,10 +109,11 @@ public class HttpConnection implements Connection {
 			String urlS = u.toExternalForm(); // URL external form may have spaces
 															// which is illegal in new URL()
 															// (odd asymmetry)
-			urlS = urlS.replaceAll(" ", "%20");
+			urlS = urlS.replace(" ", "%20");
 			final URI uri = new URI(urlS);
 			return new URL(uri.toASCIIString());
-		} catch (final Exception e) {
+		} catch (URISyntaxException | MalformedURLException e) {
+			// give up and return the original input
 			return u;
 		}
 	}
@@ -120,7 +122,7 @@ public class HttpConnection implements Connection {
 		if (val == null) {
 			return null;
 		}
-		return val.replaceAll("\"", "%22");
+		return val.replace("\"", "%22");
 	}
 
 	private Connection.Request req;
@@ -498,7 +500,7 @@ public class HttpConnection implements Connection {
 		@Override
 		public boolean hasHeader(final String name) {
 			Validate.notEmpty(name, "Header name must not be empty");
-			return getHeadersCaseInsensitive(name).size() != 0;
+			return !getHeadersCaseInsensitive(name).isEmpty();
 		}
 
 		/**
@@ -622,7 +624,7 @@ public class HttpConnection implements Connection {
 
 		Request() {
 			timeoutMilliseconds = 30000; // 30 seconds
-			maxBodySizeBytes = 1024 * 1024; // 1MB
+			maxBodySizeBytes = 1024 * 1024 * 2; // 2MB
 			followRedirects = true;
 			data = new ArrayList<>();
 			method = Method.GET;
@@ -833,7 +835,7 @@ public class HttpConnection implements Connection {
 
 			final long startTime = System.nanoTime();
 			final HttpURLConnection conn = createConnection(req);
-			Response res;
+			Response res = null;
 			try {
 				conn.connect();
 				if (conn.getDoOutput()) {
@@ -890,7 +892,7 @@ public class HttpConnection implements Connection {
 				if (contentType != null && !req.ignoreContentType() && !contentType.startsWith("text/")
 						&& !xmlContentTypeRxp.matcher(contentType).matches()) {
 					throw new UnsupportedMimeTypeException(
-							"Unhandled content type. Must be text/*, application/xml, or application/xhtml+xml",
+							"Unhandled content type. Must be text/*, application/xml, or application/*+xml",
 							contentType, req.url().toString());
 				}
 
@@ -945,11 +947,9 @@ public class HttpConnection implements Connection {
 					res.byteData = DataUtil.emptyByteBuffer();
 				}
 			} catch (final IOException e) {
-				// per Java's documentation, this is not necessary, and precludes
-				// keepalives. However in practise,
-				// connection errors will not be released quickly enough and can
-				// cause a too many open files error.
-				conn.disconnect();
+				if (res != null) {
+					res.safeClose(); // will be non-null if got to conn
+				}
 				throw e;
 			}
 
@@ -1089,13 +1089,12 @@ public class HttpConnection implements Connection {
 		}
 
 		/**
-		 * Call on completion of stream read, to close the body (or error) stream
+		 * Call on completion of stream read, to close the body (or error) stream.
+		 * The connection.disconnect allows
+		 * keep-alives to work (as the underlying connection is actually held
+		 * open, despite the name).
 		 */
 		private void safeClose() {
-			if (conn != null) {
-				conn.disconnect();
-				conn = null;
-			}
 			if (bodyStream != null) {
 				try {
 					bodyStream.close();
@@ -1104,6 +1103,10 @@ public class HttpConnection implements Connection {
 				} finally {
 					bodyStream = null;
 				}
+			}
+			if (conn != null) {
+				conn.disconnect();
+				conn = null;
 			}
 		}
 

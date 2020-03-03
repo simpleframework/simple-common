@@ -28,6 +28,20 @@ public class ParseSettings {
 	private final boolean preserveAttributeCase;
 
 	/**
+	 * Returns true if preserving tag name case.
+	 */
+	public boolean preserveTagCase() {
+		return preserveTagCase;
+	}
+
+	/**
+	 * Returns true if preserving attribute case.
+	 */
+	public boolean preserveAttributeCase() {
+		return preserveAttributeCase;
+	}
+
+	/**
 	 * Define parse settings.
 	 * 
 	 * @param tag
@@ -63,7 +77,7 @@ public class ParseSettings {
 	}
 
 	Attributes normalizeAttributes(final Attributes attributes) {
-		if (!preserveAttributeCase) {
+		if (attributes != null && !preserveAttributeCase) {
 			attributes.normalize();
 		}
 		return attributes;

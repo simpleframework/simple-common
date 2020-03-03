@@ -11,8 +11,6 @@ import net.simpleframework.lib.org.jsoup.parser.Parser;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public class Comment extends LeafNode {
-	private static final String COMMENT_KEY = "comment";
-
 	/**
 	 * Create a new comment node.
 	 * 
@@ -21,20 +19,6 @@ public class Comment extends LeafNode {
 	 */
 	public Comment(final String data) {
 		value = data;
-	}
-
-	/**
-	 * Create a new comment node.
-	 * 
-	 * @param data
-	 *        The contents of the comment
-	 * @param baseUri
-	 *        base URI not used. This is a leaf node.
-	 * @deprecated
-	 */
-	@Deprecated
-	public Comment(final String data, final String baseUri) {
-		this(data);
 	}
 
 	@Override
@@ -51,10 +35,16 @@ public class Comment extends LeafNode {
 		return coreValue();
 	}
 
+	public Comment setData(final String data) {
+		coreValue(data);
+		return this;
+	}
+
 	@Override
 	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
-		if (out.prettyPrint()) {
+		if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof Element
+				&& ((Element) parentNode).tag().formatAsBlock()) || (out.outline()))) {
 			indent(accum, depth, out);
 		}
 		accum.append("<!--").append(getData()).append("-->");
@@ -67,6 +57,11 @@ public class Comment extends LeafNode {
 	@Override
 	public String toString() {
 		return outerHtml();
+	}
+
+	@Override
+	public Comment clone() {
+		return (Comment) super.clone();
 	}
 
 	/**

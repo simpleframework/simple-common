@@ -48,7 +48,7 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return (element.tagName().equalsIgnoreCase(tagName));
+			return (element.normalName().equals(tagName));
 		}
 
 		@Override
@@ -69,7 +69,7 @@ public abstract class Evaluator {
 
 		@Override
 		public boolean matches(final Element root, final Element element) {
-			return (element.tagName().endsWith(tagName));
+			return (element.normalName().endsWith(tagName));
 		}
 
 		@Override
@@ -219,7 +219,7 @@ public abstract class Evaluator {
 	 */
 	public static final class AttributeWithValueStarting extends AttributeKeyPair {
 		public AttributeWithValueStarting(final String key, final String value) {
-			super(key, value);
+			super(key, value, false);
 		}
 
 		@Override
@@ -243,7 +243,7 @@ public abstract class Evaluator {
 	 */
 	public static final class AttributeWithValueEnding extends AttributeKeyPair {
 		public AttributeWithValueEnding(final String key, final String value) {
-			super(key, value);
+			super(key, value, false);
 		}
 
 		@Override
@@ -315,16 +315,22 @@ public abstract class Evaluator {
 		String key;
 		String value;
 
-		public AttributeKeyPair(final String key, String value) {
+		public AttributeKeyPair(final String key, final String value) {
+			this(key, value, true);
+		}
+
+		public AttributeKeyPair(final String key, String value, final boolean trimValue) {
 			Validate.notEmpty(key);
 			Validate.notEmpty(value);
 
 			this.key = normalize(key);
-			if (value.startsWith("\"") && value.endsWith("\"")
-					|| value.startsWith("'") && value.endsWith("'")) {
+			final boolean isStringLiteral = value.startsWith("'") && value.endsWith("'")
+					|| value.startsWith("\"") && value.endsWith("\"");
+			if (isStringLiteral) {
 				value = value.substring(1, value.length() - 1);
 			}
-			this.value = normalize(value);
+
+			this.value = trimValue ? normalize(value) : normalize(value, isStringLiteral);
 		}
 	}
 
@@ -488,7 +494,7 @@ public abstract class Evaluator {
 
 	/**
 	 * css-compatible Evaluator for :eq (css :nth-child)
-	 * 
+	 *
 	 * @see IndexEquals
 	 */
 	public static final class IsNthChild extends CssNthEvaluator {
@@ -510,7 +516,7 @@ public abstract class Evaluator {
 
 	/**
 	 * css pseudo class :nth-last-child)
-	 * 
+	 *
 	 * @see IndexEquals
 	 */
 	public static final class IsNthLastChild extends CssNthEvaluator {
@@ -531,7 +537,7 @@ public abstract class Evaluator {
 
 	/**
 	 * css pseudo class nth-of-type
-	 * 
+	 *
 	 */
 	public static class IsNthOfType extends CssNthEvaluator {
 		public IsNthOfType(final int a, final int b) {
@@ -623,7 +629,7 @@ public abstract class Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			final Element p = element.parent();
-			return p != null && !(p instanceof Document) && element.siblingElements().size() == 0;
+			return p != null && !(p instanceof Document) && element.siblingElements().isEmpty();
 		}
 
 		@Override

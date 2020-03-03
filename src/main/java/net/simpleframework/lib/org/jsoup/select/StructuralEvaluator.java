@@ -23,7 +23,7 @@ abstract class StructuralEvaluator extends Evaluator {
 		@Override
 		public boolean matches(final Element root, final Element element) {
 			for (final Element e : element.getAllElements()) {
-				if (e != element && evaluator.matches(root, e)) {
+				if (e != element && evaluator.matches(element, e)) {
 					return true;
 				}
 			}

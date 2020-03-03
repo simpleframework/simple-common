@@ -95,7 +95,7 @@ public class Cleaner {
 
 		final Document clean = Document.createShell(dirtyDocument.baseUri());
 		final int numDiscarded = copySafeNodes(dirtyDocument.body(), clean.body());
-		return numDiscarded == 0 && dirtyDocument.head().childNodes().size() == 0; // because
+		return numDiscarded == 0 && dirtyDocument.head().childNodes().isEmpty(); // because
 																											// we
 																											// only
 																											// look
@@ -124,7 +124,7 @@ public class Cleaner {
 		final List<Node> nodes = Parser.parseFragment(bodyHtml, dirty.body(), "", errorList);
 		dirty.body().insertChildren(0, nodes);
 		final int numDiscarded = copySafeNodes(dirty.body(), clean.body());
-		return numDiscarded == 0 && errorList.size() == 0;
+		return numDiscarded == 0 && errorList.isEmpty();
 	}
 
 	/**
@@ -146,8 +146,9 @@ public class Cleaner {
 			if (source instanceof Element) {
 				final Element sourceEl = (Element) source;
 
-				if (whitelist.isSafeTag(sourceEl.tagName())) { // safe, clone and
-																				// copy safe attrs
+				if (whitelist.isSafeTag(sourceEl.normalName())) { // safe, clone and
+																					// copy safe
+																					// attrs
 					final ElementMeta meta = createSafeElement(sourceEl);
 					final Element destChild = meta.el;
 					destination.appendChild(destChild);

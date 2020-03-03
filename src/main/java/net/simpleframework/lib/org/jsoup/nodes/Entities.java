@@ -111,21 +111,6 @@ public class Entities {
 	}
 
 	/**
-	 * Get the Character value of the named entity
-	 *
-	 * @param name
-	 *        named entity (e.g. "lt" or "amp")
-	 * @return the Character value of the named entity (e.g. '{@literal <}' or
-	 *         '{@literal &}')
-	 * @deprecated does not support characters outside the BMP or multiple
-	 *             character names
-	 */
-	@Deprecated
-	public static Character getCharacterByName(final String name) {
-		return (char) extended.codepointForName(name);
-	}
-
-	/**
 	 * Get the character(s) represented by the named entity
 	 *
 	 * @param name
@@ -287,7 +272,7 @@ public class Entities {
 	private static void appendEncoded(final Appendable accum, final EscapeMode escapeMode,
 			final int codePoint) throws IOException {
 		final String name = escapeMode.nameForCodepoint(codePoint);
-		if (name != emptyName) {
+		if (!emptyName.equals(name)) {
 			accum.append('&').append(name).append(';');
 		} else {
 			accum.append("&#x").append(Integer.toHexString(codePoint)).append(';');

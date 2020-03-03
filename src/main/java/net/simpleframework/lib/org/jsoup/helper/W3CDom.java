@@ -1,12 +1,17 @@
 package net.simpleframework.lib.org.jsoup.helper;
 
+import static javax.xml.transform.OutputKeys.METHOD;
+
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -14,7 +19,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
@@ -31,11 +38,107 @@ import net.simpleframework.lib.org.jsoup.select.NodeVisitor;
  * for integration with toolsets that use the W3C DOM.
  */
 public class W3CDom {
-	protected DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	protected DocumentBuilderFactory factory;
+
+	public W3CDom() {
+		factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+	}
+
+	/**
+	 * Converts a jsoup DOM to a W3C DOM
+	 *
+	 * @param in
+	 *        jsoup Document
+	 * @return W3C Document
+	 */
+	public static Document convert(final net.simpleframework.lib.org.jsoup.nodes.Document in) {
+		return (new W3CDom().fromJsoup(in));
+	}
+
+	/**
+	 * Serialize a W3C document to a String. Provide Properties to define output
+	 * settings including if HTML or XML. If
+	 * you don't provide the properties ({@code null}), the output will be
+	 * auto-detected based on the content of the
+	 * document.
+	 *
+	 * @param doc
+	 *        Document
+	 * @param properties
+	 *        (optional/nullable) the output properties to use. See {@link
+	 *        Transformer#setOutputProperties(Properties)} and {@link OutputKeys}
+	 * @return Document as string
+	 * @see #OutputHtml
+	 * @see #OutputXml
+	 * @see OutputKeys#ENCODING
+	 * @see OutputKeys#OMIT_XML_DECLARATION
+	 * @see OutputKeys#STANDALONE
+	 * @see OutputKeys#STANDALONE
+	 * @see OutputKeys#DOCTYPE_PUBLIC
+	 * @see OutputKeys#DOCTYPE_PUBLIC
+	 * @see OutputKeys#CDATA_SECTION_ELEMENTS
+	 * @see OutputKeys#INDENT
+	 * @see OutputKeys#MEDIA_TYPE
+	 */
+	public static String asString(final Document doc, final Map<String, String> properties) {
+		try {
+			final DOMSource domSource = new DOMSource(doc);
+			final StringWriter writer = new StringWriter();
+			final StreamResult result = new StreamResult(writer);
+			final TransformerFactory tf = TransformerFactory.newInstance();
+			final Transformer transformer = tf.newTransformer();
+			if (properties != null) {
+				transformer.setOutputProperties(propertiesFromMap(properties));
+			}
+
+			if (doc.getDoctype() != null) {
+				final DocumentType doctype = doc.getDoctype();
+				if (!StringUtil.isBlank(doctype.getPublicId())) {
+					transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+				}
+				if (!StringUtil.isBlank(doctype.getSystemId())) {
+					transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+				} else if (doctype.getName().equalsIgnoreCase("html")
+						&& StringUtil.isBlank(doctype.getPublicId())
+						&& StringUtil.isBlank(doctype.getSystemId())) {
+					transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "about:legacy-compat");
+				}
+			}
+
+			transformer.transform(domSource, result);
+			return writer.toString();
+
+		} catch (final TransformerException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	static Properties propertiesFromMap(final Map<String, String> map) {
+		final Properties props = new Properties();
+		props.putAll(map);
+		return props;
+	}
+
+	/** Canned default for HTML output. */
+	public static HashMap<String, String> OutputHtml() {
+		return methodMap("html");
+	}
+
+	/** Canned default for XML output. */
+	public static HashMap<String, String> OutputXml() {
+		return methodMap("xml");
+	}
+
+	private static HashMap<String, String> methodMap(final String method) {
+		final HashMap<String, String> map = new HashMap<>();
+		map.put(METHOD, method);
+		return map;
+	}
 
 	/**
 	 * Convert a jsoup Document to a W3C Document.
-	 * 
+	 *
 	 * @param in
 	 *        jsoup doc
 	 * @return w3c doc
@@ -44,10 +147,19 @@ public class W3CDom {
 		Validate.notNull(in);
 		DocumentBuilder builder;
 		try {
-			// set the factory to be namespace-aware
-			factory.setNamespaceAware(true);
 			builder = factory.newDocumentBuilder();
-			final Document out = builder.newDocument();
+			final DOMImplementation impl = builder.getDOMImplementation();
+			Document out;
+
+			out = builder.newDocument();
+			final net.simpleframework.lib.org.jsoup.nodes.DocumentType doctype = in.documentType();
+			if (doctype != null) {
+				final org.w3c.dom.DocumentType documentType = impl.createDocumentType(doctype.name(),
+						doctype.publicId(), doctype.systemId());
+				out.appendChild(documentType);
+			}
+			out.setXmlStandalone(true);
+
 			convert(in, out);
 			return out;
 		} catch (final ParserConfigurationException e) {
@@ -59,7 +171,7 @@ public class W3CDom {
 	 * Converts a jsoup document into the provided W3C Document. If required, you
 	 * can set options on the output document
 	 * before converting.
-	 * 
+	 *
 	 * @param in
 	 *        jsoup doc
 	 * @param out
@@ -77,6 +189,19 @@ public class W3CDom {
 		// #root
 		// node
 		NodeTraversor.traverse(new W3CBuilder(out), rootEl);
+	}
+
+	/**
+	 * Serialize a W3C document to a String. The output format will be XML or
+	 * HTML depending on the content of the doc.
+	 *
+	 * @param doc
+	 *        Document
+	 * @return Document as string
+	 * @see W3CDom#asString(Document, Map)
+	 */
+	public String asString(final Document doc) {
+		return asString(doc, null);
 	}
 
 	/**
@@ -140,6 +265,8 @@ public class W3CDom {
 				dest.appendChild(node);
 			} else {
 				// unhandled
+				// not that doctype is not handled here - rather it is used in the
+				// initial doc creation
 			}
 		}
 
@@ -188,26 +315,5 @@ public class W3CDom {
 			return pos > 0 ? el.tagName().substring(0, pos) : "";
 		}
 
-	}
-
-	/**
-	 * Serialize a W3C document to a String.
-	 * 
-	 * @param doc
-	 *        Document
-	 * @return Document as string
-	 */
-	public String asString(final Document doc) {
-		try {
-			final DOMSource domSource = new DOMSource(doc);
-			final StringWriter writer = new StringWriter();
-			final StreamResult result = new StreamResult(writer);
-			final TransformerFactory tf = TransformerFactory.newInstance();
-			final Transformer transformer = tf.newTransformer();
-			transformer.transform(domSource, result);
-			return writer.toString();
-		} catch (final TransformerException e) {
-			throw new IllegalStateException(e);
-		}
 	}
 }

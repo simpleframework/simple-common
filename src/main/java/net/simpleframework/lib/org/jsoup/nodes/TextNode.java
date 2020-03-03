@@ -11,7 +11,6 @@ import net.simpleframework.lib.org.jsoup.internal.StringUtil;
  * @author Jonathan Hedley, jonathan@hedley.net
  */
 public class TextNode extends LeafNode {
-
 	/**
 	 * Create a new TextNode representing the supplied (unencoded) text).
 	 * 
@@ -21,21 +20,6 @@ public class TextNode extends LeafNode {
 	 */
 	public TextNode(final String text) {
 		value = text;
-	}
-
-	/**
-	 * Create a new TextNode representing the supplied (unencoded) text).
-	 * 
-	 * @param text
-	 *        raw text
-	 * @param baseUri
-	 *        base uri - ignored for this node type
-	 * @see #createFromEncoded(String, String)
-	 * @deprecated use {@link TextNode#TextNode(String)}
-	 */
-	@Deprecated
-	public TextNode(final String text, final String baseUri) {
-		this(text);
 	}
 
 	@Override
@@ -116,15 +100,16 @@ public class TextNode extends LeafNode {
 	@Override
 	void outerHtmlHead(final Appendable accum, final int depth, final Document.OutputSettings out)
 			throws IOException {
-		if (out.prettyPrint() && ((siblingIndex() == 0 && parentNode instanceof Element
+		final boolean prettyPrint = out.prettyPrint();
+		if (prettyPrint && ((siblingIndex() == 0 && parentNode instanceof Element
 				&& ((Element) parentNode).tag().formatAsBlock() && !isBlank())
 				|| (out.outline() && siblingNodes().size() > 0 && !isBlank()))) {
 			indent(accum, depth, out);
 		}
 
-		final boolean normaliseWhite = out.prettyPrint() && parent() instanceof Element
-				&& !Element.preserveWhitespace(parent());
-		Entities.escape(accum, coreValue(), out, false, normaliseWhite, false);
+		final boolean normaliseWhite = prettyPrint && !Element.preserveWhitespace(parentNode);
+		final boolean stripWhite = prettyPrint && parentNode instanceof Document;
+		Entities.escape(accum, coreValue(), out, false, normaliseWhite, stripWhite);
 	}
 
 	@Override
@@ -136,21 +121,9 @@ public class TextNode extends LeafNode {
 		return outerHtml();
 	}
 
-	/**
-	 * Create a new TextNode from HTML encoded (aka escaped) data.
-	 * 
-	 * @param encodedText
-	 *        Text containing encoded HTML (e.g. &amp;lt;)
-	 * @param baseUri
-	 *        Base uri
-	 * @return TextNode containing unencoded data (e.g. &lt;)
-	 * @deprecated use {@link TextNode#createFromEncoded(String)} instead, as
-	 *             LeafNodes don't carry base URIs.
-	 */
-	@Deprecated
-	public static TextNode createFromEncoded(final String encodedText, final String baseUri) {
-		final String text = Entities.unescape(encodedText);
-		return new TextNode(text);
+	@Override
+	public TextNode clone() {
+		return (TextNode) super.clone();
 	}
 
 	/**

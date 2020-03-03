@@ -11,17 +11,16 @@ import net.simpleframework.lib.org.jsoup.internal.Normalizer;
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-public class Tag {
+public class Tag implements Cloneable {
 	private static final Map<String, Tag> tags = new HashMap<>(); // map of known
 																						// tags
 
-	private final String tagName;
+	private String tagName;
 	private final String normalName; // always the lower case version of this
 												// tag,
 	// regardless of case preservation mode
-	private boolean isBlock = true; // block or inline
+	private boolean isBlock = true; // block
 	private boolean formatAsBlock = true; // should be formatted as a block
-	private boolean canContainInline = true; // only pcdata if not
 	private boolean empty = false; // can hold nothing; e.g. img
 	private boolean selfClosing = false; // can self close (<foo />). used for
 														// unknown tags that self close,
@@ -74,15 +73,23 @@ public class Tag {
 		Tag tag = tags.get(tagName);
 
 		if (tag == null) {
-			tagName = settings.normalizeTag(tagName);
+			tagName = settings.normalizeTag(tagName); // the name we'll use
 			Validate.notEmpty(tagName);
-			tag = tags.get(tagName);
+			final String normalName = Normalizer.lowerCase(tagName); // the
+																						// lower-case
+			// name to get tag
+			// settings off
+			tag = tags.get(normalName);
 
 			if (tag == null) {
 				// not defined: create default; go anywhere, do anything! (incl be
 				// inside a <p>)
 				tag = new Tag(tagName);
 				tag.isBlock = false;
+			} else if (settings.preserveTagCase() && !tagName.equals(normalName)) {
+				tag = tag.clone(); // get a new version vs the static one, so name
+											// update doesn't reset all
+				tag.tagName = tagName;
 			}
 		}
 		return tag;
@@ -123,33 +130,12 @@ public class Tag {
 	}
 
 	/**
-	 * Gets if this tag can contain block tags.
-	 *
-	 * @return if tag can contain block tags
-	 * @deprecated No longer used, and no different result than
-	 *             {{@link #isBlock()}}
-	 */
-	@Deprecated
-	public boolean canContainBlock() {
-		return isBlock;
-	}
-
-	/**
 	 * Gets if this tag is an inline tag.
 	 *
 	 * @return if this tag is an inline tag.
 	 */
 	public boolean isInline() {
 		return !isBlock;
-	}
-
-	/**
-	 * Gets if this tag is a data only tag.
-	 *
-	 * @return if this tag is a data only tag
-	 */
-	public boolean isData() {
-		return !canContainInline && !isEmpty();
 	}
 
 	/**
@@ -238,9 +224,6 @@ public class Tag {
 		if (!tagName.equals(tag.tagName)) {
 			return false;
 		}
-		if (canContainInline != tag.canContainInline) {
-			return false;
-		}
 		if (empty != tag.empty) {
 			return false;
 		}
@@ -267,7 +250,6 @@ public class Tag {
 		int result = tagName.hashCode();
 		result = 31 * result + (isBlock ? 1 : 0);
 		result = 31 * result + (formatAsBlock ? 1 : 0);
-		result = 31 * result + (canContainInline ? 1 : 0);
 		result = 31 * result + (empty ? 1 : 0);
 		result = 31 * result + (selfClosing ? 1 : 0);
 		result = 31 * result + (preserveWhitespace ? 1 : 0);
@@ -279,6 +261,15 @@ public class Tag {
 	@Override
 	public String toString() {
 		return tagName;
+	}
+
+	@Override
+	protected Tag clone() {
+		try {
+			return (Tag) super.clone();
+		} catch (final CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	// internal static initialisers:
@@ -301,6 +292,8 @@ public class Tag {
 	private static final String[] emptyTags = { "meta", "link", "base", "frame", "img", "br", "wbr",
 			"embed", "hr", "input", "keygen", "col", "command", "device", "area", "basefont",
 			"bgsound", "menuitem", "param", "source", "track" };
+	// todo - rework this to format contents as inline; and update html emitter
+	// in Element. Same output, just neater.
 	private static final String[] formatAsInlineTags = { "title", "a", "p", "h1", "h2", "h3", "h4",
 			"h5", "h6", "pre", "address", "li", "th", "td", "script", "style", "ins", "del", "s" };
 	private static final String[] preserveWhitespaceTags = { "pre", "plaintext", "title", "textarea"
@@ -330,7 +323,6 @@ public class Tag {
 		for (final String tagName : emptyTags) {
 			final Tag tag = tags.get(tagName);
 			Validate.notNull(tag);
-			tag.canContainInline = false;
 			tag.empty = true;
 		}
 

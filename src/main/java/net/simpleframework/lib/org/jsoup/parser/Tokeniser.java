@@ -71,9 +71,10 @@ final class Tokeniser {
 
 		// if emit is pending, a non-character token was found: return any chars
 		// in buffer, and leave token for next read:
-		if (charsBuilder.length() > 0) {
-			final String str = charsBuilder.toString();
-			charsBuilder.delete(0, charsBuilder.length());
+		final StringBuilder cb = this.charsBuilder;
+		if (cb.length() != 0) {
+			final String str = cb.toString();
+			cb.delete(0, cb.length());
 			charsString = null;
 			return charPending.data(str);
 		} else if (charsString != null) {
@@ -87,7 +88,7 @@ final class Tokeniser {
 	}
 
 	void emit(final Token token) {
-		Validate.isFalse(isEmitPending, "There is an unread token pending!");
+		Validate.isFalse(isEmitPending);
 
 		emitPending = token;
 		isEmitPending = true;
@@ -170,6 +171,8 @@ final class Tokeniser {
 				reader.rewindToMark();
 				return null;
 			}
+
+			reader.unmark();
 			if (!reader.matchConsume(";")) {
 				characterReferenceError("missing semicolon"); // missing semi
 			}
@@ -208,7 +211,7 @@ final class Tokeniser {
 			if (!found) {
 				reader.rewindToMark();
 				if (looksLegit) {
-					characterReferenceError(String.format("invalid named reference '%s'", nameRef));
+					characterReferenceError("invalid named reference");
 				}
 				return null;
 			}
@@ -218,6 +221,8 @@ final class Tokeniser {
 				reader.rewindToMark();
 				return null;
 			}
+
+			reader.unmark();
 			if (!reader.matchConsume(";")) {
 				characterReferenceError("missing semicolon"); // missing semi
 			}
@@ -250,6 +255,11 @@ final class Tokeniser {
 
 	void emitCommentPending() {
 		emit(commentPending);
+	}
+
+	void createBogusCommentPending() {
+		commentPending.reset();
+		commentPending.bogus = true;
 	}
 
 	void createDoctypePending() {

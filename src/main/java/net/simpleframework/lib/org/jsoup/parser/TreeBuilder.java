@@ -48,6 +48,14 @@ abstract class TreeBuilder {
 	Document parse(final Reader input, final String baseUri, final Parser parser) {
 		initialiseParse(input, baseUri, parser);
 		runParser();
+
+		// tidy up - as the Parser and Treebuilder are retained in document for
+		// settings / fragments
+		reader.close();
+		reader = null;
+		tokeniser = null;
+		stack = null;
+
 		return doc;
 	}
 
@@ -55,12 +63,15 @@ abstract class TreeBuilder {
 			Parser parser);
 
 	protected void runParser() {
+		final Tokeniser tokeniser = this.tokeniser;
+		final Token.TokenType eof = Token.TokenType.EOF;
+
 		while (true) {
 			final Token token = tokeniser.read();
 			process(token);
 			token.reset();
 
-			if (token.type == Token.TokenType.EOF) {
+			if (token.type == eof) {
 				break;
 			}
 		}
@@ -69,6 +80,7 @@ abstract class TreeBuilder {
 	protected abstract boolean process(Token token);
 
 	protected boolean processStartTag(final String name) {
+		final Token.StartTag start = this.start;
 		if (currentToken == start) { // don't recycle an in-use token
 			return process(new Token.StartTag().name(name));
 		}
@@ -76,6 +88,7 @@ abstract class TreeBuilder {
 	}
 
 	public boolean processStartTag(final String name, final Attributes attrs) {
+		final Token.StartTag start = this.start;
 		if (currentToken == start) { // don't recycle an in-use token
 			return process(new Token.StartTag().nameAttr(name, attrs));
 		}
@@ -94,5 +107,18 @@ abstract class TreeBuilder {
 	protected Element currentElement() {
 		final int size = stack.size();
 		return size > 0 ? stack.get(size - 1) : null;
+	}
+
+	/**
+	 * If the parser is tracking errors, and an error at the current position.
+	 * 
+	 * @param msg
+	 *        error message
+	 */
+	protected void error(final String msg) {
+		final ParseErrorList errors = parser.getErrors();
+		if (errors.canAddError()) {
+			errors.add(new ParseError(reader.pos(), msg));
+		}
 	}
 }

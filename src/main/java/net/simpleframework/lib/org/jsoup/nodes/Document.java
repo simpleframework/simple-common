@@ -69,6 +69,25 @@ public class Document extends Element {
 	}
 
 	/**
+	 * Returns this Document's doctype.
+	 * 
+	 * @return document type, or null if not set
+	 */
+	public DocumentType documentType() {
+		for (final Node node : childNodes) {
+			if (node instanceof DocumentType) {
+				return (DocumentType) node;
+			} else if (!(node instanceof LeafNode)) {
+				// text, processing instructions
+				// etc
+				break;
+			}
+		}
+		return null;
+		// todo - add a set document type?
+	}
+
+	/**
 	 * Accessor to the document's {@code head} element.
 	 * 
 	 * @return {@code head}

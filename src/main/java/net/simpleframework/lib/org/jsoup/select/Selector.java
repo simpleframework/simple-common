@@ -21,7 +21,13 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * (i.e. {@code *.header} and {@code .header}
  * is equivalent).
  * </p>
- * <table summary="">
+ * <style>table.syntax tr td {vertical-align: top; padding-right: 2em;
+ * padding-top:0.5em; padding-bottom:0.5em; } table.syntax
+ * tr:hover{background-color: #eee;} table.syntax {border-spacing: 0px
+ * 0px;}</style>
+ * <table summary="" class="syntax">
+ * <colgroup><col span="1" style="width: 20%;"><col span="1" style="width:
+ * 40%;"><col span="1" style="width: 40%;"></colgroup>
  * <tr>
  * <th align="left">Pattern</th>
  * <th align="left">Matches</th>
@@ -162,7 +168,10 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * <td><code>:has(<em>selector</em>)</code></td>
  * <td>elements that contains at least one element matching the
  * <em>selector</em></td>
- * <td><code>div:has(p)</code> finds divs that contain p elements</td>
+ * <td><code>div:has(p)</code> finds <code>div</code>s that contain
+ * <code>p</code> elements.<br>
+ * <code>div:has(&gt; a)</code> selects <code>div</code> elements that have at
+ * least one direct child <code>a</code> element.</td>
  * </tr>
  * <tr>
  * <td><code>:not(<em>selector</em>)</code></td>
@@ -319,7 +328,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Element;
  * </tr>
  * <tr>
  * <td><code>:only-child</code></td>
- * <td>elements that have a parent element and whose parent element hasve no
+ * <td>elements that have a parent element and whose parent element have no
  * other element children</td>
  * <td></td>
  * </tr>

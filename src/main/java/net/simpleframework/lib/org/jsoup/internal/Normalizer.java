@@ -15,4 +15,8 @@ public final class Normalizer {
 	public static String normalize(final String input) {
 		return lowerCase(input).trim();
 	}
+
+	public static String normalize(final String input, final boolean isStringLiteral) {
+		return isStringLiteral ? lowerCase(input) : normalize(input);
+	}
 }

@@ -106,7 +106,11 @@ public class FormElement extends Element {
 			}
 			final String type = el.attr("type");
 
-			if ("select".equals(el.tagName())) {
+			if (type.equalsIgnoreCase("button")) {
+				continue; // browsers don't submit these
+			}
+
+			if ("select".equals(el.normalName())) {
 				final Elements options = el.select("option[selected]");
 				boolean set = false;
 				for (final Element option : options) {
@@ -130,5 +134,10 @@ public class FormElement extends Element {
 			}
 		}
 		return data;
+	}
+
+	@Override
+	public FormElement clone() {
+		return (FormElement) super.clone();
 	}
 }

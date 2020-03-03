@@ -1,6 +1,7 @@
 package net.simpleframework.lib.org.jsoup.helper;
 
 import java.io.BufferedReader;
+import java.io.CharArrayReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.util.Locale;
@@ -127,7 +129,6 @@ public final class DataUtil {
 		input = ConstrainableInputStream.wrap(input, bufferSize, 0);
 
 		Document doc = null;
-		boolean fullyRead = false;
 
 		// read the start of the stream and look for a BOM or meta charset
 		input.mark(bufferSize);
@@ -151,7 +152,7 @@ public final class DataUtil {
 		// can't
 		// be
 		// invalid.
-		fullyRead = input.read() == -1;
+		final boolean fullyRead = (input.read() == -1);
 		input.reset();
 
 		// look for BOM - overrides any other header or input
@@ -162,9 +163,13 @@ public final class DataUtil {
 
 		if (charsetName == null) { // determine from meta. safe first parse as
 											// UTF-8
-			final String docData = Charset.forName(defaultCharset).decode(firstBytes).toString();
 			try {
-				doc = parser.parseInput(docData, baseUri);
+				final CharBuffer defaultDecoded = Charset.forName(defaultCharset).decode(firstBytes);
+				if (defaultDecoded.hasArray()) {
+					doc = parser.parseInput(new CharArrayReader(defaultDecoded.array()), baseUri);
+				} else {
+					doc = parser.parseInput(defaultDecoded.toString(), baseUri);
+				}
 			} catch (final UncheckedIOException e) {
 				throw e.ioException();
 			}
@@ -233,11 +238,12 @@ public final class DataUtil {
 			}
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(input, charsetName),
 					bufferSize);
-			if (bomCharset != null && bomCharset.offset) {
-				// reader ignores the
-				// input pos, so must skip
-				// here
-				reader.skip(1);
+			if (bomCharset != null && bomCharset.offset) { // creating the buffered
+																			// reader ignores the
+																			// input pos, so must
+																			// skip here
+				final long skipped = reader.skip(1);
+				Validate.isTrue(skipped == 1); // WTF if this fails.
 			}
 			try {
 				doc = parser.parseInput(reader, baseUri);

@@ -30,24 +30,6 @@ public class XmlDeclaration extends LeafNode {
 		this.isProcessingInstruction = isProcessingInstruction;
 	}
 
-	/**
-	 * Create a new XML declaration
-	 * 
-	 * @param name
-	 *        of declaration
-	 * @param baseUri
-	 *        Leaf Nodes don't have base URIs; they inherit from their Element
-	 * @param isProcessingInstruction
-	 *        is processing instruction
-	 * @see XmlDeclaration#XmlDeclaration(String, boolean)
-	 * @deprecated
-	 */
-	@Deprecated
-	public XmlDeclaration(final String name, final String baseUri,
-			final boolean isProcessingInstruction) {
-		this(name, isProcessingInstruction);
-	}
-
 	@Override
 	public String nodeName() {
 		return "#declaration";
@@ -102,5 +84,10 @@ public class XmlDeclaration extends LeafNode {
 	@Override
 	public String toString() {
 		return outerHtml();
+	}
+
+	@Override
+	public XmlDeclaration clone() {
+		return (XmlDeclaration) super.clone();
 	}
 }

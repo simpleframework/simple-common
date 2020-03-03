@@ -139,6 +139,16 @@ public final class Validate {
 	}
 
 	/**
+	 * Blow up if we reach an unexpected state.
+	 * 
+	 * @param msg
+	 *        message to think about
+	 */
+	public static void wtf(final String msg) {
+		throw new IllegalStateException(msg);
+	}
+
+	/**
 	 * Cause a failure.
 	 * 
 	 * @param msg

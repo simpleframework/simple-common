@@ -129,7 +129,7 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Remove an attribute from this element.
+	 * Remove an attribute from this node.
 	 * 
 	 * @param attributeKey
 	 *        The attribute to remove.
@@ -156,7 +156,8 @@ public abstract class Node implements Cloneable {
 	}
 
 	/**
-	 * Get the base URI of this node.
+	 * Get the base URI that applies to this node. Empty string if not defined.
+	 * Used to make relative links absolute to.
 	 * 
 	 * @return base URI
 	 */
@@ -179,17 +180,7 @@ public abstract class Node implements Cloneable {
 	 */
 	public void setBaseUri(final String baseUri) {
 		Validate.notNull(baseUri);
-
-		traverse(new NodeVisitor() {
-			@Override
-			public void head(final Node node, final int depth) {
-				node.doSetBaseUri(baseUri);
-			}
-
-			@Override
-			public void tail(final Node node, final int depth) {
-			}
-		});
+		doSetBaseUri(baseUri);
 	}
 
 	/**
@@ -283,6 +274,13 @@ public abstract class Node implements Cloneable {
 	protected Node[] childNodesAsArray() {
 		return ensureChildNodes().toArray(new Node[0]);
 	}
+
+	/**
+	 * Delete all this node's children.
+	 * 
+	 * @return this node, for chaining
+	 */
+	public abstract Node empty();
 
 	/**
 	 * Gets this node's parent node.
@@ -546,9 +544,35 @@ public abstract class Node implements Cloneable {
 	}
 
 	protected void addChildren(final int index, final Node... children) {
-		Validate.noNullElements(children);
+		Validate.notNull(children);
+		if (children.length == 0) {
+			return;
+		}
 		final List<Node> nodes = ensureChildNodes();
 
+		// fast path - if used as a wrap (index=0, children =
+		// child[0].parent.children - do inplace
+		final Node firstParent = children[0].parent();
+		if (firstParent != null && firstParent.childNodeSize() == children.length) {
+			final List<Node> firstParentNodes = firstParent.childNodes();
+			// identity check contents to see if same
+			int i = children.length;
+			while (i-- > 0) {
+				if (children[i] != firstParentNodes.get(i)) {
+					break;
+				}
+			}
+			firstParent.empty();
+			nodes.addAll(index, Arrays.asList(children));
+			i = children.length;
+			while (i-- > 0) {
+				children[i].parentNode = this;
+			}
+			reindexChildren(index);
+			return;
+		}
+
+		Validate.noNullElements(children);
 		for (final Node child : children) {
 			reparentChild(child);
 		}

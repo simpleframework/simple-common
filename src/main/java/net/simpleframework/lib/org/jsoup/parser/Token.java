@@ -133,7 +133,10 @@ abstract class Token {
 					} else {
 						value = null;
 					}
-					attributes.put(pendingAttributeName, value);
+					// note that we add, not put. So that the first is kept, and rest
+					// are deduped, once in a context where case sensitivity is known
+					// (the appropriate tree builder).
+					attributes.add(pendingAttributeName, value);
 				}
 			}
 			pendingAttributeName = null;
@@ -146,7 +149,6 @@ abstract class Token {
 		final void finaliseTag() {
 			// finalises for emit
 			if (pendingAttributeName != null) {
-				// todo: check if attribute name exists; if so, drop and error
 				newAttribute();
 			}
 		}
@@ -174,8 +176,10 @@ abstract class Token {
 			return selfClosing;
 		}
 
-		@SuppressWarnings({ "TypeMayBeWeakened" })
 		final Attributes getAttributes() {
+			if (attributes == null) {
+				attributes = new Attributes();
+			}
 			return attributes;
 		}
 
@@ -242,16 +246,13 @@ abstract class Token {
 	final static class StartTag extends Tag {
 		StartTag() {
 			super();
-			attributes = new Attributes();
 			type = TokenType.StartTag;
 		}
 
 		@Override
 		Tag reset() {
 			super.reset();
-			attributes = new Attributes();
-			// todo - would prefer these to be null, but need to check Element
-			// assertions
+			attributes = null;
 			return this;
 		}
 
@@ -280,17 +281,19 @@ abstract class Token {
 
 		@Override
 		public String toString() {
-			return "</" + name() + ">";
+			return "</" + (tagName != null ? tagName : "(unset)") + ">";
 		}
 	}
 
 	final static class Comment extends Token {
-		final StringBuilder data = new StringBuilder();
+		private final StringBuilder data = new StringBuilder();
+		private String dataS; // try to get in one shot
 		boolean bogus = false;
 
 		@Override
 		Token reset() {
 			reset(data);
+			dataS = null;
 			bogus = false;
 			return this;
 		}
@@ -300,7 +303,31 @@ abstract class Token {
 		}
 
 		String getData() {
-			return data.toString();
+			return dataS != null ? dataS : data.toString();
+		}
+
+		final Comment append(final String append) {
+			ensureData();
+			if (data.length() == 0) {
+				dataS = append;
+			} else {
+				data.append(append);
+			}
+			return this;
+		}
+
+		final Comment append(final char append) {
+			ensureData();
+			data.append(append);
+			return this;
+		}
+
+		private void ensureData() {
+			// if on second hit, we'll need to move to the builder
+			if (dataS != null) {
+				data.append(dataS);
+				dataS = null;
+			}
 		}
 
 		@Override
