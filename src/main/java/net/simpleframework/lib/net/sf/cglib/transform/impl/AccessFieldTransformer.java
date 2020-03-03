@@ -17,9 +17,6 @@ package net.simpleframework.lib.net.sf.cglib.transform.impl;
 
 import net.simpleframework.lib.net.sf.cglib.transform.*;
 import net.simpleframework.lib.net.sf.cglib.core.*;
-import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
-import net.simpleframework.lib.org.objectweb.asm.MethodVisitor;
-import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 public class AccessFieldTransformer extends ClassEmitterTransformer {

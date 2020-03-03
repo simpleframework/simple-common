@@ -24,7 +24,6 @@ import net.simpleframework.lib.net.sf.cglib.core.ReflectUtils;
 import net.simpleframework.lib.net.sf.cglib.core.Signature;
 import net.simpleframework.lib.net.sf.cglib.transform.ClassEmitterTransformer;
 
-import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.Type;
 
 /**

@@ -1,7 +1,6 @@
 package net.simpleframework.lib.net.sf.cglib.core.internal;
 
 import net.simpleframework.lib.net.sf.cglib.core.Customizer;
-import net.simpleframework.lib.net.sf.cglib.core.FieldTypeCustomizer;
 import net.simpleframework.lib.net.sf.cglib.core.KeyFactoryCustomizer;
 
 import java.util.*;

@@ -18,9 +18,7 @@ package net.simpleframework.lib.net.sf.cglib.transform.impl;
 import java.lang.reflect.Constructor;
 import net.simpleframework.lib.net.sf.cglib.core.*;
 import net.simpleframework.lib.net.sf.cglib.transform.*;
-import net.simpleframework.lib.org.objectweb.asm.Attribute;
 import net.simpleframework.lib.org.objectweb.asm.Type;
-import net.simpleframework.lib.org.objectweb.asm.ClassVisitor;
 
 public class UndeclaredThrowableTransformer extends ClassEmitterTransformer {
     private Type wrapper;
