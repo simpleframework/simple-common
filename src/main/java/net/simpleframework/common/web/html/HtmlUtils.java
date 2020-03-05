@@ -185,7 +185,7 @@ public abstract class HtmlUtils implements HtmlConst {
 
 	private static Pattern url_pattern;
 
-	public static String autoLink(final String txt) {
+	public static String autoLink(final String txt, final AutoLinkCallback callback) {
 		if (url_pattern == null) {
 			url_pattern = Pattern.compile("(http(s)?|ftp)://([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?");
 		}
@@ -195,12 +195,25 @@ public abstract class HtmlUtils implements HtmlConst {
 		while (matchr.find()) {
 			final String str = matchr.group();
 			html.append(txt.substring(lastIdx, matchr.start()));
-			html.append("<a target=\"_blank\" href=\"");
-			html.append(str).append("\">").append(str).append("</a>");
+			html.append(callback.toLinkHTML(str));
 			lastIdx = matchr.end();
 		}
 		html.append(txt.substring(lastIdx));
 		return html.toString();
+	}
+
+	public static String autoLink(final String txt) {
+		return autoLink(txt, new AutoLinkCallback());
+	}
+
+	public static class AutoLinkCallback {
+
+		public Object toLinkHTML(final String str) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("<a target=\"_blank\" href=\"").append(str).append("\">").append(str)
+					.append("</a>");
+			return sb.toString();
+		}
 	}
 
 	public static String tag(final String tagName, final Properties properties) {
