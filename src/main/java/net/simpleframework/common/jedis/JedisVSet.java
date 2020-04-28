@@ -123,5 +123,23 @@ public class JedisVSet extends HashSet<String> {
 		}
 	}
 
+	@Override
+	public void clear() {
+		if (pool != null) {
+			Jedis jedis = null;
+			try {
+				jedis = pool.getResource();
+				final Set<String> set = jedis.smembers(key);
+				jedis.srem(key, set.toArray(new String[set.size()]));
+			} finally {
+				if (jedis != null) {
+					jedis.close();
+				}
+			}
+		} else {
+			super.clear();
+		}
+	}
+
 	private static final long serialVersionUID = -8332247234732521904L;
 }
