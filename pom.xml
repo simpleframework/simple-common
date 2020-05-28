@@ -32,15 +32,14 @@
     </dependency>
 
     <dependency>
-      <groupId>com.caucho</groupId>
-      <artifactId>hessian</artifactId>
+      <groupId>com.yahoo.platform.yui</groupId>
+      <artifactId>yuicompressor</artifactId>
       <optional>true</optional>
     </dependency>
     
     <dependency>
-      <groupId>com.yahoo.platform.yui</groupId>
-      <artifactId>yuicompressor</artifactId>
-      <optional>true</optional>
+      <groupId>com.caucho</groupId>
+      <artifactId>hessian</artifactId>
     </dependency>
 
     <!-- web容器包 -->
