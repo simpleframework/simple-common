@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.simpleframework.common.Convert;
-import net.simpleframework.common.IoUtils_hessian;
+import net.simpleframework.common.SerializeUtils;
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
 import redis.clients.jedis.Jedis;
@@ -196,11 +196,11 @@ public class JedisMap extends HashMap<String, Object> {
 	}
 
 	private byte[] serialize(final Object obj) throws IOException {
-		return IoUtils_hessian.serialize(obj);
+		return SerializeUtils.serialize(obj);
 	}
 
 	private Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
-		return IoUtils_hessian.deserialize(bytes);
+		return SerializeUtils.deserialize(bytes);
 	}
 
 	private static Log log = LogFactory.getLogger(JedisMap.class);

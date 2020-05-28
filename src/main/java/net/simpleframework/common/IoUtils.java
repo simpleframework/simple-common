@@ -1,13 +1,9 @@
 package net.simpleframework.common;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -102,29 +98,6 @@ public abstract class IoUtils {
 		}
 		outputStream.flush();
 		return result;
-	}
-
-	/*********************************
-	 * Serializable
-	 **********************************/
-
-	public static byte[] serialize(final Object obj) throws IOException {
-		if (obj == null) {
-			return null;
-		}
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		final ObjectOutputStream oos = new ObjectOutputStream(bos);
-		oos.writeObject(obj);
-		return bos.toByteArray();
-	}
-
-	public static Object deserialize(final byte[] bytes) throws IOException, ClassNotFoundException {
-		if (bytes == null || bytes.length == 0) {
-			return null;
-		}
-		final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		final ObjectInputStream ois = new ObjectInputStream(bis);
-		return ois.readObject();
 	}
 
 	/*********************************

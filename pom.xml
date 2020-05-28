@@ -36,19 +36,7 @@
       <artifactId>hessian</artifactId>
       <optional>true</optional>
     </dependency>
-
-    <dependency>
-      <groupId>com.esotericsoftware</groupId>
-      <artifactId>kryo</artifactId>
-      <optional>true</optional>
-      <exclusions>
-        <exclusion>
-          <groupId>com.esotericsoftware</groupId>
-          <artifactId>reflectasm</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
+    
     <dependency>
       <groupId>com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
