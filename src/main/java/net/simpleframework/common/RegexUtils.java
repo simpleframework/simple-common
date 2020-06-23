@@ -41,7 +41,7 @@ public abstract class RegexUtils {
 		if (text.length() != 11) {
 			return false;
 		}
-		return match(text, "^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\\d{8})$");
+		return match(text, "^((1[3456789][0-9]{1})+\\d{8})$");
 	}
 
 	/**
