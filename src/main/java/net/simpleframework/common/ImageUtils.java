@@ -106,7 +106,7 @@ public abstract class ImageUtils {
 		int w, h;
 		final BufferedImage sbi = ImageIO.read(inputStream);
 		if (sbi == null) {
-			IoUtils.copyStream(inputStream, outputStream);
+			doBufferedImageNull(inputStream, outputStream);
 			return;
 		}
 		if (width == 0) {
@@ -168,7 +168,7 @@ public abstract class ImageUtils {
 			final OutputStream outputStream, final String filetype) throws IOException {
 		BufferedImage sbi;
 		if (d == 1 || (sbi = ImageIO.read(inputStream)) == null) {
-			IoUtils.copyStream(inputStream, outputStream);
+			doBufferedImageNull(inputStream, outputStream);
 			return;
 		}
 		thumbnail(sbi, d, outputStream, filetype);
@@ -183,7 +183,7 @@ public abstract class ImageUtils {
 			final OutputStream outputStream, String filetype) throws IOException {
 		final BufferedImage sbi = ImageIO.read(inputStream);
 		if (sbi == null) {
-			IoUtils.copyStream(inputStream, outputStream);
+			doBufferedImageNull(inputStream, outputStream);
 			return;
 		}
 
@@ -291,5 +291,11 @@ public abstract class ImageUtils {
 				}
 			}
 		}
+	}
+
+	private static void doBufferedImageNull(final InputStream inputStream,
+			final OutputStream outputStream) throws IOException {
+		// IoUtils.copyStream(inputStream, outputStream);
+		throw new IOException("Illegal image format.");
 	}
 }
