@@ -28,7 +28,9 @@ public class SymmetricEncrypt {
 		// 生成密匙
 		try {
 			KeyGenerator _generator = KeyGenerator.getInstance(algorithm);
-			_generator.init(new SecureRandom(str.getBytes()));
+			final SecureRandom sRandom = SecureRandom.getInstance("SHA1PRNG");
+			sRandom.setSeed(str.getBytes());
+			_generator.init(sRandom);
 			this.key = _generator.generateKey();
 			_generator = null;
 		} catch (final NoSuchAlgorithmException e) {
