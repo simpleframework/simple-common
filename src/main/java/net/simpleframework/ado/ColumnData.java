@@ -34,6 +34,7 @@ public class ColumnData extends ObjectEx implements Serializable {
 	/**
 	 * 列的显示名称
 	 */
+	
 	private String text;
 
 	/**
