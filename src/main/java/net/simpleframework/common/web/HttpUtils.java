@@ -209,6 +209,22 @@ public abstract class HttpUtils implements HtmlConst {
 		}
 		return false;
 	}
+	
+	public static String stripHost(final String url) {
+		if (url == null) {
+			return "";
+		}
+		String host = url;
+		int pos = host.indexOf("//");
+		if (pos > -1) {
+			host = host.substring(pos + 2);
+		}
+		pos = host.indexOf("/");
+		if (pos > -1) {
+			host = host.substring(0, pos);
+		}
+		return host.toLowerCase();
+	}
 
 	/****************************** cookie *****************************/
 
