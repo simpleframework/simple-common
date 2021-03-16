@@ -9,10 +9,10 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -276,21 +276,23 @@ public abstract class ImageUtils {
 		if (bext && StringUtils.hasText(ext)) {
 			return isImage(ext);
 		} else {
-			FileInputStream inputStream = null;
-			try {
-				inputStream = new FileInputStream(file);
-				return ImageIO.read(inputStream) != null;
-			} catch (final IOException e) {
-				return false;
-			} finally {
-				if (inputStream != null) {
-					try {
-						inputStream.close();
-					} catch (final IOException e) {
-					}
-				}
-			}
+			return getFormatName(file) != null;
 		}
+	}
+
+	public static String getFormatName(final File o) {
+		try {
+			final ImageInputStream iis = ImageIO.createImageInputStream(o);
+			final Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+			if (!iter.hasNext()) {
+				return null;
+			}
+			final ImageReader reader = iter.next();
+			iis.close();
+			return reader.getFormatName();
+		} catch (final IOException e) {
+		}
+		return null;
 	}
 
 	private static void doBufferedImageNull(final InputStream inputStream,
