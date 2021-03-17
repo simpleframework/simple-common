@@ -210,6 +210,11 @@ public abstract class HttpUtils implements HtmlConst {
 		return false;
 	}
 	
+	public static String stripProto(String url) {
+		int p = url.indexOf("://");
+		return p > -1 ? url.substring(0, p) : "";
+	}
+
 	public static String stripHost(final String url) {
 		if (url == null) {
 			return "";
