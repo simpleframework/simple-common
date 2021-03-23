@@ -51,7 +51,7 @@ public abstract class JsonUtils {
 
 	public static Map<String, Object> toMap(final String json) {
 		final Map<String, Object> map = toObject(json, JSONObject.class);
-		return map != null ? map : new HashMap<String, Object>();
+		return map != null ? map : new HashMap<>();
 	}
 
 	public static <T> T toObject(final String json, final Class<T> valueType) {
@@ -88,8 +88,8 @@ public abstract class JsonUtils {
 		public ListMapper(final Class<?> listClass, final Class<?> valueClass) {
 			super(JSONValue.defaultReader);
 			this.valueClass = valueClass;
-			ba = BeansAccess.get(listClass.isInterface() ? JSONArray.class : listClass,
-					JSONUtil.JSON_SMART_FIELD_FILTER);
+			final Class<?> type = listClass.isInterface() ? JSONArray.class : listClass;
+			ba = BeansAccess.get(type, JSONUtil.JSON_SMART_FIELD_FILTER);
 		}
 
 		@Override
