@@ -1,5 +1,6 @@
 package net.simpleframework.common.web.html;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -448,5 +449,30 @@ public abstract class HtmlUtils implements HtmlConst {
 			return str;
 		}
 		return sb.append(str.substring(i)).toString();
+	}
+	
+	public static String joinStyle(final Map<String, String> styles) {
+		if (styles != null && styles.size() > 0) {
+			final StringBuilder sb = new StringBuilder();
+			for (final Map.Entry<String, String> e : styles.entrySet()) {
+				if (sb.length() > 0) {
+					sb.append(";");
+				}
+				sb.append(e.getKey()).append(":").append(e.getValue());
+			}
+			return sb.toString();
+		}
+		return null;
+	}
+
+	public static Map<String, String> toStyle(final String style) {
+		final Map<String, String> styles = new LinkedHashMap<>();
+		for (final String s : StringUtils.split(style, ";")) {
+			final String[] arr = StringUtils.split(s.toLowerCase(), ":");
+			if (arr.length > 0) {
+				styles.put(arr[0].trim(), arr.length > 1 ? arr[1].trim() : "");
+			}
+		}
+		return styles;
 	}
 }

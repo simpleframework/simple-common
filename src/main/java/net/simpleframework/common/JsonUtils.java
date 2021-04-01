@@ -51,7 +51,7 @@ public abstract class JsonUtils {
 
 	public static Map<String, Object> toMap(final String json) {
 		final Map<String, Object> map = toObject(json, JSONObject.class);
-		return map != null ? map : new HashMap<>();
+		return map != null ? map : new HashMap<String, Object>();
 	}
 
 	public static <T> T toObject(final String json, final Class<T> valueType) {
