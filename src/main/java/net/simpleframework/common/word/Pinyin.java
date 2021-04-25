@@ -1,4 +1,4 @@
-package net.simpleframework.common;
+package net.simpleframework.common.word;
 
 import net.simpleframework.common.logger.Log;
 import net.simpleframework.common.logger.LogFactory;
@@ -40,7 +40,6 @@ public abstract class Pinyin {
 		}
 		return t4;
 	}
-	
 
 	static Log log = LogFactory.getLogger(Pinyin.class);
 }

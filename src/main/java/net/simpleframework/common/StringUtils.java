@@ -255,4 +255,17 @@ public abstract class StringUtils {
 		}
 		return sb.toString();
 	}
+
+	public static boolean equalsIgnoreCase(final String cs1, final String cs2) {
+		if (cs1 == cs2) {
+			return true;
+		}
+		if (cs1 == null || cs2 == null) {
+			return false;
+		}
+		if (cs1.length() != cs2.length()) {
+			return false;
+		}
+		return cs1.equalsIgnoreCase(cs2);
+	}
 }
