@@ -38,7 +38,7 @@ public abstract class AlgorithmUtils {
 				}
 				bo.write(buf, 0, numRead);
 			}
-			digest.update(buf);
+			digest.update(bo.toByteArray());
 			return StringUtils.encodeHex(digest.digest());
 		} catch (final NoSuchAlgorithmException e) {
 			return null;
