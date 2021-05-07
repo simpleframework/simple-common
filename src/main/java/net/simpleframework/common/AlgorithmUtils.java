@@ -1,5 +1,6 @@
 package net.simpleframework.common;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -27,7 +28,7 @@ public abstract class AlgorithmUtils {
 		if (inputStream == null) {
 			return null;
 		}
-		try {
+		try(final ByteArrayOutputStream bo = new ByteArrayOutputStream();){
 			final MessageDigest digest = MessageDigest.getInstance(algorithm);
 			final byte[] buf = new byte[bufferSize];
 			for (;;) {
@@ -35,8 +36,9 @@ public abstract class AlgorithmUtils {
 				if (numRead == -1) {
 					break;
 				}
-				digest.update(buf);
+				bo.write(buf, 0, numRead);
 			}
+			digest.update(buf);
 			return StringUtils.encodeHex(digest.digest());
 		} catch (final NoSuchAlgorithmException e) {
 			return null;
