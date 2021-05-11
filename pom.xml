@@ -12,6 +12,11 @@
   <version>${simple.common}</version>
 
   <dependencies>
+  	<dependency>
+    	<groupId>cn.hutool</groupId>
+     	<artifactId>hutool-all</artifactId>
+		</dependency>
+		
     <dependency>
       <groupId>com.belerweb</groupId>
       <artifactId>pinyin4j</artifactId>
