@@ -5,9 +5,12 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -254,5 +257,34 @@ public abstract class FileUtils {
 	public static interface IUnZipHandle {
 
 		void doFile(ZipInputStream is, File destFile) throws IOException;
+	}
+	
+	public static File[] listAllFiles(final File dir, String ext) throws IOException {
+		final FilenameFilter filter = new FilenameFilter() {
+			@Override
+			public boolean accept(final File dir, final String name) {
+				return dir.isDirectory() || name.endsWith(ext);
+			}
+		};
+		final List<File> list = new ArrayList<>();
+		listAllFiles(dir, filter, list);
+		return list.toArray(new File[list.size()]);
+	}
+
+	private static void listAllFiles(final File dir, final FilenameFilter filter,
+			final List<File> list) throws IOException {
+		if (!dir.isDirectory()) {
+			return;
+		}
+		final File[] files = dir.listFiles(filter);
+		if (files != null) {
+			for (final File file : files) {
+				if (file.isDirectory()) {
+					listAllFiles(file, filter, list);
+				} else {
+					list.add(file);
+				}
+			}
+		}
 	}
 }
