@@ -258,8 +258,8 @@ public abstract class FileUtils {
 
 		void doFile(ZipInputStream is, File destFile) throws IOException;
 	}
-	
-	public static File[] listAllFiles(final File dir, String ext) throws IOException {
+
+	public static File[] listAllFiles(final File dir, final String ext) throws IOException {
 		final FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(final File dir, final String name) {
