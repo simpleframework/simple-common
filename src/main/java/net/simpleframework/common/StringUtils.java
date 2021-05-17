@@ -1,6 +1,11 @@
 package net.simpleframework.common;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.simpleframework.common.coll.ArrayUtils;
 
@@ -267,5 +272,20 @@ public abstract class StringUtils {
 			return false;
 		}
 		return cs1.equalsIgnoreCase(cs2);
+	}
+
+	public static String replaceVar(final String expr, final Map<String, Object> vars) {
+		final Pattern pattern = Pattern.compile("\\{([^}])*\\}");
+		final Matcher matcher = pattern.matcher(expr);
+		final List<String> list = new ArrayList<>();
+		while (matcher.find()) {
+			final String g = matcher.group();
+			list.add(g.substring(1, g.length() - 1));
+		}
+		String _expr = expr;
+		for (final String key : list) {
+			_expr = _expr.replace("{" + key + "}", StringUtils.blank(vars.get(key)));
+		}
+		return _expr;
 	}
 }
