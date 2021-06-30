@@ -271,7 +271,7 @@ public abstract class FileUtils {
 		return list.toArray(new File[list.size()]);
 	}
 
-	private static void listAllFiles(final File dir, final FilenameFilter filter,
+	public static void listAllFiles(final File dir, final FilenameFilter filter,
 			final List<File> list) throws IOException {
 		if (!dir.isDirectory()) {
 			return;
