@@ -15,16 +15,26 @@ public class LogFactory {
 	static {
 		lCache = new ConcurrentHashMap<>();
 	}
-
-	private static Log createLog(final Class<?> beanClass) {
-		return new JdkLog(beanClass.getName());
-	}
+	
+	private static LogCreator DEFAULT_CREATOR = new LogCreator();
+	private static LogCreator _logCreator = DEFAULT_CREATOR;
+	
 
 	public static Log getLogger(final Class<?> beanClass) {
 		Log log = lCache.get(beanClass);
 		if (log == null) {
-			lCache.put(beanClass, log = createLog(beanClass));
+			lCache.put(beanClass, log = _logCreator.createLog(beanClass));
 		}
 		return log;
+	}
+	
+	public static void setLogger(LogCreator logCreator) {
+		_logCreator = logCreator;
+	}
+	
+	public static class LogCreator {
+		protected Log createLog(final Class<?> beanClass) {
+			return new JdkLog(beanClass.getName());
+		}
 	}
 }
